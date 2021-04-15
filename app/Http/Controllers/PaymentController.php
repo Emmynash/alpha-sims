@@ -33,7 +33,10 @@ class PaymentController extends Controller
      */
     public function handleGatewayCallback()
     {
-        $paymentDetails = Paystack::getPaymentData();
+        // $paymentDetails = Paystack::getPaymentData();
+
+        $input = @file_get_contents("php://input");
+        $paymentDetails = json_decode($input);
 
         // return $paymentDetails;
 
