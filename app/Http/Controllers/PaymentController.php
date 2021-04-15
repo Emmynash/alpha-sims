@@ -35,6 +35,11 @@ class PaymentController extends Controller
     {
         // $paymentDetails = Paystack::getPaymentData();
 
+        $updatePayment = FeesInvoice::find(10);
+
+        $updatePayment->status = 1;
+        $updatePayment->save();
+
         $input = @file_get_contents("php://input");
         $paymentDetails = json_decode($input);
 
