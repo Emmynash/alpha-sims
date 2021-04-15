@@ -1,0 +1,176 @@
+html, body {
+    height: 100%;
+  }
+
+.indexPage{
+    position: relative;
+    width: 100%;
+    background: #0EA1A1;
+    padding-top: 30px;
+    
+  }
+  
+  .indexPage:after{
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    transform-origin: bottom right;
+    transform:skewY(-5deg);
+    z-index: -1;
+  }
+  
+  .full-height {
+    min-height: 100%;
+    overflow: hidden;
+  }
+
+  /* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+
+    .right_card{
+        height:450px; 
+        background-color: white;
+        width: 100%; border: none;
+        padding-left: 0;
+    }
+
+    .demo_form{
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .card-left-1{
+        width: 95%; 
+        margin: 0 auto;
+    }
+
+    .login-card{
+        width: 95%; 
+        margin: 0 auto; 
+        padding-top: 30px; 
+        margin-top: 30px; 
+        margin-bottom: 500px;
+    }
+
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .right_card{
+        height:450px; 
+        width: 100%; 
+        margin: 0 auto;
+    }
+
+    .demo_form{
+        width: 80%; 
+        margin: 0 auto;
+    }
+
+    .card-left-1{
+        width: 95%; 
+        margin: 0 auto;
+    }
+
+    .login-card{
+        width: 95%; 
+        margin: 0 auto; 
+        padding-top: 30px; 
+        margin-top: 30px; 
+        margin-bottom: 500px;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .right_card{
+        height:450px; 
+        background-color: white;
+        width: 65%; border: none;
+    }
+
+    .demo_form{
+        width: 80%; 
+        margin: 0 auto;
+        float: left;
+    }
+
+    .card-left-1{
+        width: 60%; 
+        margin: 0 auto;
+    }
+
+    .login-card{
+        width: 50%; 
+        margin: 0 auto; 
+        padding-top: 30px; 
+        margin-top: 30px; 
+        margin-bottom: 500px;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+    .right_card{
+        height:450px; 
+        background-color: white;
+        width: 65%; border: none;
+        float: left;
+    }
+
+    .demo_form{
+        width: 80%; 
+        margin: 0 auto;
+    }
+
+    .card-left-1{
+        width: 60%; 
+        margin: 0 auto;
+    }
+
+    .login-card{
+        width: 30%; 
+        margin: 0 auto; 
+        padding-top: 30px; 
+        margin-top: 30px; 
+        margin-bottom: 500px;
+    }
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+    .right_card{
+        height:450px; 
+        background-color: white;
+        width: 65%; border: none;
+        float: left;
+    }
+
+    .demo_form{
+        width: 80%; 
+        margin: 0 auto;
+    }
+
+    .card-left-1{
+        width: 60%; 
+        margin: 0 auto;
+    }
+
+    .login-card{
+        width: 30%; 
+        margin: 0 auto; 
+        padding-top: 30px; 
+        margin-top: 30px; 
+        margin-bottom: 500px;
+    }
+
+}

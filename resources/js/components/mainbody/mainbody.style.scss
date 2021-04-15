@@ -1,0 +1,79 @@
+.scrolltext::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+.scrolltext {
+    -ms-overflow-style: none;
+}
+
+.scrolltext {
+    scrollbar-width: none;
+ }
+
+ /* Extra small devices (phones, 600px and down) */
+ @media only screen and (max-width: 600px) {
+    #sidelistdesktop{
+        display: none;
+    }
+    #sidemenubtn{
+        display: block;
+    }
+
+    #namedisplaydesktop{
+        display: none;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    #sidelistdesktop{
+        display: none;
+    }
+    #sidemenubtn{
+        display: block;
+    }
+    #namedisplaydesktop{
+        display: none;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    #sidelistdesktop{
+        display: block;
+    }
+    #sidemenubtn{
+        display: none !important;
+    }
+    #namedisplaydesktop{
+        display: block;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    #sidelistdesktop{
+        display: block;
+    }
+    #sidemenubtn{
+        display: none !important;
+    }
+    #namedisplaydesktop{
+        display: block;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    #sidelistdesktop{
+        display: block;
+    }
+
+    #sidemenubtn{
+        display: none !important;
+    }
+    #namedisplaydesktop{
+        display: block;
+    }
+}

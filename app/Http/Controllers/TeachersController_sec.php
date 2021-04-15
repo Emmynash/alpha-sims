@@ -1,0 +1,399 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Validator;
+use App\User;
+use App\Addstudent_sec;
+use App\Addstudent;
+use App\Classlist_sec;
+use App\Addhouse_sec;
+use App\Addsection_sec;
+use App\Addclub_sec;
+use App\Addpost;
+use App\Addteachers_sec;
+use App\Addsubject_sec;
+use App\TeacherSubjects;
+use App\FormTeachers;
+use App\ConfirmSubjectRecordEntered;
+use App\ResultReadySubject;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+
+class TeachersController_sec extends Controller
+{
+
+    private $classlist_sec;
+    private $addsection_sec;
+    private $addpost;
+    private $user;
+    private $addstudent_sec;
+    private $addteachers_sec;
+    private $addsubject_sec;
+    private $teacherSubjects;
+    private $formTeachers;
+
+    function __construct(Classlist_sec $classlist_sec, Addsection_sec $addsection_sec, Addpost $addpost, User $user, Addstudent_sec $addstudent_sec, Addstudent $addstudent, Addteachers_sec $addteachers_sec, Addsubject_sec $addsubject_sec, TeacherSubjects $teacherSubjects, FormTeachers $formTeachers)
+    {
+        $this->classlist_sec = $classlist_sec;
+        $this->addsection_sec = $addsection_sec;
+        $this->addpost = $addpost;
+        $this->user = $user; 
+        $this->addstudent_sec = $addstudent_sec;
+        $this->addstudent = $addstudent;
+        $this->addteachers_sec = $addteachers_sec;
+        $this->addsubject_sec = $addsubject_sec;
+        $this->teacherSubjects = $teacherSubjects;
+        $this->formTeachers = $formTeachers;
+
+    }
+
+
+    public function index(){
+
+        $schoolId = Auth::user()->schoolid;
+
+        $classesAll = $this->classlist_sec->where('schoolid', Auth::user()->schoolid)->get();
+        $addsection_sec = $this->addsection_sec->where('schoolid', Auth::user()->schoolid)->get();
+        $addschool = $this->addpost->where('id', Auth::user()->schoolid)->get();
+        $addsubject_sec = DB::table('addsubject_secs')
+        ->join('classlist_secs', 'classlist_secs.id','=','addsubject_secs.classid')
+        ->select('addsubject_secs.*', 'classlist_secs.classname')
+        ->where('addsubject_secs.schoolid', $schoolId)->get();
+        
+        return view('secondary.teachers.addteacher_sec', compact('classesAll', 'addsection_sec', 'addschool', 'addsubject_sec'));
+    }
+
+    public function confirmTeacherRegNumber(Request $request){
+        
+
+        $validator = Validator::make($request->all(),[
+            'masterallocatedclass' => 'required|string',
+            'masterallocatedsection' => 'required|string',
+            'mastersystemnumber' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors'=>$validator->errors()->keys()]);
+        }
+
+        $userdetailfetch = $this->user->where('id', $request->input('mastersystemnumber'))->get();
+        // check if this system number is for a student
+        $addstudent_sec = $this->addstudent_sec->where('usernamesystem', $request->input('mastersystemnumber'))->get();
+        $addstudentPrimary = $this->addstudent->where('usernamesystem', $request->input('mastersystemnumber'))->get();
+        
+        if(count($addstudentPrimary) > 0){
+            return response()->json(['exist'=>'noaccount']);
+        }
+
+        if (count($userdetailfetch) > 0) {
+
+            if (count($addstudent_sec) > 0) {
+                return response()->json(['exist'=>'noaccount']);
+            }else{
+                return response()->json(['create'=>$userdetailfetch]);
+            }
+            
+        }else{
+            return response()->json(['noaccount'=>'noaccount']);
+        }
+
+        return response()->json($userdetailfetch, 200);
+    }
+
+    public function allocateFormMaster(Request $request){
+
+        $validator = Validator::make($request->all(),[
+            'formsection' => 'required',
+            'formteacherclass' => 'required',
+            'systemidformmaster' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors'=>$validator->errors()->keys()]);
+        }
+
+        $formCheck = $this->formTeachers->where('teacher_id', (int)$request->systemidformmaster)->get();
+
+        if ($formCheck->count() > 0) {
+            return response()->json(['exist'=>'exist']);
+        }
+
+        $teacherCheck = $this->addteachers_sec->where(['systemid'=> $request->input('systemidformmaster')])->get();
+
+        if (count($teacherCheck) > 0) {
+
+            $addFormMaster = new FormTeachers();
+            $addFormMaster->teacher_id = (int)$request->systemidformmaster;
+            $addFormMaster->class_id = (int)$request->formteacherclass;
+            $addFormMaster->form_id = (int)$request->formsection;
+            $addFormMaster->school_id = (int)Auth::user()->schoolid;
+            $addFormMaster->save();
+
+            return response()->json(['done'=>'done']);
+        }
+
+        $addFormMaster = new FormTeachers();
+        $addFormMaster->teacher_id = (int)$request->systemidformmaster;
+        $addFormMaster->class_id = (int)$request->formteacherclass;
+        $addFormMaster->form_id = (int)$request->formsection;
+        $addFormMaster->school_id = (int)Auth::user()->schoolid;
+        $addFormMaster->save();
+
+        //update user role
+        $teacherDetail = $this->user->where('id', $request->input('systemidformmaster'))->first();
+
+        $id = $teacherDetail->id;
+
+        $updateRole = $this->user->find($id);
+        $updateRole->role = "Teacher";
+        $updateRole->schoolid = Auth::user()->schoolid;
+        $updateRole->save();
+
+        return response()->json(['done'=>'done']);
+    }
+
+    public function allocateSubjectTeacher(Request $request){
+
+
+        $validator = Validator::make($request->all(),[
+            'subject_id' => 'required',
+            'user_id' => 'required'
+        ]);
+        
+
+        if ($validator->fails()) {
+            return response()->json(['errors'=>$validator->errors()->keys()]);
+        }
+
+            
+        $getTeacherRegNo = $this->addteachers_sec->where('systemid', $request->user_id)->get();
+
+
+        if($getTeacherRegNo->count() < 1){
+
+            $addformmaster = new Addteachers_sec();
+            $addformmaster->schoolid = Auth::user()->schoolid;
+            $addformmaster->systemid = $request->input('user_id');
+            $addformmaster->save();
+
+            $updateRole = User::find($request->user_id);
+            $updateRole->role = "Teacher";
+            $updateRole->schoolid = Auth::user()->schoolid;
+            $updateRole->save();
+
+        }
+
+           $teacherSubjectCheck = $this->teacherSubjects->where(['user_id' => $request->user_id, "subject_id" => $request->subject_id])->get();
+
+            if ($teacherSubjectCheck->count() < 1) {
+                
+                $requestData = $request->except(['_token', 'allocatedclass', 'subject_id', 'user_id']);
+
+                $getTeacherRegNoMain = $this->addteachers_sec->where('systemid', $request->user_id)->get();
+
+    
+                try {
+
+
+                    $getclassid = $this->addsubject_sec->where('id', $request->subject_id)->first();
+
+                    $addTeacher = new TeacherSubjects();
+                    $addTeacher ->user_id = (int)$request->user_id;
+                    $addTeacher->school_id = (int)Auth::user()->schoolid;
+                    $addTeacher->subject_id = (int)$request->subject_id;
+                    $addTeacher->classid = (int)$getclassid->classid;
+                    $addTeacher->usernamesystem=(int)$getTeacherRegNoMain[0]->id;
+                    $addTeacher->save();
+
+                    return response()->json(['done'=>'done']);
+
+                } catch (\Throwable $th) {
+                    return $th;
+                }
+
+            }else{
+    
+                return response()->json(['exist'=>'exist']);
+            }
+
+    }
+
+    public function confirmTeacherRegNumber2(Request $request){
+
+        $validator = Validator::make($request->all(),[
+            'allocationsubject' => 'required|string', //id of subject to allocate
+            'systemidstudentalloc' => 'required|string' //teacher user table id
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors'=>$validator->errors()->keys()]);
+        }
+
+        $userdetailfetch = $this->user->where('id', $request->input('systemidstudentalloc'))->get();
+
+        $addstudent_sec = $this->addstudent_sec->where('usernamesystem', $request->input('systemidstudentalloc'))->get();
+        
+        $addstudentPrimary = $this->addstudent->where('usernamesystem', $request->input('systemidstudentalloc'))->get();
+        
+        if(count($addstudentPrimary) > 0){
+            return response()->json(['exist'=>'noaccount']);
+        }
+
+        if (count($userdetailfetch) > 0) {
+
+            if (count($addstudent_sec) > 0) {
+                return response()->json(['exist'=>'noaccount']);
+            }else{
+                return response()->json(['create'=>$userdetailfetch]);
+            }
+            
+        }else{
+            return response()->json(['noaccount'=>'noaccount']);
+        }
+
+        return response()->json($userdetailfetch, 200);
+    }
+
+    public function teacherEditProfile(){
+
+        $teachersDetails = $this->addteachers_sec->where(['schoolid' => Auth::user()->schoolid, 'systemid' => Auth::user()->id])->first();
+
+        return view('secondary.teachers.editprofile_teachers', compact('teachersDetails'));
+    }
+
+    public function addEdited(Request $request){
+
+        $validatedData = $request->validate([
+            'firstnameedit' => 'required',
+            'middlenameedit' => 'required',
+            'lastnameedit' => 'required',
+            'emailnameedit' => 'required',
+            'courseedit' => 'required',
+            'institutionedit' => 'required',
+            'degreeedit' => 'required',
+            'educationedit' => 'required',
+            'graduationedit' => 'required',
+            'birthedit' => 'required',
+            'addressedit' => 'required',
+            'entryid' => 'required',
+            'genderedit'=> 'required',
+            'religionedit' => 'required',
+            'bloodgroupedit' => 'required',
+        ]);
+
+        $updateteachers = Addteachers_sec::find($request->input('entryid'));
+        $updateteachers->gender = $request->input('genderedit');
+        $updateteachers->religion = $request->input('religionedit');
+        $updateteachers->bloodgroup = $request->input('bloodgroupedit');
+        $updateteachers->courseedit = $request->input('courseedit');
+        $updateteachers->institutionedit = $request->input('institutionedit');
+        $updateteachers->degreeedit = $request->input('degreeedit');
+        $updateteachers->educationedit = $request->input('educationedit');
+        $updateteachers->graduationedit = $request->input('graduationedit');
+        $updateteachers->dob = $request->input('birthedit');
+        $updateteachers->residentialaddress = $request->input('addressedit');
+        $updateteachers->save(); 
+
+        return back();
+    }
+
+    public function resultremark()
+    {
+        $teacherSubject = TeacherSubjects::join('addsubject_secs', 'addsubject_secs.id','=','teacher_subjects.subject_id')
+                        ->leftjoin("classlist_secs", 'classlist_secs.id','=','addsubject_secs.classid')
+                        ->select('teacher_subjects.*','classlist_secs.id as classid', 'classlist_secs.classname', 'addsubject_secs.id as sub' )
+                        ->where('user_id', Auth::user()->id)->get();
+
+        $schooldetaild = Addpost::find(Auth::user()->schoolid);
+
+        $getEnteredSubjects = ConfirmSubjectRecordEntered::where(['schoolid'=>Auth::user()->schoolid, "term"=>$schooldetaild->term, "session"=>$schooldetaild->schoolsession])->pluck('subject_id');
+
+        $arrayOfSubjectId = array();
+
+        for ($i=0; $i < $getEnteredSubjects->count(); $i++) { 
+            array_push($arrayOfSubjectId, $getEnteredSubjects[$i]);
+        }
+
+        return view('secondary.teachers.resultremark.resultremark', compact('teacherSubject', 'arrayOfSubjectId'));
+        
+    }
+
+    public function resultremarkpost(Request $request)
+    {
+        $schooldetaild = Addpost::find(Auth::user()->schoolid);
+
+        $enterRecord = new ConfirmSubjectRecordEntered();
+        $enterRecord->session = $schooldetaild->schoolsession;
+        $enterRecord->term = $schooldetaild->term;
+        $enterRecord->subject_id = $request->subject_id;
+        $enterRecord->schoolid = Auth::user()->schoolid;
+        $enterRecord->user_id = Auth::user()->id;
+        $enterRecord->classid = $request->classid;
+        $enterRecord->save();
+        
+        return back();
+    }
+
+    public function formTeacherMain()
+    {
+
+        $formClass = FormTeachers::where('teacher_id', Auth::user()->id)->first();
+
+        if ($formClass == NULL) {
+            return back()->with('error', 'you are not a form teacher.');
+        }
+
+        $schooldetaild = Addpost::find(Auth::user()->schoolid);
+
+        $getEnteredSubjects = ConfirmSubjectRecordEntered::where(['schoolid'=>Auth::user()->schoolid, "term"=>$schooldetaild->term, "session"=>$schooldetaild->schoolsession])->pluck('subject_id');
+
+        $arrayOfSubjectId = array();
+
+        for ($i=0; $i < $getEnteredSubjects->count(); $i++) { 
+            array_push($arrayOfSubjectId, $getEnteredSubjects[$i]);
+        }
+
+        
+
+        return view('secondary.teachers.formteacher', compact('formClass', 'arrayOfSubjectId'));
+    }
+
+    public function confirmSubjectRecordEntered(Request $request)
+    {
+        $classid = $request->classid;
+        $schooldata = Addpost::where('id', Auth::user()->schoolid)->first();
+        $term = $schooldata->term;
+        $schoolsession = $schooldata->schoolsession;
+
+        $checkSubjects = Addsubject_sec::where('classid', $classid)->get();
+
+        $eachsubjectconfirm = ConfirmSubjectRecordEntered::where(['session'=>$schoolsession, 'term'=>$term, 'classid'=>$classid])->get();
+
+        if ($checkSubjects->count() != $eachsubjectconfirm->count()) {
+            return back()->with('error', 'Student marks for each subject not fully entered');
+        }
+
+
+
+        $checkConfirm = ResultReadySubject::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession])->get();
+
+        if ($checkConfirm->count() > 0) {
+            return back()->with('error', 'Process already done');
+        }
+
+
+
+        $addconfirmation = new ResultReadySubject();
+        $addconfirmation->schoolid = Auth::user()->schoolid;
+        $addconfirmation->classid = $classid;
+        $addconfirmation->term = $term;
+        $addconfirmation->session = $schoolsession;
+        $addconfirmation->save();
+
+        return back()->with('success', 'process was successfull');
+        
+    }
+}

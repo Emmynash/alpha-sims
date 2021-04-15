@@ -1,0 +1,100 @@
+#printresult{
+    /* border: 1px solid red; */
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+table {
+    border-collapse: collapse;
+  }
+
+tr th{
+    font-size: 11px;
+    font-family: 'Roboto Slab', serif;
+}
+
+tr, td{
+    font-size: 11px;
+}
+
+#passport{
+    background-color: #40babd;
+    color: #fff;
+    -webkit-print-color-adjust: exact; 
+}
+
+#passport1{
+    border: 1px solid black;
+    color: #000;
+    -webkit-print-color-adjust: exact; 
+}
+
+#gradestable td{
+    font-size: 9px;
+}
+
+#gradestableratings td{
+    font-size: 7px;
+}
+
+#resulttable{
+    background-color: #40babd;
+    color: #fff;
+    -webkit-print-color-adjust: exact; 
+}
+
+@media print{
+    #printresult{
+        border: 5px solid blue;
+        
+    }
+
+    #textText{
+        color: red;
+        background-color: blue;
+    }
+/* 
+    th{
+        background-color: blue;
+    } */
+
+    table, th, td {
+        border: 1px solid black;
+
+    }
+
+    .thdesignhh{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* td{
+        border: 1px solid white; 
+    } */
+
+    table {
+        border-collapse: collapse;
+      }
+
+    #passport{
+        background-color: #40babd;
+        color: #fff;
+        -webkit-print-color-adjust: exact; 
+    }
+
+    /* #passport1{
+        background-color: #113f7a;
+        color: #fff;
+        -webkit-print-color-adjust: exact; 
+    } */
+
+    #resulttable{
+        background-color: #40babd;
+        color: #fff;
+        -webkit-print-color-adjust: exact; 
+    }
+
+}

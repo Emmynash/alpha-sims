@@ -1,0 +1,14 @@
+sparkpay.json
+sparpayapi
+sparpayapi.pub
+
+.env
+.env.local
+/vendor
+
+/vendor
+/.idea
+Homestead.json
+Homestead.yaml
+.env
+.phpunit.result.cache 
