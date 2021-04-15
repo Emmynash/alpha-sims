@@ -389,6 +389,6 @@ Route::POST('/pay_sub_transfer', ['uses' => 'Subscription_sec@pay_sub_transfer',
 
 //payment routes
 Route::post('/pay', 'PaymentController@redirectToGateway')->name('pay');
-Route::get('/payment/callback', 'PaymentController@handleGatewayCallback');
+Route::post('/payment/callback', 'PaymentController@handleGatewayCallback');
 
 
