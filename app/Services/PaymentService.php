@@ -26,7 +26,7 @@ class PaymentService{
                   'paymentcode'=>"1", //1 school fee payment
                   'systemno' =>Auth::user()->id,
                   'schoolid' => Auth::user()->schoolid,
-                  'session' => $scholdetails->schoolsession
+                  'session' => $scholdetails->schoolsession,
               ]
             ];
             $fields_string = http_build_query($fields);

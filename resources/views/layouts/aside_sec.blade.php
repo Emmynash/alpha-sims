@@ -266,6 +266,12 @@
               <p>Fee Payment</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('payment_history') }}" class="nav-link">
+              <i class="fas fa-wallet nav-icon"></i>
+              <p>Transactions</p>
+            </a>
+          </li>
           @endif
 
           @if (Auth::user()->role == "Admin")

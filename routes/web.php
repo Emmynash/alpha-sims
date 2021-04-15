@@ -252,6 +252,7 @@ Route::group(['prefix'=>'pay', 'middleware' => 'roles'], function(){
     Route::get('/payment_details', ['uses' => 'PaymentDetailsController@index','roles' => ['Admin']])->name('payment_details');
     Route::post('/add_details', ['uses' => 'PaymentDetailsController@addDetails','roles' => ['Admin']])->name('add_details');
     Route::post('/make_payment', ['uses' => 'PaymentDetailsController@makePayment','roles' => ['Student']])->name('make_payment');
+    Route::get('/payment_history', ['uses' => 'StudentController_sec@paymentHistory','roles' => ['Student']])->name('payment_history');
 });
 
 

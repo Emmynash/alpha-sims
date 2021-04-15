@@ -12,6 +12,7 @@ use App\Addsection_sec;
 use App\Addclub_sec;
 use App\Addpost;
 use App\AmountTable;
+use App\FeesInvoice;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -230,5 +231,16 @@ class StudentController_sec extends Controller
                     ->select('amount_tables.*', 'payment_categories.categoryname')->sum('amount');
 
         return view('secondary.student.fees', compact('schoolData', 'sumAmount'));
+    }
+
+    public function paymentHistory()
+    {
+
+        $feeInvoices = FeesInvoice::
+                    join('classlist_secs', 'classlist_secs.id','=','fees_invoices.classid')
+                    ->select('fees_invoices.*', 'classlist_secs.classname')
+                    ->where(['system_id'=>Auth::user()->id])->get();
+
+        return view('secondary.student.transaction', compact('feeInvoices'));
     }
 }
