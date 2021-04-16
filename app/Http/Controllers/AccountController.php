@@ -13,6 +13,7 @@ use App\RequestModelAccount;
 use App\OrderInvoiceModel;
 use Carbon\Carbon;
 use App\InvoicesInventory;
+use App\TransactionRecord;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 
@@ -144,7 +145,9 @@ class AccountController extends Controller
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.accounting.summary', compact('schooldetails'));
+        $transactionHistory = TransactionRecord::where('school_id', Auth::user()->schoolid)->get();
+
+        return view('secondary.accounting.summary', compact('schooldetails', 'transactionHistory'));
     }
 
     public function invoices()

@@ -126,25 +126,49 @@
               <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                   <thead>
+
+                    {{-- $table->integer('system_id');
+                    $table->integer('transaction_type');
+                    $table->integer('term');
+                    $table->string('session');
+                    $table->text('purpose');
+                    $table->bigInteger('amount');
+                    $table->integer('school_id');
+                    $table->string('status'); --}}
+
                     <tr>
-                      <th>Code</th>
-                      <th>class</th>
-                      <th>Number of student</th>
-                      <th>Action</th>
+                      <th>#</th>
+                      <th>Transaction Type</th>
+                      <th>Term</th>
+                      <th>Session</th>
+                      <th>Purpose</th>
+                      <th>Amount</th>
+                      <th>Status</th>
                     </tr>
+                    
                   </thead>
                   <tbody>
-                    {{-- @if (count($classesAll) > 0)
-                      @foreach ($classesAll as $classesall)
+                    @if (count($transactionHistory) > 0)
+                    @php $count = method_exists($transactionHistory, 'links') ? 1 : 0; @endphp
+                    @foreach ($transactionHistory as $item)
+                    @php $count = method_exists($transactionHistory, 'links') ? ($transactionHistory ->currentpage()-1) * $transactionHistory ->perpage() + $loop->index + 1 : $count + 1; @endphp
                         <tr>
-                          <td>{{$classesall->id}}</td>
-                          <td>{{$classesall->classname}}</td>
-                          <td>{{$classesall->getClassCount($classesall->id)}}</td>
-                  
-                          <td><button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editclassname"><i class="fas fa-eye"></i></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname{{$classesall->id}}"><i class="fas fa-edit"></i></button></td>
+                          <td>{{$count}}</td>
+                          <td>
+                            @if ($item->transaction_type == 1)
+                              Deposit
+                            @else
+                              Withdrawal
+                            @endif
+                          </td>
+                          <td>{{$item->session}}</td>
+                          <td>{{$item->purpose}}</td>
+                          <td>{{$item->amount}}</td>
+                          <td>{{$item->status}}</td>
+                          <td></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname"><i class="fas fa-eye"></i></button></td>
                         </tr>
                       @endforeach
-                    @endif --}}
+                    @endif
                   </tbody>
                 </table>
               </div>
