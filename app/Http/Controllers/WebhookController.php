@@ -13,45 +13,50 @@ class WebhookController extends Controller
     {
 
 
-        if ((strtoupper($_SERVER['REQUEST_METHOD']) != 'POST' ) || !array_key_exists('x-paystack-signature', $_SERVER) ){
-            exit();
-        }
-
-        $paymentDetails = $request;
-
-        $paymentDetails = PaymentDetails::where("schoolid", $schoolid = $paymentDetails['data']['metadata']['schoolid'])->first();
-
-        $input = @file_get_contents("php://input");
-        define('PAYSTACK_SECRET_KEY', $paymentDetails->paystack_sk);
-
-        if($_SERVER['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $input, PAYSTACK_SECRET_KEY)) exit();
-
-        Log::debug($request);
-
-        
-
-        $paymentcode = $paymentDetails['data']['metadata']['paymentcode'];
-
-        if ($paymentcode == "1") {
+        try {
+            if ((strtoupper($_SERVER['REQUEST_METHOD']) != 'POST' ) || !array_key_exists('x-paystack-signature', $_SERVER) ){
+                exit();
+            }
+    
+            $paymentDetails = $request;
+    
+            $paymentDetails = PaymentDetails::where("schoolid", $paymentDetails['data']['metadata']['schoolid'])->first();
+    
+            $input = @file_get_contents("php://input");
+            define('PAYSTACK_SECRET_KEY', $paymentDetails->paystack_sk);
+    
+            if($_SERVER['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $input, PAYSTACK_SECRET_KEY)) exit();
+    
+            Log::debug($request);
+    
             
-            $schoolid = $paymentDetails['data']['metadata']['schoolid'];
-
-            $systemno = $paymentDetails['data']['metadata']['systemno'];
     
-            $schoolid = $paymentDetails['data']['metadata']['schoolid'];
-
-            $session = $paymentDetails['data']['metadata']['session'];
+            $paymentcode = $paymentDetails['data']['metadata']['paymentcode'];
     
-            $amount = $paymentDetails['data']['amount']/100;
+            if ($paymentcode == "1") {
+                
+                $schoolid = $paymentDetails['data']['metadata']['schoolid'];
     
-            $ref = $paymentDetails['data']['reference'];
-
-
-            $updatePayment = FeesInvoice::where(['schoolid'=>$schoolid, 'session'=>$session, 'system_id'=>$systemno])->first();
-
-            $updatePayment->status = 1;
-            $updatePayment->save();
-
+                $systemno = $paymentDetails['data']['metadata']['systemno'];
+        
+                $schoolid = $paymentDetails['data']['metadata']['schoolid'];
+    
+                $session = $paymentDetails['data']['metadata']['session'];
+        
+                $amount = $paymentDetails['data']['amount']/100;
+        
+                $ref = $paymentDetails['data']['reference'];
+    
+    
+                $updatePayment = FeesInvoice::where(['schoolid'=>$schoolid, 'session'=>$session, 'system_id'=>$systemno])->first();
+    
+                $updatePayment->status = 1;
+                $updatePayment->save();
+    
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            Log::debug($th);
         }
     }
 }
