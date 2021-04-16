@@ -12,11 +12,13 @@ class WebhookController extends Controller
     public function handle(Request $request)
     {
 
+        Log::info($request->server());
+
 
         try {
-            // if ((strtoupper($_SERVER['REQUEST_METHOD']) != 'POST' ) || !array_key_exists('x-paystack-signature', $_SERVER) ){
-            //     exit();
-            // }
+            if ((strtoupper($request->server()['REQUEST_METHOD']) != 'POST' ) || !array_key_exists('x-paystack-signature', $_SERVER) ){
+                exit();
+            }
     
             $paymentDetails = $request;
     

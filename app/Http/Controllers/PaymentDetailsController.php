@@ -63,6 +63,8 @@ class PaymentDetailsController extends Controller
     public function makePayment(Request $request, PaymentService $paymentservice)
     {
 
+        // return $request->server();
+
         //************************************************************************ 
 
         //payment reason code
