@@ -24,7 +24,7 @@ class WebhookController extends Controller
     
             $sk_key = PaymentDetails::where("schoolid", $paymentDetails['data']['metadata']['schoolid'])->first();
     
-            $input = $request->input();
+            $input = $request->getContent();;
             define('PAYSTACK_SECRET_KEY', $sk_key->paystack_sk);
             // $request['PAYSTACK_SECRET_KEY'] = $sk_key->paystack_sk;
     
