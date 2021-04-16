@@ -28,7 +28,7 @@ class WebhookController extends Controller
             define('PAYSTACK_SECRET_KEY', $sk_key->paystack_sk);
             // $request['PAYSTACK_SECRET_KEY'] = $sk_key->paystack_sk;
     
-            if($request->server()['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $request, PAYSTACK_SECRET_KEY)) exit();
+            if($request->server()['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $request->input(), PAYSTACK_SECRET_KEY)) exit();
     
             // Log::debug($request);
     
