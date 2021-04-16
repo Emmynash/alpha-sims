@@ -72,7 +72,7 @@ class WebhookController extends Controller
                     $createWalletAddMoney->total_amount = (int)$amount;
                     $createWalletAddMoney->save();
                 }else{
-                    $checkSchoolWalletExist->total_amount =+ (int)$amount;
+                    $checkSchoolWalletExist->total_amount += (int)$amount;
                     $checkSchoolWalletExist->save();
                 }
 
@@ -86,7 +86,7 @@ class WebhookController extends Controller
                     $createWalletAddMoney->session = $session;
                     $createWalletAddMoney->save();
                 }else{
-                    $checkSchoolWalletExistTerm->total_amount =+ (int)$amount;
+                    $checkSchoolWalletExistTerm->total_amount += (int)$amount;
                     $checkSchoolWalletExistTerm->save();
                 }
 
