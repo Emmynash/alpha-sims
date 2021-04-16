@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\AmountBalTableTotal;
 use App\AmountBalTableTerm;
+use GuzzleHttp\Client;
+use App\TransactionRecord;
 
 class WebhookController extends Controller
 {
@@ -23,6 +25,7 @@ class WebhookController extends Controller
             }
     
             $paymentDetails = $request;
+            
     
             $sk_key = PaymentDetails::where("schoolid", $paymentDetails['data']['metadata']['schoolid'])->first();
 
@@ -37,6 +40,80 @@ class WebhookController extends Controller
             if($request->server()['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $input, PAYSTACK_SECRET_KEY)) exit();
     
             // Log::debug($request);
+
+
+
+
+            $client = new Client();
+            $response = $client->request('GET', 'https://api.paystack.co/transaction/verify/'.$paymentDetails['data']['reference'], [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer '.env('PAYSTACK_SK_KEY') 
+                ],
+            ]);
+
+            
+
+            $responseMain = json_decode($response->getBody(), true);
+
+
+
+            if ($responseMain['data']['status'] == "success") {
+
+                $schoolid = $paymentDetails['data']['metadata']['schoolid'];
+    
+                $systemno = $paymentDetails['data']['metadata']['systemno'];
+        
+                $schoolid = $paymentDetails['data']['metadata']['schoolid'];
+    
+                $session = $paymentDetails['data']['metadata']['session'];
+
+                $term = $paymentDetails['data']['metadata']['term'];
+        
+                $amount = $paymentDetails['data']['amount']/100;
+
+                $addHistory = new TransactionRecord();
+                $addHistory->transaction_type = 1;
+                $addHistory->term = $term;
+                $addHistory->session = $session;
+                $addHistory->purpose = "Fee Payment";
+                $addHistory->amount = $amount;
+                $addHistory->school_id = $schoolid;
+                $addHistory->status = $responseMain['data']['status'];
+                $addHistory->system_id->save();
+
+
+                
+            }else{
+
+
+
+                $schoolid = $paymentDetails['data']['metadata']['schoolid'];
+    
+                $systemno = $paymentDetails['data']['metadata']['systemno'];
+        
+                $schoolid = $paymentDetails['data']['metadata']['schoolid'];
+    
+                $session = $paymentDetails['data']['metadata']['session'];
+
+                $term = $paymentDetails['data']['metadata']['term'];
+        
+                $amount = $paymentDetails['data']['amount']/100;
+
+                $addHistory = new TransactionRecord();
+                $addHistory->transaction_type = 1;
+                $addHistory->term = $term;
+                $addHistory->session = $session;
+                $addHistory->purpose = "Fee Payment";
+                $addHistory->amount = $amount;
+                $addHistory->school_id = $schoolid;
+                $addHistory->status = 'pending';
+                $addHistory->system_id->save();
+
+                exit();
+
+
+            }
     
             
     

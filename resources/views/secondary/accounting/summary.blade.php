@@ -60,8 +60,8 @@
                 <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
   
                 <div class="info-box-content">
-                  <span class="info-box-text">Total Recieved</span>
-                  <span class="info-box-number">41,410</span>
+                  <span class="info-box-text">This Term</span>
+                  <span class="info-box-number">{{ $schooldetails->getTotalBalTerm == null ? "0":$schooldetails->getTotalBalTerm->total_amount }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -90,7 +90,7 @@
                 <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
   
                 <div class="info-box-content">
-                  <span class="info-box-text">Pending Amount</span>
+                  <span class="info-box-text">This Term Expenditure</span>
                   <span class="info-box-number">2,000</span>
                 </div>
                 <!-- /.info-box-content -->

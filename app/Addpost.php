@@ -75,4 +75,10 @@ class Addpost extends Model
         return $this->hasOne('App\AmountBalTableTotal', 'school_id', 'id');
         
     }
+
+    public function getTotalBalTerm()
+    {
+        return $this->hasOne('App\AmountBalTableTerm', 'school_id', 'id');
+        
+    }
 }

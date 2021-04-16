@@ -45,7 +45,7 @@
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
   
                 <div class="info-box-content">
-                  <span class="info-box-text">Available Amount</span>
+                  <span class="info-box-text">Total Settled</span>
                   <span class="info-box-number">
                     1,000
                   </span>
@@ -60,7 +60,7 @@
                 <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
   
                 <div class="info-box-content">
-                  <span class="info-box-text">Total Recieved</span>
+                  <span class="info-box-text">Total Pending</span>
                   <span class="info-box-number">41,410</span>
                 </div>
                 <!-- /.info-box-content -->
