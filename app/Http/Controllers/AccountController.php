@@ -142,9 +142,9 @@ class AccountController extends Controller
 
     public function summary()
     {
-        
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.accounting.summary');
+        return view('secondary.accounting.summary', compact('schooldetails'));
     }
 
     public function invoices()

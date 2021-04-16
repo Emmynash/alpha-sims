@@ -47,7 +47,7 @@
                 <div class="info-box-content">
                   <span class="info-box-text">Available Amount</span>
                   <span class="info-box-number">
-                    1,000
+                    {{ $schooldetails->getTotalBal == null ? "0":$schooldetails->getTotalBal->total_amount }}
                   </span>
                 </div>
                 <!-- /.info-box-content -->

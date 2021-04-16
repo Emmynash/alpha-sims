@@ -70,9 +70,9 @@ class Addpost extends Model
         return count($availableItems);
     }
 
-    public function getPaymentDetails()
+    public function getTotalBal()
     {
-        return $this->hasOne(PaymentDetails::class, 'schoolid', 'id');
+        return $this->hasOne('App\AmountBalTableTotal', 'school_id', 'id');
         
     }
 }
