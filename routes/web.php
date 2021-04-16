@@ -391,5 +391,6 @@ Route::POST('/pay_sub_transfer', ['uses' => 'Subscription_sec@pay_sub_transfer',
 Route::post('/pay', 'PaymentController@redirectToGateway')->name('pay');
 Route::post('/payment/callback', 'PaymentController@handleGatewayCallback');
 // Route::webHooks();
+Route::post('webhook', 'WebhookController@handle');
 
 
