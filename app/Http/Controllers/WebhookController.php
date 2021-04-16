@@ -16,9 +16,9 @@ class WebhookController extends Controller
 
 
         try {
-            // if ((strtoupper($request->server()['REQUEST_METHOD']) != 'POST' ) || !array_key_exists('x-paystack-signature', $request->server()) ){
-            //     exit();
-            // }
+            if ((strtoupper($request->server()['REQUEST_METHOD']) != 'POST' )){
+                exit();
+            }
     
             $paymentDetails = $request;
     
