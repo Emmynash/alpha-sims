@@ -48,15 +48,13 @@ class WebhookController extends Controller
             $response = $client->request('GET', 'https://api.paystack.co/transaction/verify/'.$paymentDetails['data']['reference'], [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => 'Bearer '.env('PAYSTACK_SK_KEY') 
+                    'Authorization' => 'Bearer '.$sk_key->paystack_sk 
                 ],
             ]);
 
             
 
             $responseMain = json_decode($response->getBody(), true);
-
-
 
             if ($responseMain['data']['status'] == "success") {
 
@@ -81,12 +79,8 @@ class WebhookController extends Controller
                 $addHistory->school_id = $schoolid;
                 $addHistory->status = $responseMain['data']['status'];
                 $addHistory->system_id->save();
-
-
                 
             }else{
-
-
 
                 $schoolid = $paymentDetails['data']['metadata']['schoolid'];
     
@@ -111,7 +105,6 @@ class WebhookController extends Controller
                 $addHistory->system_id->save();
 
                 exit();
-
 
             }
     
