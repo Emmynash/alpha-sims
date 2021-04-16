@@ -77,6 +77,7 @@ class WebhookController extends Controller
                 $addHistory->purpose = "Fee Payment";
                 $addHistory->amount = $amount;
                 $addHistory->school_id = $schoolid;
+                $addHistory->system_id = $systemno;
                 $addHistory->status = $responseMain['data']['status'];
                 $addHistory->save();
                 
@@ -101,6 +102,7 @@ class WebhookController extends Controller
                 $addHistory->purpose = "Fee Payment";
                 $addHistory->amount = $amount;
                 $addHistory->school_id = $schoolid;
+                $addHistory->system_id = $systemno;
                 $addHistory->status = 'pending';
                 $addHistory->save();
 
