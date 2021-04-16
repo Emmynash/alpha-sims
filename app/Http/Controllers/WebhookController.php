@@ -16,16 +16,17 @@ class WebhookController extends Controller
 
 
         try {
-            if ((strtoupper($request->server()['REQUEST_METHOD']) != 'POST' ) || !array_key_exists('x-paystack-signature', $_SERVER)){
+            if ((strtoupper($request->server()['REQUEST_METHOD']) != 'POST' )){
                 exit();
             }
     
             $paymentDetails = $request;
     
-            // $sk_key = PaymentDetails::where("schoolid", $paymentDetails['data']['metadata']['schoolid'])->first();
+            $sk_key = PaymentDetails::where("schoolid", $paymentDetails['data']['metadata']['schoolid'])->first();
     
             // $input = @file_get_contents("php://input");
             // define('PAYSTACK_SECRET_KEY', $sk_key->paystack_sk);
+            $request['PAYSTACK_SECRET_KEY'] = $sk_key->paystack_sk;
     
             // if($request->server()['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $input, PAYSTACK_SECRET_KEY)) exit();
     
