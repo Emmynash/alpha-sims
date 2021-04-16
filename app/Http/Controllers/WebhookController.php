@@ -14,7 +14,7 @@ class WebhookController extends Controller
 
 
         try {
-            if ((strtoupper($request->method()) != 'POST' ) || !array_key_exists('x-paystack-signature', $request->input()) ){
+            if ((strtoupper($request()->server['REQUEST_METHOD']) != 'POST' ) || !array_key_exists('x-paystack-signature', $request()->server) ){
                 exit();
             }
     
@@ -25,7 +25,7 @@ class WebhookController extends Controller
             $input = @file_get_contents("php://input");
             define('PAYSTACK_SECRET_KEY', $paymentDetails->paystack_sk);
     
-            if($request['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $input, PAYSTACK_SECRET_KEY)) exit();
+            if($request()->server['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $input, PAYSTACK_SECRET_KEY)) exit();
     
             Log::debug($request);
     
