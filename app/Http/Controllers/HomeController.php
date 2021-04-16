@@ -21,6 +21,7 @@ use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -42,6 +43,9 @@ class HomeController extends Controller
     public function index()
     {
 
+        Log::info('This is some useful information.');
+
+        
         if (Auth::user()->role == "SuperAdmin") {
             return redirect('/superadmin');
         }

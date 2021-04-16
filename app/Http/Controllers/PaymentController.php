@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Paystack;
 use App\SubHistory;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -35,13 +36,17 @@ class PaymentController extends Controller
     {
         // $paymentDetails = Paystack::getPaymentData();
 
+        
+
         $input = $request->getContent();
 
         $paymentDetails = json_decode($input);
 
-            $updatePayment = FeesInvoice::find(10);
-            $updatePayment->status = 1;
-            $updatePayment->save();
+        Log::info($paymentDetails);
+
+            // $updatePayment = FeesInvoice::find(10);
+            // $updatePayment->status = 1;
+            // $updatePayment->save();
 
         // return $paymentDetails;
 
