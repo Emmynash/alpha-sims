@@ -27,6 +27,7 @@ class PaymentService{
                   'systemno' =>Auth::user()->id,
                   'schoolid' => Auth::user()->schoolid,
                   'session' => $scholdetails->schoolsession,
+                  'term' =>$scholdetails->term
               ]
             ];
             $fields_string = http_build_query($fields);

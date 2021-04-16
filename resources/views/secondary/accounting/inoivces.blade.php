@@ -103,53 +103,94 @@
         </div>
 
 
-        <div class="card" style="height: 200px; border-top: 2px solid #0B887C;">
+        <div class="card" style="border-top: 2px solid #0B887C;">
 
                   <!-- /.row -->
         <div class="row">
           <div class="col-12">
+
+
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Transactions</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
-                </div>
+                <h3 class="card-title">Invoices List</h3>
               </div>
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
                   <thead>
-                    <tr>
-                      <th>Code</th>
-                      <th>class</th>
-                      <th>Number of student</th>
-                      <th>Action</th>
-                    </tr>
+                  <tr>
+                    <th>Serial No.</th>
+                    <th>Name</th>
+                    <th>Invoice Number</th>
+                    <th>Amount</th>
+                    <th>Term</th>
+                    <th>Session</th>
+                    <th>Class</th>
+                    <th>Status</th>
+                  </tr>
                   </thead>
                   <tbody>
-                    {{-- @if (count($classesAll) > 0)
-                      @foreach ($classesAll as $classesall)
+
+                    @if ($feeInvoices->count() < 1)
+                      <tr>
+                        <td>---</td>
+                        <td>---</td>
+                        <td>---</td>
+                        <td>---</td>
+                        <td>---</td>
+                        <td>---</td>
+                        <td>---</td>
+                        <td>--</td>
+                      </tr>
+  
+                    @else
+                    @php $count = method_exists($feeInvoices, 'links') ? 1 : 0; @endphp
+                      @foreach ($feeInvoices as $item)
+                      @php $count = method_exists($feeInvoices, 'links') ? ($feeInvoices ->currentpage()-1) * $feeInvoices ->perpage() + $loop->index + 1 : $count + 1; @endphp
+
                         <tr>
-                          <td>{{$classesall->id}}</td>
-                          <td>{{$classesall->classname}}</td>
-                          <td>{{$classesall->getClassCount($classesall->id)}}</td>
-                  
-                          <td><button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editclassname"><i class="fas fa-eye"></i></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname{{$classesall->id}}"><i class="fas fa-edit"></i></button></td>
+                          <td>{{ $count }}</td>
+                          <td>{{ $item->firstname }} {{ $item->middlename }} {{ $item->lastname }}</td>
+                          <td>{{ $item->invoice_number }}</td>
+                          <td>{{ $item->amount }}</td>
+                          <td>{{ $item->term }}</td>
+                          <td>{{ $item->session }}</td>
+                          <td>X</td>
+                          <td>
+                            @if ($item->status == 0)
+                            <button class="btn btn-sm btn-success"><i class="fa fa-cancel"></i></button>
+                            @else
+                                <button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
+                            @endif
+                          </td>
                         </tr>
+                          
                       @endforeach
-                    @endif --}}
+                        
+                    @endif
+
+                  
+
                   </tbody>
+                  <tfoot>
+                  <tr>
+                    <th>Serial No.</th>
+                    <th>Name</th>
+                    <th>Invoice Number</th>
+                    <th>Amount</th>
+                    <th>Term</th>
+                    <th>Session</th>
+                    <th>Class</th>
+                    <th>Status</th>
+                  </tr>
+                  </tfoot>
                 </table>
               </div>
               <!-- /.card-body -->
             </div>
+
+
+
             <!-- /.card -->
           </div>
         </div>
@@ -179,10 +220,48 @@
   </aside>
   <!-- /.control-sidebar -->
 
-  <script>
-      function scrollocation(){
-        document.getElementById('invoicelistscroll').className = "nav-link active"
-      }
-  </script>
-
 @endsection
+
+@push('custom-scripts')
+
+<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset("plugins/datatables-bs4/js/dataTables.bootstrap4.min.js") }}"></script>
+<script src="{{ asset("plugins/datatables-responsive/js/dataTables.responsive.min.js") }}"></script>
+
+<script>
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true,
+        "autoWidth": false,
+      });
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+
+    $(function() {
+
+      var TotalValue = 0;
+
+      $("tr #loop").each(function(index,value){
+        currentRow = parseFloat($(this).text());
+        TotalValue += currentRow
+      });
+
+      document.getElementById('total').innerHTML = "₦"+TotalValue;
+
+    });
+
+    function scrollocation(){
+        document.getElementById('invoicelistscroll').className = "nav-link active"
+    }
+
+  </script>
+    
+@endpush

@@ -6,6 +6,8 @@ use App\FeesInvoice;
 use App\PaymentDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\AmountBalTableTotal;
+use App\AmountBalTableTerm;
 
 class WebhookController extends Controller
 {
@@ -23,6 +25,10 @@ class WebhookController extends Controller
             $paymentDetails = $request;
     
             $sk_key = PaymentDetails::where("schoolid", $paymentDetails['data']['metadata']['schoolid'])->first();
+
+            if ($sk_key == null) {
+                exit();
+            }
     
             $input = $request->getContent();;
             define('PAYSTACK_SECRET_KEY', $sk_key->paystack_sk);
@@ -45,6 +51,8 @@ class WebhookController extends Controller
                 $schoolid = $paymentDetails['data']['metadata']['schoolid'];
     
                 $session = $paymentDetails['data']['metadata']['session'];
+
+                $term = $paymentDetails['data']['metadata']['term'];
         
                 $amount = $paymentDetails['data']['amount']/100;
         
@@ -55,6 +63,34 @@ class WebhookController extends Controller
     
                 $updatePayment->status = 1;
                 $updatePayment->save();
+
+                $checkSchoolWalletExist = AmountBalTableTotal::where('school_id', $schoolid)->first();
+
+                if ($checkSchoolWalletExist == NULL) {
+                    $createWalletAddMoney = new AmountBalTableTotal();
+                    $createWalletAddMoney->school_id = (int)$schoolid;
+                    $createWalletAddMoney->total_amount = (int)$amount;
+                    $createWalletAddMoney->save();
+                }else{
+                    $checkSchoolWalletExist->total_amount =+ (int)$amount;
+                    $checkSchoolWalletExist->save();
+                }
+
+                $checkSchoolWalletExistTerm = AmountBalTableTerm::where(['school_id'=> $schoolid, 'term'=>$term, 'session'=>$session])->first();
+
+                if ($checkSchoolWalletExist == NULL) {
+                    $createWalletAddMoney = new AmountBalTableTerm();
+                    $createWalletAddMoney->school_id = (int)$schoolid;
+                    $createWalletAddMoney->total_amount = (int)$amount;
+                    $createWalletAddMoney->term = (int)$term;
+                    $createWalletAddMoney->session = $session;
+                    $createWalletAddMoney->save();
+                }else{
+                    $checkSchoolWalletExistTerm->total_amount =+ (int)$amount;
+                    $checkSchoolWalletExistTerm->save();
+                }
+
+
     
             }
         } catch (\Throwable $th) {

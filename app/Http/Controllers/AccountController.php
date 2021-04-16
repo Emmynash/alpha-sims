@@ -7,6 +7,7 @@ use App\Addstudent_sec;
 use Illuminate\Http\Request;
 use App\PaymentCategory;
 use App\AmountTable;
+use App\FeesInvoice;
 use App\InventoryModel;
 use App\RequestModelAccount;
 use App\OrderInvoiceModel;
@@ -141,12 +142,22 @@ class AccountController extends Controller
 
     public function summary()
     {
+        
+
         return view('secondary.accounting.summary');
     }
 
     public function invoices()
     {
-        return view('secondary.accounting.inoivces');
+        // $feeInvoices = FeesInvoice::where('schoolid', Auth::user()->schoolid)->get();
+
+        $feeInvoices = FeesInvoice::
+                    join('classlist_secs', 'classlist_secs.id','=','fees_invoices.classid')
+                    ->join('users', 'users.id','=','fees_invoices.system_id')
+                    ->select('fees_invoices.*', 'classlist_secs.classname', 'users.firstname', 'users.middlename', 'users.lastname')
+                    ->where(['fees_invoices.schoolid'=>Auth::user()->schoolid])->get();
+
+        return view('secondary.accounting.inoivces', compact('feeInvoices'));
     }
 
     public function orderRequest()
