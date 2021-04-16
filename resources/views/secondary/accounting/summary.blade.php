@@ -161,11 +161,13 @@
                               Withdrawal
                             @endif
                           </td>
+                          <td>{{$item->term}}</td>
                           <td>{{$item->session}}</td>
                           <td>{{$item->purpose}}</td>
                           <td>{{$item->amount}}</td>
                           <td>{{$item->status}}</td>
-                          <td></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname"><i class="fas fa-eye"></i></button></td>
+                          {{-- <td></td> --}}
+                          {{-- <td></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname"><i class="fas fa-eye"></i></button></td> --}}
                         </tr>
                       @endforeach
                     @endif
