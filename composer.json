@@ -18,7 +18,6 @@
         "laravel/ui": "^3.0",
         "nesbot/carbon": "^2.31",
         "spatie/laravel-permission": "^3.13",
-        "spatie/laravel-webhook-client": "^2.7",
         "unicodeveloper/laravel-paystack": "^1.0"
     },
     "require-dev": {
