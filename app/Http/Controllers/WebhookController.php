@@ -22,10 +22,10 @@ class WebhookController extends Controller
     
             $paymentDetails = $request;
     
-            PaymentDetails::where("schoolid", $paymentDetails['data']['metadata']['schoolid'])->first();
+            $sk_key = PaymentDetails::where("schoolid", $paymentDetails['data']['metadata']['schoolid'])->first();
     
             $input = @file_get_contents("php://input");
-            define('PAYSTACK_SECRET_KEY', $paymentDetails->paystack_sk);
+            define('PAYSTACK_SECRET_KEY', $sk_key->paystack_sk);
     
             if($request->server()['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $input, PAYSTACK_SECRET_KEY)) exit();
     
