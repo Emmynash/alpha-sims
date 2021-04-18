@@ -80,9 +80,9 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/messages" class="nav-link">
+                <a href="/rolesmanage" class="nav-link">
                   <i class="nav-icon far fa-circle text-info"></i>
-                  <p>Messages</p>
+                  <p>Roles</p>
                 </a>
               </li>
               <li class="nav-item has-treeview">

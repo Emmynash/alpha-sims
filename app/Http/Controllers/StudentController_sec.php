@@ -171,6 +171,10 @@ class StudentController_sec extends Controller
         $schoolIdUpdate->role = "Student";
         $schoolIdUpdate->save();
 
+        $user = User::find($request->input('studentsystemnumber'));
+
+        $user->assignRole('Student');
+
         return back()->with('success', 'Student added successfully');
     }
 

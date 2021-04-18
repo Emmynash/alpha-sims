@@ -19,6 +19,8 @@ use App\Classlist_sec;
 use App\Events_sec;
 use Auth;
 use DB;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class SuperController extends Controller
 {
@@ -406,5 +408,79 @@ class SuperController extends Controller
         }
         
 
+    }
+
+    public function rolesmanage()
+    {
+
+        $user = User::find(11);
+
+        $user->assignRole('HeadOfSchool');
+
+        $permission = Permission::all();
+        $role = Role::all();
+
+        return view('super.rolesmanagement', compact('permission', 'role'));
+
+    }
+
+    public function addRolesAndPermission(Request $request)
+    {
+        $validatedData = $request->validate([
+            'rolename' => 'required',
+            'permissions' =>'required'
+        ]);
+
+        
+
+        $role = Role::findById($request->rolename);
+
+        // $role->givePermissionTo($request->permission[0]);
+
+        $permissions = $request->permissions;
+
+        for ($i=0; $i < count($permissions); $i++) { 
+
+            $role->givePermissionTo($permissions[$i]);
+        }
+
+        // $permission = Permission::create(['name' => $request->rolename]);
+
+        return back();
+
+        
+
+
+        return $request;
+    }
+
+    public function addMoresRoles(Request $request)
+    {
+        $validatedData = $request->validate([
+            'morerolesname' => 'required',
+        ]);
+
+        
+        try {
+            $roles = Role::create(['name'=>$request->morerolesname]);
+            return back();
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back();
+        }
+
+        
+        
+    }
+
+    public function addMorePermissions(Request $request) 
+    {
+        $validatedData = $request->validate([
+            'morepermissionsname' => 'required',
+        ]);
+
+        $permission = Permission::create(['name' => $request->morepermissionsname]);
+
+        return back();
     }
 }

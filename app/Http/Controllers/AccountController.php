@@ -11,11 +11,18 @@ use App\FeesInvoice;
 use App\InventoryModel;
 use App\RequestModelAccount;
 use App\OrderInvoiceModel;
-use Carbon\Carbon;
 use App\InvoicesInventory;
 use App\TransactionRecord;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\AmountBalTableTotal;
+
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
+
 
 class AccountController extends Controller
 {
@@ -48,6 +55,18 @@ class AccountController extends Controller
 
     public function addPaymentCategory(Request $request)
     {
+
+
+
+
+
+        $role = Role::create(['name' => 'writer']);
+
+
+
+
+
+
         $validatedData = $request->validate([
             'paymentcategoryform' => 'required'
         ]);
@@ -300,13 +319,64 @@ class AccountController extends Controller
         $addInvoiceitem->save();
 
     }
-
-
-
         return back();
 
+    }
+
+    public function request_response(Request $request)
+    {
+
+        $updateRequestStatus = RequestModelAccount::find($request->status);
 
 
+        if ($request->key == "accept" && $updateRequestStatus->status != "accept") {
 
+            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+            $amountSchoolWallet = AmountBalTableTotal::where('school_id', Auth::user()->schoolid)->first();
+
+            if ($amountSchoolWallet == null) {
+                return back()->with('error', 'not enough funds');
+            }
+
+            if ((int)$request->amount > (int)$amountSchoolWallet->total_amount) {
+                return back()->with('error', 'not enough funds');
+            }
+
+
+            $updateRequestStatus->seeenstatus = true;
+            $updateRequestStatus->status = $request->key;
+            $updateRequestStatus->dateaccepted = Carbon::now();
+            $updateRequestStatus->save();
+
+            $amountSchoolWallet->total_amount -=$request->amount;
+            $amountSchoolWallet->save();
+
+            $addHistory = new TransactionRecord();
+            $addHistory->transaction_type = 0;
+            $addHistory->term = $schooldetails->term;
+            $addHistory->session = $schooldetails->schoolsession;
+            $addHistory->purpose = "Request Accepted";
+            $addHistory->amount = $request->amount;
+            $addHistory->school_id = Auth::user()->schoolid;
+            $addHistory->system_id = Auth::user()->id;
+            $addHistory->status = 'success';
+            $addHistory->save();
+
+            return back();
+
+        }else{
+
+            $updateRequestStatus = RequestModelAccount::find($request->status);
+            $updateRequestStatus->seeenstatus = true;
+            $updateRequestStatus->status = $request->key;
+            $updateRequestStatus->dateaccepted = Carbon::now();
+            $updateRequestStatus->save();
+
+            return back()->with('success', 'process successful');
+        }
+
+        return back();
+        
     }
 }

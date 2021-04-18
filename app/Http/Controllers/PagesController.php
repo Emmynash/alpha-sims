@@ -15,6 +15,8 @@ use App\Addgrades_sec;
 use Auth;
 use Redirect;
 use Validator;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class PagesController extends Controller
 {
@@ -319,7 +321,12 @@ class PagesController extends Controller
     }
     
     public function manageStaff(){
-        return view('secondary.managestaff');
+
+        $role = Role::all();
+
+        
+        
+        return view('secondary.managestaff', compact('role'));
     }
 
     public function manageStaffRole(Request $request){
@@ -365,6 +372,25 @@ class PagesController extends Controller
             return response()->json(['errors'=>$validator->errors()->keys()]);
         }
 
+        $user = User::find($request->systemnumberrole);
+        $roles = Role::pluck('name')->toArray();
+        $user->hasRole($roles);
+
+
+
+        if ($user->hasRole($roles)) {
+            return response()->json(['notallow'=>'notallow']);
+        }
+
+        $userrole = User::find($request->systemnumberrole);
+        $userrole->assignRole($request->roleselect);
+
+        $updaterole = User::find($request->input('systemnumberrole'));
+        $updaterole->schoolid = Auth::user()->schoolid;
+        $updaterole->save();
+
+        return response()->json(['success'=>'success']);
+
         $checkstudentrole = User::where(['id'=>$request->input('systemnumberrole'), 'role'=>'Student', 'schoolid'=>Auth::user()->schoolid])->get();
 
         if (count($checkstudentrole) > 0) {
@@ -383,10 +409,7 @@ class PagesController extends Controller
             return response()->json(['notallow'=>'notallow']);
         }
 
-        $updaterole = User::find($request->input('systemnumberrole'));
-        $updaterole->schoolid = Auth::user()->schoolid;
-        $updaterole->role = $request->input('roleselect');
-        $updaterole->save();
+
 
         return response()->json(['success'=>'success']);
 

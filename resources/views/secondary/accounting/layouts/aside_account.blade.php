@@ -53,68 +53,19 @@
             </a>
           </li>
 
-          <li class="nav-item has-treeview">
-            <a id="summarylistscroll" href="{{ route('summary') }}" class="nav-link">
-              <i class="fas fa-coins nav-icon"></i>
-              <p>
-                Summary
-              </p>
-            </a>
-          </li>
+          
 
-            <li class="nav-item">
-              <a id="feesetup" href="{{ route('index_fees') }}" class="nav-link">
-                  <i class="fas fa-money-check nav-icon"></i>
-                <p>
-                  Fees Management
-                </p>
-              </a>
-            </li>
+
             
-            <li class="nav-item has-treeview">
-              <a id="invoicelistscroll" href="{{ route('invoices') }}" class="nav-link">
-                <i class="fas fa-file-invoice nav-icon"></i>
-                <p>
-                  Invoice Management
-                </p>
-              </a>
-            </li>
 
-            <li class="nav-item has-treeview">
-              <a id="requestlistscroll" href="{{ route('order_request') }}" class="nav-link">
-                <i class="fas fa-th-list nav-icon"></i>
-                <p>
-                  Requests
-                </p>
-              </a>
-            </li>
 
-            <li class="nav-item has-treeview">
-              <a id="requestlistscroll" href="{{ route('order_request') }}" class="nav-link">
-                <i class="fas fa-money-bill-wave-alt nav-icon"></i>
-                <p>
-                  Payment Record
-                </p>
-              </a>
-            </li>
 
-            <li class="nav-item has-treeview">
-              <a id="feecollection" href="{{ route('feecollection') }}" class="nav-link">
-                <i class="fas fa-hand-holding-usd nav-icon"></i>
-                <p>
-                  Fee Collection
-                </p>
-              </a>
-            </li>
 
-            <li class="nav-item has-treeview">
-              <a id="feecollection" href="{{ route('inventory') }}" class="nav-link">
-                <i class="fas fa-dolly-flatbed nav-icon"></i>
-                <p>
-                  Inventory
-                </p>
-              </a>
-            </li>
+
+
+
+
+
 
             <li class="nav-item has-treeview">
               <a id="feecollection" href="{{ route('mail_main') }}" class="nav-link">

@@ -20,6 +20,8 @@ use App\ConfirmSubjectRecordEntered;
 use App\ResultReadySubject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 
 class TeachersController_sec extends Controller
@@ -184,6 +186,10 @@ class TeachersController_sec extends Controller
             $updateRole->schoolid = Auth::user()->schoolid;
             $updateRole->save();
 
+            $user = User::find($request->user_id);
+
+            $user->assignRole('Teacher');
+
         }
 
            $teacherSubjectCheck = $this->teacherSubjects->where(['user_id' => $request->user_id, "subject_id" => $request->subject_id])->get();
@@ -207,6 +213,10 @@ class TeachersController_sec extends Controller
                     $addTeacher->classid = (int)$getclassid->classid;
                     $addTeacher->usernamesystem=(int)$getTeacherRegNoMain[0]->id;
                     $addTeacher->save();
+
+                    $user = User::find($request->user_id);
+
+                    $user->assignRole('Teacher');
 
                     return response()->json(['done'=>'done']);
 

@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class HomeController extends Controller
 {
@@ -147,8 +149,10 @@ class HomeController extends Controller
                 
 
                 // return $daysarray;
+                $user = User::find(Auth::user()->id);
+                $user->hasRole('Teacher');
 
-                if (Auth::user()->role == "Teacher") {
+                if ($user->hasRole('Teacher')) {
 
                     $classidTeacher = $addteachers[0]['classid'];
 
@@ -190,7 +194,12 @@ class HomeController extends Controller
                     
                     return view('pages.teacher_dash')->with('studentDetails', $studentDetails);
 
-                } elseif(Auth::user()->role == "Student") {
+                } 
+
+                $user = User::find(Auth::user()->id);
+                $user->hasRole('Student');
+                
+                if($user->hasRole('Student')) {
 
                     $addstudentprocess = DB::table('addstudents')
                     ->join('users', 'users.id', '=', 'addstudents.usernamesystem')
@@ -244,7 +253,11 @@ class HomeController extends Controller
                     }
                     return view('pages.index_dash')->with('studentDetails', $studentDetails);
                 }
-                elseif(Auth::user()->role == "Supervisor"){
+
+                $user = User::find(Auth::user()->id);
+                $user->hasRole('Supervisor');
+
+                if($user->hasRole('Supervisor')){
                     
                    
                     
@@ -272,7 +285,10 @@ class HomeController extends Controller
                 
         }elseif($userschool[0]['schooltype'] == "Secondary"){
 
-            if (Auth::user()->role == "Student") {
+                $user = User::find(Auth::user()->id);
+                $user->hasRole('Student');
+
+            if ($user->hasRole('Student')) {
                 $schoolid = Auth::user()->schoolid;
 
                 $addstudentsec = DB::table('addstudent_secs')
@@ -370,8 +386,11 @@ class HomeController extends Controller
 
                 return view('secondary.student.student_dash')->with('mainStudentDetails', $mainStudentDetails);
             }
+
+                $user = User::find(Auth::user()->id);
+                $user->hasRole('Teacher');
             
-            if (Auth::user()->role == "Teacher") {
+            if ($user->hasRole('Teacher')) {
 
                 $schoolid = Auth::user()->schoolid;
 
@@ -417,8 +436,11 @@ class HomeController extends Controller
 
                 return view('secondary.teachers.teacher_dash',compact('getTeacherDetails', 'formTeacher', 'subjectTeacherOffer'));
             }
+
+                $user = User::find(Auth::user()->id);
+                $user->hasRole('Librarian');
             
-            if (Auth::user()->role == "Librarian") {
+            if ($user->hasRole('Librarian')) {
 
                 $addbook = DB::table('addbooks')->where('schoolid', Auth::user()->schoolid)->sum('quantity');
                 $available = DB::table('addbooks')->where('schoolid', Auth::user()->schoolid)->sum('available');
@@ -439,7 +461,10 @@ class HomeController extends Controller
                 return view('secondary.library_dash')->with('alldetails', $alldetails);
             }
 
-            if (Auth::user()->role == "Bursar") {
+                $user = User::find(Auth::user()->id);
+                $user->hasRole('Bursar');
+
+            if ($user->hasRole('Bursar')) {
                 
 
                 return view('secondary.accounting.dashboard');

@@ -17,7 +17,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "nesbot/carbon": "^2.31",
-        "spatie/laravel-permission": "^3.13",
+        "spatie/laravel-permission": "^4.0",
         "unicodeveloper/laravel-paystack": "^1.0"
     },
     "require-dev": {

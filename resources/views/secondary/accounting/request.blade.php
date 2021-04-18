@@ -1,9 +1,9 @@
-@extends('secondary.accounting.layouts.app_account')
+@extends('layouts.app_sec')
 
 
 @section('content')
 
-@include('secondary.accounting.layouts.aside_account')
+@include('layouts.aside_sec')
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -67,7 +67,7 @@
                       <th>Amount</th>
                       <th>Seen Status</th>
                       <th>Status</th>
-                      <th>dateAccepted or declined</th>
+                      <th>date accepted or declined</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -82,7 +82,68 @@
                           <td>{{$item->seeenstatus == 0 ? "Not seen":"Seen"}}</td>
                           <td>{{$item->status}}</td>
                           <td>{{$item->dateaccepted == "" ? "NAN":$item->dateaccepted}}</td>
-                          <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#requestreminder{{ $item->id }}"><i class="fas fa-user-clock"></i></button></td>
+                          <td>
+                            @if (Auth::user()->hasRole('HeadOfSchool'))
+                              {{-- <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#requestreminder{{ $item->id }}"><i class="fas fa-thumbs-up"></i></button> --}}
+                              <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#viewrequest{{ $item->id }}"><i class="fas fa-eye"></i></button>
+                            @else
+                              <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#requestreminder{{ $item->id }}"><i class="fas fa-user-clock"></i></button>
+                            @endif
+                            </td>
+
+                            {{-- head of school --}}
+
+                              <!-- The Modal -->
+                              <div class="modal" id="viewrequest{{ $item->id }}">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                  
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Request {{ Auth::user()->roles->pluck('name')[0] }}</h4>
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                      <div>
+                                        {{ $item->reasonforrequest }}
+
+                                        {{-- in review request --}}
+                                        <form action="{{ route('request_response') }}" method="post" id="inreview{{ $item->id }}"> 
+                                          @csrf
+                                          <input type="hidden" name="status" value="{{ $item->id }}" id="">
+                                          <input type="hidden" name="key" value="inreview">
+                                        </form>
+
+                                        {{-- approve request --}}
+                                        <form action="{{ route('request_response') }}" method="post" id="accept{{ $item->id }}"> 
+                                          @csrf
+                                          <input type="hidden" name="status" value="{{ $item->id }}" id="">
+                                          <input type="hidden" name="key" value="accept">
+                                          <input type="hidden" name="amount" value="{{ $item->amount }}" id="">
+                                        </form>
+
+                                        {{-- decline request --}}
+                                        <form action="{{ route('request_response') }}" method="post" id="declined{{ $item->id }}"> 
+                                          @csrf
+                                          <input type="hidden" name="status" value="{{ $item->id }}" id="">
+                                          <input type="hidden" name="key" value="declined">
+                                        </form>
+
+                                      </div>
+                                    </div>
+                                    
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                      <button type="submit" form="inreview{{ $item->id }}" class="btn btn-warning btn-sm">In Review</button>
+                                      <button type="submit" form="accept{{ $item->id }}" class="btn btn-success btn-sm">Approve</button>
+                                      <button type="submit" form="declined{{ $item->id }}" class="btn btn-danger btn-sm">Decline</button>
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                              </div>
 
 
                             <!-- The Modal -->

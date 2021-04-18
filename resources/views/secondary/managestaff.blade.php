@@ -91,9 +91,11 @@
                                 <button style="border: none; background: transparent; border-top: 1px solid rgb(206, 201, 201); border-bottom: 1px solid rgb(206, 201, 201); border-left: 1px solid rgb(206, 201, 201);" disabled><i class="fas fa-users"></i></button>
                                 <select name="roleselect" id="roleselect" class="form-control form-control-sm" style="border-radius: 0px;">
                                     <option value="">Select a role</option>
-                                    <option value="Librarian">Librarian</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Bursar">Bursar</option>
+                                    @foreach ($role as $item)
+                                      @if ($item->name != "Student")
+                                        <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                      @endif
+                                    @endforeach
                                 </select>
                             </div>
                         </form>

@@ -1,8 +1,8 @@
-@extends('secondary.accounting.layouts.app_account')
+@extends('layouts.app_sec')
 
 @section('content')
 
-@include('secondary.accounting.layouts.aside_account')
+@include('layouts.aside_sec')
 
 
   <!-- Content Wrapper. Contains page content -->
