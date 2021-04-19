@@ -127,6 +127,7 @@
               <th>Quantity</th>
               <th>Class</th>
               <th>Status</th>
+              <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -137,16 +138,18 @@
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
+                        <td></td>
                     </tr>
                 @else
 
                     @foreach ($schooldetails->getItemsInventody as $item)
-                        <tr data-toggle="modal" data-target="#bookoptions{{ $item->id }}">
+                        <tr>
                             <td>{{ $item->nameofitem }}</td>
                             <td>{{ number_format($item->amount) }}</td>
                             <td>{{ $item->quantity }}</td>
                             <td>{{ $schooldetails->getClassName($item->classid)->classname }}</td>
                             <td>{{ $item->quantity <1 ? "Unavailable":"Available" }}</td>
+                            <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#bookoptions{{ $item->id }}">View</button></td>
 
                                   <!-- The Modal -->
                             <div class="modal fade" id="bookoptions{{ $item->id }}">
@@ -219,6 +222,7 @@
                 <th>Quantity</th>
                 <th>Class</th>
                 <th>Status</th>
+                <th>Action</th>
             </tr>
             </tfoot>
           </table>
@@ -356,7 +360,12 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
-        <button class="btn btn-primary">Checkout</button>
+        <form action="{{ route('order_invoice_checkout') }}" method="post" id="checkoutinventory">
+          @csrf
+          <input type="hidden" name="invoiceid" value="{{ $itemforInventory == null ? "": $itemforInventory->id }}">
+          <input type="text" name="itemsamount" id="totalamountinvent">
+        </form>
+        <button type="submit" form="checkoutinventory" class="btn btn-primary">Checkout</button>
       </div>
     </div>
   </div>
@@ -417,6 +426,7 @@
       });
 
       document.getElementById('total').innerHTML = "₦"+TotalValue;
+      document.getElementById('totalamountinvent').value = TotalValue
 
     });
 

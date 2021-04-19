@@ -439,10 +439,12 @@ class SuperController extends Controller
 
         $permissions = $request->permissions;
 
-        for ($i=0; $i < count($permissions); $i++) { 
+        $role->givePermissionTo($permissions);
 
-            $role->givePermissionTo($permissions[$i]);
-        }
+        // for ($i=0; $i < count($permissions); $i++) { 
+
+        //     $role->givePermissionTo($permissions[$i]);
+        // }
 
         // $permission = Permission::create(['name' => $request->rolename]);
 
@@ -480,6 +482,20 @@ class SuperController extends Controller
         ]);
 
         $permission = Permission::create(['name' => $request->morepermissionsname]);
+
+        return back();
+    }
+
+    public function revokePermissionFromRole(Request $request)
+    {
+        $validatedData = $request->validate([
+            'rolename' => 'required',
+            'permissions' =>'required'
+        ]);
+
+        $role = Role::findById($request->rolename);
+        
+        $role->revokePermissionTo($request->permissions);
 
         return back();
     }

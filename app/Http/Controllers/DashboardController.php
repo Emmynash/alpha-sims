@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use Redirect;
 use Validator;
 use App\Services\MailServices;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DashboardController extends Controller
 {
@@ -143,14 +145,14 @@ class DashboardController extends Controller
 
         //update schoolId field
         $schoolIdUpdate = User::find($userId);
-        $schoolIdUpdate->schoolid = $getSchoolId[0]['id'];
+        $schoolIdUpdate->schoolid = $addschool->id;
         $schoolIdUpdate->role = "Admin";
         $schoolIdUpdate->save();
 
+        Auth::user()->assignRole('HeadOfSchool');
+
 
         $mailServices->sendMail($request, Auth::user()->email);
-
-
 
         return Redirect::back()->with('success', 'application submited successfully');
         
@@ -216,22 +218,7 @@ class DashboardController extends Controller
             'accounttype' => 'required',
             'content' => 'required',
         ]);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         
         // $url = 'https://www.google.com/recaptcha/api/siteverify';
         // $remoteip = $_SERVER['REMOTE_ADDR'];

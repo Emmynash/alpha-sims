@@ -12,18 +12,18 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Invoices</h1>
+            <h1 class="m-0 text-dark">Fee Invoices</h1>
 
                 <!--<i class="far fa-question-circle" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?" style="font-size: 25px;">-->
                 
                 <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Invoices"
-                data-content="View all classes in your school and the number of student in each class. You can change a class name incase of any mistake, however you have to be sure of what you are doing. Note: ensure classes are arranged in ascending order">Need help?</button>
+                data-content="View all fee invoices, settled, pending, etc">Need help?</button>
 
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Invoices</li>
+              <li class="breadcrumb-item active">Fee Invoices</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -42,12 +42,12 @@
         <div class="row">
             <div class="col-12 col-sm-6 col-md-3">
               <div class="info-box">
-                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-file-invoice-dollar"></i></span>
   
                 <div class="info-box-content">
                   <span class="info-box-text">Total Settled</span>
                   <span class="info-box-number">
-                    1,000
+                    {{ $getSettledInvoices->count() }}
                   </span>
                 </div>
                 <!-- /.info-box-content -->
@@ -57,11 +57,11 @@
             <!-- /.col -->
             <div class="col-12 col-sm-6 col-md-3">
               <div class="info-box mb-3">
-                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-file-invoice-dollar"></i></span>
   
                 <div class="info-box-content">
                   <span class="info-box-text">Total Pending</span>
-                  <span class="info-box-number">41,410</span>
+                  <span class="info-box-number">{{ $getPendingInvoices->count() }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -74,11 +74,11 @@
   
             <div class="col-12 col-sm-6 col-md-3">
               <div class="info-box mb-3">
-                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-file-invoice"></i></span>
   
                 <div class="info-box-content">
-                  <span class="info-box-text">Total Expenditure</span>
-                  <span class="info-box-number">760</span>
+                  <span class="info-box-text">Settled this Term</span>
+                  <span class="info-box-number">{{ $getSettledInvoicesThisTerm->count() }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -87,11 +87,11 @@
             <!-- /.col -->
             <div class="col-12 col-sm-6 col-md-3">
               <div class="info-box mb-3">
-                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+                <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-file-invoice"></i></span>
   
                 <div class="info-box-content">
-                  <span class="info-box-text">Pending Amount</span>
-                  <span class="info-box-number">2,000</span>
+                  <span class="info-box-text">Pending This term</span>
+                  <span class="info-box-number">{{ $getPendingInvoicesThisTerm->count() }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -155,10 +155,10 @@
                           <td>{{ $item->amount }}</td>
                           <td>{{ $item->term }}</td>
                           <td>{{ $item->session }}</td>
-                          <td>X</td>
+                          <td>{{ $item->classname }}</td>
                           <td>
                             @if ($item->status == 0)
-                            <button class="btn btn-sm btn-success"><i class="fa fa-cancel"></i></button>
+                            <button class="btn btn-sm btn-warning">Pending</button>
                             @else
                                 <button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
                             @endif

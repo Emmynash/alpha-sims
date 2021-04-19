@@ -53,7 +53,7 @@
                   <!-- Minimal red style -->
                   <div class="row">
                     <div class="col-sm-6">
-                      <p>Asign Role</p>
+                      <p>Give Permission</p>
                       <form action="{{ route('add_roles_and_permission') }}" method="post">
                         @csrf
                         <div class="form-group">
@@ -77,6 +77,33 @@
                         </div>
                         <div class="form-group">
                           <button class="btn btn-primary">Add</button>
+                        </div>
+                      </form>
+
+                      <p>Revoke Permission</p>
+                      <form action="{{ route('revoke_permission_role') }}" method="post">
+                        @csrf
+                        <div class="form-group">
+                          <label for="">Role Name</label>
+                          <select name="rolename" class="form-control" id="">
+                            <option value="">Select a Role</option>
+                            @foreach ($role as $item)
+                              <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                          </select>
+                          {{-- <input type="text" class="form-control" name="rolename" placeholder="enter role name"> --}}
+                        </div>
+  
+                        <div class="form-group">
+                          <label>Permissions</label>
+                          <select class="select2" name="permissions[]" multiple="multiple" data-placeholder="Select a Permission" style="width: 100%;">
+                            @foreach ($permission as $item)
+                              <option>{{ $item->name }}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <button class="btn btn-primary">Remove</button>
                         </div>
                       </form>
 

@@ -114,6 +114,7 @@
                                           @csrf
                                           <input type="hidden" name="status" value="{{ $item->id }}" id="">
                                           <input type="hidden" name="key" value="inreview">
+                                          <input type="hidden" name="amount" value="{{ $item->amountrequesting }}" id="">
                                         </form>
 
                                         {{-- approve request --}}
@@ -121,7 +122,7 @@
                                           @csrf
                                           <input type="hidden" name="status" value="{{ $item->id }}" id="">
                                           <input type="hidden" name="key" value="accept">
-                                          <input type="hidden" name="amount" value="{{ $item->amount }}" id="">
+                                          <input type="hidden" name="amount" value="{{ $item->amountrequesting }}" id="">
                                         </form>
 
                                         {{-- decline request --}}
@@ -129,6 +130,7 @@
                                           @csrf
                                           <input type="hidden" name="status" value="{{ $item->id }}" id="">
                                           <input type="hidden" name="key" value="declined">
+                                          <input type="hidden" name="amount" value="{{ $item->amountrequesting }}" id="">
                                         </form>
 
                                       </div>

@@ -151,6 +151,7 @@ Route::get('/superadmin', ['uses' => 'SuperController@index','roles' => ['SuperA
 Route::get('/order', ['uses' => 'SuperController@order','roles' => ['SuperAdmin']])->middleware('roles');
 Route::get('/manageadmin', ['uses' => 'SuperController@manageAdmin','roles' => ['SuperAdmin']])->middleware('roles');
 Route::POST('/add_roles_and_permission', ['uses' => 'SuperController@addRolesAndPermission','roles' => ['SuperAdmin']])->middleware('roles')->name('add_roles_and_permission');
+Route::POST('/revoke_permission_role', ['uses' => 'SuperController@revokePermissionFromRole','roles' => ['SuperAdmin']])->middleware('roles')->name('revoke_permission_role');
 Route::POST('/add_permission', ['uses' => 'SuperController@addMorePermissions','roles' => ['SuperAdmin']])->middleware('roles')->name('add_permission');
 Route::POST('/add_roles', ['uses' => 'SuperController@addMoresRoles','roles' => ['SuperAdmin']])->middleware('roles')->name('add_roles');
 Route::get('/rolesmanage', ['uses' => 'SuperController@rolesmanage','roles' => ['SuperAdmin']])->middleware('roles');
@@ -274,7 +275,8 @@ Route::group(['prefix' => 'sec'], function () {
          Route::post('/sendmoneyrequest', 'AccountController@sendMoneyRequest')->name('sendmoneyrequest');
          Route::get('/inventory', 'AccountController@inventory')->name('inventory')->middleware(['auth', 'can:access inventory']);
          Route::post('/inventory_add_item', 'AccountController@inventory_add_item')->name('inventory_add_item');
-         Route::post('/add_invoice_order/{id}', 'AccountController@addInvoiceOrder')->name('add_invoice_order');
+         Route::post('/add_invoice_order/{id}', 'AccountController@addInvoiceOrder')->name('add_invoice_order'); 
+         Route::post('/order_invoice_checkout', 'AccountController@order_invoice_checkout')->name('order_invoice_checkout');
 
 
 

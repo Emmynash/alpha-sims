@@ -16,8 +16,8 @@
 
                 <!--<i class="far fa-question-circle" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?" style="font-size: 25px;">-->
                 
-                <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Class lists"
-                data-content="View all classes in your school and the number of student in each class. You can change a class name incase of any mistake, however you have to be sure of what you are doing. Note: ensure classes are arranged in ascending order">Need help?</button>
+                <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Payment Setup"
+                data-content="Setup school fees categories and amount ">Need help?</button>
 
           </div><!-- /.col -->
           <div class="col-sm-6">
@@ -206,7 +206,9 @@
                                       <td>{{ $schooldetails->getCategoryName($item->payment_category_id)->categoryname }}</td>
                                       <td>{{ $schooldetails->getClassName($item->class_id)->classname }}</td>
                                       <td>{{ $item->amount }}</td>
-                                      <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editamountrecord{{ $item->id }}"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editclassname"><i class="fas fa-trash"></i></button></td>
+                                      <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editamountrecord{{ $item->id }}"><i class="fas fa-edit"></i></button> 
+                                        {{-- <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editclassname"><i class="fas fa-trash"></i></button> --}}
+                                      </td>
                                         <!-- The Modal -->
                                           <div class="modal fade" id="editamountrecord{{ $item->id }}">
                                               <div class="modal-dialog modal-sm">

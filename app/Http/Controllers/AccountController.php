@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Addpost;
 use App\Addstudent_sec;
+use App\AmountBalTableTerm;
 use Illuminate\Http\Request;
 use App\PaymentCategory;
 use App\AmountTable;
@@ -55,18 +56,6 @@ class AccountController extends Controller
 
     public function addPaymentCategory(Request $request)
     {
-
-
-
-
-
-        $role = Role::create(['name' => 'writer']);
-
-
-
-
-
-
         $validatedData = $request->validate([
             'paymentcategoryform' => 'required'
         ]);
@@ -164,14 +153,20 @@ class AccountController extends Controller
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        $transactionHistory = TransactionRecord::where('school_id', Auth::user()->schoolid)->get();
+        $transactionHistory = TransactionRecord::where('school_id', Auth::user()->schoolid)->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('secondary.accounting.summary', compact('schooldetails', 'transactionHistory'));
+        $sumTotalExpenditure = RequestModelAccount::where(['schoolid'=> Auth::user()->schoolid, 'status'=>'accept'])->sum('amountrequesting');
+
+        $sumTotalExpenditureTerm = RequestModelAccount::where(['schoolid'=> Auth::user()->schoolid, 'status'=>'accept', 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->sum('amountrequesting');
+
+        return view('secondary.accounting.summary', compact('schooldetails', 'transactionHistory', 'sumTotalExpenditure', 'sumTotalExpenditureTerm'));
     }
 
     public function invoices()
     {
         // $feeInvoices = FeesInvoice::where('schoolid', Auth::user()->schoolid)->get();
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
 
         $feeInvoices = FeesInvoice::
                     join('classlist_secs', 'classlist_secs.id','=','fees_invoices.classid')
@@ -179,7 +174,15 @@ class AccountController extends Controller
                     ->select('fees_invoices.*', 'classlist_secs.classname', 'users.firstname', 'users.middlename', 'users.lastname')
                     ->where(['fees_invoices.schoolid'=>Auth::user()->schoolid])->get();
 
-        return view('secondary.accounting.inoivces', compact('feeInvoices'));
+        $getSettledInvoices = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
+
+        $getSettledInvoicesThisTerm = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->get();
+
+        $getPendingInvoices = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>0])->get();
+
+        $getPendingInvoicesThisTerm = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>0, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->get();
+
+        return view('secondary.accounting.inoivces', compact('feeInvoices', 'getSettledInvoices', 'getPendingInvoices', 'getSettledInvoicesThisTerm', 'getPendingInvoicesThisTerm'));
     }
 
     public function orderRequest()
@@ -223,13 +226,19 @@ class AccountController extends Controller
             'reasonforrequest' => 'required'
         ]);
 
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+
         $addrequest = new RequestModelAccount();
         $addrequest->amountrequesting = $request->amountrequesting;
         $addrequest->reasonforrequest = $request->reasonforrequest;
         $addrequest->schoolid = (int)Auth::user()->schoolid;
         $addrequest->seeenstatus = false;
         $addrequest->status = "Unattended";
+        $addrequest->term = $schooldetails->term;
+        $addrequest->session = $schooldetails->schoolsession;
         $addrequest->dateaccepted = "";
+        
         $addrequest->sender = (int)Auth::user()->id;
         $addrequest->save();
 
@@ -326,6 +335,8 @@ class AccountController extends Controller
     public function request_response(Request $request)
     {
 
+        // return $request;
+
         $updateRequestStatus = RequestModelAccount::find($request->status);
 
 
@@ -349,15 +360,33 @@ class AccountController extends Controller
             $updateRequestStatus->dateaccepted = Carbon::now();
             $updateRequestStatus->save();
 
-            $amountSchoolWallet->total_amount -=$request->amount;
+            $amountSchoolWallet->total_amount -= (int)$request->amount;
             $amountSchoolWallet->save();
+
+
+            $amountSchoolWalletterm = AmountBalTableTerm::where(['school_id'=> Auth::user()->schoolid, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->first();
+
+            if ($amountSchoolWalletterm == NULL) {
+
+                $createWalletAddMoney = new AmountBalTableTerm();
+                $createWalletAddMoney->school_id = (int)$schooldetails->schoolsession;
+                $createWalletAddMoney->total_amount = (int)$request->amount;
+                $createWalletAddMoney->term = (int)$schooldetails->term;
+                $createWalletAddMoney->session = $schooldetails->schoolsession;
+                $createWalletAddMoney->save();
+                
+            }else{
+                $amountSchoolWalletterm->total_amount -= (int)$request->amount;
+                $amountSchoolWalletterm->save();
+            }
+
 
             $addHistory = new TransactionRecord();
             $addHistory->transaction_type = 0;
             $addHistory->term = $schooldetails->term;
             $addHistory->session = $schooldetails->schoolsession;
             $addHistory->purpose = "Request Accepted";
-            $addHistory->amount = $request->amount;
+            $addHistory->amount = (int)$request->amount;
             $addHistory->school_id = Auth::user()->schoolid;
             $addHistory->system_id = Auth::user()->id;
             $addHistory->status = 'success';
@@ -379,4 +408,84 @@ class AccountController extends Controller
         return back();
         
     }
+
+    public function order_invoice_checkout(Request $request)
+    {
+        $validatedData = $request->validate([
+            'invoiceid' => 'required',
+            'itemsamount' => 'required'
+        ]);
+
+        //InvoicesInventory
+        //TransactionRecord
+        //AmountBalTableTotal
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $updateInvoiceStatus = InvoicesInventory::find($request->invoiceid);
+        $updateInvoiceStatus->status = "Completed";
+        $updateInvoiceStatus->save();
+
+        $addHistory = new TransactionRecord();
+        $addHistory->transaction_type = 0;
+        $addHistory->term = $schooldetails->term;
+        $addHistory->session = $schooldetails->schoolsession;
+        $addHistory->purpose = "Inventory trans";
+        $addHistory->amount = $request->itemsamount;
+        $addHistory->school_id = Auth::user()->schoolid;
+        $addHistory->system_id = Auth::user()->id;
+        $addHistory->status = 'success';
+        $addHistory->save();
+
+        $updateWallet = AmountBalTableTotal::where('school_id', Auth::user()->schoolid)->first();
+
+
+        if ($updateWallet == NULL) {
+
+            $createWalletAddMoney = new AmountBalTableTotal();
+            $createWalletAddMoney->school_id = (int)Auth::user()->schoolid;
+            $createWalletAddMoney->total_amount = (int)$request->itemsamount;
+            $createWalletAddMoney->save();
+
+        }else{
+            $updateWallet->total_amount +=(int)$request->itemsamount;
+            $updateWallet->save();
+        }
+
+
+        $updateWalletterm = AmountBalTableTerm::where(['school_id'=> Auth::user()->schoolid, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->first();
+
+        if ($updateWalletterm == NULL) {
+
+            $createWalletAddMoney = new AmountBalTableTerm();
+            $createWalletAddMoney->school_id = (int)Auth::user()->schoolid;
+            $createWalletAddMoney->total_amount = (int)$request->itemsamount;
+            $createWalletAddMoney->term = (int)$schooldetails->term;
+            $createWalletAddMoney->session = $schooldetails->schoolsession;
+            $createWalletAddMoney->save();
+
+        } else {
+            $updateWalletterm->total_amount +=(int)$request->itemsamount;
+            $updateWalletterm->save();
+        }
+
+        //update item quantity
+
+        $invoice_items = OrderInvoiceModel::where('invoice_id', $request->invoiceid)->get();
+
+        for ($i=0; $i < $invoice_items->count(); $i++) { 
+            
+            $updateProductQuatity = InventoryModel::find($invoice_items[$i]['item_id']);
+
+            if ((int)$updateProductQuatity->quantity >= (int)$invoice_items[$i]['quantity']) {
+                $updateProductQuatity->quantity -= (int)$invoice_items[$i]['quantity'];
+                $updateProductQuatity->save();
+            }
+        }
+
+        $request->session()->forget('latestinvoice');
+
+        return back()->with('success', 'book purchase was successfull');
+        
+    } 
 }

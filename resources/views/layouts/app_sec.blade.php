@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
   <!-- iCheck -->
   <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{{ asset("plugins/datatables-bs4/css/dataTables.bootstrap4.min.css") }}">
+  <link rel="stylesheet" href="{{ asset("plugins/datatables-responsive/css/responsive.bootstrap4.min.css") }}">
   <!-- JQVMap -->
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="{{ asset('../../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
@@ -2157,7 +2160,7 @@
  
  <script src="{{ asset('../../plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
  <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
- 
+
  <script type="text/javascript">
  $(document).ready(function () {
    bsCustomFileInput.init();
@@ -2213,5 +2216,6 @@
 
  }
  </script>
+  @stack('custom-scripts')
 </body>
 </html>

@@ -16,8 +16,8 @@
 
                 <!--<i class="far fa-question-circle" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?" style="font-size: 25px;">-->
                 
-                <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Class lists"
-                data-content="View all classes in your school and the number of student in each class. You can change a class name incase of any mistake, however you have to be sure of what you are doing. Note: ensure classes are arranged in ascending order">Need help?</button>
+                <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Summary"
+                data-content="View the financial runnings of your school at a glance.">Need help?</button>
 
           </div><!-- /.col -->
           <div class="col-sm-6">
@@ -42,7 +42,7 @@
         <div class="row">
             <div class="col-12 col-sm-6 col-md-3">
               <div class="info-box">
-                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-wallet"></i></span>
   
                 <div class="info-box-content">
                   <span class="info-box-text">Available Amount</span>
@@ -57,7 +57,7 @@
             <!-- /.col -->
             <div class="col-12 col-sm-6 col-md-3">
               <div class="info-box mb-3">
-                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+                <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-wallet"></i></span>
   
                 <div class="info-box-content">
                   <span class="info-box-text">This Term</span>
@@ -78,7 +78,7 @@
   
                 <div class="info-box-content">
                   <span class="info-box-text">Total Expenditure</span>
-                  <span class="info-box-number">760</span>
+                  <span class="info-box-number">{{ $sumTotalExpenditure }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -91,7 +91,7 @@
   
                 <div class="info-box-content">
                   <span class="info-box-text">This Term Expenditure</span>
-                  <span class="info-box-number">2,000</span>
+                  <span class="info-box-number">{{ $sumTotalExpenditureTerm }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -172,7 +172,17 @@
                       @endforeach
                     @endif
                   </tbody>
+                  
                 </table>
+              </div>
+              <div class="text-center">
+                <i style="font-style: normal;">Page {{ $transactionHistory->currentPage() }}</i>
+                <i style="font-style: normal;">of</i>
+                <i style="font-style: normal;">{{ $transactionHistory->lastPage() }}</i>
+              </div>
+              <div class="text-center" style="margin: 10px;">
+                <a href="{{ $transactionHistory->previousPageUrl() }}"><button class="btn btn-sm btn-info">Prev</button></a>
+                <a href="{{ $transactionHistory->nextPageUrl() }}"><button class="btn btn-sm btn-info">Next</button></a>
               </div>
               <!-- /.card-body -->
             </div>
