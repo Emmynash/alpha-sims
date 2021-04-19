@@ -43,11 +43,13 @@ class SchoolsetupSecController extends Controller
             
             $getStudentCount = Addstudent_sec::where(['sessionstatus'=> '0', 'schoolid'=>Auth::user()->schoolid])->get();
             $subHistory = SubHistory::where(['schoolid'=> Auth::user()->schoolid, 'session'=>$addschool[0]->schoolsession])->sum('student_count');
+            $classlist_sec = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
     
             $alldetails = array(
                 'addschool' => $addschool,
                 "getStudentCount"=>$getStudentCount,
-                "subHistory"=>$subHistory
+                "subHistory"=>$subHistory,
+                "classlist_sec"=>$classlist_sec
             );
     
             // return $alldetails['getStudentCount'];
@@ -124,30 +126,26 @@ class SchoolsetupSecController extends Controller
 
     public function addClasses(Request $request){
         
-        $addclasses_input = $request->input('addclasses_input');
+        $validatedData = $request->validate([
+            'classname' => 'required',
+            'type' => 'required'
+        ]);
 
-        if (empty($addclasses_input)) {
-            $msg = 0;
-            return response()->json(array('msg' => $msg), 200);
+        $classlistCheck = Classlist_sec::where(['classname' =>strtoupper($request->classname), 'schoolid' => Auth::user()->schoolid])->get();
+
+        if (count($classlistCheck) > 0) {
+            return back()->with('error', 'class already exist');
         }
 
-        $addclasses_sec_explode = explode(',', $addclasses_input);
+        $addclasses_sec = new Classlist_sec();
+        $addclasses_sec->schoolid = Auth::user()->schoolid;
+        $addclasses_sec->classname = strtoupper($request->classname);
+        $addclasses_sec->studentcount = 0;
+        $addclasses_sec->classtype = (int)$request->type;
+        $addclasses_sec->save();
 
-        for ($i=0; $i < count($addclasses_sec_explode); $i++) { 
+        return back()->with('success', 'process was successfull');
 
-            $classlistCheck = Classlist_sec::where(['classname' => $addclasses_sec_explode[$i], 'schoolid' => Auth::user()->schoolid])->get();
-
-            if (count($classlistCheck) < 1) {
-                $addclasses_sec = new Classlist_sec();
-                $addclasses_sec->schoolid = Auth::user()->schoolid;
-                $addclasses_sec->classname = strtoupper($addclasses_sec_explode[$i]);
-                $addclasses_sec->studentcount = 0;
-                $addclasses_sec->save();
-            }
-        }
-
-        $msg = 1;
-        return response()->json(array('msg' => $msg), 200);
     }
 
     public function addhouses_sec(Request $request){

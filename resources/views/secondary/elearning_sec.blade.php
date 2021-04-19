@@ -214,8 +214,17 @@
                       @endif
                     </tbody>
                   </table>
-                  <div style="margin: 10px;">
+                  {{-- <div style="margin: 10px;">
                     {{ $alldetails['assignments']->links() }}
+                  </div> --}}
+                  <div class="text-center">
+                    <i style="font-style: normal;">Page {{ $alldetails['assignments']->currentPage() }}</i>
+                    <i style="font-style: normal;">of</i>
+                    <i style="font-style: normal;">{{ $alldetails['assignments']->lastPage() }}</i>
+                  </div>
+                  <div class="text-center" style="margin: 10px;">
+                    <a href="{{ $alldetails['assignments']->previousPageUrl() }}"><button class="btn btn-sm btn-info">Prev</button></a>
+                    <a href="{{ $alldetails['assignments']->nextPageUrl() }}"><button class="btn btn-sm btn-info">Next</button></a>
                   </div>
                 </div>
                 <!-- /.card-body -->

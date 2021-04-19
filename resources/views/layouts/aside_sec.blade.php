@@ -286,7 +286,7 @@
 
             
             
-            @if (Auth::user()->role == "Teacher")
+            @if (Auth::user()->hasRole('Teacher'))
             <li class="nav-item has-treeview">
               <a id="teacheredit" href="/editteacherprofile" class="nav-link">
                 <i class="fas fa-user-edit nav-icon"></i>
@@ -304,14 +304,18 @@
                   </p>
                 </a>
             </li>
-            <li class="nav-item">
+
+            @can('form teacher')
+              <li class="nav-item">
                 <a id="formmasteroption" href="{{ route('form_teacher') }}" class="nav-link">
                     <i class="fas fa-users nav-icon"></i>
                   <p>
                     Form Master
                   </p>
                 </a>
-            </li>
+              </li>
+            @endcan
+
             @endif
 
               <li class="nav-item">
@@ -327,7 +331,7 @@
                 </a>
               </li>
               
-          @if(Auth::user()->role == "Student")
+          @if(Auth::user()->hasRole('Student'))
           <li class="nav-item has-treeview">
             <a id="resultmainscroll" href="#" class="nav-link">
                 <i class="fas fa-vials nav-icon"></i>

@@ -34,6 +34,14 @@
             @csrf
             <div class="row" style="margin: 10px;">
                 <div class="col-md-6">
+                  <div class="form-group">
+                    <i style="font-size: 10px;">Grade Type</i>
+                    <select name="type" class="form-control form-control-sm" id="">
+                      <option value="">Select a school type</option>
+                      <option value="1">Junior Secondary</option>
+                      <option value="2">Senior Secondary</option>
+                    </select>
+                  </div>
                     <div class="form-group">
                         <i style="font-size: 10px;">GPA For</i>
                         <input type="text" class="form-control form-control-sm" id="gpafor" name="gpafor" value="100 Marks">
@@ -52,6 +60,10 @@
                         <i style="font-size: 10px;">Mark To</i>
                         <input type="text" class="form-control form-control-sm" id="marksto" name="marksto" placeholder="40, 50, 60">
                     </div>
+                    <div class="form-group">
+                      <i style="font-size: 10px;">Points(for senior secondary)</i>
+                      <input type="number" class="form-control form-control-sm" id="" name="point" placeholder="e.g 4, 3, 2">
+                  </div>
                 </div>
                 <button class="btn btn-info btn-sm">Add</button>
             </div>

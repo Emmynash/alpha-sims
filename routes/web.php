@@ -28,9 +28,6 @@ Route::group(['middleware' => ['auth', 'can:settings']], function () {
 
 
 
-
-
-
 //add school
 Route::get('/addschool', "DashboardController@addschool")->middleware('auth')->middleware('verified');
 Route::POST('/shoolreg', 'DashboardController@store')->middleware('auth')->name('shoolreg');
@@ -250,7 +247,7 @@ Route::group(['prefix' => 'sec'], function () {
      Route::group(['prefix' => 'teacher', 'middleware' => ['auth', 'role:Teacher']], function () { 
         Route::get('/teacher_sec_remark', 'TeachersController_sec@resultremark')->name('teacher_sec_remark');
         Route::post('/resultremarkpost', 'TeachersController_sec@resultremarkpost')->name('resultremarkpost');
-        Route::get('/form_teacher', 'TeachersController_sec@formTeacherMain')->name('form_teacher');
+        Route::get('/form_teacher', 'TeachersController_sec@formTeacherMain')->name('form_teacher')->middleware('can:form teacher');
         Route::post('/form_teacher_result_confirm', 'TeachersController_sec@confirmSubjectRecordEntered')->name('form_teacher_result_confirm');
      });
 
@@ -268,6 +265,7 @@ Route::group(['prefix' => 'sec'], function () {
          Route::get('/index_fees', 'AccountController@index_fees')->name('index_fees');
          Route::get('/summary', 'AccountController@summary')->name('summary')->middleware(['auth', 'can:view account summary']); 
          Route::get('/invoices', 'AccountController@invoices')->name('invoices')->middleware(['auth', 'can:invoice management']); 
+         Route::get('/unpaid_fees', 'AccountController@unpaid_fees')->name('unpaid_fees')->middleware(['auth', 'can:invoice management']); 
          Route::get('/order_request', 'AccountController@orderRequest')->name('order_request')->middleware(['auth', 'can:can send or receive request']);
          Route::post('/request_response', 'AccountController@request_response')->name('request_response')->middleware(['auth', 'can:can send or receive request']); 
          Route::get('/feecollection', 'AccountController@feecollection')->name('feecollection')->middleware(['auth', 'can:fee collection']);
@@ -276,6 +274,7 @@ Route::group(['prefix' => 'sec'], function () {
          Route::get('/inventory', 'AccountController@inventory')->name('inventory')->middleware(['auth', 'can:access inventory']);
          Route::post('/inventory_add_item', 'AccountController@inventory_add_item')->name('inventory_add_item');
          Route::post('/add_invoice_order/{id}', 'AccountController@addInvoiceOrder')->name('add_invoice_order'); 
+         Route::post('/update_invoice_items/{id}', 'AccountController@update_invoice_items')->name('update_invoice_items'); 
          Route::post('/order_invoice_checkout', 'AccountController@order_invoice_checkout')->name('order_invoice_checkout');
 
 

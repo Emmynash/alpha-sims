@@ -97,4 +97,12 @@ tr, td{
         -webkit-print-color-adjust: exact; 
     }
 
+    .collapse{
+        display: none;
+    }
+
+    .print-container{
+        height: 1123px;
+    }
+
 }

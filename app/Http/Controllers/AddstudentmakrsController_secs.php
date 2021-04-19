@@ -191,7 +191,9 @@ class AddstudentmakrsController_secs extends Controller
 
         if ($checkifidexists == "NA") {
 
-                $studentgradeprocess = $this->addmark_sec->where('schoolid', Auth::user()->schoolid)->get();
+                $getClassDetails = Classlist_sec::find($selectedclassidMain);
+
+                $studentgradeprocess = $this->addmark_sec->where(['schoolid'=> Auth::user()->schoolid])->get();
 
                 if (count($studentgradeprocess) < 5) {
                     $msg = "grades";
@@ -205,7 +207,7 @@ class AddstudentmakrsController_secs extends Controller
 
                     $totalmarks = $examsmarks + $ca1marks + $ca2marks + $ca3marks;
 
-                    $studentgradeprocess = Addgrades_sec::where('schoolid', Auth::user()->schoolid)->get();
+                    $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
     
                     $gradeFInal = "";
     
@@ -339,17 +341,21 @@ class AddstudentmakrsController_secs extends Controller
 //               processing patial entry
 //---------------------------------------------------------
 
+                $getClassDetails = Classlist_sec::find($selectedclassidMain);
+
             if ($examsmarks == "" || $ca1marks == "" || $ca2marks == "" || $ca3marks == "") {
 
                 $totalmarks = $examsmarks + $ca1marks + $ca2marks + $ca3marks;
 
-                $studentgradeprocess = Addgrades_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
 
                 $gradeFInal = "";
+                $point = "";
 
                 for ($i=0; $i < count($studentgradeprocess); $i++) {
                     if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
                         $gradeFInal = $studentgradeprocess[$i]['gpaname'];
+                        $point = $studentgradeprocess[$i]['point'];
                     }
                 }
 
@@ -360,6 +366,7 @@ class AddstudentmakrsController_secs extends Controller
                 $updatestudentresult->ca3 = $ca3marks;
                 $updatestudentresult->totalmarks = $totalmarks;
                 $updatestudentresult->grades = $gradeFInal;
+                $updatestudentresult->points = $point;
                 $updatestudentresult->save();
 
                 $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm')])->orderBy('totalmarks', 'desc')->get();
@@ -401,10 +408,12 @@ class AddstudentmakrsController_secs extends Controller
                 $studentgradeprocess = Addgrades_sec::where('schoolid', Auth::user()->schoolid)->get();
 
                 $gradeFInal = "";
+                $point = "0";
 
                 for ($i=0; $i < count($studentgradeprocess); $i++) {
                     if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
                         $gradeFInal = $studentgradeprocess[$i]['gpaname'];
+                        $point = $studentgradeprocess[$i]['point'];
                     }
                 }
 
@@ -415,6 +424,7 @@ class AddstudentmakrsController_secs extends Controller
                 $updatestudentresult->ca3 = $ca3marks;
                 $updatestudentresult->totalmarks = $totalmarks;
                 $updatestudentresult->grades = $gradeFInal;
+                $updatestudentresult->points = $point;
                 $updatestudentresult->save();
 
 

@@ -332,6 +332,22 @@ class AccountController extends Controller
 
     }
 
+    public function update_invoice_items(Request $request, $id)
+    {
+
+        $validatedData = $request->validate([
+            'quantity' => 'required',
+            'amount' => 'required'
+        ]);
+
+        $updateInventoryItems = InventoryModel::find($id);
+        $updateInventoryItems->amount = (int)$request->amount;
+        $updateInventoryItems->quantity += (int)$request->quantity;
+        $updateInventoryItems->save();
+        
+        return back(); 
+    }
+
     public function request_response(Request $request)
     {
 
@@ -488,4 +504,32 @@ class AccountController extends Controller
         return back()->with('success', 'book purchase was successfull');
         
     } 
+
+
+    public function unpaid_fees()
+    {
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $allStudent = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                    ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                    ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+                    ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlist_secs.classname', 'addsection_secs.sectionname')
+                    ->where(['addstudent_secs.schoolid'=>Auth::user()->schoolid, 'addstudent_secs.sessionstatus'=>0])->get();
+
+        $paidInvoices = FeesInvoice::where(['schoolid'=>Auth::user()->schoolid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'status'=>1])->pluck('system_id')->toArray();
+
+        $unpaidArray = array();
+
+        for ($i=0; $i < $allStudent->count(); $i++) { 
+
+            if (!in_array ( $allStudent[$i]['usernamesystem'], $paidInvoices )) {
+                array_push($unpaidArray, $allStudent[$i]);
+            }
+            
+        }
+
+
+        return view('secondary.accounting.unpaidfees', compact('unpaidArray'));
+    }
 }

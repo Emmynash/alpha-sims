@@ -182,15 +182,15 @@
                                         <button class="btn btn-sm btn-warning" style="margin-bottom: 5px;" data-toggle="collapse" data-target="#updateitem{{ $item->id }}">Update Item</button>
                                         <div style="margin-bottom: 5px">
                                           <div id="updateitem{{ $item->id }}" class="collapse">
-                                            <form action="" method="post">
+                                            <form action="{{ route('update_invoice_items', $item->id) }}" method="post">
                                               @csrf
                                               <div class="form-group">
-                                                <label for="">item price</label>
-                                                <input type="number" value="{{ $item->amount }}" class="form-control form-control-sm">
+                                                <label for="">item price Quantity (available is {{ $item->quantity }})</label>
+                                                <input type="number" name="amount" value="{{ $item->amount }}" class="form-control form-control-sm">
                                               </div>
                                               <div class="form-group">
-                                                <label for="">item price</label>
-                                                <input type="number" value="{{ $item->quantity }}" class="form-control form-control-sm">
+                                                <label for="">Quantity to add</label>
+                                                <input type="number" name="quantity" class="form-control form-control-sm">
                                               </div>
                                               <button class="btn btn-success btn-sm">Proceed</button>
                                             </form>
@@ -395,26 +395,41 @@
 
 @push('custom-scripts')
 
-<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+{{-- <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset("plugins/datatables-bs4/js/dataTables.bootstrap4.min.js") }}"></script>
-<script src="{{ asset("plugins/datatables-responsive/js/dataTables.responsive.min.js") }}"></script>
+<script src="{{ asset("plugins/datatables-responsive/js/dataTables.responsive.min.js") }}"></script> --}}
+
+
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="../../plugins/jszip/jszip.min.js"></script>
+<script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+<script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 <script>
-    $(function () {
-      $("#example1").DataTable({
-        "responsive": true,
-        "autoWidth": false,
-      });
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
+  $(function () {
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
     });
+  });
 
     $(function() {
 

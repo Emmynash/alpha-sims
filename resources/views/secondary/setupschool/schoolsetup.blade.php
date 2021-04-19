@@ -28,6 +28,7 @@
     <section class="content">
       <div class="container-fluid">
 
+        @include('layouts.message')
 
         <div class="card" style="border-top: 2px solid #0B887C;">
 
@@ -180,7 +181,51 @@
                             <i style="font-style: normal;">Setup Class List</i>
                         </div>
                         <div class="card-body">
-                            <form id="addclasses_secform" action="javascript:console.log('submitted');" method="post">
+
+
+                          <form action="{{ route('addclasses_sec') }}" method="post">
+                            @csrf
+                            <div>
+                              <div class="form-group">
+                                <select name="type" class="form-control form-control-sm" id="">
+                                  <option value="">Select a level</option>
+                                  <option value="1">Junior Secondary</option>
+                                  <option value="2">Senior Secondary</option>
+                                </select>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6 col-12">
+                                  <div class="form-group">
+                                    <input type="text" name="classname" class="form-control form-control-sm" placeholder="Class name">
+                                  </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                  <div class="form-group">
+                                    <button class="btn btn-sm btn-info btn-block">Add</button>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+                          </form>
+
+                          <div>
+
+                            @if ($alldetails['classlist_sec']->count()>0)
+
+                              @foreach ($alldetails['classlist_sec'] as $item)
+                                  <div class="card" style="display: flex; flex-direction: row;">
+                                    <i style="font-style: normal; ">{{ $item->classname }}</i>
+                                    <div style="flex: 1;"></div>
+                                    <button class="btn btn-sm btn-danger">X</button>
+                                  </div>
+                              @endforeach
+                                
+                            @endif
+                            
+                          </div>
+
+                            {{-- <form id="addclasses_secform" action="javascript:console.log('submitted');" method="post">
                                 @csrf
                                 <div class="form-group">
                                     <i style="font-style: normal; color: red;">Note: class list should be entered in accending order.</i>
@@ -190,7 +235,7 @@
                                     <button id="addclasses_secbtn" class="btn btn-sm btn-info">Submit</button>
                                     <div id="classes_spinner_sec" class="spinner-border" style="width: 20px; height: 20px; display: none;"></div>
                                   </div>
-                            </form>
+                            </form> --}}
                         </div>
                         <div class="card-footer">
 

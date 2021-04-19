@@ -105,6 +105,10 @@
 
         <div class="card" style="border-top: 2px solid #0B887C;">
 
+          <div style="margin: 5px;">
+            <a href="{{ route('unpaid_fees') }}"><button class="btn btn-sm btn-info">Unpaid Fees</button></a>
+          </div>
+
                   <!-- /.row -->
         <div class="row">
           <div class="col-12">

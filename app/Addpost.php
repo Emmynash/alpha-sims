@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Addpost extends Model
 {
@@ -80,5 +81,12 @@ class Addpost extends Model
     {
         return $this->hasOne('App\AmountBalTableTerm', 'school_id', 'id');
         
+    }
+
+    public function getGradeDetails($schoolid)
+    {
+        $grades = Addgrades_sec::where(['schoolid'=>$schoolid, 'type'=>2])->get();
+
+        return $grades;
     }
 }
