@@ -24,13 +24,12 @@
     </div>
     <!-- /.content-header -->
 
+
+    @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('HeadOfSchool'))
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
-        @if (count($studentDetails['userschool']) >0)
-            @if ($studentDetails['userschool'][0]['status'] == "Approved")
-            @if (Auth::user()->role == "Admin")
 
             @if (count($studentDetails['classList']) < 1 || count($studentDetails['addHouses']) < 1 || count($studentDetails['addSection']) < 1 || count($studentDetails['addClub']) < 1)
                 <div class="alert alert-info alert-block">
@@ -60,7 +59,6 @@
                 </div>
             @endif
             
-
             <div class="row">
               <div class="col-lg-3 col-6">
                 <!-- small box -->
@@ -123,83 +121,11 @@
               </div>
               <!-- ./col -->
             </div>
-            @endif
-          @endif
-        @endif
-
         <!-- /.row -->
         <!-- Main row -->
-        @if(Auth::user()->schoolid == null)
-        <div class="" >
-        <h5>System Number: <b id="tempreg" style="color: red;">{{Auth::user()->id}}</b></h5>
-          <h6>Alpha-sim guideline</h6>
-          <p>1. Upload a passport photograph</p>
-          <p>2. Print your registration slip below and take it to your school administrator</p>
-          <p>3. Please, don't add a school if you are not an administrator</p>
-          @if (Auth::user()->profileimg == null)
-          <p style="font-size: 12px; color: red;">You must first upload your passport</p>
-            <button class="btn btn-sm btn-info">Print Slip</button>
-          @else
-        <button class="btn btn-sm btn-info" onclick="PrintImage('storage/schimages/{{Auth::user()->profileimg}}')">Print Slip</button>
-          @endif
-          
-
-          <form style="width: 100%;" method="POST" action="/uploadProfilePix" enctype="multipart/form-data">
-            @csrf
-
-            <div class="alert alert-warning alert-block" style="margin-top:10px;">
-              {{-- <button type="button" class="close" data-dismiss="alert">×</button>	 --}}
-              <strong>Upload a passport photograph.</strong>
-              <i>passport dimension: 180px x 180px, max-Size: 200kb</i>
-            </div>
-
-            <div style="width: 100%; margin: 0 auto; padding-top: 10px;">
-              @include('layouts.message')
-            </div>
-
-            <div class="form-group">
-              {{-- <label for="exampleInputFile">Passport size photograph (not more than 200KB)</label> --}}
-              <div class="input-group">
-              <div class="custom-file">
-                  <input name="profilepix" style="border: none; background-color:#EEF0F0;" type="file" class="custom-file-input @error('profilepix') is-invalid @enderror" id="profilepix" required>
-                  <label class="custom-file-label" for="profilepix">Choose file</label>
-              </div>
-              <div class="input-group-append">
-                  <span class="input-group-text" id="">Upload</span>
-              </div>
-              </div>
-              @error('profilepix')
-                  <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
-                  </span>
-              @enderror
-          </div>
-          <button class="btn btn-sm btn-info">Upload</button>
-          </form>
-
-          <div id="GFG">
-            <div style="border: 1px solid red; margin-top: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center;">
-              @if (Auth::user()->profileimg == null)
-              <img src="storage/schimages/profile.png" alt="" width="100px" height="100px">
-              @else
-              <img src="{{asset('storage/schimages/'.Auth::user()->profileimg)}}" alt="" width="100px" height="100px">
-              @endif
-              
-              <div style="margin-left: 15px;">
-                <p>Account Status: <b style="color: red;">Pending</b></p>
-                <p id="firstnameprint">Firstname: <b>{{Auth::user()->firstname}}</b></p>
-                <p id="middlenameprint">Middlename: <b>{{Auth::user()->middlename}}</b></p>
-                <p id="lastnameprint">Lastname: <b>{{Auth::user()->lastname}}</b></p>
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-        @endif
-        <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
     </section>
+    @endif
 
 
         <!-- Main content -->
@@ -270,13 +196,6 @@
               @endif
             @endif
 
-
-
-
-
-
-
-            
             @if (Auth::user()->role == "Student")
           <h5 class="mb-2">{{$studentDetails['userschool'][0]['schoolname']}}</h5>
             <div class="row">
@@ -550,198 +469,7 @@
             </div>
             <!-- /.row -->
 
-            {{-- <div class="card card-default">
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-6">
-
-                  </div>
-                  <div class="col-md-12">
-                    <img src="{{asset('storage/schimages/'.Auth::user()->profileimg)}}" class="img-circle elevation-2" alt="Cinque Terre" width="100px" height="100px">
-                    
-                    <p style="margin-top: 10px;">Name: {{ Auth::user()->firstname }} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</p>
-                    <p>Email: {{Auth::user()->email}}</p>
-                  </div>
-                </div>
-                <h5>Accademic Details</h5>
-                <div class="row">
-                  <div class="col-md-6">
-                    <p><b>Class/Section:</b> {{$studentDetails['addStudent']['classid']}}{{$studentDetails['addStudent']['studentsection']}}</p>
-                    <hr>
-                    <p><b>Session:</b> {{$studentDetails['addStudent']['schoolsession']}}</p>
-                    <hr>
-                    <p><b>RegNumber:</b> {{$studentDetails['addStudent']['id']}}</p>
-                    <hr>
-                    <p><b>SystemNumber:</b> {{$studentDetails['addStudent']['usernamesystem']}}</p>
-                    <hr>
-                    <p><b>House:</b> {{$studentDetails['addStudent']['housename']}}</p>
-                    <hr>
-                    <p><b>Shift:</b> {{$studentDetails['addStudent']['studentshift']}}</p>
-                    
-
-
-                  </div>
-                  <div class="col-md-6">
-                    <p><b>Club:</b> {{$studentDetails['addStudent']['studentclub']}}</p>
-                    <hr>
-                    <p><b>Firstname:</b> {{$studentDetails['addStudent']['firstname']}}</p>
-                    <hr>
-                    <p><b>Middlename:</b> {{$studentDetails['addStudent']['middlename']}}</p>
-                    <hr>
-                    <p><b>Lastname:</b> {{$studentDetails['addStudent']['lastname']}}</p>
-                    <hr>
-                    <p><b>Gender:</b> {{$studentDetails['addStudent']['gender']}}</p>
-                    <hr>
-                    <p><b>Date of birth:</b> {{$studentDetails['addStudent']['dateOfBirth']}}</p>
-
-                  </div>
-                </div>
-              </div>
-            </div> --}}
             @endif
-
-{{-------------------------------------------------------------------------------------}}
-{{--                                      teachers                                   --}}
-{{-------------------------------------------------------------------------------------}}
-
-            @if (Auth::user()->role == "Teacher")
-
-            <!-- Info boxes -->
-              <div>
-                  
-                    <div class="row">
-                      <div class="col-md-3">
-            
-                        <!-- Profile Image -->
-                        <div class="card card-primary card-outline">
-                          <div class="card-body box-profile">
-                            <div class="text-center">
-                              <img class="profile-user-img img-fluid img-circle"
-                                   src="../../dist/img/user4-128x128.jpg"
-                                   alt="User profile picture">
-                            </div>
-            
-                            <h3 class="profile-username text-center">Nina Mcintire</h3>
-            
-                            <p class="text-muted text-center">Software Engineer</p>
-            
-                            <ul class="list-group list-group-unbordered mb-3">
-                              <li class="list-group-item">
-                                <b>Followers</b> <a class="float-right">1,322</a>
-                              </li>
-                              <li class="list-group-item">
-                                <b>Following</b> <a class="float-right">543</a>
-                              </li>
-                              <li class="list-group-item">
-                                <b>Friends</b> <a class="float-right">13,287</a>
-                              </li>
-                            </ul>
-            
-                            <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
-                          </div>
-                          <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-            
-                        <!-- About Me Box -->
-                        <div class="card card-primary">
-                          <div class="card-header">
-                            <h3 class="card-title">About Me</h3>
-                          </div>
-                          <!-- /.card-header -->
-                          <div class="card-body">
-                            <strong><i class="fas fa-book mr-1"></i> Education</strong>
-            
-                            <p class="text-muted">
-                              B.S. in Computer Science from the University of Tennessee at Knoxville
-                            </p>
-            
-                            <hr>
-            
-                            <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
-            
-                            <p class="text-muted">Malibu, California</p>
-            
-                            <hr>
-            
-                            <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
-            
-                            <p class="text-muted">
-                              <span class="tag tag-danger">UI Design</span>
-                              <span class="tag tag-success">Coding</span>
-                              <span class="tag tag-info">Javascript</span>
-                              <span class="tag tag-warning">PHP</span>
-                              <span class="tag tag-primary">Node.js</span>
-                            </p>
-            
-                            <hr>
-            
-                            <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
-            
-                            <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
-                          </div>
-                          <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                      </div>
-                      <!-- /.col -->
-                      <div class="col-md-9">
-                        <div class="card">
-                          <div class="card-header p-2">
-                            <ul class="nav nav-pills">
-                              <li class="nav-item"><a class="nav-link active" href="#subjects" data-toggle="tab">Subjects</a></li>
-                              <li class="nav-item"><a class="nav-link" href="#attendace" data-toggle="tab">Attendance</a></li>
-                              <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
-                            </ul>
-                          </div><!-- /.card-header -->
-                          <div class="card-body">
-                            <div class="tab-content">
-                              <div class="active tab-pane" id="subjects">
-
-                                <div>
-                                    
-                                    <div class="card">
-                                        <div style="margin: 10px;">
-                                            <div style="display: flex; flex-direction: column;">
-                                                <i style="font-style: normal; font-size: 12px;">subject name</i>
-                                                <i style="font-style: normal; font-size: 12px;">subject code</i>
-                                                <i style="font-style: normal; font-size: 12px;">class</i>
-                                                <i style="font-style: normal; font-size: 12px;">class count</i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-
-                              </div>
-                              <!-- /.tab-pane -->
-                              <div class="tab-pane" id="attendace">
-                                  
-                                  
-    
-                              </div>
-                              <!-- /.tab-pane -->
-            
-                              <div class="tab-pane" id="settings">
-                                  
-                                  
-                    
-                              </div>
-                              <!-- /.tab-pane -->
-                            </div>
-                            <!-- /.tab-content -->
-                          </div><!-- /.card-body -->
-                        </div>
-                        <!-- /.nav-tabs-custom -->
-                      </div>
-                      <!-- /.col -->
-                    </div>
-
-              </div>
-                
-            @endif
-            <!-- /.row -->
           </section>
     <!-- /.content -->
   </div>

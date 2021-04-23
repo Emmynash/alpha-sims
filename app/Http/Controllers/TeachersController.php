@@ -12,12 +12,14 @@ use App\AddClub;
 use App\Addstudent;
 use App\Addteachers;
 use App\Addsubject;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Redirect;
 use Carbon\Carbon;
 use App\TeacherAttendance;
 use Validator;
 use DB;
+use App\TeacherSubjectPris;
+use Spatie\Permission\Models\Role;
 
 class TeachersController extends Controller
 {
@@ -30,30 +32,16 @@ class TeachersController extends Controller
     {
         $id = Auth::user()->schoolid;
 
-        $userschool = Addpost::where('id', $id)->get();
+
         $classList = Classlist::where('schoolid', $id)->get();
-        $addHouses = Addhouses::where('schoolid', $id)->get();
         $addSection = Addsection::where('schoolid', $id)->get();
-        $addClub = AddClub::where('schoolid', $id)->get();
-        $addteachers = Addteachers::where('schoolid', $id)->get();
         $addsubjects = DB::table('addsubjects')
                      ->join("classlists", "classlists.id","=","addsubjects.classid")
                      ->where('addsubjects.schoolid', $id)
                      ->select("addsubjects.*", "classlists.classnamee")->get();
 
-        $studentDetails = array(
-            'userschool' => $userschool,
-            'classList' => $classList,
-            'addHouses' => $addHouses,
-            'addSection' => $addSection,
-            'addClub' => $addClub,
-            'addteachers' => $addteachers,
-            'addsubjects' => $addsubjects
-        );
-        
-        // $studentDetails['classList']
 
-        return view('pages.addteacher')->with('studentDetails', $studentDetails);
+        return view('pages.teacher.addteacher', compact('classList', 'addSection', 'addsubjects'));
     }
     
     // public function 
@@ -115,51 +103,61 @@ class TeachersController extends Controller
             return response()->json(['success' => "success"], 200);
             
         }else{
-            
-            $validatedData = $request->validate([
-                'systemnumberTeacherSubject' => 'required',
-                'subjectAllocatedSubject' => 'required',
-            ]);
-            
-            $checkteacher = Addteachers::where("systemid", $request->input('systemnumberTeacherSubject'))->get();
-            
-            if(count($checkteacher)<1){
+
+            try {
+                $validatedData = $request->validate([
+                    'systemnumberTeacherSubject' => 'required',
+                    'subjectAllocatedSubject' => 'required',
+                ]);
+    
+    
                 
-                $addteachers = new Addteachers;
-                $addteachers->schoolid = Auth::user()->schoolid;
-                $addteachers->systemid = $request->input('systemnumberTeacherSubject');
-                $addteachers->track = Auth::user()->useridsystem;
-                $addteachers->save();
+                $checkteacher = Addteachers::where("systemid", $request->input('systemnumberTeacherSubject'))->get();
                 
-            }
+                if(count($checkteacher)<1){
+                    
+                    $addteachers = new Addteachers;
+                    $addteachers->schoolid = Auth::user()->schoolid;
+                    $addteachers->systemid = $request->input('systemnumberTeacherSubject');
+                    $addteachers->track = Auth::user()->useridsystem;
+                    $addteachers->save();
+                    
+                }
+    
+                //update user role
+    
+                $updateRole = User::find($request->input('systemnumberTeacherSubject'));
+                $updateRole->role = "Teacher";
+                $updateRole->schoolid = Auth::user()->schoolid;
+                $updateRole->save();
+                
+                //alocate subject to teacher
 
-            //update user role
-            $teacherDetail = User::where('id', $request->input('systemnumberTeacherSubject'))->get();
+                $getSubjectId = Addsubject::find($request->input('subjectAllocatedSubject'));
 
-            $id = $teacherDetail[0]['id'];
+                $subjectCheck = TeacherSubjectPris::where(['user_id'=>$request->systemnumberTeacherSubject, 'subject_id'=>$request->input('subjectAllocatedSubject'), 'classid'=>$getSubjectId->classid])->get();
 
-            $updateRole = User::find($id);
-            $updateRole->role = "Teacher";
-            $updateRole->schoolid = Auth::user()->schoolid;
-            $updateRole->save();
-            
-            //alocate subject to teacher
-            
-            $addsubjecttoteacher = Addsubject::find($request->input('subjectAllocatedSubject'));
-            $addsubjecttoteacher->teacherid = $request->input('systemnumberTeacherSubject');
-            $addsubjecttoteacher->save();
+                if ($subjectCheck->count() > 0) {
+                    return response()->json('already', 201);
+                }
 
-            return response()->json(['success' => "success"], 200); 
-            
+                $asignTeacherToSubject = new TeacherSubjectPris();
+                $asignTeacherToSubject->user_id = $request->systemnumberTeacherSubject;
+                $asignTeacherToSubject->subject_id = $request->input('subjectAllocatedSubject');
+                $asignTeacherToSubject->classid = $getSubjectId->classid;
+                $asignTeacherToSubject->schoolid = Auth::user()->schoolid;
+                $asignTeacherToSubject->save();
+
+                $updateRole->assignRole('Teacher');
+    
+                return response()->json(['success' => "success"], 200); 
+
+            } catch (\Throwable $th) {
+                //throw $th;
+
+                return response()->json($th, 201);
+            } 
         }
-        
-        
-
-
-
-
-
-
         
     }
 
@@ -214,32 +212,26 @@ class TeachersController extends Controller
         
                 if($key == "addteacherform"){
                     
-                $regNumber = $request->input('regNumber');
+                $regNumber = $request->input('teacherRegNoConfirm');
         
-                $teachDetails = User::where(['id'=> $regNumber])->get();
+                $teachDetails = User::find($regNumber);
         
-                $teachersCheck = DB::table('addteachers')
-                               ->leftjoin("classlists", "classlists.id","=","addteachers.formteacher")
-                               ->leftjoin("addsections", "addsections.id","=","addteachers.formsection")
-                               ->where('systemid', $regNumber)
-                               ->select("addteachers.*", "classlists.classnamee", "addsections.sectionname")->get();
+                // $teachersCheck = DB::table('addteachers')
+                //                ->leftjoin("classlists", "classlists.id","=","addteachers.formteacher")
+                //                ->leftjoin("addsections", "addsections.id","=","addteachers.formsection")
+                //                ->where('systemid', $regNumber)
+                //                ->select("addteachers.*", "classlists.classnamee", "addsections.sectionname")->get();
                 
                 
-                // Addteachers::where('systemid', $regNumber)->get();
+                // // Addteachers::where('systemid', $regNumber)->get();
         
-                $checkCountteachers = count($teachersCheck);
-                
-                
-                
-                
-        
+                // $checkCountteachers = count($teachersCheck);
+
                 $teacherDetailsArray = array(
-                    'firstname' => $teachDetails[0]['firstname'],
-                    'middlename' => $teachDetails[0]['middlename'],
-                    'lastname' => $teachDetails[0]['lastname'],
-                    'profileimg' => $teachDetails[0]['profileimg'],
-                    'checkCountteachers' => $checkCountteachers,
-                    'teachersCheck'=>$teachersCheck
+                    'firstname' => $teachDetails->firstname,
+                    'middlename' => $teachDetails->middlename,
+                    'lastname' => $teachDetails->lastname,
+                    'profileimg' => $teachDetails->profileimg,
         
                 );
         
@@ -247,41 +239,37 @@ class TeachersController extends Controller
             
         }else{
             
-                    $regNumber = $request->input('regNumber');
+                    $regNumber = $request->input('teacherRegNoConfirmclass');
 
-                    $teachDetails = User::where(['id'=> $regNumber])->get();
+                    $teachDetails = User::find($regNumber);
+
+                    if ($teachDetails == null) {
+                        return response()->json("error", 200);
+                    }
             
-                    $teachersCheck = DB::table('addteachers')
-                                   ->leftjoin("classlists", "classlists.id","=","addteachers.formteacher")
-                                   ->leftjoin("addsections", "addsections.id","=","addteachers.formsection")
-                                   ->where('systemid', $regNumber)
-                                   ->select("addteachers.*", "classlists.classnamee", "addsections.sectionname")->get();
+                    // $teachersCheck = DB::table('addteachers')
+                    //                ->leftjoin("classlists", "classlists.id","=","addteachers.formteacher")
+                    //                ->leftjoin("addsections", "addsections.id","=","addteachers.formsection")
+                    //                ->where('systemid', $regNumber)
+                    //                ->select("addteachers.*", "classlists.classnamee", "addsections.sectionname")->get();
                     
                     
-                    // Addteachers::where('systemid', $regNumber)->get();
+                    // // Addteachers::where('systemid', $regNumber)->get();
             
-                    $checkCountteachers = count($teachersCheck);
-                    
-                    
-                    
-                    
+                    // $checkCountteachers = count($teachersCheck);
+
+                    // $teacherDetailsArray = array(
+                    //     'firstname' => $teachDetails[0]['firstname'],
+                    //     'middlename' => $teachDetails[0]['middlename'],
+                    //     'lastname' => $teachDetails[0]['lastname'],
+                    //     'profileimg' => $teachDetails[0]['profileimg'],
+                    //     'checkCountteachers' => $checkCountteachers,
+                    //     'teachersCheck'=>$teachersCheck
+                    // );
             
-                    $teacherDetailsArray = array(
-                        'firstname' => $teachDetails[0]['firstname'],
-                        'middlename' => $teachDetails[0]['middlename'],
-                        'lastname' => $teachDetails[0]['lastname'],
-                        'profileimg' => $teachDetails[0]['profileimg'],
-                        'checkCountteachers' => $checkCountteachers,
-                        'teachersCheck'=>$teachersCheck
-            
-                    );
-            
-                    return response()->json($teacherDetailsArray, 200);
+                    return response()->json($teachDetails, 200);
             
         }
-
-
-        
     }
 
     public function viewteachers(){
@@ -302,7 +290,11 @@ class TeachersController extends Controller
             'addClub' => $addClub
         );
 
-        return view('pages.viewteachers')->with('studentDetails', $studentDetails);
+        $allTeachers = Addteachers::join('users', 'users.id','=','addteachers.systemid')
+                    ->select('addteachers.*', 'users.firstname', 'users.middlename', 'users.lastname')
+                    ->where('addteachers.schoolid', Auth::user()->schoolid)->get();
+
+        return view('pages.teacher.viewteachers', compact('allTeachers'))->with('studentDetails', $studentDetails);
     }
 
     public function getTeacher(Request $request){
@@ -410,7 +402,6 @@ class TeachersController extends Controller
             'classList' => $classList,
             'addHouses' => $addHouses,
             'addSection' => $addSection,
-            'addClub' => $addClub,
             'attDate' => $attDate
         );
         return view('pages.teachersattendance')->with('studentDetails', $studentDetails);
@@ -502,21 +493,9 @@ class TeachersController extends Controller
     public function addStaff(){
         $id = Auth::user()->schoolid;
 
-        $userschool = Addpost::where('id', $id)->get();
-        $classList = Classlist::where('schoolid', $id)->get();
-        $addHouses = Addhouses::where('schoolid', $id)->get();
-        $addSection = Addsection::where('schoolid', $id)->get();
-        $addClub = AddClub::where('schoolid', $id)->get();
+        $roles = Role::all();
 
-        $studentDetails = array(
-            'userschool' => $userschool,
-            'classList' => $classList,
-            'addHouses' => $addHouses,
-            'addSection' => $addSection,
-            'addClub' => $addClub
-        );
-
-        return view('pages.addstaff')->with('studentDetails', $studentDetails);
+        return view('pages.addstaff', compact('roles'));
     }
 
     public function addstaffdata(Request $request){
@@ -547,19 +526,33 @@ class TeachersController extends Controller
         $SelectRole = $request->input('SelectRole');
         $staffid = $request->input('staffid');
 
-        $checkvalue = User::where(['id' => $staffid, 'schoolid' => Auth::user()->schoolid])->get();
+       $checkvalue = User::find($staffid);
 
-        $notincludedroles = array("Student", "Teacher");
+       $roles = Role::all()->pluck('name')->toArray();
 
-        if (count($checkvalue) > 0 && in_array($checkvalue[0]['role'], $notincludedroles)) {
-            return back()->with('error', 'Operation not allowed');
-        }else{
+    //    $checkvalue->hasAnyRole($roles);
+
+        if ($checkvalue->hasAnyRole($roles)) {
+            return back()->with('error', 'role already allocated to this user');
+        }
+
+        $getRoles = Role::find($request->SelectRole);
+
+        $checkvalue->assignRole($getRoles->name);
+
+
+
+        // $notincludedroles = array("Student", "Teacher");
+
+        // if (count($checkvalue) > 0 && in_array($checkvalue[0]['role'], $notincludedroles)) {
+        //     return back()->with('error', 'Operation not allowed');
+        // }else{
             $checkrole = User::find($staffid);
             $checkrole->schoolid = Auth::user()->schoolid;
-            $checkrole->role = $SelectRole;
+            $checkrole->role = $getRoles->name;
             $checkrole->save();
             return back()->with('success', 'Role allocated seccessfully');
-        }   
+        // }   
     }
 
     public function editprofileteacher(){

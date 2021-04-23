@@ -57,6 +57,8 @@ class PaymentService{
         } catch (\Throwable $th) {
             //throw $th;
 
+            return $th;
+
             return "error";
         }
     }

@@ -49,13 +49,13 @@
             
                             <ul class="list-group list-group-unbordered mb-3">
                               <li class="list-group-item">
-                                <b>Form Master</b> <a class="float-right">{{$studentDetails['addteacher'][0]->classnamee}} {{$studentDetails['addteacher'][0]->sectionname}}</a>
+                                <b>Form Master</b> <a class="float-right">{{$addteacher->classnamee}} {{$addteacher->sectionname}}</a>
                               </li>
                               <li class="list-group-item">
                                 <b>System No.</b> <a class="float-right">{{Auth::user()->id}}</a>
                               </li>
                               <li class="list-group-item">
-                                <b>School Type</b> <a class="float-right">{{$studentDetails['userschool'][0]->schooltype}}</a>
+                                <b>School Type</b> <a class="float-right">{{$addteacher->schooltype}}</a>
                               </li>
                             </ul>
             
@@ -75,21 +75,21 @@
                             <strong><i class="fas fa-book mr-1"></i> School</strong>
             
                             <p class="text-muted">
-                              {{$studentDetails['userschool'][0]->schoolname}}
+                              {{$addteacher->schoolname}}
                             </p>
             
                             <hr>
             
                             <strong><i class="fas fa-map-marker-alt mr-1"></i> Address</strong>
             
-                            <p class="text-muted">{{$studentDetails['addteacher'][0]->residentialaddress}}</p>
+                            <p class="text-muted">{{$addteacher->residentialaddress}}</p>
             
                             <hr>
             
                             <strong><i class="fas fa-pencil-alt mr-1"></i> Date of Birth</strong>
             
                             <p class="text-muted">
-                                {{$studentDetails['addteacher'][0]->dob}}
+                                {{$addteacher->dob}}
                             </p>
             
                             <hr>
@@ -118,15 +118,15 @@
 
                                 <div>
                                     
-                                    @if(count($studentDetails['subjects'])>0)
-                                        @foreach($studentDetails['subjects'] as $subjects)
+                                    @if(count($subjects)>0)
+                                        @foreach($subjects as $subjects)
                                             <div class="card">
                                                 <div style="margin: 10px;">
                                                     <div style="display: flex; flex-direction: column;">
                                                         <i style="font-style: normal; font-size: 12px;">{{$subjects->subjectname}}</i>
                                                         <i style="font-style: normal; font-size: 12px;">{{$subjects->subjectcode}}</i>
                                                         <i style="font-style: normal; font-size: 12px;">{{$subjects->classnamee}}</i>
-                                                        <i style="font-style: normal; font-size: 12px;">class count: {{$subjects->studentcount}}</i>
+                                                        <i style="font-style: normal; font-size: 12px;">class count: {{$subjects->getClassCount($subjects->classid)}}</i>
                                                     </div>
                                                 </div>
                                             </div>

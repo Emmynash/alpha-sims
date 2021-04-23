@@ -21,7 +21,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
+              <li class="breadcrumb-item active">Subject List</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -33,25 +33,6 @@
     <section class="content">
         <div class="container-fluid">
           <!-- SELECT2 EXAMPLE -->
-        @if ($studentDetails['userschool'][0]['status'] != "Pending" && $studentDetails['userschool'][0]['schooltype'] != "Primary")
-        <div class="card card-default">
-          <!-- /.card-header -->
-          <div class="card-body">
-            
-
-            <p>card body</p>
-
-
-          </div>
-          <!-- /.card-body -->
-          <div class="card-footer">
-            {{-- Visit <a href="https://select2.github.io/">Select2 documentation</a> for more examples and information about
-            the plugin. --}}
-          </div>
-        </div>
-        <!-- /.card -->
-
-        @else
 
         <!-- /.row -->
         @include('layouts.message')
@@ -87,9 +68,9 @@
                     </thead>
                     <tbody>
                       
-                        @if (count($studentDetails['addsubject']) > 0)
+                        @if (count($addsubject) > 0)
   
-                        @foreach ($studentDetails['addsubject'] as $subject)
+                        @foreach ($addsubject as $subject)
                         <tr>
                           <td>{{strtoupper($subject->subjectcode)}}</td>
                           <td>{{$subject->subjectname}}</td>
@@ -123,8 +104,8 @@
                                             <div class="form-group">
                                               <i for="" style="font-weight: normal; font-size: 10px;">{{$subject->classnamee}}</i>
                                               <select name="updateclass" class="form-control form-control-sm">
-                                                @if (count($studentDetails['classList']) > 0)
-                                                    @foreach ($studentDetails['classList'] as $class)
+                                                @if (count($classList) > 0)
+                                                    @foreach ($classList as $class)
                                                         <option value="{{$class->id}}">{{$class->classnamee}}</option>
                                                     @endforeach
                                                 @endif
@@ -170,69 +151,11 @@
                 <!-- /.card-body -->
               </div>
               <!-- /.card -->
-              @if (count($studentDetails['addsubject']) > 0)
-                {{ $studentDetails['addsubject']->links() }}
+              @if (count($addsubject) > 0)
+                {{ $addsubject->links() }}
               @endif
             </div>
           </div>
-        
-        @endif
-
-          @if ($studentDetails['userschool'][0]['status'] == "Pending")
-                      <!-- /.row -->
-        <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Status</h3>
-  
-                  <div class="card-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
-                      <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-  
-                      <div class="input-group-append">
-                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>School Id</th>
-                        <th>Email</th>
-                        <th>Phone Number</th>
-                        <th>Active From</th>
-                        <th>End On</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        {{-- @if (count($userschool) > 0)
-  
-                        @foreach ($userschool as $schools)
-                          <td>{{$userschool[0]['schoolId']}}</td>
-                          <td>{{$userschool[0]['schoolemail']}}</td>
-                          <td>{{$userschool[0]['mobilenumber']}}</td>
-                          <td>{{$userschool[0]['periodfrom']}}</td>
-                          <td>{{$userschool[0]['periodto']}}</td>
-                          <td><span class="tag tag-success">{{$userschool[0]['status']}}</span></td>
-                        @endforeach
-                          
-                        @endif --}}
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
-            </div>
-          </div>
-          @endif
 
         </div><!-- /.container-fluid -->
       </section>

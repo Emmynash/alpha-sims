@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Addpost;
+use App\Addstudent;
 use App\Addstudent_sec;
 use App\AmountBalTableTerm;
 use Illuminate\Http\Request;
@@ -52,6 +53,7 @@ class AccountController extends Controller
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
         return view('secondary.accounting.schoolfees.index_fees', compact('schooldetails'));
+        
     }
 
     public function addPaymentCategory(Request $request)
@@ -159,6 +161,8 @@ class AccountController extends Controller
 
         $sumTotalExpenditureTerm = RequestModelAccount::where(['schoolid'=> Auth::user()->schoolid, 'status'=>'accept', 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->sum('amountrequesting');
 
+        
+
         return view('secondary.accounting.summary', compact('schooldetails', 'transactionHistory', 'sumTotalExpenditure', 'sumTotalExpenditureTerm'));
     }
 
@@ -182,7 +186,7 @@ class AccountController extends Controller
 
         $getPendingInvoicesThisTerm = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>0, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->get();
 
-        return view('secondary.accounting.inoivces', compact('feeInvoices', 'getSettledInvoices', 'getPendingInvoices', 'getSettledInvoicesThisTerm', 'getPendingInvoicesThisTerm'));
+        return view('secondary.accounting.inoivces', compact('feeInvoices', 'getSettledInvoices', 'getPendingInvoices', 'getSettledInvoicesThisTerm', 'getPendingInvoicesThisTerm', 'schooldetails'));
     }
 
     public function orderRequest()
@@ -511,25 +515,50 @@ class AccountController extends Controller
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        $allStudent = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
-                    ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-                    ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
-                    ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlist_secs.classname', 'addsection_secs.sectionname')
-                    ->where(['addstudent_secs.schoolid'=>Auth::user()->schoolid, 'addstudent_secs.sessionstatus'=>0])->get();
+        if ($schooldetails->schoolid == "Secondary") {
+            $allStudent = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+            ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+            ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlist_secs.classname', 'addsection_secs.sectionname')
+            ->where(['addstudent_secs.schoolid'=>Auth::user()->schoolid, 'addstudent_secs.sessionstatus'=>0])->get();
 
-        $paidInvoices = FeesInvoice::where(['schoolid'=>Auth::user()->schoolid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'status'=>1])->pluck('system_id')->toArray();
+            $paidInvoices = FeesInvoice::where(['schoolid'=>Auth::user()->schoolid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'status'=>1])->pluck('system_id')->toArray();
 
-        $unpaidArray = array();
+            $unpaidArray = array();
 
-        for ($i=0; $i < $allStudent->count(); $i++) { 
+            for ($i=0; $i < $allStudent->count(); $i++) { 
 
-            if (!in_array ( $allStudent[$i]['usernamesystem'], $paidInvoices )) {
-                array_push($unpaidArray, $allStudent[$i]);
+                if (!in_array ( $allStudent[$i]['usernamesystem'], $paidInvoices )) {
+                    array_push($unpaidArray, $allStudent[$i]);
+                }
+                
             }
-            
+
+
+            return view('secondary.accounting.unpaidfees', compact('unpaidArray', 'schooldetails'));
+        }else{
+           $allStudent = Addstudent::join('users', 'users.id','=','addstudents.usernamesystem')
+                    ->join('classlists', 'classlists.id','=','addstudents.classid')
+                    ->join('addsections', 'addsections.id','=','addstudents.studentsection')
+                    ->select('addstudents.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlists.classnamee as classname', 'addsections.sectionname')
+                    ->where(['addstudents.schoolid'=>Auth::user()->schoolid, 'addstudents.sessionstatus'=>0])->get();
+
+            $paidInvoices = FeesInvoice::where(['schoolid'=>Auth::user()->schoolid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'status'=>1])->pluck('system_id')->toArray();
+
+            $unpaidArray = array();
+
+            for ($i=0; $i < $allStudent->count(); $i++) { 
+
+                if (!in_array ( $allStudent[$i]['usernamesystem'], $paidInvoices )) {
+                    array_push($unpaidArray, $allStudent[$i]);
+                }
+                
+            }
+
+
+            return view('secondary.accounting.unpaidfees', compact('unpaidArray', 'schooldetails'));
         }
 
 
-        return view('secondary.accounting.unpaidfees', compact('unpaidArray'));
     }
 }

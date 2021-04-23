@@ -12,8 +12,17 @@ class Addpost extends Model
     ];
 
     public function getClassList($schoolid) {
-        $classlist_sec = Classlist_sec::where('schoolid', $schoolid)->get();
-        return $classlist_sec;
+
+        $schooltype = Addpost::find($schoolid);
+
+        if ($schooltype->schooltype == "Primary") {
+            $classlist_sec = Classlist::where('schoolid', $schoolid)->get();
+            return $classlist_sec;
+        } else {
+            $classlist_sec = Classlist_sec::where('schoolid', $schoolid)->get();
+            return $classlist_sec;
+        }
+        
     }
 
     public function getSectionList($schoolid) {
@@ -43,9 +52,19 @@ class Addpost extends Model
 
     public function getClassName($classid)
     {
-        $classlist_sec = Classlist_sec::where('id', $classid)->first();
 
-        return $classlist_sec;
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+
+        if ($schoolDetails->schooltype == "Primary") {
+
+            $classlist_sec = Classlist::where('id', $classid)->first();
+            return $classlist_sec;
+
+        } else {
+            $classlist_sec = Classlist_sec::where('id', $classid)->first();
+            return $classlist_sec;
+        }
+        
     }
 
     public function getCategoryName($catid)
@@ -89,4 +108,11 @@ class Addpost extends Model
 
         return $grades;
     }
+
+    public function getPaymentDetails()
+    {
+        return $this->hasOne('App\PaymentDetails', 'schoolid', 'id');
+    }
+
+
 }

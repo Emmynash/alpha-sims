@@ -465,7 +465,7 @@
         }
         });
           $.ajax({
-            url:"/getclasssubject", //the page containing php script
+            url:'{{ route('getclasssubject') }}', //the page containing php script
             method: "POST", //request type,
             cache: false,
             data: {classid: studentclassMain},
@@ -506,7 +506,7 @@
         }
         });
           $.ajax({
-            url:"/getsubjectmarks", //the page containing php script
+            url:'{{ route('getsubjectmarks') }}', //the page containing php script
             method: "POST", //request type,
             cache: false,
             data: {subjectId: studentclassMain},

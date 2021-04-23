@@ -33,15 +33,7 @@
     <section class="content">
         <div class="container-fluid">
           <!-- SELECT2 EXAMPLE -->
-        @if ($studentDetails['userschool'][0]['status'] != "Pending")
 
-        @if (count($studentDetails['addstudent']) < 1)
-            <div class="alert alert-info alert-block">
-              {{-- <button type="button" class="close" data-dismiss="alert">×</button>	 --}}
-              <strong>It seems you don't have a Student in your school.</strong>
-              <i>You can add a student using system Id</i>
-            </div>
-        @endif
 
         @include('layouts.message')
 
@@ -67,7 +59,7 @@
                   <div class="form-group">
                     <select id="classid" name="studentclass" style="border: none; background-color:#EEF0F0;" class="form-control form-control-sm" type="text" placeholder="School Name">
                           <option value="">choose class</option>
-                        @foreach ($studentDetails['classList'] as $classlist)
+                        @foreach ($classList as $classlist)
                           <option value="{{$classlist->id}}">{{$classlist->classnamee}}</option>
                         @endforeach
                     </select>
@@ -76,8 +68,8 @@
                   <div class="form-group">
                     <select id="studentsectionvalue" name="studentsection" style="border: none; background-color:#EEF0F0;" class="form-control form-control-sm" type="text" placeholder="Student House">
                       <option value="">Select section</option>
-                      @foreach ($studentDetails['addSection'] as $section)
-                      <option value="{{$section->sectionname}}">{{$section->sectionname}}</option>
+                      @foreach ($addSection as $section)
+                      <option value="{{$section->id}}">{{$section->sectionname}}</option>
                       @endforeach
                     </select>
                   </div>
@@ -88,9 +80,9 @@
                 </div>
                 <div class="col-md-6">
 
-                  <div class="form-group">
+                  {{-- <div class="form-group">
                     <input id="schoolsession" name="schoolsession" style="border: none; background-color:#EEF0F0;" value="{{$studentDetails['userschool'][0]['schoolsession']}}" class="form-control form-control-sm" type="text" placeholder="Session">
-                  </div>
+                  </div> --}}
 
                   <div class="form-group">
                     <select id="studentshift" name="studentshift" style="border: none; background-color:#EEF0F0;" class="form-control form-control-sm" type="text" placeholder="Address">
@@ -149,7 +141,7 @@
       <div id="formforstudent">
             <h4 style="padding-top: 30px;">Student Details</h4>
 
-          <form id="addstudentstd" method="POST" action="/studentreg" enctype="multipart/form-data">
+          <form id="addstudentstd" method="POST" action="{{ route('studentreg') }}" enctype="multipart/form-data">
             @csrf
             <div class="row">
               <div>
@@ -214,7 +206,7 @@
                     <div class="form-group">
                       <select name="studenthouse" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg @error('studenthouse') is-invalid @enderror" type="text" placeholder="Mobile Number">
                         <option value="">Choose house</option>
-                        @foreach ($studentDetails['addHouses'] as $houses)
+                        @foreach ($addHouses as $houses)
                         <option value="{{$houses->id}}">{{$houses->housename}}</option>
                         @endforeach
                       </select>
@@ -235,7 +227,7 @@
                     <div class="form-group">
                         <select name="studentclub" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg @error('studentclub') is-invalid @enderror" type="text" placeholder="">
                             <option value="">Choose a club/society</option>
-                            @foreach ($studentDetails['addClub'] as $club)
+                            @foreach ($addClub as $club)
                             <option value="{{$club->clubname}}">{{$club->clubname}}</option>
                             @endforeach
                         </select>
@@ -366,127 +358,6 @@
             </div>
           </div>
         </div>
-
-{{--------------------------------------------------------------------------------------}}
-{{--                                add new student by admin modal                    --}}
-{{--------------------------------------------------------------------------------------}}
-
-            <!-- The Modal -->
-            <div class="modal fade" id="addnewstudentmodal">
-              <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                
-                  <!-- Modal Header -->
-                  <div class="modal-header">
-                    <h6 class="modal-title">Create A Student Account</h6>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  </div>
-                  
-                  <!-- Modal body -->
-                  <div class="modal-body">
-                      
-                      <i>Please all students will have to first create an account because only the system number is required for registration. However, you as an admin can create account for the student.</i>
-                    <!--<form action="javascript:console.log('submitted');" method="POST" id="manualcreateuser">-->
-                    <!--  @csrf-->
-                    <!--  <div class="row">-->
-                    <!--    <div class="col-md-12">-->
-                    <!--      <div class="card" style="">-->
-                    <!--        <div class="card-body">-->
-                    <!--          <div class="form-group">-->
-                    <!--            <input type="text" name="firstname" placeholder="First Name" style="border: none; background-color:#EEF0F0;" class="form-control form-control-sm">-->
-                    <!--          </div>-->
-                    <!--          <div class="form-group">-->
-                    <!--            <input type="text" name="middlename" placeholder="Middle Name" style="border: none; background-color:#EEF0F0;" class="form-control form-control-sm">-->
-                    <!--          </div>-->
-                    <!--          <div class="form-group">-->
-                    <!--            <input type="text" name="lastname" placeholder="Last Name" placeholder="Last Name" style="border: none; background-color:#EEF0F0;" class="form-control form-control-sm">-->
-                    <!--          </div>-->
-                    <!--          <div class="form-group">-->
-                    <!--            <input type="email" name="email" value="{{ old('email') }}" placeholder="Email" style="border: none; background-color:#EEF0F0;" class="form-control form-control-sm">-->
-                    <!--          </div>-->
-                    <!--          <div class="form-group">-->
-                    <!--            <input type="number" name="phonenumber" placeholder="Phone Number" style="border: none; background-color:#EEF0F0;" class="form-control form-control-sm">-->
-                    <!--          </div>-->
-                    <!--          <div class="form-group">-->
-                    <!--            <input type="password" name="password" placeholder="Password" style="border: none; background-color:#EEF0F0;" class="form-control form-control-sm">-->
-                    <!--          </div>-->
-                    <!--        </div>-->
-
-                    <!--      </div>-->
-                    <!--    </div>-->
-                    <!--  </div>-->
-                    <!--</form>-->
-                    <!--<i style="font-style: normal; font-size: 12px; color: red;">Note: Use phonenumber as the temporary password</i>-->
-                  </div>
-                  
-                  <!-- Modal footer -->
-                  <div class="modal-footer">
-                    <button id="manualcreateuserbtn" type="button" class="btn btn-success btn-sm">Create</button>
-                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                  </div>
-                  
-                </div>
-              </div>
-            </div>
-
-        @endif
-        @if ($studentDetails['userschool'][0]['status'] !="Approved")
-        <!-- /.row -->
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Status</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>School Id</th>
-                      <th>Email</th>
-                      <th>Phone Number</th>
-                      <th>Active From</th>
-                      <th>End On</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      {{-- @if ($userschool[0]["status"] !="Approved")
-
-                      @foreach ($userschool as $schools)
-                        <td>{{$userschool[0]['schoolId']}}</td>
-                        <td>{{$userschool[0]['schoolemail']}}</td>
-                        <td>{{$userschool[0]['mobilenumber']}}</td>
-                        <td>{{$userschool[0]['periodfrom']}}</td>
-                        <td>{{$userschool[0]['periodto']}}</td>
-                        <td><span class="tag tag-success">{{$userschool[0]['status']}}</span></td>
-                      @endforeach
-                        
-                      @endif --}}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
-        @endif
-
-
 
         </div><!-- /.container-fluid -->
       </section>

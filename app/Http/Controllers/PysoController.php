@@ -12,7 +12,9 @@ use App\Addsection;
 use App\AddClub;
 use App\Addstudent;
 use App\Addmoto;
+use App\AddmotoPri;
 use App\Addteachers;
+use App\MotoListPri;
 use Illuminate\Support\Facades\Auth;
 use Redirect;
 use Carbon\Carbon;
@@ -31,8 +33,6 @@ class PysoController extends Controller
         $addHouses = Addhouses::where('schoolid', $id)->get();
         $addSection = Addsection::where('schoolid', $id)->get();
         $addClub = AddClub::where('schoolid', $id)->get();
-        // $addsubject = Addsubject::where('schoolid', $id)->get();
-        // $gradeCheck = Addgrades::where('schoolid', $id)->get();
 
         if (Auth::user()->role == "Teacher") {
 
@@ -60,7 +60,71 @@ class PysoController extends Controller
             );
         }
 
-        return view('pages.pycomoto')->with('studentDetails', $studentDetails);
+        return view('pages.moto.pycomoto')->with('studentDetails', $studentDetails);
+    }
+
+    public function motosettings()
+    {
+
+        $motosettings = MotoListPri::where('schoolid', Auth::user()->schoolid)->get();
+
+        return view('pages.moto.motosettings', compact('motosettings'));
+    }
+
+    public function addmotomain($id)
+    {
+        $motosettings = MotoListPri::where('schoolid', Auth::user()->schoolid)->get();
+        $getStudentDetails = User::find($id);
+
+        return view('pages.moto.addmoto', compact('motosettings', 'getStudentDetails'));
+    }
+
+    public function addmotoPost(Request $request, $id)
+    {
+        $requestData = $request->except(['_token']);
+
+        $getschoolData = Addpost::find(Auth::user()->schoolid);
+
+        $check = AddmotoPri::where(['session'=>$getschoolData->schoolsession, 'schoolid'=>Auth::user()->schoolid, 'term'=>$getschoolData->term])->get();
+
+        if ($check->count() > 0) {
+            return back()->with('error', 'moto already added');
+        }
+
+        foreach ($requestData as $key => $value) {
+            
+            $explodeSelection = explode('_', $value);
+
+            
+
+            $addmoto = new AddmotoPri();
+            $addmoto->moto_id = $explodeSelection[0];
+            $addmoto->moto_score = $explodeSelection[2];
+            $addmoto->student_id = $id;
+            $addmoto->schoolid = Auth::user()->schoolid;
+            $addmoto->session = $getschoolData->schoolsession;
+            $addmoto->term = $getschoolData->term;
+            $addmoto->save();
+
+        }
+
+        return back()->with('success', 'process was successfull');
+
+    }
+
+    public function addMotoPri(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required',
+        ]);
+
+        $addMotoPri = new MotoListPri();
+        $addMotoPri->name = $request->name;
+        $addMotoPri->schoolid = Auth::user()->schoolid;
+        $addMotoPri->save();
+
+        return back()->with('success', 'added successfully');
+        
     }
 
     public function fetchStudentData(Request $request){
@@ -78,14 +142,14 @@ class PysoController extends Controller
         }
 
         $studentsCategory = DB::table('addstudents')
-        ->join('users', 'users.id', '=', 'addstudents.usernamesystem')
-        ->join('classlists', 'classlists.id', '=', 'addstudents.classid')
-        ->select('addstudents.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlists.classnamee')
-        ->where(['addstudents.classid' => $request->input('studentclass'), 
-        'addstudents.studentsection' => $request->input('studentsection'), 
-        'addstudents.schoolsession' => $request->input('sessionquery'), 
-        'addstudents.studentshift' => $request->input('studentshift')])
-        ->get();
+                            ->join('users', 'users.id', '=', 'addstudents.usernamesystem')
+                            ->join('classlists', 'classlists.id', '=', 'addstudents.classid')
+                            ->select('addstudents.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlists.classnamee')
+                            ->where(['addstudents.classid' => $request->input('studentclass'), 
+                            'addstudents.studentsection' => $request->input('studentsection'), 
+                            'addstudents.schoolsession' => $request->input('sessionquery'), 
+                            'addstudents.studentshift' => $request->input('studentshift')])
+                            ->get();
 
         $addmoto = Addmoto::where(['schoolid'=>Auth::user()->schoolid, 
         'classid'=>$request->input('studentclass'), 

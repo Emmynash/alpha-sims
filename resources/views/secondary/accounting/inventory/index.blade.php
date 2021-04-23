@@ -1,9 +1,12 @@
-@extends('layouts.app_sec')
-
+@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@include('layouts.aside_sec')
+@if ($schooldetails->schooltype == "Primary")
+@include('layouts.asideside') 
+@else
+  @include('layouts.aside_sec')
+@endif
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -147,7 +150,7 @@
                             <td>{{ $item->nameofitem }}</td>
                             <td>{{ number_format($item->amount) }}</td>
                             <td>{{ $item->quantity }}</td>
-                            <td>{{ $schooldetails->getClassName($item->classid)->classname }}</td>
+                            <td>{{ $schooldetails->schooltype == "Primary" ? $schooldetails->getClassName($item->classid)->classnamee : $schooldetails->getClassName($item->classid)->classname }}</td>
                             <td>{{ $item->quantity <1 ? "Unavailable":"Available" }}</td>
                             <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#bookoptions{{ $item->id }}">View</button></td>
 
@@ -259,7 +262,7 @@
 
                             @foreach ($schooldetails->getClassList($schooldetails->id) as $item)
 
-                                <option value="{{ $item->id }}">{{ $item->classname }}</option>
+                                <option value="{{ $item->id }}">{{ $schooldetails->schooltype == "Primary" ? $item->classnamee: $item->classname }}</option>
                                 
                             @endforeach
 

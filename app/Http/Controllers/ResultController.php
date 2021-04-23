@@ -14,12 +14,12 @@ use App\Addmarks;
 use App\Addsubject;
 use App\ClassAverageMarksPri;
 use App\ResultAveragePri;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Addmoto;
 use Redirect;
 use Carbon\Carbon;
 use App\Studentattendance;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Quotation;
 
 class ResultController extends Controller

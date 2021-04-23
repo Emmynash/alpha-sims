@@ -33,28 +33,8 @@
     <section class="content">
         <div class="container-fluid">
           <!-- SELECT2 EXAMPLE -->
-        @if ($studentDetails['userschool'][0]['status'] != "Pending" && $studentDetails['userschool'][0]['schooltype'] != "Primary")
-        <button>Add classes</button>
 
-        <div class="card card-default">
-          <!-- /.card-header -->
-          <div class="card-body">
-
-            <p>card body</p>
-
-
-          </div>
-          <!-- /.card-body -->
-          <div class="card-footer">
-            {{-- Visit <a href="https://select2.github.io/">Select2 documentation</a> for more examples and information about
-            the plugin. --}}
-          </div>
-        </div>
-        <!-- /.card -->
-
-        @else
-
-        @if (count($studentDetails['classList']) < 1)
+        @if (count($classList) < 1)
             <div class="alert alert-info alert-block">
               {{-- <button type="button" class="close" data-dismiss="alert">×</button>	 --}}
               <strong>It seems you haven't added a class yet.</strong>
@@ -93,13 +73,13 @@
                     </thead>
                     <tbody>
                       
-                        @if (count($studentDetails['classList']) > 0)
+                        @if (count($classList) > 0)
   
-                        @foreach ($studentDetails['classList'] as $classes)
+                        @foreach ($classList as $classes)
                         <tr>
                           <td>{{$classes->id}}</td>
                           <td>{{$classes->classnamee}}</td>
-                          <td>{{$classes->studentcount}}</td>
+                          <td>{{$classes->getClassCount($classes->id)}}</td>
 
                           <!-- The Modal -->
                           <div class="modal fade" id="myModal{{$classes->id}}">
@@ -151,64 +131,6 @@
               <!-- /.card -->
             </div>
           </div>
-        
-        @endif
-
-          @if ($studentDetails['userschool'][0]['status'] == "Pending")
-                      <!-- /.row -->
-        <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Status</h3>
-  
-                  <div class="card-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
-                      <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-  
-                      <div class="input-group-append">
-                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>School Id</th>
-                        <th>Email</th>
-                        <th>Phone Number</th>
-                        <th>Active From</th>
-                        <th>End On</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        {{-- @if (count($userschool) > 0)
-  
-                        @foreach ($userschool as $schools)
-                          <td>{{$userschool[0]['schoolId']}}</td>
-                          <td>{{$userschool[0]['schoolemail']}}</td>
-                          <td>{{$userschool[0]['mobilenumber']}}</td>
-                          <td>{{$userschool[0]['periodfrom']}}</td>
-                          <td>{{$userschool[0]['periodto']}}</td>
-                          <td><span class="tag tag-success">{{$userschool[0]['status']}}</span></td>
-                        @endforeach
-                          
-                        @endif --}}
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
-            </div>
-          </div>
-          @endif
 
         </div><!-- /.container-fluid -->
       </section>

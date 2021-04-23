@@ -89,7 +89,7 @@
                         <div>
                             <h5>Promotion to</h5>
                             @include('layouts.message')
-                            <form method="POST" action="/promotemain" id="promotionmain">
+                            <form method="POST" action="{{ route('promotemain') }}" id="promotionmain">
                               @csrf
                             <div  style="display: flex; flex-direction: row;">
                                 <div class="form-group" style="width: 45%;">

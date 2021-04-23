@@ -64,10 +64,6 @@ class MarksController extends Controller
             );
         }
 
-        
-
-        
-
         return view('pages.addmarks')->with('studentDetails', $studentDetails);
     }
 
@@ -484,46 +480,52 @@ class MarksController extends Controller
 
         // return response()->json($request->input(), 200);
 
-        $validator = Validator::make($request->all(),[
-            'studentclass' => 'required',
-            'subjectbyclass' => 'required',
-            'schoolterm' => 'required',
-            'sessionquery' => 'required',
-            'studentshift' => 'required',
-            'studentsection' => 'required',
-        ]);
+        try {
+            $validator = Validator::make($request->all(),[
+                'studentclass' => 'required',
+                'subjectbyclass' => 'required',
+                'schoolterm' => 'required',
+                'sessionquery' => 'required',
+                'studentshift' => 'required',
+                'studentsection' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(['errors'=>$validator->errors()->all()]);
+            }
+    
+            $session = $request->input('sessionquery');
+            $classId = $request->input('studentclass');
+            $subjectbyclassid = $request->input('subjectbyclass');
+            $schoolterm = $request->input('schoolterm');
+            $studentshift = $request->input('studentshift');
+            $studentsection = $request->input('studentsection');
+    
+            $marks = Addmarks::where(['schoolid' => Auth::user()->schoolid, 'classid' => $classId, 'subjectid' => $subjectbyclassid, 'term' => $schoolterm, 'shift' => $studentshift, 'section' => $studentsection, 'session' => $session])->get();
+            
+                $studentlist = DB::table('addstudents')
+                ->join('users', 'users.id', '=', 'addstudents.usernamesystem')
+                ->leftJoin('addmarks', function($join) use($subjectbyclassid, $schoolterm){
+                    $join->on('addmarks.regno', '=', 'addstudents.id');
+                    $join->where(['addmarks.subjectid' => $subjectbyclassid, 'addmarks.term'=> $schoolterm]);
+                })
+                ->select('addstudents.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmarks.subjectid', 'addmarks.exams', 'addmarks.grades', 'addmarks.totalmarks', 'addmarks.ca1', 'addmarks.ca2', 'addmarks.ca3', 'addmarks.position', 'addmarks.id as markid')
+                ->where(['addstudents.classid' => $classId, 'addstudents.schoolsession' => $session, 
+                'addstudents.studentshift' => $studentshift, 'addstudents.studentsection' => $studentsection])->orderBy('renumberschoolnew', 'desc')->get();
+    
+            $a = array();
+    
+            for ($i=0; $i < count($marks); $i++) { 
+                $markscheck = $marks[$i]['regno'];
+                    array_push($a, $markscheck);
+            }
+    
+            return response()->json([$studentlist, $a], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
 
-        if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->all()]);
+            return response()->json($th, 200);
         }
-
-        $session = $request->input('sessionquery');
-        $classId = $request->input('studentclass');
-        $subjectbyclassid = $request->input('subjectbyclass');
-        $schoolterm = $request->input('schoolterm');
-        $studentshift = $request->input('studentshift');
-        $studentsection = $request->input('studentsection');
-
-        $marks = Addmarks::where(['schoolid' => Auth::user()->schoolid, 'classid' => $classId, 'subjectid' => $subjectbyclassid, 'term' => $schoolterm, 'shift' => $studentshift, 'section' => $studentsection, 'session' => $session])->get();
-        
-            $studentlist = DB::table('addstudents')
-            ->join('users', 'users.id', '=', 'addstudents.usernamesystem')
-            ->leftJoin('addmarks', function($join) use($subjectbyclassid, $schoolterm){
-                $join->on('addmarks.regno', '=', 'addstudents.id');
-                $join->where(['addmarks.subjectid' => $subjectbyclassid, 'addmarks.term'=> $schoolterm]);
-            })
-            ->select('addstudents.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmarks.subjectid', 'addmarks.exams', 'addmarks.grades', 'addmarks.totalmarks', 'addmarks.ca1', 'addmarks.ca2', 'addmarks.ca3', 'addmarks.position', 'addmarks.id as markid')
-            ->where(['addstudents.classid' => $classId, 'addstudents.schoolsession' => $session, 
-            'addstudents.studentshift' => $studentshift, 'addstudents.studentsection' => $studentsection])->orderBy('renumberschoolnew', 'desc')->get();
-
-        $a = array();
-
-        for ($i=0; $i < count($marks); $i++) { 
-            $markscheck = $marks[$i]['regno'];
-                array_push($a, $markscheck);
-        }
-
-        return response()->json([$studentlist, $a], 200);
 
     }
 

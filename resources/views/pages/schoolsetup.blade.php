@@ -8,9 +8,6 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <div style="width: 90%; margin: 0 auto; padding-top: 10px;">
-      @include('layouts.message')
-    </div>
     
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -34,7 +31,7 @@
     <section class="content">
         <div class="container-fluid">
           <!-- SELECT2 EXAMPLE -->
-        @if ($studentDetails['userschool'][0]['status'] != "Pending")
+          @include('layouts.message')
         <div class="card card-default">
           <!-- /.card-header -->
           <div class="card-body">
@@ -43,7 +40,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                    <input id="initialvalue" name="schoolInitial" value="{{$studentDetails['userschool'][0]['shoolinitial']}}" style="border: none; background-color:#EEF0F0; text-transform:uppercase" class="form-control form-control-lg" type="text" placeholder="School Initial">
+                    <input id="initialvalue" name="schoolInitial" value="{{$schooldetails->shoolinitial}}" style="border: none; background-color:#EEF0F0; text-transform:uppercase" class="form-control form-control-lg" type="text" placeholder="School Initial">
                         <button data-toggle="collapse" data-target="#demo" style="background: transparent; border: none; outline: none; color: blue;">What is school initials?</button>
                         <div id="demo" class="collapse" style="border-bottom: 10px;">
                           <p style="margin-left: 10px; font-size: 13px;">
@@ -52,18 +49,35 @@
                             <i style="color: red;">School initial is a compulsory field and cannot be changed.</i>
                           </p>
                         </div><p></p>
-                        @if ($studentDetails['userschool'][0]['shoolinitial'] == "")
-                            <button onclick="addschoolinitial('{{$studentDetails['userschool'][0]['schoolId']}}')" class="btn btn-sm btn-info">Add school Initial</button>
+                        @if ($schooldetails->shoolinitial == "")
+                            <button onclick="addschoolinitial('{{$schooldetails->schoolId}}')" class="btn btn-sm btn-info">Add school Initial</button>
                         @endif
                     </div>
                     
                 </div>
                 <div class="col-md-6">
+
+                  <form action="{{ route('add_term') }}" method="post">
+                    @csrf
+                    <div class="form-group">
+                      <select name="term" id="" class="form-control form-control-lg" style="border: none; background-color:#EEF0F0; text-transform:uppercase">
+                        <option value="">Select current term</option>
+                        <option value="1" {{ $schooldetails->term == 1 ? "selected":"" }}>first term</option>
+                        <option value="2" {{ $schooldetails->term == 2 ? "selected":"" }}>second term</option>
+                        <option value="3" {{ $schooldetails->term == 3 ? "selected":"" }}>third term</option>
+                      </select>
+                    </div>
+                    <button type="button" style="margin-bottom: 5px;" class="btn btn-sm btn-info" data-toggle="collapse" data-target="#updateterm">Proceed</button>
+                    <div style="margin-bottom: 5px;" id="updateterm" class="collapse">
+                      <i>Click the add button to proceed</i>  <button class="btn btn-sm btn-success">Add</button>
+                    </div>
+                  </form>
+
                   <form id="schoolsessionSetterform" method="POST" action="javascript:console.log('submitted');">
                     @csrf
                       <i id="processConfirm" style="display: none; color: green; font-size: 12px; font-style: normal;"> <i class="fas fa-check-circle"></i> Session succefully added</i>
                       <div class="form-group">
-                        <input id="schoolsessionSetter" name="schoolsessionSetter" value="{{$studentDetails['userschool'][0]['schoolsession']}}" style="border: none; background-color:#EEF0F0; text-transform:uppercase" class="form-control form-control-lg" type="text" placeholder="School Session">
+                        <input id="schoolsessionSetter" name="schoolsessionSetter" value="{{$schooldetails->schoolsession}}" style="border: none; background-color:#EEF0F0; text-transform:uppercase" class="form-control form-control-lg" type="text" placeholder="School Session">
                       </div>
                       
                   </form>
@@ -186,15 +200,6 @@
 
                 </div>
               </div>
-
-
-
-
-
-
-
-            
-
           </div>
           <!-- /.card-body -->
           <div class="card-footer">
@@ -202,122 +207,6 @@
             the plugin. --}}
           </div>
         </div>
-
-        <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Student List</h3>
-  
-                  <div class="card-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
-                      <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-  
-                      <div class="input-group-append">
-                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body table-responsive p-0">
-                  <table class="table table-hover text-nowrap" id="studenttable">
-                    <thead>
-                      <tr>
-                        <th>Reg No</th>
-                        <th>Class</th>
-                        <th>Name</th>
-                        <th>Gender</th>
-                        <th>Religion</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        @if ($studentDetails['userschool'][0]["status"] !="Approved")
-  
-                        @foreach ($userschool as $schools)
-                          <td>{{$userschool[0]['schoolId']}}</td>
-                          <td>{{$userschool[0]['schoolemail']}}</td>
-                          <td>{{$userschool[0]['mobilenumber']}}</td>
-                          <td>{{$userschool[0]['periodfrom']}}</td>
-                          <td>{{$userschool[0]['periodto']}}</td>
-                          <td><span class="tag tag-success">{{$userschool[0]['status']}}</span></td>
-                        @endforeach
-                          
-                        @endif
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
-            </div>
-          </div>
-
-
-        <!-- /.card -->
-        @endif
-        @if ($studentDetails['userschool'][0]["status"] !="Approved")
-        <!-- /.row -->
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Status</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>School Id</th>
-                      <th>Email</th>
-                      <th>Phone Number</th>
-                      <th>Active From</th>
-                      <th>End On</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      @if ($studentDetails['userschool'][0]["status"] !="Approved")
-
-                      @foreach ($userschool as $schools)
-                        <td>{{$userschool[0]['schoolId']}}</td>
-                        <td>{{$userschool[0]['schoolemail']}}</td>
-                        <td>{{$userschool[0]['mobilenumber']}}</td>
-                        <td>{{$userschool[0]['periodfrom']}}</td>
-                        <td>{{$userschool[0]['periodto']}}</td>
-                        <td><span class="tag tag-success">{{$userschool[0]['status']}}</span></td>
-                      @endforeach
-                        
-                      @endif
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
-        @endif
-
-
 
         </div><!-- /.container-fluid -->
       </section>

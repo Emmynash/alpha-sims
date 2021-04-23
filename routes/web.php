@@ -17,14 +17,136 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', "PagesController@index");
 
 
-Route::group(['middleware' => ['auth', 'can:settings']], function () {
+Route::group(['prefix' => 'pri'], function () {
 
-    Route::get('/grades', 'PagesController@grades');
-    Route::POST('/submitgrades', 'PagesController@submitMark');
-    Route::POST('/deletegrade', 'PagesController@deleteGrade');
-    Route::POST('/addsession', 'PagesController@addsession');
+    Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
+        Route::get('/viewclasslist', 'SubjectController@viewClass')->name('viewclasslist');
+    });
 
+    Route::group(['middleware' => ['auth', 'can:asign subjects']], function () {
+            //subject controller 
+        Route::get('/addsubject', 'SubjectController@index')->name('addsubject');
+        Route::Post('/addsubjectpost', 'SubjectController@store')->name('addsubjectpost');
+        Route::get('/subjectlist', 'SubjectController@subjectList')->name('subjectlist');
+        Route::POST('/updatesubject', 'SubjectController@updateSubject')->name('updatesubject');
+    });
+
+    Route::group(['middleware' => ['auth', 'can:add students']], function () { //
+        Route::get('/viewstudent', 'StudentController@viewlist')->name('viewstudent');
+        Route::POST('/studentreg', 'StudentController@store')->name('studentreg');
+        Route::get('/addstudent', 'StudentController@index')->name('addstudent');
+
+        //student
+        // Route::get('/addstudent', ['uses' => 'StudentController@index','roles' => ['Admin', 'Teacher']])->middleware('roles');
+        Route::POST('/confirmReg', 'StudentController@confirmReg')->name('confirmReg');
+        Route::POST('/confirmRegNew', 'StudentController@confirmRegNew')->name('confirmRegNew');
+        Route::POST('/verifyreg', 'StudentController@verifyuserregistration')->name('verifyreg');
+
+
+    });
+
+    Route::group(['middleware' => ['auth', 'can:asign form teacher']], function () { //
+        Route::get('/addteacher', 'TeachersController@index')->name('addteacher');
+        Route::POST('addteachersverify', 'TeachersController@verifyTeacher')->name('addteachersverify');
+        Route::POST('addteachermain', 'TeachersController@store')->name('addteachermain');
+        Route::get('/viewteachers', 'TeachersController@viewteachers')->name('viewteachers');
+    });
+
+    Route::group(['middleware' => ['auth', 'role:Teacher']], function () {
+        Route::get('/editprofileteacher', 'TeachersController@editprofileteacher')->name('editprofileteacher');
+        
+    });
+
+    Route::group(['middleware' => ['auth']], function () { //, 'can:take teachers attendance'
+        Route::get('/teachersattendance', 'TeachersController@teachersAttendance')->name('teachersattendance');
+    });
+
+    Route::group(['middleware' => ['auth', 'can:manage marks']], function () {
+
+        //-------------------------------------------------------------------------------------
+        //                                 marks controller
+        //-------------------------------------------------------------------------------------
+
+        Route::get('/managemarks', 'MarksController@index')->name('managemarks');
+        Route::POST('/getclasssubject', 'MarksController@getClassSubject')->name('getclasssubject');
+        Route::POST('/getsubjectmarks', 'MarksController@getsubjectmarks')->name('getsubjectmarks');
+        Route::POST('/fetchusersbyclass', 'MarksController@getclassStudentsbyname')->name('fetchusersbyclass');
+        Route::POST('/addstudentmarks', 'MarksController@addStudentMarks')->name('addstudentmarks');
+        Route::get('/viewmarks', 'MarksController@viewmarks')->name('viewmarks');
+        Route::POST('/viewusersbyclass', 'MarksController@viewusersbyclass')->name('viewusersbyclass');
+        Route::POST('/deletestudent', 'MarksController@deletestudent');
+        Route::POST('/process_position_pri', 'MarksController@processPriPosition')->name('process_position_pri');
+        
+    });
+
+    Route::group(['middleware' => ['auth', 'can:add psychomotor']], function () { // 
+        Route::get('/moto', 'PysoController@index')->name('moto');
+        Route::get('/motosettings', 'PysoController@motosettings')->name('motosettings');
+        Route::POST('/fetchstudentdata', 'PysoController@fetchStudentData')->name('fetchstudentdata');
+        Route::POST('/addmoto', ['uses' => 'PysoController@addmoto','roles' => ['Admin', 'Teacher']])->middleware('roles');
+        Route::get('/addmotopage', ['uses' => 'PysoController@addmotopage','roles' => ['Admin', 'Teacher']])->middleware('roles');
+        Route::POST('/addmotopri', 'PysoController@addMotoPri')->name('addmotopri');
+        Route::get('/addmotomain/{id}', 'PysoController@addmotomain')->name('addmotomain');
+        Route::POST('/addmoto_post/{id}', 'PysoController@addmotoPost')->name('addmoto_post');
+    });
+
+
+    Route::group(['middleware' => ['auth']], function () { //, 'can:manage staff'
+        Route::get('/addstaff', 'TeachersController@addStaff')->name('addstaff');
+        Route::POST('/addstaffdata', 'TeachersController@addstaffdata')->name('addstaffdata');
+        Route::POST('/addstaffrecord', 'TeachersController@addroles')->name('addstaffrecord');
+    });
+
+
+
+    Route::group(['middleware' => ['auth', 'can:settings']], function () { //
+
+        Route::get('/grades', 'PagesController@grades')->name('grades');
+        Route::POST('/submitgrades', 'PagesController@submitMark')->name('submitgrades');
+        Route::POST('/deletegrade', 'PagesController@deleteGrade')->name('deletegrade');
+        Route::POST('/addsession', 'PagesController@addsession')->name('addsession');
+        Route::get('/allusers', 'AllUsersController@index')->name('allusers');
+        Route::get('/setupschool', 'PagesController@setUpSchool')->name('setupschool');
+        Route::POST('/add_term', 'PagesController@addTerm')->name('add_term');
+        Route::get('/payment_details', 'PaymentDetailsController@index')->name('payment_details');
+        Route::post('/add_details', 'PaymentDetailsController@addDetails')->name('add_details');
+    
+    });
+    
+
+    Route::group(['middleware' => ['auth']], function () { //, 'can:student promotion'
+        // promotion controller 
+        Route::get('/promotion', 'PromotionController@index')->name('promotion');
+        Route::POST('/fetchstudentspromotion', 'PromotionController@fetchstudentsforpromotion')->name('fetchstudentspromotion');
+        Route::POST('/promotemain', 'PromotionController@promotemain')->name('promotemain');
+    });
+
+    // Route::group(['middleware' => ['auth']], function () { //, 'can:student promotion'
+    //     // promotion controller 
+    //     Route::get('/index_fees_pri', 'AccountController@index_fees')->name('index_fees_pri');
+    //     Route::get('/summary_pri', 'AccountController@summary')->name('summary_pri')->middleware(['auth', 'can:view account summary']); 
+
+    //     Route::post('/add_category_pri', 'AccountController@addPaymentCategory')->name('add_category_pri');
+    //     Route::post('/update_category_pri/{id}', 'AccountController@updatePaymentCategory')->name('update_category_pri');
+    //     // Route::post('/add_category_amount', 'AccountController@addcategoryamount')->name('add_category_amount');
+    //     // Route::post('/deletepaymentcategory/{id}', 'AccountController@deletePaymentCategory')->name('deletepaymentcategory'); 
+    //     // Route::post('/updatepaymentamount/{id}', 'AccountController@updateCategoryAmount')->name('updatepaymentamount'); 
+    // });
+
+    
+
+
+    
+
+
+
+
+
+    
+    
 });
+
+
 
 
 
@@ -43,31 +165,21 @@ Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
 
 
 
-//student
-Route::get('/addstudent', ['uses' => 'StudentController@index','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/confirmReg', 'StudentController@confirmReg')->middleware('auth');
-Route::POST('/confirmRegNew', 'StudentController@confirmRegNew')->middleware('auth');
-
-Route::get('/addstudent', ['uses' => 'StudentController@index','roles' => ['Admin', 'Teacher']])->middleware('roles');
-
-Route::get('/viewstudent', 'StudentController@viewlist')->middleware('auth');
-Route::POST('/studentreg', 'StudentController@store')->middleware('auth');
-
-
-
 Route::get('/studentattendance', ['uses' => 'StudentController@studentAttendance','roles' => ['Admin', 'Teacher']])->middleware('roles');
 Route::POST('/studentatt', ['uses' => 'StudentController@studentAtt','roles' => ['Admin', 'Teacher']])->middleware('roles');
 Route::get('/viewallstudents', ['uses' => 'StudentController@viewallstudents','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
 Route::POST('/viewatstudents', ['uses' => 'StudentController@viewatstudent','roles' => ['Admin', 'Teacher', "Student"]])->middleware('roles');
 Route::get('/exammark', ['uses' => 'StudentController@getExamsMarks','roles' => ['Student']])->middleware('roles');
 Route::POST('/specificresult', ['uses' => 'StudentController@specificresult','roles' => ['Student']])->middleware('roles');
-Route::POST('/verifyreg', ['uses' => 'StudentController@verifyuserregistration','roles' => ['Admin']])->middleware('roles');
+
+
+
 Route::POST('/regusermanuall', ['uses' => 'StudentController@regUserManuallyAdmin','roles' => ['Admin']])->middleware('roles');
 
 
 
 //setup school
-Route::get('/setupschool', 'PagesController@setUpSchool')->middleware('auth');
+
 Route::POST('/updateSchoolInitial', 'PagesController@updateSchoolInitial')->middleware('auth');
 Route::POST('/addclasslist', 'PagesController@addclasslist')->middleware('auth');
 Route::POST('/addhouses', 'PagesController@addhouses')->middleware('auth');
@@ -84,33 +196,29 @@ Route::group(['middleware' => ['auth', 'can:manage staff']], function () {
 
 
 //teachers Controller
-Route::get('/addteacher', 'TeachersController@index')->middleware('auth');
-Route::POST('addteachersverify', 'TeachersController@verifyTeacher')->middleware('auth');
-Route::POST('addteachermain', 'TeachersController@store')->middleware('auth');
-Route::get('/viewteachers', ['uses' => 'TeachersController@viewteachers','roles' => ['Admin', 'Supervisor']])->middleware('roles');
+
+
 Route::POST('/singleTeacher', ['uses' => 'TeachersController@getTeacher','roles' => ['Admin', 'Supervisor']])->middleware('roles');
 Route::POST('/getallteacher', ['uses' => 'TeachersController@getAllTeachers','roles' => ['Admin', 'Supervisor']])->middleware('roles');
 Route::POST('/getallteacherforview', ['uses' => 'TeachersController@getAllTeachersforview','roles' => ['Admin', 'Supervisor']])->middleware('roles');
-Route::get('/teachersattendance', ['uses' => 'TeachersController@teachersAttendance','roles' => ['Admin', 'Supervisor']])->middleware('roles');
+
 Route::POST('/teachersatt', ['uses' => 'TeachersController@teachersAtt','roles' => ['Admin', 'Supervisor']])->middleware('roles');
 Route::get('/viewallteachers', ['uses' => 'TeachersController@viewallTeachers','roles' => ['Admin', 'Supervisor']])->middleware('roles');
 Route::POST('/viewatteachers', ['uses' => 'TeachersController@viewatTeachers','roles' => ['Admin', 'Supervisor']])->middleware('roles');
-Route::get('/addstaff', ['uses' => 'TeachersController@addStaff','roles' => ['Admin']])->middleware('roles');
-Route::POST('/addstaffdata', ['uses' => 'TeachersController@addstaffdata','roles' => ['Admin']])->middleware('roles');
-Route::POST('/addstaffrecord', ['uses' => 'TeachersController@addroles','roles' => ['Admin']])->middleware('roles');
-Route::get('/editprofileteacher', ['uses' => 'TeachersController@editprofileteacher','roles' => ['Teacher']])->middleware('roles');
+
+
+
 Route::POST('/editteachersdata', ['uses' => 'TeachersController@editteachersdata','roles' => ['Teacher']])->middleware('roles');
 
 // Route::POST('/editteachersdata', ['uses' => 'TeachersController@editteachersdata','roles' => ['Admin']])->middleware('roles');
 
-//subject controller 
-Route::get('/addsubject', 'SubjectController@index')->middleware('auth');
-Route::Post('/addsubjectpost', 'SubjectController@store')->middleware('auth');
-Route::get('/subjectlist', 'SubjectController@subjectList')->middleware('auth');
-Route::POST('/updatesubject', ['uses' => 'SubjectController@updateSubject','roles' => ['Admin']])->middleware('roles');
+
 
 //leads to class list
-Route::get('/viewclasslist', 'SubjectController@viewClass')->middleware('auth');
+
+
+
+
 Route::POST('/deletesubject', ['uses' => 'SubjectController@deleteSubject','roles' => ['Admin', 'Teacher']])->middleware('roles');
 
 Auth::routes(['verify' => true]);
@@ -121,27 +229,9 @@ Route::POST('/uploadProfilePixwithout', 'HomeController@uploadProfilePixwithout'
 
 Route::get('/home', 'HomeController@index')->middleware('auth');
 
-//-------------------------------------------------------------------------------------
-//                                 marks controller
-//-------------------------------------------------------------------------------------
-
-Route::get('/managemarks', ['uses' => 'MarksController@index','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/getclasssubject', ['uses' => 'MarksController@getClassSubject','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/getsubjectmarks', ['uses' => 'MarksController@getsubjectmarks','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/fetchusersbyclass', ['uses' => 'MarksController@getclassStudentsbyname','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/addstudentmarks', ['uses' => 'MarksController@addStudentMarks','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::get('/viewmarks', ['uses' => 'MarksController@viewmarks','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/viewusersbyclass', ['uses' => 'MarksController@viewusersbyclass','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/deletestudent', ['uses' => 'MarksController@deletestudent','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/process_position_pri', ['uses' => 'MarksController@processPriPosition','roles' => ['Admin', 'Teacher']])->middleware('roles');
-
-Route::get('/allusers', ['uses' => 'AllUsersController@index','roles' => ['Admin', 'Teacher']])->middleware('roles');
 
 
-Route::get('/moto', ['uses' => 'PysoController@index','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/fetchstudentdata', ['uses' => 'PysoController@fetchStudentData','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/addmoto', ['uses' => 'PysoController@addmoto','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::get('/addmotopage', ['uses' => 'PysoController@addmotopage','roles' => ['Admin', 'Teacher']])->middleware('roles');
+
 
 // super controller
 Route::get('/superadmin', ['uses' => 'SuperController@index','roles' => ['SuperAdmin']])->middleware('roles');
@@ -169,11 +259,6 @@ Route::get('/view_school_order/{id}', ['uses' => 'SuperController@viewSchoolOrde
 Route::get('/result', ['uses' => 'ResultController@index','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
 Route::POST('/querystudentforresult', ['uses' => 'ResultController@fetchresultdetailsPri','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
 Route::POST('/processresult', ['uses' => 'ResultController@processresult','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
-
-// promotion controller 
-Route::get('/promotion', ['uses' => 'PromotionController@index','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/fetchstudentspromotion', ['uses' => 'PromotionController@fetchstudentsforpromotion','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/promotemain', ['uses' => 'PromotionController@promotemain','roles' => ['Admin', 'Teacher']])->middleware('roles');
 
 //messages controller
 Route::POST('/fetchmessage', ['uses' => 'MessagesController@fetchMessages','roles' => ['Admin', 'Teacher']])->middleware('roles');
@@ -251,31 +336,7 @@ Route::group(['prefix' => 'sec'], function () {
         Route::post('/form_teacher_result_confirm', 'TeachersController_sec@confirmSubjectRecordEntered')->name('form_teacher_result_confirm');
      });
 
-    Route::group(['prefix' => 'account', 'middleware' => ['auth', 'role:Bursar']], function () {
-        Route::get('/account_index', 'AccountController@index')->name('account_index');
-        Route::get('/account_dash', 'AccountController@account_dash')->name('account_dash');
-        Route::post('/add_category', 'AccountController@addPaymentCategory')->name('add_category');
-        Route::post('/update_category/{id}', 'AccountController@updatePaymentCategory')->name('update_category');
-        Route::post('/add_category_amount', 'AccountController@addcategoryamount')->name('add_category_amount');
-        Route::post('/deletepaymentcategory/{id}', 'AccountController@deletePaymentCategory')->name('deletepaymentcategory'); 
-        Route::post('/updatepaymentamount/{id}', 'AccountController@updateCategoryAmount')->name('updatepaymentamount'); 
-    });
 
-
-         Route::get('/index_fees', 'AccountController@index_fees')->name('index_fees');
-         Route::get('/summary', 'AccountController@summary')->name('summary')->middleware(['auth', 'can:view account summary']); 
-         Route::get('/invoices', 'AccountController@invoices')->name('invoices')->middleware(['auth', 'can:invoice management']); 
-         Route::get('/unpaid_fees', 'AccountController@unpaid_fees')->name('unpaid_fees')->middleware(['auth', 'can:invoice management']); 
-         Route::get('/order_request', 'AccountController@orderRequest')->name('order_request')->middleware(['auth', 'can:can send or receive request']);
-         Route::post('/request_response', 'AccountController@request_response')->name('request_response')->middleware(['auth', 'can:can send or receive request']); 
-         Route::get('/feecollection', 'AccountController@feecollection')->name('feecollection')->middleware(['auth', 'can:fee collection']);
-         Route::post('/fetchstudentdataforfee', 'AccountController@fetchstudentdataforfee')->name('fetchstudentdataforfee'); 
-         Route::post('/sendmoneyrequest', 'AccountController@sendMoneyRequest')->name('sendmoneyrequest');
-         Route::get('/inventory', 'AccountController@inventory')->name('inventory')->middleware(['auth', 'can:access inventory']);
-         Route::post('/inventory_add_item', 'AccountController@inventory_add_item')->name('inventory_add_item');
-         Route::post('/add_invoice_order/{id}', 'AccountController@addInvoiceOrder')->name('add_invoice_order'); 
-         Route::post('/update_invoice_items/{id}', 'AccountController@update_invoice_items')->name('update_invoice_items'); 
-         Route::post('/order_invoice_checkout', 'AccountController@order_invoice_checkout')->name('order_invoice_checkout');
 
 
 
@@ -290,8 +351,8 @@ Route::group(['prefix' => 'main', 'middleware' => 'roles'], function () {
  });
 
 Route::group(['prefix'=>'pay', 'middleware' => 'roles'], function(){ 
-    Route::get('/payment_details', ['uses' => 'PaymentDetailsController@index','roles' => ['Admin']])->name('payment_details');
-    Route::post('/add_details', ['uses' => 'PaymentDetailsController@addDetails','roles' => ['Admin']])->name('add_details');
+    
+    
     Route::post('/make_payment', ['uses' => 'PaymentDetailsController@makePayment','roles' => ['Student']])->name('make_payment');
     Route::get('/payment_history', ['uses' => 'StudentController_sec@paymentHistory','roles' => ['Student']])->name('payment_history');
 });
@@ -313,8 +374,8 @@ Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
 
 // add student route 
 
-Route::group(['prefix'=>'pay', 'middleware' => 'roles'], function(){ 
-    Route::get('/student_fees', ['uses' => 'StudentController_sec@feePayment','roles' => ['Student']])->name('student_fees');
+Route::group(['prefix'=>'pay'], function(){ 
+    Route::get('/student_fees', 'StudentController_sec@feePayment')->name('student_fees');
  });
 
  Route::group(['middleware' => ['auth', 'can:add students']], function () {
@@ -469,3 +530,32 @@ Route::post('/payment/callback', 'PaymentController@handleGatewayCallback');
 Route::post('webhook', 'WebhookController@handle');
 
 
+Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
+
+    Route::group(['prefix' => 'account', 'middleware' => ['auth', 'role_or_permission:Bursar|Serve as temporary Bursar' ]], function () {
+        Route::get('/account_index', 'AccountController@index')->name('account_index');
+        Route::get('/account_dash', 'AccountController@account_dash')->name('account_dash');
+        Route::post('/add_category', 'AccountController@addPaymentCategory')->name('add_category');
+        Route::post('/update_category/{id}', 'AccountController@updatePaymentCategory')->name('update_category');
+        Route::post('/add_category_amount', 'AccountController@addcategoryamount')->name('add_category_amount');
+        Route::post('/deletepaymentcategory/{id}', 'AccountController@deletePaymentCategory')->name('deletepaymentcategory'); 
+        Route::post('/updatepaymentamount/{id}', 'AccountController@updateCategoryAmount')->name('updatepaymentamount'); 
+    });
+
+
+         Route::get('/index_fees', 'AccountController@index_fees')->name('index_fees');
+         Route::get('/summary', 'AccountController@summary')->name('summary')->middleware(['auth', 'can:view account summary']); 
+         Route::get('/invoices', 'AccountController@invoices')->name('invoices')->middleware(['auth', 'can:invoice management']); 
+         Route::get('/unpaid_fees', 'AccountController@unpaid_fees')->name('unpaid_fees')->middleware(['auth', 'can:invoice management']); 
+         Route::get('/order_request', 'AccountController@orderRequest')->name('order_request')->middleware(['auth', 'can:can send or receive request']);
+         Route::post('/request_response', 'AccountController@request_response')->name('request_response')->middleware(['auth', 'can:can send or receive request']); 
+         Route::get('/feecollection', 'AccountController@feecollection')->name('feecollection')->middleware(['auth', 'can:fee collection']);
+         Route::post('/fetchstudentdataforfee', 'AccountController@fetchstudentdataforfee')->name('fetchstudentdataforfee'); 
+         Route::post('/sendmoneyrequest', 'AccountController@sendMoneyRequest')->name('sendmoneyrequest');
+         Route::get('/inventory', 'AccountController@inventory')->name('inventory')->middleware(['auth', 'can:access inventory']);
+         Route::post('/inventory_add_item', 'AccountController@inventory_add_item')->name('inventory_add_item');
+         Route::post('/add_invoice_order/{id}', 'AccountController@addInvoiceOrder')->name('add_invoice_order'); 
+         Route::post('/update_invoice_items/{id}', 'AccountController@update_invoice_items')->name('update_invoice_items'); 
+         Route::post('/order_invoice_checkout', 'AccountController@order_invoice_checkout')->name('order_invoice_checkout');
+
+});

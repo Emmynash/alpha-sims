@@ -6,9 +6,8 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <div style="width: 90%; margin: 0 auto; padding-top: 10px;">
-      @include('layouts.message')
-    </div>
+      
+
     
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -32,6 +31,7 @@
     <section class="content">
         <div class="container-fluid">
           <!-- SELECT2 EXAMPLE -->
+          @include('layouts.message')
         @if ($studentDetails['userschool'][0]['status'] != "Pending")
         <div class="card card-default">
           <!-- /.card-header -->
@@ -40,7 +40,7 @@
             <div class="row">
               <div class="col-md-6">
             
-                <form id="addschoolgrade" method="POST" action="/submitgrades" enctype="multipart/form-data">
+                <form id="addschoolgrade" method="POST" action="{{ route('submitgrades') }}" enctype="multipart/form-data">
                     @csrf
                         <div class="form-group">
                             <label for="gpafor">GPA For</label>
@@ -126,7 +126,7 @@
                         <td>{{$grades['marksfrom']}}</td>
                         <td>{{$grades['marksto']}}</td>
 
-                        <form action="/deletegrade" method="post" id="deleteform.{{$grades['id']}}">
+                        <form action="{{ route('deletegrade') }}" method="post" id="deleteform.{{$grades['id']}}">
                           @csrf
                         <input name="entryId" type="hidden" value="{{$grades['id']}}" >
                         </form>

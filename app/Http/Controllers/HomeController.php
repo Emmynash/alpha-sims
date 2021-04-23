@@ -18,6 +18,7 @@ use App\Addteachers_sec;
 use App\Addstudent_sec;
 use App\Addsubject_sec;
 use App\TeacherSubjects;
+use App\TeacherSubjectPris;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -150,49 +151,36 @@ class HomeController extends Controller
 
                 // return $daysarray;
                 $user = User::find(Auth::user()->id);
-                $user->hasRole('Teacher');
+               $user->hasRole('Teacher');
 
                 if ($user->hasRole('Teacher')) {
 
-                    $classidTeacher = $addteachers[0]['classid'];
+                    // $classidTeacher = $addteachers[0]['classid'];
 
-                    $addstudents = DB::table('addstudents')
-                    ->join('users', 'users.id', '=', 'addstudents.usernamesystem')
-                    ->join('addhouses', 'addhouses.id', '=', 'addstudents.studenthouse')
-                    ->select('addstudents.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addhouses.housename')
-                    ->where(['addstudents.schoolid'=> $id, 'addstudents.classid' => $classidTeacher])->get();
+                    // $addstudents = DB::table('addstudents')
+                    //                 ->join('users', 'users.id', '=', 'addstudents.usernamesystem')
+                    //                 ->join('addhouses', 'addhouses.id', '=', 'addstudents.studenthouse')
+                    //                 ->select('addstudents.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addhouses.housename')
+                    //                 ->where(['addstudents.schoolid'=> $id, 'addstudents.classid' => $classidTeacher])->get();
                     
-                    $subjects = DB::table('addsubjects')
-                              ->join("classlists", "classlists.id","=","addsubjects.classid")
-                              ->where("teacherid", Auth::user()->id)
-                              ->select("addsubjects.*", "classlists.classnamee", "classlists.studentcount")->get();
+                    // $subjects = DB::table('addsubjects')
+                    //           ->join("classlists", "classlists.id","=","addsubjects.classid")
+                    //           ->where("teacherid", Auth::user()->id)
+                    //           ->select("addsubjects.*", "classlists.classnamee", "classlists.studentcount")->get();
+
+                    $subjects = TeacherSubjectPris::join('addsubjects', 'addsubjects.id','=','teacher_subject_pris.subject_id')
+                              ->join('classlists', 'classlists.id','=', 'teacher_subject_pris.classid')
+                              ->select('teacher_subject_pris.*', 'addsubjects.subjectname', 'addsubjects.subjectcode', 'classlists.classnamee')
+                              ->where('teacher_subject_pris.user_id', Auth::user()->id)->get();
                     
-                    $addteacher = DB::table('addteachers')
-                                ->leftjoin("classlists", "classlists.id","=","addteachers.formteacher")
+                    $addteacher = Addteachers::leftjoin("classlists", "classlists.id","=","addteachers.formteacher")
                                 ->leftjoin("addsections", "addsections.id","=","addteachers.formsection")
+                                ->join('addposts', 'addposts.id','=','addteachers.schoolid')
                                 ->where("addteachers.systemid", Auth::user()->id)
-                                ->select("addteachers.*", "classlists.classnamee", "addsections.sectionname")->get();
-                                
-                    // return $addteacher;
-                    
-                    $studentDetails = array(
-                        'userschool' => $userschool,
-                        'classList' => $classList,
-                        'addHouses' => $addHouses,
-                        'addSection' => $addSection,
-                        'addClub' => $addClub,
-                        'addstudents' => $addstudents,
-                        'addteachers' => $addteachers,
-                        'addsubject' => $addsubject,
-                        'addgrades' => $addgrades,
-                        "subjects"=>$subjects,
-                        "addteacher"=>$addteacher
-                    );
-                    
-                    // return $studentDetails['userschool'];
-                    
-                    
-                    return view('pages.teacher_dash')->with('studentDetails', $studentDetails);
+                                ->select("addteachers.*", "classlists.classnamee", "addsections.sectionname", 'addposts.schoolname', 'addposts.schooltype')->first();
+                
+                                    
+                    return view('pages.teacher.teacher_dash', compact('subjects', 'addteacher'));
 
                 } 
 
@@ -252,7 +240,20 @@ class HomeController extends Controller
                         
                     }
                     return view('pages.index_dash')->with('studentDetails', $studentDetails);
+
                 }
+
+                $user = User::find(Auth::user()->id);
+                $user->hasRole('Bursar');
+                
+                if ($user->hasRole('Bursar')) {
+
+                    return view('pages.accounting.bursar');
+                    
+                }
+
+                
+
 
                 $user = User::find(Auth::user()->id);
                 $user->hasRole('Supervisor');
@@ -263,7 +264,11 @@ class HomeController extends Controller
                     
                     return view('pages.supervisor_dash');
                     
-                }else{
+                }
+                $user = User::find(Auth::user()->id);
+                $user->hasRole('Admin');
+
+                if($user->hasRole('Admin')){
                     
                     $addstudent = Addstudent::where('schoolid', $id)->get();
             
@@ -282,6 +287,39 @@ class HomeController extends Controller
                     return view('pages.index_dash')->with('studentDetails', $studentDetails);
                     
                 }
+
+                $user = User::find(Auth::user()->id);
+                
+                if ($user->hasRole('HeadOfSchool')) {
+                    
+                    $addstudent = Addstudent::where('schoolid', $id)->get();
+            
+                        $studentDetails = array(
+                            'userschool' => $userschool,
+                            'classList' => $classList,
+                            'addHouses' => $addHouses,
+                            'addSection' => $addSection,
+                            'addClub' => $addClub,
+                            'addStudent' => $addstudent,
+                            'addteachers' => $addteachers,
+                            'addsubject' => $addsubject,
+                            'addgrades' => $addgrades
+                        );
+                    
+                    return view('pages.index_dash')->with('studentDetails', $studentDetails);
+                }
+
+                $user = User::find(Auth::user()->id);
+                $user->hasanyRole(Role::all());
+
+                if (!$user->hasanyRole(Role::all())) {
+                    return view('pages.noroleacount.noroledash');
+                }
+
+
+
+
+
                 
         }elseif($userschool[0]['schooltype'] == "Secondary"){
 
@@ -410,9 +448,9 @@ class HomeController extends Controller
                     $allocatedSubject = $getFormClass[0]['teachclass'];
 
                     $studentsInClass = DB::table('addstudent_secs')
-                    ->join('users', 'users.id','=','addstudent_secs.usernamesystem') 
-                    ->where('classid', $allocatedSubject)
-                    ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')->get();
+                                        ->join('users', 'users.id','=','addstudent_secs.usernamesystem') 
+                                        ->where('classid', $allocatedSubject)
+                                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')->get();
 
 
 

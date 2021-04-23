@@ -13,11 +13,12 @@ use App\AddClub;
 use App\Addstudent;
 use App\Addmarks;
 use App\Addteachers;
-use Auth;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Redirect;
 use Carbon\Carbon;
 use App\Studentattendance;
+use Spatie\Permission\Models\Role;
 use Validator;
 
 
@@ -50,7 +51,7 @@ class StudentController extends Controller
 
         // return $studentDetails['userschool'][0]['schoolsession'];
 
-        return view('pages.addstudent')->with('studentDetails', $studentDetails);
+        return view('pages.students.addstudent', compact('classList', 'addSection', 'addHouses', 'addClub'));
     }
 
     /**
@@ -71,14 +72,11 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-
-        // return $request->input();
         
         $validatedData = $request->validate([
             'classidstd' => 'required',
             'StudentSectionstd' => 'required',
             'systemnumberstd' => 'required',
-            'currentsessionstd' => 'required',
             'studentgender' => 'required',
             'shiftstd' => 'required',
             'studentfathername' => 'required',
@@ -92,26 +90,6 @@ class StudentController extends Controller
             'studentclub' => 'required',
             'dateofbirth' => 'required'
         ]);
-
-        // return $request->input();
-
-        // if ($request->hasFile('studentpassport')) {
-
-        //     //get file name with extension
-        //     $studentpassportExt = $request->file('studentpassport')->getClientOriginalName();
-
-        //     //get just file names
-        //     $fileNamePassport = pathinfo($studentpassportExt, PATHINFO_FILENAME);
-
-        //     //get just extensions
-        //     $extensionStudentPix = $request->file('studentpassport')->getClientOriginalExtension();
-
-        //     //file name to store
-        //     $studentPassportFinal = $fileNamePassport."_".time().$extensionStudentPix;
-
-        //     $pathPassport = $request->file('studentpassport')->storeAs('public/schimages', $studentPassportFinal);
-
-        // }
 
         $classid = $request->input('classidstd');
         $studentSection =  $request->input('StudentSectionstd');
@@ -176,13 +154,15 @@ class StudentController extends Controller
 
         $className = Classlist::where(['id'=> $request->input('studentclass'), 'schoolid'=> Auth::user()->schoolid])->get();
 
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+
         $addstudent = new Addstudent;
         $addstudent->classid = $request->input('classidstd');
         $addstudent->schoolid = Auth::user()->schoolid;
         $addstudent->usernamesystem = $request->input('systemnumberstd');
         $addstudent->renumberschoolnew = $newrolnumber;
         $addstudent->studentsection =$studentSection;
-        $addstudent->schoolsession = $request->input('currentsessionstd');
+        $addstudent->schoolsession = $schoolDetails->schoolsession;
         $addstudent->gender = $studentgender;
         $addstudent->studenthouse = $studenthouse;
         $addstudent->studentreligion = $sudentreligion;
@@ -201,36 +181,15 @@ class StudentController extends Controller
 
         //asign student role
         
-        $userId = User::where('id', $request->input('systemnumberstd'))->get();
-        $userIdFinal = $userId[0]['id'];
+        $user = User::where('id', $request->input('systemnumberstd'))->first();
+        // $userIdFinal = $userId[0]['id'];
 
         //update schoolId field
-        $schoolIdUpdate = User::find($userIdFinal);
-        $schoolIdUpdate->schoolid = Auth::user()->schoolid;;
-        $schoolIdUpdate->role = "Student";
-        $schoolIdUpdate->save();
+        $user->schoolid = Auth::user()->schoolid;;
+        $user->role = "Student";
+        $user->save();
 
-//---------------------------------------------------------------------------------
-//-----------------------------update classcount here------------------------------
-//---------------------------------------------------------------------------------
-
-        $classList = Classlist::where('schoolid', Auth::user()->schoolid)->get();
-
-        if(count($classList) > 0){
-            for ($i=0; $i < count($classList); $i++) { 
-                $classidcountupdate = $classList[$i]['id'];
-                
-                $studentcountquery = Addstudent::where('classid', $classidcountupdate)->get();
-                
-                $maincount = count($studentcountquery);
-                
-                $updatecountquery = Classlist::find($classidcountupdate);
-                $updatecountquery->studentcount = $maincount;
-                $updatecountquery->save();
-                
-            }
-        }
-
+        $user->assignRole('Student');
 
         return back()->with('success', 'Student added successfully');
     }
@@ -282,26 +241,9 @@ class StudentController extends Controller
 
     public function viewlist(){
 
-        $id = Auth::user()->schoolid;
+        $studentList = Addstudent::where(['schoolid'=>Auth::user()->schoolid, 'sessionstatus'=>'0'])->get();
 
-        $userschool = Addpost::where('id', $id)->get();
-        $classList = Classlist::where('schoolid', $id)->get();
-        $addHouses = Addhouses::where('schoolid', $id)->get();
-        $addSection = Addsection::where('schoolid', $id)->get();
-        $addClub = AddClub::where('schoolid', $id)->get();
-        // $addsubject = Addsubject::where('schoolid', $id)->get();
-
-        $studentDetails = array(
-            'userschool' => $userschool,
-            'classList' => $classList,
-            'addHouses' => $addHouses,
-            'addSection' => $addSection,
-            'addClub' => $addClub
-        );
-
-        // return $userschool[0]['shoolinitial'];
-
-        return view('pages.viewstudents')->with('studentDetails', $studentDetails);
+        return view('pages.students.viewstudents', compact('studentList'));
     }
 
     public function confirmReg(Request $request){
@@ -622,7 +564,7 @@ class StudentController extends Controller
         public function verifyuserregistration(Request $request){
 
             $validator = Validator::make($request->all(),[
-                'schoolsession' => 'required',
+                // 'schoolsession' => 'required',
                 'studentclass' => 'required',
                 'studentsection' => 'required',
                 'studentshift' => 'required',
@@ -633,7 +575,12 @@ class StudentController extends Controller
                 return response()->json(['errors'=>$validator->errors()->all()]);
             }
 
-            $userdetails = User::where(['id' => $request->input('systemnumber'), 'role' => NULL])->get();
+            $userdetails = User::where(['id' => $request->input('systemnumber')])->first();
+
+            if ($userdetails->hasAnyRole(Role::all())) {
+                return response()->json("already", 200);
+            }
+
 
             return response()->json($userdetails, 200);
         }

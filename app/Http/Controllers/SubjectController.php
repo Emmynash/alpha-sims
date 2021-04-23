@@ -11,7 +11,7 @@ use App\Addsection;
 use App\AddClub;
 use App\Addstudent;
 use App\Addsubject;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use DB;
 use Redirect;
 
@@ -24,28 +24,11 @@ class SubjectController extends Controller
      */
     public function index()
     {
-
-        // $phone = User::find($id)->getClubList;
-        // return $phone;
-        
         $id = Auth::user()->schoolid;
-
-        $userschool = Addpost::where('id', $id)->get();
         $classList = Classlist::where('schoolid', $id)->get();
-        $addHouses = Addhouses::where('schoolid', $id)->get();
-        $addSection = Addsection::where('schoolid', $id)->get();
-        $addClub = AddClub::where('schoolid', $id)->get();
         $addsubject = Addsubject::where('schoolid', $id)->get();
 
-        $studentDetails = array(
-            'userschool' => $userschool,
-            'classList' => $classList,
-            'addHouses' => $addHouses,
-            'addSection' => $addSection,
-            'addClub' => $addClub,
-            'addsubject' => $addsubject
-        );
-        return view('pages.addsubject')->with('studentDetails', $studentDetails);
+        return view('pages.subjects.addsubject', compact('classList', 'addsubject'));
     }
 
     /**
@@ -219,74 +202,20 @@ class SubjectController extends Controller
     public function subjectList(){
 
         $id = Auth::user()->schoolid;
-
-        $userschool = Addpost::where('id', $id)->get();
         $classList = Classlist::where('schoolid', $id)->get();
-        $addHouses = Addhouses::where('schoolid', $id)->get();
-        $addSection = Addsection::where('schoolid', $id)->get();
-        $addClub = AddClub::where('schoolid', $id)->get();
         $addsubject = DB::table('addsubjects')
-        ->join('classlists', 'classlists.id', '=', 'addsubjects.classid')
-        ->select('addsubjects.*', 'classlists.classnamee')
-        ->where('addsubjects.schoolid', $id)->paginate(10);
+                    ->join('classlists', 'classlists.id', '=', 'addsubjects.classid')
+                    ->select('addsubjects.*', 'classlists.classnamee')
+                    ->where('addsubjects.schoolid', $id)->paginate(10);
 
-
-        $studentDetails = array(
-            'userschool' => $userschool,
-            'classList' => $classList,
-            'addHouses' => $addHouses,
-            'addSection' => $addSection,
-            'addClub' => $addClub,
-            'addsubject' => $addsubject
-        );
-        // return $studentDetails['addsubject'];
-        return view('pages.viewsubject')->with('studentDetails', $studentDetails);
+        return view('pages.subjects.viewsubject', compact('addsubject', 'classList'));
     }
 
     public function viewClass(){
 
-        $id = Auth::user()->schoolid;
-
-        $userschool = Addpost::where('id', $id)->get();
-        $classList = Classlist::where('schoolid', $id)->get();
-        $addHouses = Addhouses::where('schoolid', $id)->get();
-        $addSection = Addsection::where('schoolid', $id)->get();
-        $addClub = AddClub::where('schoolid', $id)->get();
-        $addsubject = Addsubject::where('schoolid', $id)->get();
-
-        // return $addSection;
-
-        $studentDetails = array(
-            'userschool' => $userschool,
-            'classList' => $classList,
-            'addHouses' => $addHouses,
-            'addSection' => $addSection,
-            'addClub' => $addClub,
-            'addsubject' => $addsubject
-        );
-        
-//---------------------------------------------------------------------------------
-//-----------------------------update classcount here------------------------------
-//---------------------------------------------------------------------------------
-
         $classList = Classlist::where('schoolid', Auth::user()->schoolid)->get();
 
-        if(count($classList) > 0){
-            for ($i=0; $i < count($classList); $i++) { 
-                $classidcountupdate = $classList[$i]['id'];
-                
-                $studentcountquery = Addstudent::where('classid', $classidcountupdate)->get();
-                
-                $maincount = count($studentcountquery);
-                
-                $updatecountquery = Classlist::find($classidcountupdate);
-                $updatecountquery->studentcount = $maincount;
-                $updatecountquery->save();
-                
-            }
-        }
-
-        return view('pages.viewclasses')->with('studentDetails', $studentDetails);
+        return view('pages.classes.viewclasses', compact('classList'));
     }
 
     public function deleteSubject(Request $request){

@@ -287,29 +287,24 @@ class ResultController_sec extends Controller
             if (count($psycomoto) < 1) {
                 return response()->json(['notready' => 'notready'], 200);
             }else{
+                
                 $resultdetails = DB::table('addmark_secs')
-                ->join('addsubject_secs', 'addsubject_secs.id','=','addmark_secs.subjectid')
-                ->join('class_average_marks', 'class_average_marks.subjectid','=','addmark_secs.subjectid')
-                ->join('classlist_secs', 'classlist_secs.id','=','addmark_secs.classid')
-                ->select('addmark_secs.*', 'addsubject_secs.subjectname', 'class_average_marks.average', 'classlist_secs.classname')
-                ->where(['addmark_secs.schoolid'=>Auth::user()->schoolid, 'addmark_secs.classid'=>$classid, 'addmark_secs.term'=>$term, 'addmark_secs.regno'=>$regNo])->get();
-
-
+                                ->join('addsubject_secs', 'addsubject_secs.id','=','addmark_secs.subjectid')
+                                ->join('class_average_marks', 'class_average_marks.subjectid','=','addmark_secs.subjectid')
+                                ->join('classlist_secs', 'classlist_secs.id','=','addmark_secs.classid')
+                                ->select('addmark_secs.*', 'addsubject_secs.subjectname', 'class_average_marks.average', 'classlist_secs.classname')
+                                ->where(['addmark_secs.schoolid'=>Auth::user()->schoolid, 'addmark_secs.classid'=>$classid, 'addmark_secs.term'=>$term, 'addmark_secs.regno'=>$regNo])->get();
 
                 $fetchUserDetails = DB::table('addstudent_secs')
-                    ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-                    ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
-                    ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
-                    ->select('addstudent_secs.*', 'classlist_secs.classname', 'users.firstname', 'users.middlename', 'users.lastname', 'addsection_secs.sectionname')
-                    ->where(['addstudent_secs.id'=>$regNo])->get();
-
-
+                                    ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                                    ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                                    ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+                                    ->select('addstudent_secs.*', 'classlist_secs.classname', 'users.firstname', 'users.middlename', 'users.lastname', 'addsection_secs.sectionname')
+                                    ->where(['addstudent_secs.id'=>$regNo])->get();
 
                 return response()->json(['resultdetails'=>$resultdetails, 'fetchUserDetails'=>$fetchUserDetails, 'psycomoto'=>$psycomoto, 'positionaverage'=>$getaverageposition]);
             }
         }
-
-        
     }
 
     public function result_by_class()

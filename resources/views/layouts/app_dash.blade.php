@@ -23,6 +23,10 @@
   <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{{ asset('../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
   <!-- Daterange picker -->
@@ -103,7 +107,7 @@
                 document.getElementById('subjectprocess').style.display = "block"
 
                 $.ajax({
-                url: '/addsubjectpost',
+                url: "{{ route('addsubjectpost') }}",
                 type: 'post',
                 dataType: 'json',
                 data: $('form#addsubject').serialize(),
@@ -115,7 +119,7 @@
                         $("#projectalert").removeClass("alert-danger");
                         $("#projectalert").addClass("alert-success");
                         // document.getElementById('subjectalertmessage').innerHTML = "subject added successfully"
-                        fullscreenerror('subject added Successfully.', ' ', '/grades', 'Success...')
+                        fullscreensuccess('subject added Successfully.', ' ', '/grades', 'Success...')
                         window.scrollTo(0, 0);
                       }else{
                         document.getElementById('subjectprocess').style.display = "none"
@@ -171,7 +175,7 @@
                 document.getElementById('staffconfirmprocess').style.display = "block"
 
                 $.ajax({
-                url: '/addstaffdata',
+                url: '{{ route('addstaffdata') }}',
                 type: 'post',
                 dataType: 'json',
                 data: $('form#addstaff').serialize(),
@@ -342,7 +346,7 @@
               $("#studenttable").find("tr:gt(0)").remove();
 
                 $.ajax({
-                url: '/confirmRegNew',
+                url: '{{ route('confirmRegNew') }}',
                 type: 'post',
                 dataType: 'json',
                 data: $('form#querysingleuser').serialize(),
@@ -448,53 +452,56 @@
                 e.preventDefault();
                 $("#addstudent").submit();
 
-              //  document.getElementById('tablepromofetch').style.display ="visible"
-
-              //  $("#promotiontable tbody").empty();
-              //  $("#promotiontable > tr").remove();
-              // $("#studenttable").find("tr:gt(0)").remove();
                   document.getElementById('classidstd').value = document.getElementById('classid').value
                   document.getElementById('StudentSectionstd').value = document.getElementById('studentsectionvalue').value
                   document.getElementById('systemnumberstd').value = document.getElementById('studentRegNoConfirm').value
-                  document.getElementById('currentsessionstd').value = document.getElementById('schoolsession').value
+                  // document.getElementById('currentsessionstd').value = document.getElementById('schoolsession').value
                   document.getElementById('shiftstd').value = document.getElementById('studentshift').value
                   document.getElementById('spinnerprocessstd').style.display = "block"
 
                 $.ajax({
-                url: '/verifyreg',
+                url: '{{ route('verifyreg') }}',
                 type: 'post',
                 dataType: 'json',
                 data: $('form#addstudent').serialize(),
                 success: function(data) {
 
-                  // console.log(data)
+                  // console.log(data['errors'])
                       
-                      if (data.length > 0) {
+                      if (data != null && data != "already") {
 
-                        for (let index = 0; index < data.length; index++) {
-                          const element = data[index];
-
-                          document.getElementById('confirstname').value = data[index]['firstname']
-                          document.getElementById('conmiddlename').value = data[index]['middlename']
-                          document.getElementById('conlastname').value = data[index]['lastname']
-                          document.getElementById('conprofileimg').src = 'storage/schimages/'+ data[index]['profileimg']
+                          document.getElementById('confirstname').value = data['firstname']
+                          document.getElementById('conmiddlename').value = data['middlename']
+                          document.getElementById('conlastname').value = data['lastname']
+                          document.getElementById('conprofileimg').src = '/storage/schimages/'+ data['profileimg']
                           
-                        }
-
                         // document.getElementById('formforstudent').style.display = "block"
                         document.getElementById('spinnerprocessstd').style.display = "none"
                        
                       } else{
 
-                        console.log(data)
+                        // console.log(data)
+
+                        document.getElementById('confirstname').value = ""
+                        document.getElementById('conmiddlename').value = ""
+                        document.getElementById('conlastname').value = ""
+                        document.getElementById('conprofileimg').src = ""
+
                         document.getElementById('spinnerprocessstd').style.display = "none"
+                        fullscreenerror('Role already alocated', ' ', 'ff', 'Oops...')
 
                       }
 
                     },
                     error:function(errors){
 
-                      console.log(errors)
+                      // console.log(errors)
+
+                      document.getElementById('confirstname').value = ""
+                      document.getElementById('conmiddlename').value = ""
+                      document.getElementById('conlastname').value = ""
+                      document.getElementById('conprofileimg').src = ""
+
                       document.getElementById('spinnerprocessstd').style.display = "none"
                     }
                 });
@@ -536,7 +543,7 @@
 
                 $("#psycomotoqueryform").find("tr:gt(0)").remove();
                 $.ajax({
-                url: '/fetchstudentdata',
+                url: '{{ route('fetchstudentdata') }}',
                 type: 'post',
                 dataType: 'json',
                 data: $('form#psycomotoquery').serialize(),
@@ -567,10 +574,14 @@
 
                         var n = motocheck.includes(elementMain.toString());
 
+                        var layer_id = $(this).data('id');
+                        var url = '{{ route("addmotomain", ":id") }}';
+                        url = url.replace(':id', data[0][index]['usernamesystem'] );
+
                         if (n) {
                           cell5.innerHTML = '<button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>'
                         }else{
-                          cell5.innerHTML = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#motomodal" onclick="motoprocess(\''+data[0][index]["firstname"]+'\', \''+data[0][index]["middlename"]+'\', \''+data[0][index]["lastname"]+'\', \''+data[0][index]["id"]+'\', \''+data[0][index]["usernamesystem"]+'\', \''+data[0][index]["classid"]+'\')"><i class="fas fa-plus-square"></i></button>'
+                          cell5.innerHTML = '<a target="_blank" href=\"'+url+'\"><button class="btn btn-sm btn-success" data-toggle="modal" data-target="#motomodal"><i class="fas fa-plus-square"></i></button></a>'
                         }
 
 
@@ -641,13 +652,13 @@
                 document.getElementById('sessionprocessmark').value = document.getElementById('sessionquery').value;
                 document.getElementById('selectedsessionmarksin').value = document.getElementById('studentsection').value;
                 $.ajax({
-                url: '/viewusersbyclass',
+                url: '{{ route('viewusersbyclass') }}',
                 type: 'post',
                 dataType: 'json',
                 data: $('form#studentmarksform').serialize(),
                 success: function(data) {
 
-                  // console.log(data)
+                  console.log(data)
 
                   try {
                     if (data[0].length > 0) {
@@ -772,7 +783,7 @@
 
                 // $("#tableformarks").find("tr:gt(0)").remove();
                 $.ajax({
-                url: '/addstudentmarks',
+                url: '{{ route('addstudentmarks') }}',
                 type: 'post',
                 dataType: 'json',
                 data: $('form#marksformmain').serialize(),
@@ -1027,7 +1038,7 @@
 
 
                 $.ajax({
-                url: '/process_position_pri',
+                url: '{{ route('process_position_pri') }}',
                 type: 'post',
                 dataType: 'json',
                 data: $('form#processformmarksform').serialize(),
@@ -1083,7 +1094,6 @@
                 e.preventDefault();
                 $("#formteacherallocationform").submit();
 
-
                 $.ajax({
                 url: '/addteachermain',
                 type: 'post',
@@ -1125,7 +1135,7 @@
 
 
                 $.ajax({
-                url: '/addteachermain',
+                url: "{{ route('addteachermain') }}",
                 type: 'post',
                 dataType: 'json',
                 data: $('form#allocatesubjectteacherform').serialize(),
@@ -1138,7 +1148,7 @@
                   }
                   
                   if(data.success){
-                      fullscreenerror('Operation was successfull', ' ', '#', 'Success...')
+                      fullscreensuccess('Operation was successfull', ' ', '#', 'Success...')
                   }
 
                     },
@@ -1411,12 +1421,21 @@ function toastError(message) {
 }
 
 function fullscreenerror(message, message1, link, title){
-  Swal.fire({
-  icon: 'error',
-  title: title,
-  text: message,
-  footer: '<a href='+ link +'>'+ message1 +'</a>'
-})
+    Swal.fire({
+      icon: 'error',
+      title: title,
+      text: message,
+      footer: '<a href='+ link +'>'+ message1 +'</a>'
+    })
+}
+
+function fullscreensuccess(message, message1, link, title){
+    Swal.fire({
+      icon: 'success',
+      title: title,
+      text: message,
+      footer: '<a href='+ link +'>'+ message1 +'</a>'
+    })
 }
 
 // $('.sidebar1 a').click(function(){
@@ -1426,7 +1445,7 @@ function fullscreenerror(message, message1, link, title){
 </script>
 <script src="{{ asset('js/main.js') }}"></script>
 
-
+@stack('custom-scripts')
 </body>
 
 </html>

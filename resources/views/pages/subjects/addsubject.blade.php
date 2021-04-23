@@ -34,61 +34,6 @@
     <section class="content">
         <div class="container-fluid">
           <!-- SELECT2 EXAMPLE -->
-        @if ($studentDetails['userschool'][0]['status'] != "Pending" && $studentDetails['userschool'][0]['schooltype'] != "Primary")
-        <div class="card card-default">
-          <!-- /.card-header -->
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-6">
-                    <form id="addschool" method="POST" action="/shoolreg" enctype="multipart/form-data">
-                        @csrf
-                            <div class="form-group">
-                            <input id="schoolNameInput" name="schoolname" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="Subject Code" required>
-                            </div>
-                            <div class="form-group">
-                            <input id="schoolEmailInput" name="schoolemail" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="Subject Name">
-                            </div>
-                            <div class="form-group">
-                            <select id="schoolMobileNumber" name="mobilenumber" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="Mobile Number">
-                                <option value="">Select Class</option>
-                            </select>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <select id="schoolWebsiteInput" name="schoolwebsite" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="Website">
-                                    <option value="">choose student group</option>
-                                    <option value="">Science</option>
-                                    <option value="">Art</option>
-                                    <option value="">Commercial</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <input id="schoolDateEstablished" name="dateestablished" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="Establish">
-                            </div>
-                            <div class="form-group">
-                                <textarea id="schoolAddressInput" name="schooladdress" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="Address"></textarea>
-                            </div>  
-                    </form>
-              </div>
-              <button id="formSubmit" type="submit" class="btn btn-info" form="addschool">Submit</button>
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
-            {{-- <button id="formVerify" onclick="verifyForm()" class="btn btn-warning">Verify</button> --}}
-            
-
-          </div>
-          <!-- /.card-body -->
-          <div class="card-footer">
-            {{-- Visit <a href="https://select2.github.io/">Select2 documentation</a> for more examples and information about
-            the plugin. --}}
-          </div>
-        </div>
-        <!-- /.card -->
-
-        @else
 
         <div class="card card-default">
             <!-- /.card-header -->
@@ -99,7 +44,7 @@
                 </div>
               </div>
 
-              @if (count($studentDetails['addsubject']) < 1)
+              @if (count($addsubject) < 1)
                   <div id="projectalert" class="alert alert-info alert-block">
                     {{-- <button type="button" class="close" data-dismiss="alert">×</button>	 --}}
                     <i class="fas fa-exclamation-circle"></i><strong id="subjectalertmessage"> It seem you haven't added a subject. Add using the form below</strong>
@@ -119,8 +64,8 @@
                               <div class="form-group">
                               <select id="selectclass" name="selectclass" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="Mobile Number">
                                   <option value="">Select Class</option>
-                                  @foreach ($studentDetails['classList'] as $classlist)
-                                  <option value="{{$classlist->id}}">{{$classlist->classnamee}}</option>
+                                  @foreach ($classList as $item)
+                                  <option value="{{$item->id}}">{{$item->classnamee}}</option>
           
                                   @endforeach
                               </select>
@@ -193,61 +138,6 @@
               the plugin. --}}
             </div>
           </div>
-        @endif
-
-        <!-- /.row -->
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Status</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>School Id</th>
-                      <th>Email</th>
-                      <th>Phone Number</th>
-                      <th>Active From</th>
-                      <th>End On</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      {{-- @if (count($userschool) > 0)
-
-                      @foreach ($userschool as $schools)
-                        <td>{{$userschool[0]['schoolId']}}</td>
-                        <td>{{$userschool[0]['schoolemail']}}</td>
-                        <td>{{$userschool[0]['mobilenumber']}}</td>
-                        <td>{{$userschool[0]['periodfrom']}}</td>
-                        <td>{{$userschool[0]['periodto']}}</td>
-                        <td><span class="tag tag-success">{{$userschool[0]['status']}}</span></td>
-                      @endforeach
-                        
-                      @endif --}}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
 
         </div><!-- /.container-fluid -->
       </section>
@@ -268,6 +158,10 @@
   </aside>
   <!-- /.control-sidebar -->
 </div>
+    
+@endsection
+
+@push('custom-scripts')
 
 <script>
   function scrollocation(){
@@ -276,4 +170,4 @@
   }
 </script>
     
-@endsection
+@endpush

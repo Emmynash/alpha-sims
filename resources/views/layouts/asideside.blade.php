@@ -2,15 +2,8 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 5px; border-bottom: 1px solid #fff;">
-      <img src="{{ isset($studentDetails) ? count($studentDetails['userschool']) > 0 ? asset('storage/schimages/'.$studentDetails['userschool'][0]['schoolLogo']) : " " : ""}}" alt="" class="brand-image img-circle elevation-3"
-           style="opacity: .8" width="60px" height="60px">
-           <span class="brand-text font-weight-light" style="color: #fff;">{{isset($studentDetails['userschool']) ? count($studentDetails['userschool']) > 0 ? $studentDetails['userschool'][0]['schoolname'] : " NA" : "NA"}}</span>
+
     </div>
-    {{-- <a href="/" class="brand-link">
-      <img src="{{ isset($studentDetails) ? count($studentDetails['userschool']) > 0 ? asset('storage/schimages/'.$studentDetails['userschool'][0]['schoolLogo']) : " " : ""}}" alt="" class="brand-image img-circle elevation-3"
-           style="opacity: .8">
-      <span class="brand-text font-weight-light">{{isset($studentDetails['userschool']) ? count($studentDetails['userschool']) > 0 ? $studentDetails['userschool'][0]['schoolname'] : " NA" : "NA"}}</span>
-    </a> --}}
 
     <!-- Sidebar -->
     <div class="sidebar"> 
@@ -53,7 +46,7 @@
           </li>
             @if (Auth::user()->schoolid == null)
 
-            <li class="nav-item has-treeview">
+            {{-- <li class="nav-item has-treeview">
               <a id="addinstitution" href="/addschool" class="nav-link">
                  <i class="fas fa-plus-square"></i> 
                 <p>
@@ -72,14 +65,427 @@
               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
               </form>
-            </li>
+            </li> --}}
                 
             @else
 
-            @if (isset($studentDetails))
+            @can('view edit class')
+              <li class="nav-item has-treeview">
+                <a id="classpage" href="{{ route('viewclasslist') }}" class="nav-link">
+                    <i class="fas fa-home"></i> 
+                  <p>
+                    Class
+                  </p>
+                </a>
+              </li>
+            @endcan
 
-              @if ($studentDetails['userschool'][0]['status'] == "Approved")
-                @if (Auth::user()->role == "Student")
+            @can('asign subjects')
+              <li class="nav-item has-treeview">
+                <a id="subjectpage" href="" class="nav-link">
+                  <i class="fas fa-poll-h"></i> 
+                  <p>
+                    Subject
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a id="addnewsubject" href="{{ route('addsubject') }}" class="nav-link">
+                      <i class="fas fa-plus"></i> 
+                      <p>Add New</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a id="viewsubjectside" href="{{ route('subjectlist') }}" class="nav-link">
+                      <i class="fas fa-clipboard-list"></i> 
+                      <p>Subject list</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            @endcan
+
+            {{-- -------------------------------------------------------------------------------- --}}
+
+            @can('view account summary')
+            <li class="nav-item has-treeview">
+              <a id="summarylistscroll" href="{{ route('summary') }}" class="nav-link">
+                <i class="fas fa-coins nav-icon"></i>
+                <p>
+                  Summary
+                </p>
+              </a>
+            </li>
+          @endcan
+
+          @can('fee management')
+            <li class="nav-item">
+              <a id="feesetup" href="{{ route('index_fees') }}" class="nav-link">
+                  <i class="fas fa-money-check nav-icon"></i>
+                <p>
+                  Fees Management
+                </p>
+              </a>
+            </li>
+          @endcan
+
+          @can('invoice management')
+            <li class="nav-item has-treeview">
+              <a id="invoicelistscroll" href="{{ route('invoices') }}" class="nav-link">
+                <i class="fas fa-file-invoice nav-icon"></i>
+                <p>
+                  Invoice Management
+                </p>
+              </a>
+            </li>
+          @endcan
+
+          @can('can send or receive request')
+            <li class="nav-item has-treeview">
+              <a id="requestlistscroll" href="{{ route('order_request') }}" class="nav-link">
+                <i class="fas fa-th-list nav-icon"></i>
+                <p>
+                  Requests
+                </p>
+              </a>
+            </li>
+          @endcan
+
+          {{-- @can('view payment record')
+            <li class="nav-item has-treeview">
+              <a id="requestlistscroll" href="{{ route('order_request') }}" class="nav-link">
+                <i class="fas fa-money-bill-wave-alt nav-icon"></i>
+                <p>
+                  Payment Record
+                </p>
+              </a>
+            </li>
+          @endcan --}}
+
+          @can('fee collection')
+            <li class="nav-item has-treeview">
+              <a id="feecollection" href="{{ route('feecollection') }}" class="nav-link">
+                <i class="fas fa-hand-holding-usd nav-icon"></i>
+                <p>
+                  Fee Collection
+                </p>
+              </a>
+            </li>
+          @endcan
+
+          @can('access inventory')
+            <li class="nav-item has-treeview">
+              <a id="feecollection" href="{{ route('inventory') }}" class="nav-link">
+                <i class="fas fa-dolly-flatbed nav-icon"></i>
+                <p>
+                  Inventory
+                </p>
+              </a>
+            </li>
+          @endcan
+
+          {{-- ------------------------------------------------------------------------------- --}}
+
+            @can('add students')
+              <li class="nav-item has-treeview">
+                <a id="studentaside" href="#" class="nav-link">
+                  <i class="fas fa-user-graduate"></i> 
+                  <p>
+                    Student
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a id="addstudentaside" href="{{ route('addstudent') }}" class="nav-link">
+                      <i class="fas fa-plus"></i> 
+                      <p>Add New</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a id="viewstudentaside" href="{{ route('viewstudent') }}" class="nav-link">
+                      <i class="fas fa-clipboard-list"></i> 
+                      <p>Student list</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            @endcan
+
+            @can('asign form teacher')
+              <li class="nav-item has-treeview">
+                <a id="teachersaside" href="#" class="nav-link">
+                  <i class="fas fa-chalkboard-teacher"></i> 
+                  <p>
+                    Teacher
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a id="addteacheraside" href="{{ route('addteacher') }}" class="nav-link">
+                      <i class="fas fa-plus"></i> 
+                      <p>Add New</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a id="viewteacheraside" href="{{ route('viewteachers') }}" class="nav-link">
+                      <i class="fas fa-clipboard-list"></i> 
+                      <p>Teacher list</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            @endcan
+
+            @if (Auth::user()->hasRole('Teacher'))
+              <li class="nav-item has-treeview">
+                <a id="editteacher" href="{{ route('editprofileteacher') }}" class="nav-link">
+                  <i class="fas fa-user-edit"></i> 
+                  <p>
+                    Edit Profile
+                  </p>
+                </a>
+              </li>
+            @endif
+
+            <li class="nav-item has-treeview">
+              <a id="teachersattendanceaside" href="#" class="nav-link">
+                <i class="fas fa-address-card"></i> 
+                <p>
+                  Teacher Attendance
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a id="addteacherattendanceaside" href="{{ route('teachersattendance') }}" class="nav-link">
+                     <i class="fas fa-plus"></i> 
+                    <p>Add</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a id="viewteacherattendanceaside" href="/viewallteachers" class="nav-link">
+                     <i class="fas fa-clipboard-list"></i> 
+                    <p>View</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item has-treeview">
+              <a id="studentattendanceaside" href="#" class="nav-link">
+                <i class="fas fa-address-card"></i> 
+                <p>
+                  Student Attendance
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a id="addstudentattendanceaside" href="/studentattendance" class="nav-link">
+                     <i class="fas fa-plus"></i> 
+                    <p>Add</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a id="viewstudentattendance" href="/viewallstudents" class="nav-link">
+                     <i class="fas fa-clipboard-list"></i> 
+                    <p>View</p>
+                  </a>
+                </li>
+              </ul>
+
+              @can('manage marks')
+                <li class="nav-item has-treeview">
+                  <a id="viewmarks" href="#" class="nav-link">
+                    <i class="fas fa-check-double"></i> 
+                    <p>
+                      Mark Manage
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a id="viewmarksadd" href="{{ route('managemarks') }}" class="nav-link">
+                        <i class="fas fa-plus"></i> 
+                        <p>Add New</p>
+                      </a>
+                    </li>
+                    {{-- <li class="nav-item">
+                      <a id="viewmarkslist" href="/viewmarks" class="nav-link">
+                        <i class="fas fa-clipboard-list"></i> 
+                        <p>Mark list</p>
+                      </a>
+                    </li> --}}
+                  </ul>
+                </li>
+              @endcan
+
+              @can('manage staff')
+                <li class="nav-item has-treeview">
+                  <a id="managestaffaside" href="{{ route('addstaff') }}" class="nav-link">
+                    <i class="fas fa-user-tie"></i> 
+                    <p>
+                      Manage Staff
+                    </p>
+                  </a>
+                </li>
+              @endcan
+
+            @can('add psychomotor')
+              <li class="nav-item has-treeview">
+                <a id="pychomotoraside" href="#" class="nav-link">
+                    <i class="fas fa-home"></i> 
+                  <p>
+                    Pychomotor
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a id="affectivedomainaside" href="{{ route('moto') }}" class="nav-link">
+                      <i class="fas fa-plus"></i> 
+                      <p>affective domain</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a id="affectivedomainasidesetting" href="{{ route('motosettings') }}" class="nav-link">
+                      <i class="fas fa-plus"></i> 
+                      <p>settings</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            @endcan
+  
+
+  
+            <li class="nav-item has-treeview">
+              <a id="resultaside" href="#" class="nav-link">
+                <i class="fas fa-vials"></i> 
+                <p>
+                  Result
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a id="geberateresultaside" href="/result" class="nav-link">
+                     <i class="fas fa-plus"></i> 
+                    <p>Generate</p>
+                  </a>
+                </li>
+                {{-- <li class="nav-item">
+                  <a href="" class="nav-link">
+                     <i class="fas fa-clipboard-list"></i> 
+                    <p>Search</p>
+                  </a>
+                </li> --}}
+              </ul>
+            </li>
+  
+            <li class="nav-item has-treeview">
+              <a id="promotionaside" href="{{ route('promotion') }}" class="nav-link">
+                <i class="fas fa-exchange-alt"></i> 
+                <p>
+                  Promotion
+                  {{-- <i class="right fas fa-angle-left"></i> --}}
+                </p>
+              </a>
+            </li>
+  
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="far fa-newspaper"></i> 
+                <p>
+                  News/updates
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+            </li>
+
+
+            @can('settings')
+              <li class="nav-item has-treeview">
+                <a id="settingsaside" href="#" class="nav-link">
+                  <i class="fas fa-cogs"></i> 
+                  <p>
+                    Settings
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a id="gradesaside" href="{{ route('grades') }}" class="nav-link">
+                      <i class="fas fa-plus"></i> 
+                      <p>Grade</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a id="usersaside" href="{{ route('allusers') }}" class="nav-link">
+                      <i class="fas fa-clipboard-list"></i> 
+                      <p>Users</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a id="schoolsetupaside" href="{{ route('setupschool') }}" class="nav-link">
+                      <i class="fas fa-clipboard-list"></i> 
+                      <p>SetUp Shool</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a id="resultmaingenscroll" href="{{ route('payment_details') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Payment Details</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a id="institutionaside" href="/addschool" class="nav-link">
+                      <i class="fas fa-clipboard-list"></i> 
+                      <p>Institute</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a id="institutionaside" href="/sub_index" class="nav-link">
+                      <i class="fas fa-clipboard-list"></i> 
+                      <p>Subscription</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            @endcan
+  
+
+
+
+
+            <li class="nav-item">
+              <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); 
+              document.getElementById('logout-form').submit();">
+                <i class="fas fa-sign-out-alt"></i> 
+                <p>
+                  SignOut
+                </p>
+              </a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+              </form>
+            </li>
+
+
+
+
+
+
+
+
+
+            {{-- @if (isset($studentDetails)) --}}
+
+         
+                @if (Auth::user()->hasRole('Student'))
 
                 <li class="nav-item has-treeview">
                     <a id="studentoptions" href="#" class="nav-link">
@@ -120,7 +526,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                       <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('student_fees') }}" class="nav-link">
                           <i class="fas fa-plus"></i> 
                           <p>Invoices</p>
                         </a>
@@ -146,314 +552,30 @@
                     </form>
                   </li>
                     
-                @endif
-                @if (Auth::user()->role == "Admin")
-                <li class="nav-item has-treeview">
-                    <a id="classpage" href="/viewclasslist" class="nav-link">
-                        <i class="fas fa-home"></i> 
-                      <p>
-                        Class
-                      </p>
-                    </a>
-                  </li>
-        
-                  <li class="nav-item has-treeview">
-                    <a id="subjectpage" href="/addsubject" class="nav-link">
-                      <i class="fas fa-poll-h"></i> 
-                      <p>
-                        Subject
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="addnewsubject" href="/addsubject" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>Add New</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a id="viewsubjectside" href="/subjectlist" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Subject list</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-        
-                  <li class="nav-item has-treeview">
-                    <a id="studentaside" href="#" class="nav-link">
-                      <i class="fas fa-user-graduate"></i> 
-                      <p>
-                        Student
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="addstudentaside" href="/addstudent" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>Add New</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a id="viewstudentaside" href="/viewstudent" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Student list</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-        
-                  <li class="nav-item has-treeview">
-                    <a id="teachersaside" href="#" class="nav-link">
-                      <i class="fas fa-chalkboard-teacher"></i> 
-                      <p>
-                        Teacher
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="addteacheraside" href="/addteacher" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>Add New</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a id="viewteacheraside" href="/viewteachers" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Teacher list</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-        
-                  <li class="nav-item has-treeview">
-                    <a id="teachersattendanceaside" href="#" class="nav-link">
-                      <i class="fas fa-address-card"></i> 
-                      <p>
-                        Teacher Attendance
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="addteacherattendanceaside" href="/teachersattendance" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>Add</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a id="viewteacherattendanceaside" href="/viewallteachers" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>View</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-        
-                  <li class="nav-item has-treeview">
-                    <a id="studentattendanceaside" href="#" class="nav-link">
-                      <i class="fas fa-address-card"></i> 
-                      <p>
-                        Student Attendance
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="addstudentattendanceaside" href="/studentattendance" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>Add</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a id="viewstudentattendance" href="/viewallstudents" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>View</p>
-                        </a>
-                      </li>
-                    </ul>
-                    <li class="nav-item has-treeview">
-                    <a id="viewmarks" href="#" class="nav-link">
-                      <i class="fas fa-check-double"></i> 
-                      <p>
-                        Mark Manage
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="viewmarksadd" href="/managemarks" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>Add New</p>
-                        </a>
-                      </li>
-                      {{-- <li class="nav-item">
-                        <a id="viewmarkslist" href="/viewmarks" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Mark list</p>
-                        </a>
-                      </li> --}}
-                    </ul>
-                  </li>
 
-                  <li class="nav-item has-treeview">
-                    <a id="managestaffaside" href="/addstaff" class="nav-link">
-                      <i class="fas fa-user-tie"></i> 
-                      <p>
-                        Manage Staff
-                      </p>
-                    </a>
-                  </li>
+                  
+
+
+                  
+
+
+                  {{--                 
+
+             
+             
+                    @if (Auth::user()->role == "Admin") --}}
+
         
-                  <li class="nav-item has-treeview">
-                    <a id="pychomotoraside" href="#" class="nav-link">
-                        <i class="fas fa-home"></i> 
-                      <p>
-                        Pychomotor
-                        {{-- <i class="right fas fa-angle-left"></i> --}}
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="affectivedomainaside" href="/moto" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>affective domain</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
+
         
-                  <li class="nav-item has-treeview">
-                    <a id="resultaside" href="#" class="nav-link">
-                      <i class="fas fa-vials"></i> 
-                      <p>
-                        Result
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="geberateresultaside" href="/result" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>Generate</p>
-                        </a>
-                      </li>
-                      {{-- <li class="nav-item">
-                        <a href="" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Search</p>
-                        </a>
-                      </li> --}}
-                    </ul>
-                  </li>
+
         
-                  <li class="nav-item has-treeview">
-                    <a id="promotionaside" href="/promotion" class="nav-link">
-                      <i class="fas fa-exchange-alt"></i> 
-                      <p>
-                        Promotion
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                  </li>
+
         
-                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                      <i class="far fa-newspaper"></i> 
-                      <p>
-                        News/updates
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                  </li>
+
         
-                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-home"></i> 
-                      <p>
-                        Reports
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="pages/charts/chartjs.html" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>MarkSheet</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="pages/charts/chartjs.html" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Account by type</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="pages/charts/chartjs.html" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Account balance</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-        
-                  <li class="nav-item has-treeview">
-                    <a id="settingsaside" href="#" class="nav-link">
-                      <i class="fas fa-cogs"></i> 
-                      <p>
-                        Settings
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="gradesaside" href="/grades" class="nav-link">
-                           <i class="fas fa-plus"></i> 
-                          <p>Grade</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a id="usersaside" href="/allusers" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Users</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a id="schoolsetupaside" href="/setupschool" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>SetUp Shool</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a id="institutionaside" href="/addschool" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Institute</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a id="institutionaside" href="/sub_index" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Subscription</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); 
-                    document.getElementById('logout-form').submit();">
-                      <i class="fas fa-sign-out-alt"></i> 
-                      <p>
-                        SignOut
-                      </p>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                      @csrf
-                    </form>
-                  </li>
-                @endif
+
+                {{-- @endif --}}
 
 {{--------------------------------------------------------------------------------------}}
 {{--                                 teachers role                                    --}}
@@ -559,15 +681,6 @@
                     </a>
                   </li>
 
-                  <li class="nav-item has-treeview">
-                    <a id="editteacher" href="/editprofileteacher" class="nav-link">
-                      <i class="fas fa-user-edit"></i> 
-                      <p>
-                        Edit Profile
-                      </p>
-                    </a>
-                  </li>
-        
                   <li class="nav-item">
                     <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); 
                     document.getElementById('logout-form').submit();">
@@ -609,37 +722,11 @@
                     </li>
                   </ul>
                 </li>
-                <!--<li class="nav-item">-->
-                <!--  <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); -->
-                <!--  document.getElementById('logout-form').submit();">-->
-                <!--    <i class="fas fa-sign-out-alt"></i> -->
-                <!--    <p>-->
-                <!--      SignOut-->
-                <!--    </p>-->
-                <!--  </a>-->
-                <!--  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">-->
-                <!--    @csrf-->
-                <!--  </form>-->
-                <!--</li>-->
                     
                 @endif
               @endif
 
             @endif
-          @endif
-         <li class="nav-item has-treeview">
-            <a href="#" class="nav-link" href="{{ route('logout') }}"
-            onclick="event.preventDefault();
-                          document.getElementById('logout-form').submit();">
-                <i class="fas fa-sign-in-alt nav-icon"></i>
-              <p>
-                Signout
-              </p>
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-              @csrf
-            </form>
-          </li>
           
       </nav>
       <!-- /.sidebar-menu -->

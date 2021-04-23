@@ -11,6 +11,7 @@ use App\Addhouse_sec;
 use App\Addsection_sec;
 use App\Addclub_sec;
 use App\Addpost;
+use App\Addstudent;
 use App\AmountTable;
 use App\FeesInvoice;
 use Illuminate\Support\Facades\Auth;
@@ -223,18 +224,41 @@ class StudentController_sec extends Controller
     public function feePayment()
     {
 
-        $studentDetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
-                            ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
-                            ->select('amount_tables.*', 'payment_categories.categoryname')->get();
+        if ($schooldetails->schooltype == "Primary") {
 
-        
-        $sumAmount = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
-                    ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
-                    ->select('amount_tables.*', 'payment_categories.categoryname')->sum('amount');
+            $studentDetails = Addstudent::where('usernamesystem', Auth::user()->id)->first();
 
-        return view('secondary.student.fees', compact('schoolData', 'sumAmount'));
+            $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+                                ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
+                                ->select('amount_tables.*', 'payment_categories.categoryname')->get();
+    
+            
+            $sumAmount = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+                        ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
+                        ->select('amount_tables.*', 'payment_categories.categoryname')->sum('amount');
+    
+            return view('secondary.student.fees', compact('schoolData', 'sumAmount', 'schooldetails'));
+            
+        }else{
+
+            $studentDetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+
+            $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+                                ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
+                                ->select('amount_tables.*', 'payment_categories.categoryname')->get();
+    
+            
+            $sumAmount = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+                        ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
+                        ->select('amount_tables.*', 'payment_categories.categoryname')->sum('amount');
+    
+            return view('secondary.student.fees', compact('schoolData', 'sumAmount', 'schooldetails'));
+
+        }
+
+
     }
 
     public function paymentHistory()

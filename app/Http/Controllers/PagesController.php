@@ -31,37 +31,30 @@ class PagesController extends Controller
         }else{
             return redirect('/home');
         }
-        
-        
+    }
+
+    public function addTerm(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'term' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->with('error', 'term field is empty');
+        }
+
+        $addTerm = Addpost::find(Auth::user()->schoolid);
+        $addTerm->term = (int)$request->term;
+        $addTerm->save();
+
+        return back()->with('success', 'process successfull');
     }
 
     public function setUpSchool(){
 
-        $id = Auth::user()->schoolid;
-        
-        // return "";
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-
-        $userschool = Addpost::where('id', $id)->get();
-        $classList = Classlist::where('schoolid', $id)->get();
-        $addHouses = Addhouses::where('schoolid', $id)->get();
-        $addSection = Addsection::where('schoolid', $id)->get();
-        $addClub = AddClub::where('schoolid', $id)->get();
-        $addgrades = Addgrades::where('schoolid', $id)->get();
-
-        
-
-        $studentDetails = array(
-            'userschool' => $userschool,
-            'classList' => $classList,
-            'addHouses' => $addHouses,
-            'addSection' => $addSection,
-            'addClub' => $addClub,
-            'addgrades' => $addgrades
-        );
-
-
-        return view('pages.schoolsetup')->with('studentDetails', $studentDetails);
+        return view('pages.schoolsetup', compact('schooldetails'));
     }
 
     public function updateSchoolInitial(Request $request){
@@ -211,16 +204,12 @@ class PagesController extends Controller
 
         $studentDetails = array(
             'userschool' => $userschool,
-            'classList' => $classList,
-            'addHouses' => $addHouses,
-            'addSection' => $addSection,
-            'addClub' => $addClub,
             'addgrades' => $addgrades
         );
 
         // return $studentDetails['addgrades'];
 
-        return view('pages.grade')->with('studentDetails', $studentDetails);
+        return view('pages.grades.grade')->with('studentDetails', $studentDetails);
     }
 
     public function submitMark(Request $request){

@@ -96,7 +96,13 @@ class MotoController_sec extends Controller
         
         $requestData = $request->except(['_token']);
 
-        $getschoolData = Addpost::find(Auth::user()->id);
+        $getschoolData = Addpost::find(Auth::user()->schoolid);
+
+        $check = AddMoto_sec::where(['session'=>$getschoolData->schoolsession, 'schoolid'=>Auth::user()->schoolid, 'term'=>$getschoolData->term])->get();
+
+        if ($check->count() > 0) {
+            return back()->with('error', 'moto already added');
+        }
 
         foreach ($requestData as $key => $value) {
             
