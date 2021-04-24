@@ -100,7 +100,7 @@
                             <select id="studentsection" name="studentsection" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="Mobile Number">
                                 <option value="">Choose section</option>
                                 @foreach ($studentDetails['addSection'] as $section)
-                                <option value="{{$section->sectionname}}">{{$section->sectionname}}</option>
+                                <option value="{{$section->id}}">{{$section->sectionname}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -266,65 +266,6 @@
           </div>
 
         <!-- /.card -->
-        @endif
-        @if ($studentDetails['userschool'][0]["status"] !="Approved")
-        <!-- /.row -->
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Status</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              
-              
-              
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>School Id</th>
-                      <th>Email</th>
-                      <th>Phone Number</th>
-                      <th>Active From</th>
-                      <th>End On</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      @if ($studentDetails['userschool'][0] !="Approved")
-
-                      @foreach ($studentDetails['userschool'] as $schools)
-                        <td>{{$studentDetails['userschool'][0]['schoolId']}}</td>
-                        <td>{{$studentDetails['userschool'][0]['schoolemail']}}</td>
-                        <td>{{$studentDetails['userschool'][0]['mobilenumber']}}</td>
-                        <td>{{$studentDetails['userschool'][0]['periodfrom']}}</td>
-                        <td>{{$studentDetails['userschool'][0]['periodto']}}</td>
-                        <td><span class="tag tag-success">{{$studentDetails['userschool'][0]['status']}}</span></td>
-                      @endforeach
-                        
-                      @endif
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
         @endif
 
         {{-- marks modal begin --}}

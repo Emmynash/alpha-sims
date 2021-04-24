@@ -66,7 +66,7 @@
   
                 <div class="info-box-content">
                   <span class="info-box-text">This Term</span>
-                  <span class="info-box-number">{{ $schooldetails->getTotalBalTerm == null ? "0":$schooldetails->getTotalBalTerm->total_amount }}</span>
+                  <span class="info-box-number">{{ $schooldetails->getTotalBalTerm($schooldetails->id) == null ? "0":$schooldetails->getTotalBalTerm($schooldetails->id)->total_amount }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>

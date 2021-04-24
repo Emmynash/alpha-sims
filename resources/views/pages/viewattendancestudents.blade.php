@@ -23,7 +23,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
+              <li class="breadcrumb-item active">St Attendance</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -57,7 +57,7 @@
                         <select id="studentsection" name="studentsection" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="Mobile Number">
                             <option value="">Choose section</option>
                             @foreach ($studentDetails['addSection'] as $section)
-                            <option value="{{$section->sectionname}}" {{ count($studentDetails) > 6 ? $studentDetails['addteachers'][0]['section'] == $section->sectionname ? "" : "disabled" : "" }}>{{$section->sectionname}}</option>
+                            <option value="{{$section->id}}" {{ count($studentDetails) > 6 ? $studentDetails['addteachers'][0]['section'] == $section->sectionname ? "" : "disabled" : "" }}>{{$section->sectionname}}</option>
                             @endforeach
                         </select>
                         </div>
@@ -76,8 +76,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                        <label for="todaysdate" style="font-weight: normal; font-size: 12px; color: red;">Date in this format (YYYY-MM-DD)</label>
-                        <input id="todaysdate" name="todaysdate" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="YYYY-MM-DD">
+                        <label for="todaysdate" style="font-weight: normal; font-size: 12px; color: red;">Enter date</label>
+                        <input id="todaysdate" type="date" name="todaysdate" style="border: none; background-color:#EEF0F0;" class="form-control form-control-lg" type="text" placeholder="YYYY-MM-DD">
+
                         </div>
                     </div>
                         
@@ -139,63 +140,6 @@
 
 
         <!-- /.card -->
-        @endif
-        @if ($studentDetails['userschool'][0]["status"] !="Approved")
-        <!-- /.row -->
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Status</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>School Id</th>
-                      <th>Email</th>
-                      <th>Phone Number</th>
-                      <th>Active From</th>
-                      <th>End On</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      @if ($studentDetails['userschool'][0] !="Approved")
-
-                      @foreach ($studentDetails['userschool'] as $schools)
-                        <td>{{$studentDetails['userschool'][0]['schoolId']}}</td>
-                        <td>{{$studentDetails['userschool'][0]['schoolemail']}}</td>
-                        <td>{{$studentDetails['userschool'][0]['mobilenumber']}}</td>
-                        <td>{{$studentDetails['userschool'][0]['periodfrom']}}</td>
-                        <td>{{$studentDetails['userschool'][0]['periodto']}}</td>
-                        <td><span class="tag tag-success">{{$studentDetails['userschool'][0]['status']}}</span></td>
-                      @endforeach
-                        
-                      @endif
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
         @endif
 
         <div class="modal fade" id="modal-lg">
@@ -366,6 +310,7 @@ alert(myTableArray);
           cache: false,
           data: {studentSession: studentSession, studentclassMain:studentclassMain, studentsectionMain:studentsectionMain, studentshiftMain:studentshiftMain, datehist:datehist},
           success:function(result){
+
                   console.log(result)
 
               for (let index = 0; index < result[0].length; index++) {

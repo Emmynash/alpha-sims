@@ -448,6 +448,10 @@
 
     });
 
+    function scrollocation(){
+        document.getElementById('inventory').className = "nav-link active"
+    }
+
   </script>
     
 @endpush

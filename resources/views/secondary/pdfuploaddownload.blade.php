@@ -63,7 +63,7 @@
                 $.ajax({
                     type: "POST",
                     enctype: 'multipart/form-data',
-                    url: "/file-upload",
+                    url: "{{ route('file-upload') }}",
                     data: data,
                     processData: false,
                     contentType: false,

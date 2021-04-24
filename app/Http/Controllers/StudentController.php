@@ -304,10 +304,11 @@ class StudentController extends Controller
         $studentshiftMain = $request->input('studentshiftMain');
 
         $allClassStudent = DB::table('addstudents') 
-        ->join('users', 'users.id', '=', 'addstudents.usernamesystem')
-        ->join('classlists', 'classlists.id', '=', 'addstudents.classid')
-        ->select('addstudents.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlists.classnamee')
-        ->where(['schoolsession' => $session, 'classid' => $studentclassMain, 'studentsection' => $studentsectionMain, 'studentshift' => $studentshiftMain])->get();
+                        ->join('users', 'users.id', '=', 'addstudents.usernamesystem')
+                        ->join('classlists', 'classlists.id', '=', 'addstudents.classid')
+                        ->join('addsections', 'addsections.id','=','addstudents.studentsection')
+                        ->select('addstudents.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlists.classnamee', 'addsections.sectionname')
+                        ->where(['schoolsession' => $session, 'classid' => $studentclassMain, 'studentsection' => $studentsectionMain, 'studentshift' => $studentshiftMain])->get();
 
         $datemain = Carbon::now();
             $attDate = $datemain->toDateString();
@@ -474,7 +475,7 @@ class StudentController extends Controller
             ->where(['schoolsession' => $session, 'classid' => $studentclassMain, 'studentsection' => $studentsectionMain, 'studentshift' => $studentshiftMain])->get();
 
             $datemain = Carbon::now();
-            $attDate = $datemain->toDateString();
+           $attDate = $datemain->toDateString();
 
             $getStudent = Studentattendance::where('datetoday', $datehist)->get();
 

@@ -96,9 +96,11 @@ class Addpost extends Model
         
     }
 
-    public function getTotalBalTerm()
+    public function getTotalBalTerm($schooid)
     {
-        return $this->hasOne('App\AmountBalTableTerm', 'school_id', 'id');
+        $getTotal = Addpost::find($schooid);
+        $termAmount = AmountBalTableTerm::where(['term'=>$getTotal->term, 'session'=>$getTotal->schoolsession, 'school_id'=>$schooid])->first();
+        return $termAmount;
         
     }
 

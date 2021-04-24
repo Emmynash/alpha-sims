@@ -71,7 +71,7 @@
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',
-                url: "/book-upload",
+                url: "{{ route('book-upload') }}",
                 data: data,
                 processData: false,
                 contentType: false,
@@ -176,7 +176,7 @@
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',
-                url: "/book-upload",
+                url: "{{ route('book-upload') }}",
                 data: data,
                 processData: false,
                 contentType: false,
@@ -255,7 +255,7 @@
                     // document.getElementById('psycospinner').style.display = "flex";
 
                     $.ajax({
-                    url: '/category_library',
+                    url: '{{ route('category_library') }}',
                     type: 'post',
                     dataType: 'json',
                     data: $('form#addcategoryform').serialize(),
@@ -325,7 +325,7 @@
                         function fetchDataAll(){
                             // document.getElementById('booksgotten').style.display = "block";
                             $.ajax({
-                            url: '/all_books',
+                            url: '{{ route('all_books') }}',
                             type: 'GET',
                             data: {
                                 page: page,
@@ -523,7 +523,7 @@
                 <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
                 </div>
             </form> --}}
-            @if (Auth::user()->role == "Librarian")
+            @if (Auth::user()->hasRole('Librarian'))
                 <a href="/view_all_books"><button type="button" class="btn btn-sm btn-outline-default waves-effect">View all Books(Admin)</button></a>
             @endif
             
@@ -534,7 +534,7 @@
         <!--/.Navbar-->
 
         <div class="container-fluid" style="margin-top: 10px;">
-            @if (Auth::user()->role == "Librarian")
+            @if (Auth::user()->hasRole('Librarian'))
                 <div class="col-md-6" style="">
                     <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#centralModalSm">Books</button>
 

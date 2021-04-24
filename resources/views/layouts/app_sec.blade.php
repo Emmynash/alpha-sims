@@ -216,7 +216,7 @@
                 document.getElementById('houses_spinner_sec').style.display ="block"
 
                 $.ajax({
-                url: '/addhouses_sec',
+                url: '{{ route('addhouses_sec') }}',
                 type: 'post',
                 dataType: 'json',
                 data: $('form#addhouses_secform').serialize(),

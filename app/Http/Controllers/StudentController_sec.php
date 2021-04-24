@@ -243,7 +243,7 @@ class StudentController_sec extends Controller
             
         }else{
 
-            $studentDetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+           return $studentDetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
 
             $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
                                 ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
@@ -264,11 +264,27 @@ class StudentController_sec extends Controller
     public function paymentHistory()
     {
 
-        $feeInvoices = FeesInvoice::
-                    join('classlist_secs', 'classlist_secs.id','=','fees_invoices.classid')
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        if ($schooldetails->schooltype == "Primary") {
+
+            $feeInvoices = FeesInvoice::
+            join('classlists', 'classlists.id','=','fees_invoices.classid')
+                    ->select('fees_invoices.*', 'classlists.classnamee as classname')
+                    ->where(['system_id'=>Auth::user()->id])->get();
+
+            return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails'));
+            
+        }else{
+            
+            $feeInvoices = FeesInvoice::
+            join('classlist_secs', 'classlist_secs.id','=','fees_invoices.classid')
                     ->select('fees_invoices.*', 'classlist_secs.classname')
                     ->where(['system_id'=>Auth::user()->id])->get();
 
-        return view('secondary.student.transaction', compact('feeInvoices'));
+            return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails'));
+        }
+
+
     }
 }

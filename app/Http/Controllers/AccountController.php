@@ -473,7 +473,7 @@ class AccountController extends Controller
         }
 
 
-        $updateWalletterm = AmountBalTableTerm::where(['school_id'=> Auth::user()->schoolid, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->first();
+            $updateWalletterm = AmountBalTableTerm::where(['school_id'=> Auth::user()->schoolid, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->first();
 
         if ($updateWalletterm == NULL) {
 

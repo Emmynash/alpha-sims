@@ -264,28 +264,28 @@
               </li>
             @endcan
 
+            @can('elearning')
+              <li class="nav-item has-treeview">
+                <a href="{{ route('elearning') }}" class="nav-link">
+                  <i class="fas fa-chalkboard nav-icon"></i>
+                  <p>
+                    eLearning
+                  </p>
+                </a>
+              </li>
+            @endcan
 
-            <li class="nav-item has-treeview">
-              <a href="/elearning" class="nav-link">
-                <i class="fas fa-chalkboard nav-icon"></i>
-                <p>
-                  eLearning
-                </p>
-              </a>
-            </li>
-         
-            
-            <li class="nav-item has-treeview">
-              <a href="/school_library" class="nav-link">
-                <i class="fas fa-chalkboard nav-icon"></i>
-                <p>
-                  Visit Library
-                </p>
-              </a>
-            </li>
+            @can('access library')
+              <li class="nav-item has-treeview">
+                <a href="{{ route('school_library') }}" class="nav-link">
+                  <i class="fas fa-chalkboard nav-icon"></i>
+                  <p>
+                    Visit Library
+                  </p>
+                </a>
+              </li>
+            @endcan
 
-            
-            
             @if (Auth::user()->hasRole('Teacher'))
             <li class="nav-item has-treeview">
               <a id="teacheredit" href="/editteacherprofile" class="nav-link">
@@ -318,8 +318,9 @@
 
             @endif
 
+            @can('elearning')
               <li class="nav-item">
-                <a href="/dowloads_videos" class="nav-link">
+                <a href="{{ route('dowloads_videos') }}" class="nav-link">
                   <i class="fas fa-video nav-icon"></i>
                   <p>Videos</p>
                 </a>
@@ -330,6 +331,7 @@
                   <p>PDF downloads</p>
                 </a>
               </li>
+            @endcan
               
           @if(Auth::user()->hasRole('Student'))
           <li class="nav-item has-treeview">

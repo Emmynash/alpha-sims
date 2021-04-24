@@ -134,7 +134,12 @@ Route::group(['prefix' => 'pri'], function () {
     // });
 
     
+    Route::group(['middleware' => ['auth', 'can:student attendance']], function () {
 
+        Route::get('/studentattendance', 'StudentController@studentAttendance')->name('studentattendance');
+        Route::POST('/studentatt', 'StudentController@studentAtt')->name('studentatt');
+
+    });
 
     
 
@@ -158,17 +163,19 @@ Route::POST('/contactform', 'DashboardController@contactform')->name('contactfor
 
 
 Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
+
     Route::POST('/viewallclass', 'StudentController@getAllStudent');
+    Route::get('/viewallstudents', 'StudentController@viewallstudents')->name('viewallstudents');
+
 });
 
 
 
 
 
-Route::get('/studentattendance', ['uses' => 'StudentController@studentAttendance','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::POST('/studentatt', ['uses' => 'StudentController@studentAtt','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::get('/viewallstudents', ['uses' => 'StudentController@viewallstudents','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
-Route::POST('/viewatstudents', ['uses' => 'StudentController@viewatstudent','roles' => ['Admin', 'Teacher', "Student"]])->middleware('roles');
+
+
+Route::POST('/viewatstudents', 'StudentController@viewatstudent');
 Route::get('/exammark', ['uses' => 'StudentController@getExamsMarks','roles' => ['Student']])->middleware('roles');
 Route::POST('/specificresult', ['uses' => 'StudentController@specificresult','roles' => ['Student']])->middleware('roles');
 
@@ -374,7 +381,7 @@ Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
 
 // add student route 
 
-Route::group(['prefix'=>'pay'], function(){ 
+Route::group(['prefix'=>'pay', 'middleware' => ['auth', 'role:Student']], function(){ 
     Route::get('/student_fees', 'StudentController_sec@feePayment')->name('student_fees');
  });
 
@@ -405,20 +412,26 @@ Route::group(['middleware' => ['auth', 'role:Teacher']], function () {
 });
 
 
+Route::group(['middleware' => ['auth', 'can:elearning']], function () { 
+    //elearning 
+    Route::get('/elearning', 'ElearningController_sec@index')->name('elearning');
+    Route::get('/dowloads_videos', 'ElearningController_sec@downloadsVideos')->name('dowloads_videos');
+    Route::post('/add_videos', 'ElearningController_sec@addVideos')->name('add_videos');
+    Route::get('/all_videos', 'ElearningController_sec@ftechAllVieosStudent')->name('all_videos');
+    Route::get('/all_pdfs', 'ElearningController_sec@ftechAllpdfStudent')->name('all_pdfs');
+
+    //pdf upload
+    Route::get('/dowloads_pdf', 'PdfController@index')->name('dowloads_pdf');
+    Route::POST('/file-upload', 'PdfController@fileUploadPost')->name('file-upload');
+
+    //main routes
+    Route::post('/add_assignment', 'ElearningController_sec@submitAssignment')->middleware('roles');
+    Route::post('/deletealignment', 'ElearningController_sec@deleteAssignment')->middleware('roles');
+});
 
 
 
 
-//elearning 
-Route::get('/elearning', ['uses' => 'ElearningController_sec@index','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
-Route::get('/dowloads_videos', ['uses' => 'ElearningController_sec@downloadsVideos','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
-Route::post('/add_videos', ['uses' => 'ElearningController_sec@addVideos','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::get('/all_videos', ['uses' => 'ElearningController_sec@ftechAllVieosStudent','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
-Route::get('/all_pdfs', ['uses' => 'ElearningController_sec@ftechAllpdfStudent','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
-
-//main routes
-Route::post('/add_assignment', ['uses' => 'ElearningController_sec@submitAssignment','roles' => ['Admin', 'Teacher']])->middleware('roles');
-Route::post('/deletealignment', ['uses' => 'ElearningController_sec@deleteAssignment','roles' => ['Admin', 'Teacher']])->middleware('roles');
 
 
 
@@ -455,11 +468,6 @@ Route::group(['middleware' => ['auth', 'can:take teachers attendance']], functio
 });
 
 
-//pdf upload
-Route::get('/dowloads_pdf', ['uses' => 'PdfController@index','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
-Route::POST('/file-upload', ['uses' => 'PdfController@fileUploadPost','roles' => ['Admin', 'Teacher']])->middleware('roles');
-
-
 //secondary promotion route
 Route::group(['middleware' => ['auth', 'can:student promotion']], function () {
     Route::get('/promotion_student_sec', 'PromotionController_sec@index');
@@ -469,6 +477,28 @@ Route::group(['middleware' => ['auth', 'can:student promotion']], function () {
     Route::POST('/promote_jss_ss', 'PromotionController_sec@promotejss3toss1');
 });
 
+Route::group(['middleware' => ['auth', 'can:access library']], function () { // library module
+    Route::get('/school_library', 'LibraryController@index')->name('school_library');
+    Route::get('/all_books', 'LibraryController@ftechAllbooks')->name('all_books');
+});
+
+
+Route::group(['middleware' => ['auth', 'role:Librarian']], function () {
+
+    Route::POST('/book-upload', 'LibraryController@addbooks')->name('book-upload');
+    Route::POST('/category_library', 'LibraryController@addcategory')->name('category_library');
+    Route::get('/view_all_books', 'LibraryController@viewallbooks')->name('view_all_books');
+    Route::POST('/delete_book', 'LibraryController@deletebook')->name('delete_book');
+    Route::get('/trackbook', 'LibraryController@trackbook')->name('trackbook');
+    Route::POST('/fetch_book_details', 'LibraryController@fetchbokdetailisbn')->name('fetch_book_details');
+    Route::POST('/fetch_student_book', 'LibraryController@getstudentforbook')->name('fetch_student_book');
+    Route::POST('/add_book_borrow_data', 'LibraryController@addBookBorrowData')->name('add_book_borrow_data');
+    Route::get('/all_borrowed_books', 'LibraryController@allborrowedbook')->name('all_borrowed_books');
+    Route::POST('/delete_borrow_book', 'LibraryController@deletebookborrowrecord')->name('delete_borrow_book');
+    Route::POST('/return_borrow_book', 'LibraryController@approvereturnbook')->name('return_borrow_book');
+
+});
+
 
 // secondary school result computation
 
@@ -476,22 +506,6 @@ Route::group(['middleware' => ['auth', 'can:student promotion']], function () {
     Route::get('/result_view_sec', ['uses' => 'ResultController_sec@index','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
     Route::Post('/result_print_sec', ['uses' => 'ResultController_sec@viewResult','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
     Route::Post('/result_print_update_sec', ['uses' => 'ResultController_sec@fetchresultdetails','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
-
-
-
-Route::get('/school_library', ['uses' => 'LibraryController@index','roles' => ['Admin', 'Teacher', 'Student', 'Librarian']])->middleware('roles');
-Route::POST('/book-upload', ['uses' => 'LibraryController@addbooks','roles' => ['Admin', 'Librarian']])->middleware('roles');
-Route::POST('/category_library', ['uses' => 'LibraryController@addcategory','roles' => ['Admin', 'Librarian']])->middleware('roles');
-Route::get('/view_all_books', ['uses' => 'LibraryController@viewallbooks','roles' => ['Librarian']])->middleware('roles');
-Route::get('/all_books', ['uses' => 'LibraryController@ftechAllbooks','roles' => ['Admin', 'Teacher', 'Student', 'Librarian']])->middleware('roles');
-Route::POST('/delete_book', ['uses' => 'LibraryController@deletebook','roles' => ['Admin', 'Librarian']])->middleware('roles');
-Route::get('/trackbook', ['uses' => 'LibraryController@trackbook','roles' => ['Admin', 'Teacher', 'Student', 'Librarian']])->middleware('roles');
-Route::POST('/fetch_book_details', ['uses' => 'LibraryController@fetchbokdetailisbn','roles' => ['Admin', 'Librarian']])->middleware('roles');
-Route::POST('/fetch_student_book', ['uses' => 'LibraryController@getstudentforbook','roles' => ['Admin', 'Librarian']])->middleware('roles');
-Route::POST('/add_book_borrow_data', ['uses' => 'LibraryController@addBookBorrowData','roles' => ['Admin', 'Librarian']])->middleware('roles');
-Route::get('/all_borrowed_books', ['uses' => 'LibraryController@allborrowedbook','roles' => ['Admin', 'Teacher', 'Student', 'Librarian']])->middleware('roles');
-Route::POST('/delete_borrow_book', ['uses' => 'LibraryController@deletebookborrowrecord','roles' => ['Admin', 'Librarian']])->middleware('roles');
-Route::POST('/return_borrow_book', ['uses' => 'LibraryController@approvereturnbook','roles' => ['Admin', 'Librarian']])->middleware('roles');
 
 
 Route::Post('/cookie/set','CookieController@setCookie');
