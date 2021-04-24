@@ -323,6 +323,7 @@ class HomeController extends Controller
                 
         }elseif($userschool[0]['schooltype'] == "Secondary"){
 
+            
                 $user = User::find(Auth::user()->id);
                 $user->hasRole('Student');
 
@@ -434,6 +435,10 @@ class HomeController extends Controller
 
                 $getFormClass = Addteachers_sec::where('systemid', Auth::user()->id)->get();
 
+                if ($getFormClass->count() <1) {
+                    $formTeacher = "";
+                }
+
                 if ($getFormClass[0]['formteacher'] == "") {
                     $formTeacher = "";
                 }else{
@@ -442,7 +447,11 @@ class HomeController extends Controller
                     $formTeacher = $formClass[0]['classname'];
                 }
 
-                if ($getFormClass[0]['subject'] == "") {
+                if ($getFormClass->count() <1) {
+                    $allocatedSubject = [];
+                }
+
+                if ($getFormClass[0]['subject'] == "") {//ewrkejkwjekwjekwjekwjekwe
                     $allocatedSubject = [];
                 }else{
                     $allocatedSubject = $getFormClass[0]['teachclass'];
@@ -451,8 +460,6 @@ class HomeController extends Controller
                                         ->join('users', 'users.id','=','addstudent_secs.usernamesystem') 
                                         ->where('classid', $allocatedSubject)
                                         ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')->get();
-
-
 
 
                 }
