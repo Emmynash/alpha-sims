@@ -437,32 +437,37 @@ class HomeController extends Controller
 
                 if ($getFormClass->count() <1) {
                     $formTeacher = "";
-                }
-
-                if ($getFormClass[0]['formteacher'] == "") {
-                    $formTeacher = "";
                 }else{
-                    $formClass = Classlist_sec::where('id', $getFormClass[0]['formteacher'])->get();
+                    if ($getFormClass[0]['formteacher'] == "") {
+                        $formTeacher = "";
+                    }else{
+                        $formClass = Classlist_sec::where('id', $getFormClass[0]['formteacher'])->get();
+    
+                        $formTeacher = $formClass[0]['classname'];
+                    }
 
-                    $formTeacher = $formClass[0]['classname'];
                 }
+
+
 
                 if ($getFormClass->count() <1) {
                     $allocatedSubject = [];
-                }
-
-                if ($getFormClass[0]['subject'] == "") {//ewrkejkwjekwjekwjekwjekwe
-                    $allocatedSubject = [];
                 }else{
-                    $allocatedSubject = $getFormClass[0]['teachclass'];
-
-                    $studentsInClass = DB::table('addstudent_secs')
-                                        ->join('users', 'users.id','=','addstudent_secs.usernamesystem') 
-                                        ->where('classid', $allocatedSubject)
-                                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')->get();
-
-
+                    if ($getFormClass[0]['subject'] == "") {//ewrkejkwjekwjekwjekwjekwe
+                        $allocatedSubject = [];
+                    }else{
+                        $allocatedSubject = $getFormClass[0]['teachclass'];
+    
+                        $studentsInClass = DB::table('addstudent_secs')
+                                            ->join('users', 'users.id','=','addstudent_secs.usernamesystem') 
+                                            ->where('classid', $allocatedSubject)
+                                            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')->get();
+    
+    
+                    }
                 }
+
+
 
                 $getTeacherDetails = Addteachers_sec::join('addposts', 'addposts.id','=','addteachers_secs.schoolid')
                                     ->where(['addteachers_secs.schoolid'=>$schoolid, 'addteachers_secs.systemid'=>Auth::user()->id])
