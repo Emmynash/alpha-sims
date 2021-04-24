@@ -128,7 +128,7 @@
                                             <div>
                                                 <i style="font-style: normal; color: red; font-size: 15px;">Proceed?</i>
                                             </div>
-                                            <form id="deletehostelid{{$allhostel->id}}" action="/delete_hostel" method="post">
+                                            <form id="deletehostelid{{$allhostel->id}}" action="{{ route('delete_hostel') }}" method="post">
                                                 @csrf
                                                 <input type="hidden" name="hostelidDelete" value="{{$allhostel->id}}">
                                             </form>
@@ -141,7 +141,7 @@
                                     </div>
                                 </div>
 
-                                <td><div style="display: flex; flex-direction: row;"><a href="/add_rooms/{{$allhostel->id}}"><i style="color: rgb(204, 204, 68);" class="far fa-eye"></i></a> <div style="width:5px;"></div>  <i style="color: red;" class="far fa-trash-alt" data-toggle="modal" data-target="#deleteHostel{{$allhostel->id}}"></i></div></td>
+                                <td><div style="display: flex; flex-direction: row;"><a href="{{ route('add_rooms', $allhostel->id) }}"><i style="color: rgb(204, 204, 68);" class="far fa-eye"></i></a> <div style="width:5px;"></div>  <i style="color: red;" class="far fa-trash-alt" data-toggle="modal" data-target="#deleteHostel{{$allhostel->id}}"></i></div></td>
                             </tr>
                         @endforeach
                       @endif
@@ -176,7 +176,7 @@
                 </button>
                 </div>
                 <div class="modal-body">
-                    <form id="addhoselform" action="/add_hostel" method="post">
+                    <form id="addhoselform" action="{{ route('add_hostel') }}" method="post">
                         @csrf
                         <div class="form-group" style="display: flex; flex-direction: row;">
                             <button style="border: none; background: transparent; border-left: 1px solid rgb(202, 198, 198); border-top: 1px solid rgb(202, 198, 198); border-bottom: 1px solid rgb(202, 198, 198);" disabled><i class="fas fa-school"></i></button>

@@ -330,11 +330,11 @@ class HomeController extends Controller
                 $schoolid = Auth::user()->schoolid;
 
                 $addstudentsec = DB::table('addstudent_secs')
-                ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-                ->join('addposts', 'addposts.id','=','addstudent_secs.schoolid')
-                ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection') 
-                ->where('usernamesystem', Auth::user()->id)
-                ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addposts.schoolname')->get();
+                                ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                                ->join('addposts', 'addposts.id','=','addstudent_secs.schoolid')
+                                ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection') 
+                                ->where('usernamesystem', Auth::user()->id)
+                                ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addposts.schoolname')->get();
 
 
                 $idf = $addstudentsec->toJson();

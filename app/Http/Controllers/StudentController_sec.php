@@ -243,7 +243,7 @@ class StudentController_sec extends Controller
             
         }else{
 
-           return $studentDetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+           $studentDetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
 
             $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
                                 ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])

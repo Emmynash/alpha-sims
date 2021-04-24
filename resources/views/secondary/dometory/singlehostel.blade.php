@@ -48,7 +48,7 @@
                     document.getElementById('infodatahostel').innerHTML = "Loading...";
 
                     $.ajax({
-                    url: '/add_student_hostel',
+                    url: '{{ route('add_student_hostel') }}',
                     type: 'post',
                     dataType: 'json',
                     data: $('form#addstudenthostelform').serialize(),
@@ -287,7 +287,7 @@
                                                     <i>{{$hostel->roomname}}</i>
                                                 </div>
                                                 <i style="font-style: normal; font-size: 12px; color: red;">Are you sure about this? Remember, this request cannot be undone. All students in this room will be rendered roomless.</i>
-                                                <form id="deleteroom{{$hostel->id}}" action="/delete_room" method="post">
+                                                <form id="deleteroom{{$hostel->id}}" action="{{ route('delete_room') }}" method="post">
                                                     @csrf
                                                     <input type="hidden" value="{{$hostel->id}}" name="roomidvalue">
                                                 </form>
@@ -331,7 +331,7 @@
                 </button>
                 </div>
                 <div class="modal-body">
-                    <form id="addhostelmodal" action="/add_room" method="post">
+                    <form id="addhostelmodal" action="{{ route('add_room') }}" method="post">
                         @csrf
                         <div class="text-center">
                             <i style="font-style: normal; font-size: 10px; color: red;">All fields are required</i>
@@ -475,7 +475,7 @@
             }
             });
                 $.ajax({
-                url:"/fetch_students_in_room", //the page containing php script
+                url:"{{ route('fetch_students_in_room') }}", //the page containing php script
                 method: "POST", //request type,
                 cache: false,
                 data: {roomid: roomid, hostelid:hostelid},
@@ -521,7 +521,7 @@
             }
             });
                 $.ajax({
-                url:"/delete_roommate", //the page containing php script
+                url:"{{ route('delete_roommate') }}", //the page containing php script
                 method: "POST", //request type,
                 cache: false,
                 data: {studenthostelid: studenthostelid, roomid:roomid, hostelid:hostelid},

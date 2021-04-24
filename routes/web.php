@@ -499,6 +499,19 @@ Route::group(['middleware' => ['auth', 'role:Librarian']], function () {
 
 });
 
+Route::group(['middleware' => ['auth']], function () {
+    //domitory management route
+    Route::get('/dom_index', 'DometoryController@index')->name('dom_index');
+    Route::POST('/add_hostel', 'DometoryController@addHostel')->name('add_hostel');
+    Route::get('/add_rooms/{id}', 'DometoryController@show')->name('add_rooms');
+    Route::POST('/add_room', 'DometoryController@addHostels')->name('add_room');
+    Route::POST('/add_student_hostel', 'DometoryController@addStudentToHostel')->name('add_student_hostel');
+    Route::POST('/fetch_students_in_room', 'DometoryController@fetchAllStudentInARoom')->name('fetch_students_in_room');
+    Route::POST('/delete_roommate', 'DometoryController@deleteRoomMate')->name('delete_roommate');
+    Route::POST('/delete_room', 'DometoryController@deleteRoom')->name('delete_room');
+    Route::POST('/delete_hostel', 'DometoryController@deleteHostel')->name('delete_hostel');
+});
+
 
 // secondary school result computation
 
@@ -510,17 +523,6 @@ Route::group(['middleware' => ['auth', 'role:Librarian']], function () {
 
 Route::Post('/cookie/set','CookieController@setCookie');
 Route::get('/cookie/get','CookieController@getCookie');
-
-//domitory management route
-Route::get('/dom_index', ['uses'=>'DometoryController@index', 'roles'=> ['Admin']])->middleware('roles');
-Route::POST('/add_hostel', ['uses' => 'DometoryController@addHostel','roles' => ['Admin']])->middleware('roles');
-Route::get('/add_rooms/{id}', ['uses' => 'DometoryController@show','roles' => ['Admin']])->middleware('roles');
-Route::POST('/add_room', ['uses' => 'DometoryController@addHostels','roles' => ['Admin']])->middleware('roles');
-Route::POST('/add_student_hostel', ['uses' => 'DometoryController@addStudentToHostel','roles' => ['Admin']])->middleware('roles');
-Route::POST('/fetch_students_in_room', ['uses' => 'DometoryController@fetchAllStudentInARoom','roles' => ['Admin']])->middleware('roles');
-Route::POST('/delete_roommate', ['uses' => 'DometoryController@deleteRoomMate','roles' => ['Admin']])->middleware('roles');
-Route::POST('/delete_room', ['uses' => 'DometoryController@deleteRoom','roles' => ['Admin']])->middleware('roles');
-Route::POST('/delete_hostel', ['uses' => 'DometoryController@deleteHostel','roles' => ['Admin']])->middleware('roles');
 
 
 //feedback route

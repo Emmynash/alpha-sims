@@ -378,7 +378,7 @@
 
           @can('accommodation')
             <li class="nav-item has-treeview">
-              <a id="managestaffaside" href="/dom_index" class="nav-link">
+              <a id="managestaffaside" href="{{ route('dom_index') }}" class="nav-link">
                 <i class="fas fa-user-tie nav-icon"></i> 
                 <p>
                   Accomodation

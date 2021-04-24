@@ -152,7 +152,7 @@ class DashboardController extends Controller
         Auth::user()->assignRole('HeadOfSchool');
 
 
-        $mailServices->sendMail($request, Auth::user()->email);
+        // $mailServices->sendMail($request, Auth::user()->email);
 
         return Redirect::back()->with('success', 'application submited successfully');
         
