@@ -77,7 +77,7 @@
                   </style>
 
                   <div class="mydiv">
-                    <p style="padding: 10px;">Current Term: First</p>
+                    <p style="padding: 10px;">Current Term: {{$alldetails['addschool'][0]['term'] == null ? "NAN":$alldetails['addschool'][0]['term']}}</p>
                     <button class="btn btn-sm btn-block btn-info" data-toggle="modal" data-target="#updateterm">CLick to Update term</button>
                   </div>
 
