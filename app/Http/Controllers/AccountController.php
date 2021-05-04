@@ -198,7 +198,9 @@ class AccountController extends Controller
 
     public function feecollection()
     {
-        return view('secondary.accounting.feecollection');
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.accounting.feecollection', compact('schooldetails'));
     }
 
     public function fetchstudentdataforfee(Request $request)
@@ -269,21 +271,44 @@ class AccountController extends Controller
             'quantity' => 'required'
         ]);
 
-        $checkforduplicate = InventoryModel::where(['schoolid'=>Auth::user()->schoolid, "nameofitem"=>$request->nameofitem, 'classid'=>$request->classid])->get();
+        if ($request->classid == "Others") {
 
-        if ($checkforduplicate->count() > 0) {
-            return back()->with("error", "Duplicate entry");
+            $checkforduplicate = InventoryModel::where(['schoolid'=>Auth::user()->schoolid, "nameofitem"=>$request->nameofitem, 'classid'=>$request->classid, 'othersval'=>$request->Otherfield])->get();
+
+            if ($checkforduplicate->count() > 0) {
+                return back()->with("error", "Duplicate entry");
+            }
+    
+            $additeminventory = new InventoryModel();
+            $additeminventory->classid = $request->classid;
+            $additeminventory->nameofitem = $request->nameofitem;
+            $additeminventory->amount = $request->amount;
+            $additeminventory->quantity = $request->quantity;
+            $additeminventory->schoolid = (int)Auth::user()->schoolid;
+            $additeminventory->othersval = $request->Otherfield;
+            $additeminventory->save();
+    
+            return back()->with("success", "Item added successfully");
+            
+        }else{
+            $checkforduplicate = InventoryModel::where(['schoolid'=>Auth::user()->schoolid, "nameofitem"=>$request->nameofitem, 'classid'=>$request->classid])->get();
+
+            if ($checkforduplicate->count() > 0) {
+                return back()->with("error", "Duplicate entry");
+            }
+    
+            $additeminventory = new InventoryModel();
+            $additeminventory->classid = $request->classid;
+            $additeminventory->nameofitem = $request->nameofitem;
+            $additeminventory->amount = $request->amount;
+            $additeminventory->quantity = $request->quantity;
+            $additeminventory->schoolid = (int)Auth::user()->schoolid;
+            $additeminventory->save();
+    
+            return back()->with("success", "Item added successfully");
         }
 
-        $additeminventory = new InventoryModel();
-        $additeminventory->classid = $request->classid;
-        $additeminventory->nameofitem = $request->nameofitem;
-        $additeminventory->amount = $request->amount;
-        $additeminventory->quantity = $request->quantity;
-        $additeminventory->schoolid = (int)Auth::user()->schoolid;
-        $additeminventory->save();
 
-        return back()->with("success", "Item added successfully");
 
         
     }

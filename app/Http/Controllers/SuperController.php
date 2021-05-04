@@ -412,11 +412,6 @@ class SuperController extends Controller
 
     public function rolesmanage()
     {
-
-        $user = User::find(11);
-
-        $user->assignRole('HeadOfSchool');
-
         $permission = Permission::all();
         $role = Role::all();
 

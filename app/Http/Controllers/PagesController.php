@@ -361,8 +361,6 @@ class PagesController extends Controller
 
         $role = Role::all();
 
-        
-        
         return view('secondary.managestaff', compact('role'));
     }
 

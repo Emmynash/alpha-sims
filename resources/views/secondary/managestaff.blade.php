@@ -74,7 +74,7 @@
                 </div>
                 <div class="modal-body">
                     <div style="display: flex; align-items: center; justify-content: center;">
-                        <img id="allocateroleimg" src="cinqueterre.jpg" class="rounded-circle" alt="Cinque Terre" width="70px" height="auto">
+                        <img id="allocateroleimg" src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" class="rounded-circle" alt="Cinque Terre" width="70px" height="auto">
                     </div>
                     <div style="display: none;" id="spinnerallocaterolemain" class="spinner-border"></div>
                     <br>
@@ -92,7 +92,7 @@
                                 <select name="roleselect" id="roleselect" class="form-control form-control-sm" style="border-radius: 0px;">
                                     <option value="">Select a role</option>
                                     @foreach ($role as $item)
-                                      @if ($item->name != "Student")
+                                      @if ($item->name != "Student" && $item->name != "Teacher")
                                         <option value="{{ $item->name }}">{{ $item->name }}</option>
                                       @endif
                                     @endforeach

@@ -108,7 +108,8 @@ class StudentController_sec extends Controller
             'studenthouse' => 'required',
             'nationality' => 'required',
             'studentclub' => 'required',
-            'studentaddress_sec' => 'required'
+            'studentaddress_sec' => 'required',
+            'admissionname' => 'required'
         ]);
         
         $checkduplicate = $this->addstudent_sec->where('usernamesystem', $request->input('studentsystemnumber'))->get();
@@ -159,6 +160,7 @@ class StudentController_sec extends Controller
         $Addstudent->studentpermanenthomeaddress = $request->input('studentaddress_sec');
         $Addstudent->dateOfBirth = $request->input('dateofbirth');
         $Addstudent->sessionstatus = 0;
+        $Addstudent->admission_no = $request->admissionname;
         $Addstudent->save();
 
         //asign student role
