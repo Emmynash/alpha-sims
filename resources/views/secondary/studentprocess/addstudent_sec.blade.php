@@ -136,6 +136,14 @@
                 <div class="row" style="margin: 10px;">
                     <div class="col-md-6">
                         <div class="form-group">
+                            <input type="text" name="admissionname" placeholder="enter admission number" class="form-control @error('admissionname') is-invalid @enderror" value="{{ old('admissionname') }}">
+                            @error('admissionname')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>required feild</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             {{-- <label for="exampleInputEmail1">Subject Code</label> --}}
                             <Select class="form-control @error('studentgender') is-invalid @enderror" name="studentgender" id="studentgender">
                                 <option value="">Select gender</option>

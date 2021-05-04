@@ -30,6 +30,8 @@
     <!-- Main content -->
     <section class="content">
 
+      @include('layouts.message')
+
         <div>
                     <!-- Info boxes -->
         <div class="row">
@@ -150,7 +152,7 @@
                             <td>{{ $item->nameofitem }}</td>
                             <td>{{ number_format($item->amount) }}</td>
                             <td>{{ $item->quantity }}</td>
-                            <td>{{ $schooldetails->schooltype == "Primary" ? $schooldetails->getClassName($item->classid)->classnamee : $schooldetails->getClassName($item->classid)->classname }}</td>
+                            <td>{{ $schooldetails->schooltype == "Primary" ? ($item->classid == "Others" ? $item->othersval:$schooldetails->getClassName($item->classid)->classnamee) : ($item->classid == "Others" ? $item->othersval:$schooldetails->getClassName($item->classid)->classname) }}</td>
                             <td>{{ $item->quantity <1 ? "Unavailable":"Available" }}</td>
                             <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#bookoptions{{ $item->id }}">View</button></td>
 
@@ -254,7 +256,7 @@
               @csrf
               <div class="form-group">
                     <label for="">Select a Class(optional)</label>
-                    <select name="classid" class="form-control form-control-sm" id="">
+                    <select name="classid" onchange="getOthersCategory(this)" class="form-control form-control-sm" id="" required>
                         <option value="">Select a class</option>
                         @if($schooldetails->getClassList($schooldetails->id)->count() < 1)
 
@@ -267,7 +269,12 @@
                             @endforeach
 
                         @endif
+                        <option value="Others">Others</option>
                     </select>
+               </div>
+               <div class="form-group" id="othercategoryfield" style="display: none;">
+                    <label for="">Enter a Value</label>
+                    <input name="Otherfield" type="text" class="form-control form-control-sm" id="" placeholder="enter other value">
                </div>
                <div class="form-group">
                         <label for="">Name of item</label>
@@ -450,6 +457,15 @@
 
     function scrollocation(){
         document.getElementById('inventory').className = "nav-link active"
+    }
+
+    function getOthersCategory(select) {
+        console.log(select.value)
+        if (select.value == "Others") {
+          document.getElementById('othercategoryfield').style.display = "block";
+        }else{
+          document.getElementById('othercategoryfield').style.display = "none";
+        }
     }
 
   </script>

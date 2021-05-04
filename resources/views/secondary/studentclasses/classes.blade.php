@@ -69,9 +69,11 @@
                   </thead>
                   <tbody>
                     @if (count($classesAll) > 0)
+                    @php $count = method_exists($classesAll, 'links') ? 1 : 0; @endphp
                       @foreach ($classesAll as $classesall)
+                      @php $count = method_exists($classesAll, 'links') ? ($classesAll ->currentpage()-1) * $classesAll ->perpage() + $loop->index + 1 : $count + 1; @endphp
                         <tr>
-                          <td>{{$classesall->id}}</td>
+                          <td>{{$count}}</td>
                           <td>{{$classesall->classname}}</td>
                           <td>{{$classesall->getClassCount($classesall->id)}}</td>
                   
@@ -111,10 +113,45 @@
                               </div>
                             </div>
                             <!-- Central Modal Small -->
+
+
+                              <!-- The Modal -->
+                              <div class="modal fade" id="viewsectioncount{{ $classesall->id }}">
+                                <div class="modal-dialog modal-sm">
+                                  <div class="modal-content">
+                                  
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                      <h4 class="modal-title">Section Count</h4>
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <ul class="list-group">
+
+                                          @foreach ($classesall->getArmCount($classesall->id) as $item)
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                              {{$classesall->classname}} {{ $item->sectionname }}
+                                              <span class="badge badge-primary badge-pill">{{ $item->sectioncount }}</span>
+                                            </li>
+                                          @endforeach
+
+                                        </ul>
+                                    </div>
+                                    
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                      {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                              </div>
                           
                           
                           
-                          <td><button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editclassname{{$classesall->id}}"><i class="fas fa-eye"></i></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname{{$classesall->id}}"><i class="fas fa-edit"></i></button></td>
+                          <td><button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#viewsectioncount{{$classesall->id}}"><i class="fas fa-eye"></i></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname{{$classesall->id}}"><i class="fas fa-edit"></i></button></td>
                         </tr>
                       @endforeach
                     @endif

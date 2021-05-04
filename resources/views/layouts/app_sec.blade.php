@@ -1603,7 +1603,13 @@
 
                     if (data.userdetails) {
 
-                      document.getElementById('allocateroleimg').src = "storage/schimages/"+data.userdetails[0].profileimg;
+                      if (data.userdetails[0].profileimg != null) {
+                        document.getElementById('allocateroleimg').src = "storage/schimages/"+data.userdetails[0].profileimg;
+                      }else{
+                        document.getElementById('allocateroleimg').src = "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png";
+                      }
+
+                      
                       document.getElementById('fullnamerole').innerHTML = data.userdetails[0].firstname+" "+data.userdetails[0].middlename+" "+data.userdetails[0].lastname
                       document.getElementById('systemnumberrole').value = data.userdetails[0].id;
 
@@ -1650,6 +1656,10 @@
                   document.getElementById('allocaterolebtn').style.display = "block"
 
                   console.log(data)
+
+                  if (data.success) {
+                    fullscreensuccess('Role allocated', ' ', '#', 'Success...')
+                  }
 
                     if (data.errors) {
                       for (let index = 0; index < data.errors.length; index++) {
