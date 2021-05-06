@@ -1243,13 +1243,13 @@
                 document.getElementById('submitmarksmainbtn').style.display = "none"
 
                 $.ajax({
-                url: '/add_marks_main',
+                url: '{{ route("add_marks_main") }}',
                 type: 'post',
                 dataType: 'json',
                 data: $('form#submitmarksmainform').serialize(),
                 success: function(data) {
                     
-                    // console.log(data)
+                    console.log(data)
 
                   document.getElementById('addmarkprogress').style.display = "none";
                   document.getElementById('submitmarksmainbtn').style.display = "block"

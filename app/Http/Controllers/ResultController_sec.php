@@ -327,7 +327,7 @@ class ResultController_sec extends Controller
 
     public function generateResult()
     {
-        $classlist = Classlist_sec::where('schoolid', Auth::user()->id)->get();
+       $classlist = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
 
         return view('secondary.adminside.result.generateresult', compact('classlist'));
     }

@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\AmountBalTableTotal;
-
+use App\FeesInvoiceItems;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -203,10 +203,229 @@ class AccountController extends Controller
         return view('secondary.accounting.feecollection', compact('schooldetails'));
     }
 
+    public function confirmMoneyReceived(Request $request)
+    {
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+
+        $checkTransaction = TransactionRecord::where(['term' => $schoolDetails->term, 'session' =>$schoolDetails->schoolsession, 'school_id'=>Auth::user()->schoolid, 'system_id'=>$request->usernamesystem, 'status'=>'success'])->get();
+
+        if ($checkTransaction->count() > 0) {
+            return back()->with('error', 'School fee already paid');
+        }
+
+        if ($schoolDetails->schooltype == "Primary") {
+
+            $getId = $schoolDetails->shoolinitial.time().$request->usernamesystem;
+
+            $studentDetails = Addstudent::where('usernamesystem', $request->usernamesystem)->first();
+    
+            $checkFeeInvoiceExist = FeesInvoice::where(['system_id'=>$request->usernamesystem, 'session'=>$schoolDetails->schoolsession])->first();
+    
+            $invoice_student = "";
+    
+            if ($checkFeeInvoiceExist == null) {
+    
+                $generateInvoice = new FeesInvoice();
+                $generateInvoice->schoolid = Auth::user()->schoolid;
+                $generateInvoice->invoice_number = $getId;
+                $generateInvoice->amount = $request->amount;
+                $generateInvoice->system_id = $request->usernamesystem;
+                $generateInvoice->session = $schoolDetails->schoolsession;
+                $generateInvoice->term = $schoolDetails->term;
+                $generateInvoice->status = 0;
+                $generateInvoice->classid = $studentDetails->classid;
+                $generateInvoice->save();
+    
+                $invoice_student = $generateInvoice->id;
+    
+            }else{
+    
+                $invoice_student = $checkFeeInvoiceExist->id;
+    
+            }
+
+            $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+                        ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
+                        ->select('amount_tables.*', 'payment_categories.categoryname')->get();
+
+            for ($i=0; $i < $schoolData->count(); $i++) { 
+
+                $checkIfItemAdded = FeesInvoiceItems::where(['session'=>$schoolDetails->schoolsession, 'term' => $schoolDetails->term, 'category_name' => $schoolData[$i]['categoryname']])->get();
+
+                if ($checkIfItemAdded->count()< 1) {
+                    $addInvoiceItems = new FeesInvoiceItems();
+                    $addInvoiceItems->school_id = Auth::user()->schoolid;
+                    $addInvoiceItems->session = $schoolDetails->schoolsession;
+                    $addInvoiceItems->system_id = $request->usernamesystem;
+                    $addInvoiceItems->category_name = $schoolData[$i]['categoryname'];
+                    $addInvoiceItems->term = $schoolDetails->term;
+                    $addInvoiceItems->amount = $schoolData[$i]['amount'];
+                    $addInvoiceItems->invoice_id = $invoice_student;
+                    $addInvoiceItems->save();
+                }
+
+            }
+
+
+            $checkSchoolWalletExist = AmountBalTableTotal::where('school_id', Auth::user()->schoolid)->first();
+
+            if ($checkSchoolWalletExist == NULL) {
+                $createWalletAddMoney = new AmountBalTableTotal();
+                $createWalletAddMoney->school_id = (int)Auth::user()->schoolid;
+                $createWalletAddMoney->total_amount = (int)$request->amount;
+                $createWalletAddMoney->save();
+            }else{
+                $checkSchoolWalletExist->total_amount += (int)$request->amount;
+                $checkSchoolWalletExist->save();
+            }
+
+            $checkSchoolWalletExistTerm = AmountBalTableTerm::where(['school_id'=> Auth::user()->schoolid, 'term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession])->first();
+
+            if ($checkSchoolWalletExist == NULL) {
+                $createWalletAddMoney = new AmountBalTableTerm();
+                $createWalletAddMoney->school_id = (int)Auth::user()->schoolid;
+                $createWalletAddMoney->total_amount = (int)$request->amount;
+                $createWalletAddMoney->term = (int)$schoolDetails->term;
+                $createWalletAddMoney->session = $schoolDetails->schoolsession;
+                $createWalletAddMoney->save();
+            }else{
+                $checkSchoolWalletExistTerm->total_amount += (int)$request->amount;
+                $checkSchoolWalletExistTerm->save();
+            }
+
+            $updatePayment = FeesInvoice::where(['schoolid'=>Auth::user()->schoolid, 'session'=>$schoolDetails->schoolsession, 'system_id'=>$request->usernamesystem])->first();
+    
+            $updatePayment->status = 1;
+            $updatePayment->save();
+
+            $addHistory = new TransactionRecord();
+            $addHistory->transaction_type = 1;
+            $addHistory->term = $schoolDetails->term;
+            $addHistory->session = $schoolDetails->schoolsession;
+            $addHistory->purpose = "Fee Payment";
+            $addHistory->amount = $request->amount;
+            $addHistory->school_id = Auth::user()->schoolid;
+            $addHistory->system_id = $request->usernamesystem;
+            $addHistory->status = 'success';
+            $addHistory->save();
+
+
+            return back()->with('success', 'Process Successful');
+
+
+        }else{
+
+            $getId = $schoolDetails->shoolinitial.time().$request->usernamesystem;
+
+            $studentDetails = Addstudent_sec::where('usernamesystem', $request->usernamesystem)->first();
+    
+            $checkFeeInvoiceExist = FeesInvoice::where(['system_id'=>$request->usernamesystem, 'session'=>$schoolDetails->schoolsession])->first();
+    
+            $invoice_student = "";
+    
+            if ($checkFeeInvoiceExist == null) {
+    
+                $generateInvoice = new FeesInvoice();
+                $generateInvoice->schoolid = Auth::user()->schoolid;
+                $generateInvoice->invoice_number = $getId;
+                $generateInvoice->amount = $request->amount;
+                $generateInvoice->system_id = $request->usernamesystem;
+                $generateInvoice->session = $schoolDetails->schoolsession;
+                $generateInvoice->term = $schoolDetails->term;
+                $generateInvoice->status = 0;
+                $generateInvoice->classid = $studentDetails->classid;
+                $generateInvoice->save();
+    
+                $invoice_student = $generateInvoice->id;
+    
+            }else{
+    
+                $invoice_student = $checkFeeInvoiceExist->id;
+    
+            }
+
+            $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+                        ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
+                        ->select('amount_tables.*', 'payment_categories.categoryname')->get();
+
+            for ($i=0; $i < $schoolData->count(); $i++) { 
+
+                $checkIfItemAdded = FeesInvoiceItems::where(['session'=>$schoolDetails->schoolsession, 'term' => $schoolDetails->term, 'category_name' => $schoolData[$i]['categoryname']])->get();
+
+                if ($checkIfItemAdded->count()< 1) {
+                    $addInvoiceItems = new FeesInvoiceItems();
+                    $addInvoiceItems->school_id = Auth::user()->schoolid;
+                    $addInvoiceItems->session = $schoolDetails->schoolsession;
+                    $addInvoiceItems->system_id = $request->usernamesystem;
+                    $addInvoiceItems->category_name = $schoolData[$i]['categoryname'];
+                    $addInvoiceItems->term = $schoolDetails->term;
+                    $addInvoiceItems->amount = $schoolData[$i]['amount'];
+                    $addInvoiceItems->invoice_id = $invoice_student;
+                    $addInvoiceItems->save();
+                }
+
+            }
+
+
+            $checkSchoolWalletExist = AmountBalTableTotal::where('school_id', Auth::user()->schoolid)->first();
+
+            if ($checkSchoolWalletExist == NULL) {
+                $createWalletAddMoney = new AmountBalTableTotal();
+                $createWalletAddMoney->school_id = (int)Auth::user()->schoolid;
+                $createWalletAddMoney->total_amount = (int)$request->amount;
+                $createWalletAddMoney->save();
+            }else{
+                $checkSchoolWalletExist->total_amount += (int)$request->amount;
+                $checkSchoolWalletExist->save();
+            }
+
+            $checkSchoolWalletExistTerm = AmountBalTableTerm::where(['school_id'=> Auth::user()->schoolid, 'term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession])->first();
+
+            if ($checkSchoolWalletExist == NULL) {
+                $createWalletAddMoney = new AmountBalTableTerm();
+                $createWalletAddMoney->school_id = (int)Auth::user()->schoolid;
+                $createWalletAddMoney->total_amount = (int)$request->amount;
+                $createWalletAddMoney->term = (int)$schoolDetails->term;
+                $createWalletAddMoney->session = $schoolDetails->schoolsession;
+                $createWalletAddMoney->save();
+            }else{
+                $checkSchoolWalletExistTerm->total_amount += (int)$request->amount;
+                $checkSchoolWalletExistTerm->save();
+            }
+
+            $updatePayment = FeesInvoice::where(['schoolid'=>Auth::user()->schoolid, 'session'=>$schoolDetails->schoolsession, 'system_id'=>$request->usernamesystem])->first();
+    
+            $updatePayment->status = 1;
+            $updatePayment->save();
+
+
+            $addHistory = new TransactionRecord();
+            $addHistory->transaction_type = 1;
+            $addHistory->term = $schoolDetails->term;
+            $addHistory->session = $schoolDetails->schoolsession;
+            $addHistory->purpose = "Fee Payment";
+            $addHistory->amount = $request->amount;
+            $addHistory->school_id = Auth::user()->schoolid;
+            $addHistory->system_id = $request->usernamesystem;
+            $addHistory->status = 'success';
+            $addHistory->save();
+
+
+            return back()->with('success', 'Process Successful');
+
+        }
+        
+    }
+
     public function fetchstudentdataforfee(Request $request)
     {
+        $validatedData = $request->validate([
+            'identity' => 'required',
+        ]);
 
-        $regno = $request->admission_no;
+        $regno = $request->identity;
+
+        //check if identity is regno first
 
         $getStudentData = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
                         ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
@@ -214,11 +433,29 @@ class AccountController extends Controller
                         ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname')
                         ->where('addstudent_secs.id', $regno)->first();
 
-        $feesummary = AmountTable::where("amount_tables.class_id", $getStudentData->classid)
+        if ($getStudentData == null) {
+        //else
+        $getStudentData = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                        ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+                        ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                        ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname', 'users.profileimg')
+                        ->where('addstudent_secs.admission_no', $regno)->first();
+        }
+
+        if ($getStudentData == null) {
+            return back()->with('error', 'Student record not found');
+        }
+
+
+
+       $feesummary = AmountTable::where("amount_tables.class_id", $getStudentData->classid)
                     ->join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
                     ->select('amount_tables.*', 'payment_categories.categoryname')->get();
 
         $totalfees = AmountTable::where("amount_tables.class_id", $getStudentData->classid)->sum('amount');
+
+
+        return redirect()->back()->with(['data'=>$getStudentData, 'feesummary'=>$feesummary, 'totalfees'=>$totalfees]);
 
 
         return response()->json(['data'=>$getStudentData, 'feesummary'=>$feesummary, 'totalfees'=>$totalfees]);

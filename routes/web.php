@@ -260,6 +260,7 @@ Route::POST('/submitcallrequest', ['uses' => 'SuperController@submitCallRequestF
 Route::POST('/oncalladd', ['uses' => 'SuperController@onCallAdd','roles' => ['SuperAdmin']])->middleware('roles');
 Route::POST('/deleteschool', ['uses' => 'SuperController@deleteSchool','roles' => ['SuperAdmin']])->middleware('roles');
 Route::get('/view_school_order/{id}', ['uses' => 'SuperController@viewSchoolOrder','roles' => ['SuperAdmin']])->middleware('roles');
+Route::get('/role_list', ['uses' => 'SuperController@roleList','roles' => ['SuperAdmin']])->middleware('roles')->name('role_list');
 
 
 // result controller
@@ -453,7 +454,7 @@ Route::group(['middleware' => ['auth', 'can:manage marks']], function () {
     Route::POST('/fetch_students_marks', 'AddstudentmakrsController_secs@fetchstudentssubject');
     Route::POST('/fetch_subject_details', 'AddstudentmakrsController_secs@fetchsubjectdetails');
     Route::POST('/fetch_subject_student_details', 'AddstudentmakrsController_secs@getallstudentsandmarks');
-    Route::POST('/add_marks_main', 'AddstudentmakrsController_secs@addmarksmiain');
+    Route::POST('/add_marks_main', 'AddstudentmakrsController_secs@addmarksmiain')->name('add_marks_main');
     Route::POST('/marks_process_main', 'AddstudentmakrsController_secs@processPosition');
 });
 
@@ -567,6 +568,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::post('/request_response', 'AccountController@request_response')->name('request_response')->middleware(['auth', 'can:can send or receive request']); 
          Route::get('/feecollection', 'AccountController@feecollection')->name('feecollection')->middleware(['auth', 'can:fee collection']);
          Route::post('/fetchstudentdataforfee', 'AccountController@fetchstudentdataforfee')->name('fetchstudentdataforfee'); 
+         Route::post('/confirm_money_received_fees', 'AccountController@confirmMoneyReceived')->name('confirm_money_received_fees');
          Route::post('/sendmoneyrequest', 'AccountController@sendMoneyRequest')->name('sendmoneyrequest');
          Route::get('/inventory', 'AccountController@inventory')->name('inventory')->middleware(['auth', 'can:access inventory']);
          Route::post('/inventory_add_item', 'AccountController@inventory_add_item')->name('inventory_add_item');

@@ -494,4 +494,11 @@ class SuperController extends Controller
 
         return back();
     }
+
+    public function roleList()
+    {
+        $role = Role::all();
+
+        return view('super.roleslist', compact('role'));
+    }
 }
