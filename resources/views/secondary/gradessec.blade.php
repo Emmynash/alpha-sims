@@ -97,6 +97,8 @@
                             <th>GPA Name No</th>
                             <th>Mark From</th>
                             <th>Mark To</th>
+                            <th>Points</th>
+                            <th>Type</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -108,6 +110,8 @@
                               <td>{{$grades->gpaname}}</td>
                               <td>{{$grades->marksfrom}}</td>
                               <td>{{$grades->marksto}}</td>
+                              <td>{{ $grades->point }}</td>
+                              <td>{{ $grades->type == 1 ? "Junior Sec":"Senior Sec" }}</td>
                               <td><button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>
                           </tr>
                             @endforeach

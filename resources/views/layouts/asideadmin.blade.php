@@ -82,6 +82,12 @@
               <li class="nav-item">
                 <a href="/rolesmanage" class="nav-link">
                   <i class="nav-icon far fa-circle text-info"></i>
+                  <p>Manage Permission</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('role_list') }}" class="nav-link">
+                  <i class="nav-icon far fa-circle text-info"></i>
                   <p>Roles</p>
                 </a>
               </li>

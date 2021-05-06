@@ -41,50 +41,28 @@
           @include('layouts.message')
 
 
-        <div class="card" style="height: 200px; border-top: 2px solid #0B887C;">
+        <div class="card" style="border-top: 2px solid #0B887C;">
 
                   <!-- /.row -->
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-header">
-                <h3 class="card-title"><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#cashpaymentmodal">Cash Payment</button></h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 col-md-4">
+                    <form action="{{ route('fetchstudentdataforfee') }}" method="post">
+                      @csrf
+                      
+                      <div class="form-group">
+                        <input type="text" name="identity" class="form-control form-control-sm" placeholder="reg no. or Admission no.">
+                      </div>
+                      <div class="form-group">
+                        <button class="btn btn-sm btn-info">Query</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>Code</th>
-                      <th>class</th>
-                      <th>Number of student</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{-- @if (count($classesAll) > 0)
-                      @foreach ($classesAll as $classesall)
-                        <tr>
-                          <td>{{$classesall->id}}</td>
-                          <td>{{$classesall->classname}}</td>
-                          <td>{{$classesall->getClassCount($classesall->id)}}</td>
-                  
-                          <td><button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editclassname"><i class="fas fa-eye"></i></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname{{$classesall->id}}"><i class="fas fa-edit"></i></button></td>
-                        </tr>
-                      @endforeach
-                    @endif --}}
-                  </tbody>
-                </table>
               </div>
               <!-- /.card-body -->
             </div>
@@ -92,7 +70,73 @@
           </div>
         </div>
         <!-- /.row -->
+
         </div>
+
+        <div class="card" style="margin: 10px;">
+          @if (\Session::has('data'))
+          {{-- <div class="alert alert-success">
+              <ul>
+                  <li>{!! \Session::get('data') !!}</li>
+              </ul>
+          </div> --}}
+
+          <div id="gottenstudentdata" style="">
+            <div class="row">
+              <div class="col-12 col-md-2 text-center">
+                <img id="profileimgmainpix" style="margin: 10px;" src="{{ \Session::get('data')->profileimg == null ? "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png": asset('storage/schimages/'.\Session::get('data')->profileimg)}}" class="img-circle elevation-2" height="100px" alt="User Image">
+              </div>
+              <div class="col-12 col-md-10">
+                <p id="studentname">Name: {{ \Session::get('data')->firstname }} {{ \Session::get('data')->middlename }} {{ \Session::get('data')->lastname }}</p>
+                <p id="studentclass">Class: {{ \Session::get('data')->classname }}</p>
+                <p id="studentclass">Admission No: {{ \Session::get('data')->admission_no }}</p>
+              </div>
+            </div>
+            <br>
+            <div style="margin: 10px;">
+              <p>Fees Summary</p>
+              <div class="row" id="feesummary">
+                <div class="col-12 col-md-12">
+                  @if (count(\Session::get('feesummary')) > 0)
+
+                      @foreach (\Session::get('feesummary') as $item)
+                          <div class="card">
+                            <div style="margin: 10px;">
+                              {{ $item->categoryname }} N{{ $item->amount }}
+                            </div>
+                          </div>
+                      @endforeach
+                      
+                  @endif
+
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row" style="margin: 10px;">
+              <div class='col-12 col-md-8' style='display: flex;'><i style='font-style: normal; font-weight: bold;'>Total</i><div style='flex:1;'></div><i id="totalfeesstd" style='font-style: normal;'>N{{ \Session::get('totalfees') }}</i></div>
+            </div>
+            <br>
+            <div style="display: flex; flex-direction: column; margin-left: 10px;">
+              <i style="font-style: normal; font-size: 13px;">Click the button below to confirm Fees has been recieved</i>
+              
+            </div>
+            <div class="form-group" style="margin-left: 10px;">
+              <form action="{{ route('confirm_money_received_fees') }}" method="post">
+                @csrf
+                {{-- <input type="hidden" name="classid" value="{{ \Session::get('data')->classid }}" id=""> --}}
+                <input type="hidden" name="amount" value="{{ \Session::get('totalfees') }}">
+                <input type="hidden" name="studentregno" value="{{ \Session::get('data')->id }}">
+                <input type="hidden" name="usernamesystem" value="{{ \Session::get('data')->usernamesystem }}">
+                <button class="btn btn-success btn-sm">Confirm</button>
+              </form>
+            </div>
+            
+
+          </div>
+      @endif
+        </div>
+        <br>
 
 
         <!-- The Modal -->
