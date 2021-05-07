@@ -74,9 +74,9 @@ class LibraryController extends Controller
                 return response()->json(['already'=>'already']);
             }
     
-            if (!$request->hasFile('file')) {
-                return response()->json(['imgerr'=>'imgerr']);
-            }
+            // if (!$request->hasFile('file')) {
+            //     return response()->json(['imgerr'=>'imgerr']);
+            // }
      
             $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
             
@@ -138,9 +138,9 @@ class LibraryController extends Controller
 
             
 
-            if (!$request->hasFile('file')) {
-                return response()->json(['imgerr'=>'imgerr']);
-            }
+            // if (!$request->hasFile('file')) {
+            //     return response()->json(['imgerr'=>'imgerr']);
+            // }
             
             
             $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
