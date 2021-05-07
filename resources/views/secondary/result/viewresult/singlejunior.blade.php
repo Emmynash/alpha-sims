@@ -156,9 +156,13 @@
                     </div>
                     <div style="width: 75%; height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
                         <i style="font-size: 30px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schoolname}}</i>
-                            <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schooladdress}}, {{$addschool->mobilenumber}}, {{$addschool->schoolemail}}</i>, 
-                            <i style="font-size: 15px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;"></i>
+                        <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schooladdress}}, {{$addschool->mobilenumber}}, {{$addschool->schoolemail}}</i>
+                        <i style="font-size: 15px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;"></i>
+                        <div>
+                            <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Junior Secondary School Termly Report</i>
+                        </div>
                     </div>
+                    
                 </div>
                 <br>
     
@@ -181,6 +185,10 @@
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Sex:</i></td>
                                     <td><i id="studentgender" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->gender }}</i></td>
+                                </tr>
+                                <tr>
+                                    <td><i style="font-size: 12px; font-style: normal;">Addmission No:</i></td>
+                                    <td><i id="studentgender" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->admission_no }}</i></td>
                                 </tr>
                             </table>
                         </div>
@@ -236,7 +244,7 @@
                                 <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Second CA</i></th>
                                 <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">EXAM SCORE</i></th>
                                 <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">TOTAL MARK</i></th>
-                                <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Points</i></th>
+                                {{-- <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Points</i></th> --}}
                                 <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Average</i></th>
                                 <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">POSITION</i></th>
                                 <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Grade</i></th>
@@ -267,7 +275,7 @@
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca1 }}</center></td>
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->exams }}</center></td>
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->totalmarks }}</center></td>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td>
+                                        {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getClassAverageMarkSubject($item->id, $term, $schoolsession) == NULL ? "0":$item->getClassAverageMarkSubject($item->id, $term, $schoolsession)->average }}</center></td>
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->position }}</center></td>
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->grades }}</center></td>
@@ -290,30 +298,31 @@
                 </div>
                 <br>
                 <div style="">
-                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Average: {{ $resultAverage == NULL ? "NAN":$resultAverage->average }}</i>
-                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Point Avg: {{ $resultAverage == NULL ? "NAN":$resultAverage->average }}</i>
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: {{ $resultAverage == NULL ? "NAN":$resultAverage->average }}</i>
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ $resultAverage == NULL ? "NAN":$resultAverage->average/$subjects->count() }}</i>
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Final Grade: {{ $addschool->getGrade($resultAverage->average, $studentClass->classtype) }}</i>
                 </div>
-                <div style="width: 95%; margin: 10px auto;">
+                <center><div class="text-center" style="width: 95%; margin: 10px auto;">
                     @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                         @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                             <i style="font-size: 10px; font-style: normal;">{{ $item->gpaname }} = ({{ $item->marksfrom }}-{{ $item->marksto }})</i>
                         @endforeach
                     @endif
-                </div>
-                <div style="width: 95%; margin: 3px auto;">
+                </div></center>
+                {{-- <div style="width: 95%; margin: 3px auto;">
                     @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                         @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                             <i style="font-size: 10px; font-style: normal;">({{ $item->marksfrom }}-{{ $item->marksto }}) = {{ $item->point }}</i>
                         @endforeach
                     @endif
-                </div>
-                <div style="width: 95%; margin: 3px auto;">
+                </div> --}}
+                {{-- <div style="width: 95%; margin: 3px auto;">
                     @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                         @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                         <i style="font-size: 10px; font-style: normal;">{{ $item->gpaname }} = {{ $item->remark }}</i>
                         @endforeach
                     @endif
-                </div>
+                </div> --}}
                 <div style="display: flex; align-items: center; justify-content: center;">
                     <i style="text-decoration: underline; font-style: normal; font-weight: bold;">RATINGS</i>
                 </div>
@@ -359,40 +368,28 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td class="thdesign1">A1</td>
+                                                <td class="thdesign1">A</td>
                                                 <td class="thdesign1">Excellent</td>
                                             </tr>
                                             <tr>
-                                                <td class="thdesign1">B2</td>
+                                                <td class="thdesign1">B</td>
                                                 <td class="thdesign1">V.Good</td>
                                             </tr>
                                             <tr>
-                                                <td class="thdesign1">B3</td>
+                                                <td class="thdesign1">C</td>
                                                 <td class="thdesign1">Good</td>
                                             </tr>
                                             <tr>
-                                                <td class="thdesign1">C4</td>
+                                                <td class="thdesign1">D</td>
                                                 <td class="thdesign1">Credit</td>
                                             </tr>
                                             <tr>
-                                                <td class="thdesign1">C5</td>
+                                                <td class="thdesign1">E</td>
                                                 <td class="thdesign1">Credit</td>
                                             </tr>
                                             <tr>
-                                                <td class="thdesign1">C6</td>
+                                                <td class="thdesign1">F</td>
                                                 <td class="thdesign1">Credit</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">D7</td>
-                                                <td class="thdesign1">Pass</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">E8</td>
-                                                <td class="thdesign1">Pass</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">F9</td>
-                                                <td class="thdesign1">Fail</td>
                                             </tr>
                                         </tbody>
                                     </table>

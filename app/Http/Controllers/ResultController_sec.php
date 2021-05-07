@@ -206,10 +206,13 @@ class ResultController_sec extends Controller
             'session'=>'required'
         ]);
 
+
         $classid = $request->input('classid');
         $term = $request->input('term');
         $regNo = $request->input('student_reg_no');
         $schoolsession = $request->input('session');
+
+        $checkclasstype = Classlist_sec::find($classid);
 
         $studentdetails = Addstudent_sec::find($regNo);
 
@@ -220,7 +223,14 @@ class ResultController_sec extends Controller
 
         $resultAverage = ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();
 
-        return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolist', 'resultAverage'));
+        $studentClass = Classlist_sec::find($classid);
+
+        if ($checkclasstype->classtype == 1) {
+            return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolist', 'resultAverage', 'studentClass'));
+        } else {
+            return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolist', 'resultAverage', 'studentClass'));
+        }
+        
         
 
 //--------------------------------------------------------------------------------
@@ -329,7 +339,11 @@ class ResultController_sec extends Controller
     {
        $classlist = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
 
-        return view('secondary.adminside.result.generateresult', compact('classlist'));
+       $schoolDetails = Addpost::find(Auth::user()->schoolid);
+
+        $checkRecord = ResultAverage::where(['session'=>$schoolDetails->schoolsession, 'term'=>$schoolDetails->term, 'schoolid'=>Auth::user()->schoolid])->pluck('classid')->toArray();
+
+        return view('secondary.adminside.result.generateresult', compact('classlist', 'checkRecord'));
     }
 
     public function generateResultMain(Request $request, ProcessClassAverage $processClassAverage, ResultAverageProcess $resultAverageProcess)

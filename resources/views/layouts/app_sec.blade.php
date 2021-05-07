@@ -22,6 +22,8 @@
   <!-- JQVMap -->
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="{{ asset('../../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="{{ asset('../../plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
   <!-- Toastr -->
   <link rel="stylesheet" href="{{ asset('../../plugins/toastr/toastr.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
@@ -374,7 +376,7 @@
                       $("#subjectalertduplicate").addClass("alert-success");
                       document.getElementById('subjectadd_sec').innerHTML = "Subject successfully added"
                       document.getElementById('subjectaddprocessspinner').style.display = "none"
-                      fullscreenerror('subject added successfully.', ' ', '#', 'Success')
+                      fullscreenerror('subject added successfully.', ' ', '#', 'Success', 'success')
 
                   }
 
@@ -468,13 +470,13 @@
                       $("#subjectalertduplicate").removeClass("alert-danger");
                       $("#subjectalertduplicate").addClass("alert-success");
                       document.getElementById('subjectadd_sec').innerHTML = "Student record Already Added..."
-                      fullscreenerror('Student record already exist.', ' ', '#', 'Ooops...')
+                      fullscreenerror('Student record already exist.', ' ', '#', 'Ooops...', 'error')
                     }
 
                     },
                     error:function(errors){
                       // console.log(errors)
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
 
                     },
                     timeout: 60000
@@ -553,7 +555,7 @@
                     },
                     error:function(errors){
                       // console.log(errors)
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
 
                     },
                     timeout: 60000
@@ -628,13 +630,13 @@
                       $("#subjectalertduplicate").removeClass("alert-danger");
                       $("#subjectalertduplicate").addClass("alert-success");
                     //   document.getElementById('subjectadd_sec').innerHTML = "Student record Already Added..."
-                      fullscreenerror('Student record already exist.', ' ', '#', 'Ooops...')
+                      fullscreenerror('Student record already exist.', ' ', '#', 'Ooops...', error)
                     }
 
                     },
                     error:function(errors){
                       // console.log(errors)
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
 
                     },
                     timeout: 60000
@@ -680,15 +682,15 @@
 
                     if (data.errors) {
 
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
                       
                     }else if(data.exist){
 
-                      fullscreenerror('Teacher already a form master', ' ', '#', 'Ooops...')
+                      fullscreenerror('Teacher already a form master', ' ', '#', 'Ooops...', 'error')
 
                     }else if(data.done){
 
-                      fullscreenerror('Process successfull', ' ', '#', 'Success...')
+                      fullscreenerror('Process successfull', ' ', '#', 'Success...', 'success')
 
                     }
                     
@@ -696,7 +698,7 @@
                     },
                     error:function(errors){
                       // console.log(errors)
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
 
                     },
                     timeout: 60000
@@ -764,7 +766,7 @@
                       // $("#subjectalertduplicate").removeClass("alert-danger");
                       // $("#subjectalertduplicate").addClass("alert-success");
                       // document.getElementById('subjectadd_sec').innerHTML = "Student record Already Added..."
-                      fullscreenerror('Student record already exist.', ' ', '#', 'Ooops...')
+                      fullscreenerror('Student record already exist.', ' ', '#', 'Ooops...', 'error')
                     }
 
                     },
@@ -811,15 +813,15 @@
 
                     if (data.errors) {
 
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
                       
                     }else if(data.exist){
 
-                      fullscreenerror('Subject already allocated to this teacher', ' ', '#', 'Ooops...')
+                      fullscreenerror('Subject already allocated to this teacher', ' ', '#', 'Ooops...', 'error')
 
                     }else if(data.done){
 
-                      fullscreenerror('Process successfull', ' ', '#', 'Success...')
+                      fullscreenerror('Process successfull', ' ', '#', 'Success...', 'success')
 
                     }
                     
@@ -827,7 +829,7 @@
                     },
                     error:function(errors){
                       // console.log(errors)
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
 
                     },
                     timeout: 60000
@@ -1268,6 +1270,7 @@
                   }
 
                   if (data.success) {
+                    fullscreenerror('Added successfully.', ' ', '#', 'Success', 'success');
                       document.getElementById('messagedisplay').innerHTML = "Process success, student marks successfully added";
                       document.getElementById('messagedisplay').style.color = "green";
                     
@@ -1398,12 +1401,12 @@
 
                     if (data.duplicate) {
 
-                      fullscreenerror('Psycomoto already added.', ' ', '#', 'Duplicate');
+                      fullscreenerror('Psycomoto already added.', ' ', '#', 'Duplicate', 'error');
                       
                     }
 
                     if (data.success) {
-                      fullscreenerror('Psycomoto added successfully.', ' ', '#', 'Success');
+                      fullscreenerror('Psycomoto added successfully.', ' ', '#', 'Success', 'success');
                     }
 
 
@@ -1618,7 +1621,7 @@
                     }
 
                     if (data.none) {
-                      fullscreenerror('No response. Please, check that the number you entered is correct', ' ', '#', 'Ooops...')
+                      fullscreenerror('No response. Please, check that the number you entered is correct', ' ', '#', 'Ooops...', 'error')
                     }
 
 
@@ -1627,7 +1630,7 @@
                       // console.log(errors)
                       document.getElementById('spinnerroleallocation').style.display = "none"
                       document.getElementById('addrolebtn').style.display = "block"
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
 
                     },
                     timeout: 60000
@@ -1669,7 +1672,7 @@
                     }
 
                     if (data.notallow) {
-                      fullscreenerror('Operation not allowed', ' ', '#', 'Ooops...')
+                      fullscreenerror('Operation not allowed', ' ', '#', 'Ooops...', 'error')
                       
                     }
 
@@ -1681,7 +1684,7 @@
                       // console.log(errors)
                       // document.getElementById('spinnerroleallocation').style.display = "none"
                       // document.getElementById('addrolebtn').style.display = "block"
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
 
                     },
                     timeout: 60000
@@ -1854,7 +1857,7 @@
 
                     if (data.success) {
                       document.getElementById("fetchstudentforprotionbtn").click(); 
-                      fullscreenerror('Student successfully promoted', ' ', '#', 'Success...')
+                      fullscreenerror('Student successfully promoted', ' ', '#', 'Success...', 'success')
                       
                     }
 
@@ -1864,7 +1867,7 @@
                       // document.getElementById('spinnerroleallocation').style.display = "none"
                       // document.getElementById('addrolebtn').style.display = "block"
                       console.log(errors);
-                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...')
+                      fullscreenerror('Oops an error occured', ' ', '#', 'Ooops...', 'error')
 
                     },
                     timeout: 60000
@@ -2209,9 +2212,9 @@
          })
  }
  
-  function fullscreenerror(message, message1, link, title){
+  function fullscreenerror(message, message1, link, title, type){
     Swal.fire({
-    icon: 'error',
+    icon: type,
     title: title,
     text: message,
     footer: '<a href='+ link +'>'+ message1 +'</a>'

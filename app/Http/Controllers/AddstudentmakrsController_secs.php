@@ -265,7 +265,7 @@ class AddstudentmakrsController_secs extends Controller
                 
                         $msg = "success";
                 
-                        return response()->json(['msg' => $msg], 200);
+                        return response()->json(['success' => $msg], 200);
                         }else{
     
     //---------------------------------------------------------------------------------
@@ -353,12 +353,12 @@ class AddstudentmakrsController_secs extends Controller
                     $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
     
                     $gradeFInal = "";
-                    $point = "";
+                    $point = 0;
     
                     for ($i=0; $i < count($studentgradeprocess); $i++) {
                         if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
                             $gradeFInal = $studentgradeprocess[$i]['gpaname'];
-                            $point = $studentgradeprocess[$i]['point'] == "NA" ? "0":$studentgradeprocess[$i]['point'];;
+                            $point = $studentgradeprocess[$i]['point'] == "NA" ? 0:(int)$studentgradeprocess[$i]['point'];;
                         }
                     }
     
@@ -427,7 +427,7 @@ class AddstudentmakrsController_secs extends Controller
                     $updatestudentresult->ca3 = $ca3marks;
                     $updatestudentresult->totalmarks = $totalmarks;
                     $updatestudentresult->grades = $gradeFInal;
-                    $updatestudentresult->points = $point;
+                    $updatestudentresult->points = (int)$point;
                     $updatestudentresult->save();
     
     
@@ -467,7 +467,7 @@ class AddstudentmakrsController_secs extends Controller
         } catch (\Throwable $th) {
             //throw $th;
 
-            return response()->json(['success' => $th], 200);
+            return response()->json(['error' => $th], 200);
 
         }
     }

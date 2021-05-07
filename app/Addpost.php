@@ -104,9 +104,9 @@ class Addpost extends Model
         
     }
 
-    public function getGradeDetails($schoolid)
+    public function getGradeDetails($schoolid, $classtype)
     {
-        $grades = Addgrades_sec::where(['schoolid'=>$schoolid, 'type'=>2])->get();
+        $grades = Addgrades_sec::where(['schoolid'=>$schoolid, 'type'=>$classtype])->get();
 
         return $grades;
     }
@@ -114,6 +114,22 @@ class Addpost extends Model
     public function getPaymentDetails()
     {
         return $this->hasOne('App\PaymentDetails', 'schoolid', 'id');
+    }
+
+    public function getGrade($studentaverage, $classtype)
+    {
+        $gradeFInal = "";
+
+        $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$classtype])->get();
+
+        for ($i=0; $i < count($studentgradeprocess); $i++) {
+            if ($studentaverage >= $studentgradeprocess[$i]['marksfrom'] && $studentaverage<= $studentgradeprocess[$i]['marksto']) {
+                $gradeFInal = $studentgradeprocess[$i]['gpaname'];
+            }
+        }
+
+        return $gradeFInal;
+        
     }
 
 

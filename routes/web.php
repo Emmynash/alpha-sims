@@ -308,6 +308,7 @@ Route::group(['prefix' => 'sec'], function () {
         Route::POST('/addclub_sec', 'SchoolsetupSecController@addclub_sec')->name('addclub_sec');
         Route::get('/addschool_sec', 'DashboardController@addschool')->middleware('auth')->middleware('verified')->name('addschool_sec');
         Route::POST('/update_term', 'SchoolsetupSecController@update_term')->name('update_term');
+        Route::POST('/update_caset', 'SchoolsetupSecController@updatecaSet')->name('update_caset');
 
         Route::get('/allusers_sec', 'AllUsersController@index_sec')->name('allusers_sec');
         Route::POST('/allusers_sec_fetch', 'AllUsersController@fetchuser_sec')->name('allusers_sec_fetch');
@@ -345,6 +346,21 @@ Route::group(['prefix' => 'sec'], function () {
      });
 
 
+
+    //  --------------------------------------------------sec--------------------------------------------
+
+    Route::group(['middleware' => ['auth', 'can:accomodation']], function () {
+        //domitory management route
+        Route::get('/dom_index', 'DometoryController@index')->name('dom_index');
+        Route::POST('/add_hostel', 'DometoryController@addHostel')->name('add_hostel');
+        Route::get('/add_rooms/{id}', 'DometoryController@show')->name('add_rooms');
+        Route::POST('/add_room', 'DometoryController@addHostels')->name('add_room');
+        Route::POST('/add_student_hostel', 'DometoryController@addStudentToHostel')->name('add_student_hostel');
+        Route::POST('/fetch_students_in_room', 'DometoryController@fetchAllStudentInARoom')->name('fetch_students_in_room');
+        Route::POST('/delete_roommate', 'DometoryController@deleteRoomMate')->name('delete_roommate');
+        Route::POST('/delete_room', 'DometoryController@deleteRoom')->name('delete_room');
+        Route::POST('/delete_hostel', 'DometoryController@deleteHostel')->name('delete_hostel');
+    });
 
 
 
@@ -499,20 +515,6 @@ Route::group(['middleware' => ['auth', 'role:Librarian']], function () {
     Route::POST('/return_borrow_book', 'LibraryController@approvereturnbook')->name('return_borrow_book');
 
 });
-
-Route::group(['middleware' => ['auth']], function () {
-    //domitory management route
-    Route::get('/dom_index', 'DometoryController@index')->name('dom_index');
-    Route::POST('/add_hostel', 'DometoryController@addHostel')->name('add_hostel');
-    Route::get('/add_rooms/{id}', 'DometoryController@show')->name('add_rooms');
-    Route::POST('/add_room', 'DometoryController@addHostels')->name('add_room');
-    Route::POST('/add_student_hostel', 'DometoryController@addStudentToHostel')->name('add_student_hostel');
-    Route::POST('/fetch_students_in_room', 'DometoryController@fetchAllStudentInARoom')->name('fetch_students_in_room');
-    Route::POST('/delete_roommate', 'DometoryController@deleteRoomMate')->name('delete_roommate');
-    Route::POST('/delete_room', 'DometoryController@deleteRoom')->name('delete_room');
-    Route::POST('/delete_hostel', 'DometoryController@deleteHostel')->name('delete_hostel');
-});
-
 
 // secondary school result computation
 

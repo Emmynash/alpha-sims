@@ -228,4 +228,22 @@ class SchoolsetupSecController extends Controller
         $msg = 1;
         return response()->json(array('msg' => $msg), 200);
     }
+
+    public function updatecaSet(Request $request)
+    {
+
+        if($request->caoption == "on"){
+            $addcaoption = Addpost::find(Auth::user()->schoolid);
+            $addcaoption->caset = 1;
+            $addcaoption->save();
+            return back()->with('success', 'CA3 enabled');
+
+        }else{
+            $addcaoption = Addpost::find(Auth::user()->schoolid);
+            $addcaoption->caset = 0;
+            $addcaoption->save();
+            return back()->with('success', 'CA3 disabled');
+        }
+        
+    }
 }

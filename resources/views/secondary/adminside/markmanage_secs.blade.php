@@ -336,10 +336,12 @@
                                     <i style="font-size: 10px;">CA2</i>
                                     <input type="text" name="ca2marksentered" id="ca2marksentered" class="form-control form-control-sm">
                                   </div>
-                                  <div class="form-group">
-                                    <i style="font-size: 10px;">CA3</i>
-                                    <input type="text" name="ca3marksentered" id="ca3marksentered" class="form-control form-control-sm">
-                                  </div>
+                                  {{-- @if ($addpost->caset == 1) --}}
+                                    <div class="form-group" style="display: {{ $addpost->caset == 1 ? '':'none' }};">
+                                      <i style="font-size: 10px;">CA3</i>
+                                      <input type="text" name="ca3marksentered" id="ca3marksentered" class="form-control form-control-sm">
+                                    </div>
+                                  {{-- @endif --}}
                                 </div>
                               </div>
                               <input type="hidden" name="studentregno" id="studentregno">
