@@ -585,11 +585,11 @@
         
         </nav>
         <!--/.Navbar-->
-        @if (Auth::user()->role == "Librarian")
+        {{-- @if (Auth::user()->role == "Librarian") --}}
             <div class="container-fluid">
                 <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#borrowbookmodal">Give out Book</button>
             </div>
-        @endif
+        {{-- @endif --}}
 
         <div class="container-fluid" style="margin-top: 10px;">
             <div class="col-md-6" style="">
