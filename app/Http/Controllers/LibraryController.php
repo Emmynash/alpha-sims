@@ -372,7 +372,7 @@ class LibraryController extends Controller
         $schooltypemain = $schooltype[0]['schooltype'];
 
         if ($schooltypemain == "Primary") {
-            if (Auth::user()->role == "Librarian") {
+            if (Auth::user()->hasRole('Librarian')) {
                 $chatdown = DB::table('addborrows')
                 ->join('addbooks', 'addbooks.id','=','addborrows.bookid')
                 ->join('addstudents', 'addstudents.id','=','addborrows.studentregno')
@@ -392,7 +392,7 @@ class LibraryController extends Controller
                 return response()->json(['data'=>$chatdown]);
             }
         }else{
-            if (Auth::user()->role == "Librarian") {
+            if (Auth::user()->hasRole('Librarian')) {
                 $chatdown = DB::table('addborrows')
                 ->join('addbooks', 'addbooks.id','=','addborrows.bookid')
                 ->join('addstudent_secs', 'addstudent_secs.id','=','addborrows.studentreno')
