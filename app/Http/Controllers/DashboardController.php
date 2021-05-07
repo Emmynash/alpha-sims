@@ -129,11 +129,11 @@ class DashboardController extends Controller
         $addschool->schoolemail = $request->input('schoolemail');
         $addschool->schoolstate = $request->input('schoolstate');
         $addschool->mobilenumber = $request->input('mobilenumber');
-        $addschool->schoolLogo = $schoolLogoFinal;
+        // $addschool->schoolLogo = $schoolLogoFinal;
         $addschool->schoolwebsite = $request->input('schoolwebsite');
         $addschool->dateestablished = $request->input('dateestablished');
         $addschool->schooladdress = $request->input('schooladdress');
-        $addschool->schoolprincipalsignature = $principalSignatureFinal;
+        // $addschool->schoolprincipalsignature = $principalSignatureFinal;
         $addschool->status = 'Pending';
         $addschool->periodfrom = '';
         $addschool->periodto = '';

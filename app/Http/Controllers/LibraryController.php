@@ -55,7 +55,7 @@ class LibraryController extends Controller
 
         if ($request->input('submittype') == "0") { //add offline book
             $validator = Validator::make($request->all(),[
-                'file' => 'required|max:2000|mimes:png,jpeg,jpg',
+                // 'file' => 'required|max:2000|mimes:png,jpeg,jpg',
                 'booktitle'=>'required|string',
                 'bookisbn'=>'required|string',
                 'bookcategory'=>'required|string',
@@ -95,7 +95,7 @@ class LibraryController extends Controller
             $addpdf->bookauthor = $request->input('bookauthor');
             $addpdf->datebook = $attDate;
             $addpdf->aboutbook = $request->input('editor1');
-            $addpdf->file =  $fileNamecover;
+            $addpdf->file =  "https://www.mswordcoverpages.com/wp-content/uploads/2018/10/Book-cover-page-3-CRC.png";
             $addpdf->quantity = $request->input('quantity');
             $addpdf->available = $request->input('quantity');
             $addpdf->booktype = "hard copy";
@@ -107,7 +107,7 @@ class LibraryController extends Controller
         if($request->input('submittype') == "1"){ // add ebook
 
             $validator = Validator::make($request->all(),[
-                'file' => 'required|max:2000|mimes:png,jpeg,jpg', //book cover
+                // 'file' => 'required|max:2000|mimes:png,jpeg,jpg', //book cover
                 'fileebook'=> 'required|max:2000|mimes:pdf,docx,doc', //pdf book 
                 'booktitle'=>'required|string',
                 'bookisbn'=>'required|string',
@@ -157,7 +157,7 @@ class LibraryController extends Controller
             $addpdf->bookauthor = $request->input('bookauthor');
             $addpdf->datebook = $attDate;
             $addpdf->aboutbook = $request->input('editor1');
-            $addpdf->file =  $fileNamecover;
+            $addpdf->file =  "https://www.mswordcoverpages.com/wp-content/uploads/2018/10/Book-cover-page-3-CRC.png";
             $addpdf->quantity = "0";
             $addpdf->fileebook = $fileName;
             $addpdf->booktype = "ebook";
