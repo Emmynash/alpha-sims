@@ -78,9 +78,9 @@ class LibraryController extends Controller
             //     return response()->json(['imgerr'=>'imgerr']);
             // }
      
-            $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
+            // $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
             
-            $pathProfile = $request->file('file')->storeAs('public/cover', $fileNamecover);
+            // $pathProfile = $request->file('file')->storeAs('public/cover', $fileNamecover);
     
     
             $datemain = Carbon::now();
@@ -143,9 +143,9 @@ class LibraryController extends Controller
             // }
             
             
-            $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
+            // $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
             
-            $pathProfile = $request->file('file')->storeAs('public/cover', $fileNamecover);
+            // $pathProfile = $request->file('file')->storeAs('public/cover', $fileNamecover);
             
             
 
