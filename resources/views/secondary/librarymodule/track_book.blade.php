@@ -955,7 +955,7 @@
         <!-- Central Modal Small -->
 
 
-        <input id="userrolefilter" type="hidden" value="{{Auth::user()->role}}">
+        <input id="userrolefilter" type="hidden" value="{{Auth::user()->getRoleNames()[0]}}">
 
         </div>
 
@@ -997,7 +997,7 @@
 
             document.getElementById('myModalLabel').innerHTML = booktitle;
             document.getElementById('bookcovermodal').src = "storage/cover/"+bookcover;
-            // document.getElementById('abouttheauthor').innerHTML = document.getElementById(aboutbookid).value;
+            document.getElementById('abouttheauthor').innerHTML = document.getElementById(aboutbookid).value;
             document.getElementById('isbnmainvalue').innerHTML = bookisbn;
             document.getElementById('bookcategorymain').innerHTML = bookcategory;
 
