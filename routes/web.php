@@ -349,7 +349,7 @@ Route::group(['prefix' => 'sec'], function () {
 
     //  --------------------------------------------------sec--------------------------------------------
 
-    Route::group(['middleware' => ['auth', 'can:accomodation']], function () {
+    Route::group(['middleware' => ['auth', 'can:accommodation']], function () {
         //domitory management route
         Route::get('/dom_index', 'DometoryController@index')->name('dom_index');
         Route::POST('/add_hostel', 'DometoryController@addHostel')->name('add_hostel');
