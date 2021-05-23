@@ -7,6 +7,7 @@ use App\Classlist_sec;
 use App\Addsubject_sec;
 use App\Addmark_sec;
 use App\Addpost;
+use App\Addsection_sec;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Validator;
@@ -27,9 +28,9 @@ class SubjectController_sec extends Controller
     public function index(){ 
 
         $subjectAll = DB::table('addsubject_secs')
-        ->join('classlist_secs', 'classlist_secs.id', '=', 'addsubject_secs.classid')
-        ->select('addsubject_secs.*', 'classlist_secs.classname')
-        ->where('addsubject_secs.schoolid', Auth::user()->schoolid)->get();
+                ->join('classlist_secs', 'classlist_secs.id', '=', 'addsubject_secs.classid')
+                ->select('addsubject_secs.*', 'classlist_secs.classname')
+                ->where('addsubject_secs.schoolid', Auth::user()->schoolid)->get();
 
         $classesAll = $this->classlist_sec->where('schoolid', Auth::user()->schoolid)->get();
         $schoolDetails = Addpost::find(Auth::user()->schoolid);
@@ -43,7 +44,19 @@ class SubjectController_sec extends Controller
 
         $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.subjects.addsubject', compact('classesAll', 'schoolDetails'));
+        $allsubjects = Addsubject_sec::join('classlist_secs', 'classlist_secs.id', '=', 'addsubject_secs.classid')
+                ->leftJoin('addsection_secs', 'addsection_secs.id','=','addsubject_secs.subjectsectione')
+                ->select('addsubject_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname')
+                ->where('addsubject_secs.schoolid', Auth::user()->schoolid)->get();
+
+        $coresubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'2'])->get();
+
+        $electivesubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'1'])->get();
+
+        $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
+        
+
+        return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'coresubjects'=>$coresubjects, 'electivesubjects'=>$electivesubjects, 'schoolsection'=>$schoolsection]);
     }
 
     public function store(Request $request){
@@ -52,99 +65,25 @@ class SubjectController_sec extends Controller
 
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
-            if ($schoolDetails->caset == 1) {
+            
                 $validator = Validator::make($request->all(),[
-                    'ca1marks_sec' => 'required|max:7|min:3|string',
-                    'ca2marks_sec' => 'required|max:7|min:3|string',
-                    'ca3marks_sec' => 'required|max:7|min:3|string',
-                    'class_sec' => 'required|string',
-                    'examsmark_sec' => 'required|max:7|min:3|string',
-                    'fullmarkpassmark_sec' => 'required|max:7|min:3|string',
-                    'gradesystem_sec' => 'required|string',
-                    'subjectcodesec' => 'required|string',
+                    'subjecttype_sec' => 'required|string',
                     'subjectnamesec' => 'required|string',
-                    'subjecttype_sec' => 'required|string'
-                ]);
-            }else{
-                $validator = Validator::make($request->all(),[
-                    'ca1marks_sec' => 'required|max:7|min:3|string',
-                    'ca2marks_sec' => 'required|max:7|min:3|string',
-                    // 'ca3marks_sec' => 'required|max:7|min:3|string',
                     'class_sec' => 'required|string',
-                    'examsmark_sec' => 'required|max:7|min:3|string',
-                    'fullmarkpassmark_sec' => 'required|max:7|min:3|string',
-                    'gradesystem_sec' => 'required|string',
-                    'subjectcodesec' => 'required|string',
-                    'subjectnamesec' => 'required|string',
-                    'subjecttype_sec' => 'required|string'
+                    'subjectsectione' => 'required|string'
                 ]);
-            }
 
     
             if ($validator->fails()) {
-                return response()->json(['errors'=>$validator->errors()->keys()]);
+                return response()->json(['response'=>'fields']);
             }
 
-            if ($schoolDetails->caset == 1) {
-                $formInputNames = array("ca1marks_sec", "ca2marks_sec", "ca3marks_sec", "examsmark_sec", "fullmarkpassmark_sec");
-            }else{
-                $formInputNames = array("ca1marks_sec", "ca2marks_sec", "examsmark_sec", "fullmarkpassmark_sec");
-            }
-    
-            
-    
-                $withissues = array();
-    
-            for ($i=0; $i < count($formInputNames); $i++) { 
-    
-                $mainValues = trim($request->input($formInputNames[$i]));
-                
-                $explodevalue = explode(",", $mainValues);
-    
-                if (count($explodevalue) < 2 || $explodevalue[1] == "") {
-                    array_push($withissues, $formInputNames[$i]);
-                }
-            }
-    
-    
-            if (count($withissues) > 0) {
-                return response()->json(['errors'=>$withissues]);
-            }
-    
-            $addsubjectCheck = $this->addsubject_sec->where(['subjectcode'=> $request->input('subjectcodesec'), 'schoolid'=>Auth::user()->schoolid])->get();
-    
-            if (count($addsubjectCheck) > 0) {
-                return response()->json(['duplicate'=>"yes"]);
-            }
-    
-            $ca1marks_sec = $request->input('ca1marks_sec');
-            $ca1marks_secexplode = explode(',', $ca1marks_sec);
-            $ca1marks_sec_finalfull = $ca1marks_secexplode[0];
-            $ca1marks_sec_passmark = $ca1marks_secexplode[1];
-    
-            $ca2marks_sec = $request->input('ca2marks_sec');
-            $ca2marks_secexplode = explode(',', $ca2marks_sec);
-            $ca2marks_sec_finalfull = $ca2marks_secexplode[0];
-            $ca2marks_sec_passmark = $ca2marks_secexplode[1];
-    
-            if ($schoolDetails->caset == 1) {
+            $checkExist = Addsubject_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$request->input('class_sec'), 'subjectname'=>strtoupper($request->input('subjectnamesec')), 'subjecttype' => $request->subjecttype_sec])->get();
 
-                $ca3marks_sec = $request->input('ca3marks_sec');
-                $ca3marks_secexplode = explode(',', $ca3marks_sec);
-                $ca3marks_sec_finalfull = $ca3marks_secexplode[0];
-                $ca3marks_sec_passmark = $ca3marks_secexplode[1];
-
+            if ($checkExist->count()>0) {
+                return response()->json(['response'=>'duplicate']);
             }
-    
-            $examsmark_sec = $request->input('examsmark_sec');
-            $examsmark_secexplode = explode(',', $examsmark_sec);
-            $examsmark_sec_finalfull = $examsmark_secexplode[0];
-            $examsmark_sec_passmark = $examsmark_secexplode[1];
-    
-            $fullmarkpassmark_sec = $request->input('fullmarkpassmark_sec');
-            $fullmarkpassmark_secexplode = explode(',', $fullmarkpassmark_sec);
-            $fullmarkpassmark_sec_finalfull = $fullmarkpassmark_secexplode[0];
-            $fullmarkpassmark_sec_passmark = $fullmarkpassmark_secexplode[1];
+
     
             $Addsubject_sec = new Addsubject_sec();
             $Addsubject_sec->schoolid =Auth::user()->schoolid;
@@ -152,24 +91,11 @@ class SubjectController_sec extends Controller
             $Addsubject_sec->subjectcode = strtoupper($request->input('subjectcodesec'));
             $Addsubject_sec->subjectname = strtoupper($request->input('subjectnamesec'));
             $Addsubject_sec->subjecttype = $request->input('subjecttype_sec');
-            $Addsubject_sec->gradesystem = $request->input('gradesystem_sec');
-            $Addsubject_sec->totalfull = $fullmarkpassmark_sec_finalfull;
-            $Addsubject_sec->totalpass = $fullmarkpassmark_sec_passmark;
-            $Addsubject_sec->examfull = $examsmark_sec_finalfull;
-            $Addsubject_sec->exampass = $examsmark_sec_passmark;
-            $Addsubject_sec->ca1full = $ca1marks_sec_finalfull;
-            $Addsubject_sec->ca1pass = $ca1marks_sec_passmark;
-            $Addsubject_sec->ca2full = $ca2marks_sec_finalfull;
-            $Addsubject_sec->ca2pass = $ca2marks_sec_passmark;
-
-            if ($schoolDetails->caset == 1) {
-                $Addsubject_sec->ca3full = $ca3marks_sec_finalfull;
-                $Addsubject_sec->ca3pass = $ca3marks_sec_passmark;
-            };
-
+            $Addsubject_sec->subjectsectione = $request->input('subjectsectione');
             $Addsubject_sec->save();
+
     
-            return response()->json(['success'=> "success"]);
+            return response()->json(['response'=> "success"]);
         } catch (\Throwable $th) {
             return $th;
         }

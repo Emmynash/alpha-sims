@@ -196,6 +196,7 @@ Route::POST('/fetchtoschoolsetup', 'PagesController@fetchtoschoolsetup')->middle
 
 Route::group(['middleware' => ['auth', 'can:manage staff']], function () {
     Route::get('/manage_saff_sec', 'PagesController@manageStaff');
+    Route::get('/manage_saff_sec_alloc', 'PagesController@manageStaffDetails');
     Route::POST('/allocate_role_sec', 'PagesController@manageStaffRole');
     Route::POST('/allocate_role_sec_main', 'PagesController@allocateroletostaff');
 });
@@ -298,9 +299,15 @@ Route::group(['prefix' => 'sec'], function () {
     Route::group(['prefix' => 'setting', 'middleware' => ['auth', 'can:settings']], function () { //School setup route grades_sec
 
         Route::get('/setupschool_sec', 'SchoolsetupSecController@index')->name('setupschool_sec');
+        Route::get('/fetchschooldata', 'SchoolsetupSecController@fetchSchoolDetailsSetUp')->name('setupschool_sec'); // Route::view('/stagetwo', 'voting.competition.step_two_main');
+        Route::view('/setup_school_sec', 'secondary.setupschool.schoolsetupreact')->name('setup_school_sec');
         Route::get('/grades_sec', 'SchoolsetupSecController@grades_sec')->name('grades_sec');
         Route::POST('/submitgrades_sec', 'PagesController@submitMark_sec')->name('submitgrades_sec');
         Route::POST('/addschoolinitials', 'SchoolsetupSecController@addSchoolInitials')->name('addschoolinitials');
+        Route::POST('/update_exams_status', 'SchoolsetupSecController@updateExamsStatus')->name('update_exams_status');
+        Route::POST('/update_ca1_status', 'SchoolsetupSecController@updateCa1Status')->name('update_ca1_status');
+        Route::POST('/update_ca2_status', 'SchoolsetupSecController@updateCa2Status')->name('update_ca2_status');
+        Route::POST('/update_ca3_status', 'SchoolsetupSecController@updateCa3Status')->name('update_ca3_status');
         Route::POST('/addschoolsession', 'SchoolsetupSecController@addSchoolSession')->name('addschoolsession');
         Route::POST('/addclasses_sec', 'SchoolsetupSecController@addClasses')->name('addclasses_sec');
         Route::POST('/addhouses_sec', 'SchoolsetupSecController@addhouses_sec')->name('addhouses_sec');
@@ -388,7 +395,8 @@ Route::group(['prefix'=>'pay', 'middleware' => 'roles'], function(){
 
 Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
     Route::get('/subject_sec_index', 'SubjectController_sec@index');
-    Route::get('/addsubject_sec', 'SubjectController_sec@addsubject_sec');
+    Route::view('/addsubject_sec', 'secondary.subjects.addsubjectsreact');
+    Route::get('/get_all_subjects', 'SubjectController_sec@addsubject_sec');
     Route::POST('/subjectprocess_sec', 'SubjectController_sec@store');
     Route::POST('/deletesubject_sec', 'SubjectController_sec@deleteSubject');
     Route::POST('/editsubject_sec', 'SubjectController_sec@editSubject_sec');
@@ -414,8 +422,9 @@ Route::group(['prefix'=>'pay', 'middleware' => ['auth', 'role:Student']], functi
 
 
 // add teachers
-Route::group(['middleware' => ['auth', 'can:assign form teacher']], function () {
+Route::group(['middleware' => ['auth', 'can:assign form teacher']], function () { //
     Route::get('/teacher_sec_index', 'TeachersController_sec@index');
+    Route::get('/get_teacher_page_details', 'TeachersController_sec@fetchDataForAddTeachersPage');
     Route::post('/teacher_sec_confirm', 'TeachersController_sec@confirmTeacherRegNumber');
     Route::post('/teachers_sec_confirm', 'TeachersController_sec@confirmTeacherRegNumber2');
     Route::post('/allocateformmaster', 'TeachersController_sec@allocateFormMaster');
@@ -466,8 +475,11 @@ Route::group(['middleware' => ['auth', 'can:student attendance']], function () {
 //add students marks secondary 
 
 Route::group(['middleware' => ['auth', 'can:manage marks']], function () {
+
     Route::get('/student_add_marks', 'AddstudentmakrsController_secs@index');
-    Route::POST('/fetch_students_marks', 'AddstudentmakrsController_secs@fetchstudentssubject');
+    Route::get('get_school_basic_details', 'AddstudentmakrsController_secs@getSchoolBasicDetails');
+    Route::get('/fetch_students_marks/{id}', 'AddstudentmakrsController_secs@fetchstudentssubject');
+    Route::get('fetch_student_sections/{id}', 'AddstudentmakrsController_secs@fetchStudentSections');
     Route::POST('/fetch_subject_details', 'AddstudentmakrsController_secs@fetchsubjectdetails');
     Route::POST('/fetch_subject_student_details', 'AddstudentmakrsController_secs@getallstudentsandmarks');
     Route::POST('/add_marks_main', 'AddstudentmakrsController_secs@addmarksmiain')->name('add_marks_main');

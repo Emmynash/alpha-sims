@@ -361,7 +361,7 @@ class PagesController extends Controller
 
         $role = Role::all();
 
-        return view('secondary.managestaff', compact('role'));
+        return view('secondary.managestaff.managestaff');
     }
 
     public function manageStaffRole(Request $request){
@@ -444,11 +444,32 @@ class PagesController extends Controller
             return response()->json(['notallow'=>'notallow']);
         }
 
-
-
         return response()->json(['success'=>'success']);
+    }
 
+    public function manageStaffDetails()
+    {
+        $staffList = User::where('schoolid', Auth::user()->schoolid)->get();
 
+        $staffListMain = array();
+
+        for ($i=0; $i < count($staffList); $i++) { 
+
+            $name = $staffList[$i]['firstname']." ".$staffList[$i]['middlename']." ".$staffList[$i]['lastname'];
+            $systemNumber = $staffList[$i]['id'];
+            $role = $staffList[$i]->getRoleNames()[0];
+            $date = $staffList[$i]['updated_at'];
+
+            $userObjs = (object) ['name' => $name, 'systemno'=>$systemNumber, 'role'=>$role, 'date'=>$date];
+            if ($role != "Student") {
+                array_push($staffListMain, $userObjs);
+            }
+            
+        }
+
+        $role = Role::all();
+
+        return response()->json(['stafflist'=>$staffListMain, 'role'=>$role]);
     }
 
 
