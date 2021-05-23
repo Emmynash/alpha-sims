@@ -441,12 +441,12 @@
                     <p>Result By Class</p>
                   </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                   <a id="resultmaingenscroll" href="/result_view_sec" class="nav-link">
                     <i class="far fa-eye nav-icon"></i>
                     <p>Result By Class</p>
                   </a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                   <a id="resultmaingenscrollgenerate" href="{{ route('generate_result') }}" class="nav-link">
                     <i class="far fa-eye nav-icon"></i>
