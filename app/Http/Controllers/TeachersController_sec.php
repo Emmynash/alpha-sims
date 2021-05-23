@@ -54,31 +54,47 @@ class TeachersController_sec extends Controller
 
 
     public function index(){
-
-        $schoolId = Auth::user()->schoolid;
-
-        $classesAll = $this->classlist_sec->where('schoolid', Auth::user()->schoolid)->get();
-        $addsection_sec = $this->addsection_sec->where('schoolid', Auth::user()->schoolid)->get();
-        $addschool = $this->addpost->where('id', Auth::user()->schoolid)->get();
-        $addsubject_sec = DB::table('addsubject_secs')
-        ->join('classlist_secs', 'classlist_secs.id','=','addsubject_secs.classid')
-        ->select('addsubject_secs.*', 'classlist_secs.classname')
-        ->where('addsubject_secs.schoolid', $schoolId)->get();
         
-        return view('secondary.teachers.addteacher_sec', compact('classesAll', 'addsection_sec', 'addschool', 'addsubject_sec'));
+        return view('secondary.teachers.addteachersreact');
+    }
+
+    public function fetchDataForAddTeachersPage()
+    {
+        try {
+            $schoolId = Auth::user()->schoolid;
+
+            $classesAll = $this->classlist_sec->where('schoolid', Auth::user()->schoolid)->get();
+            $addsection_sec = $this->addsection_sec->where('schoolid', Auth::user()->schoolid)->get();
+            $addschool = $this->addpost->where('id', Auth::user()->schoolid)->get();
+            $addsubject_sec = DB::table('addsubject_secs')
+                    ->join('classlist_secs', 'classlist_secs.id','=','addsubject_secs.classid')
+                    ->leftJoin('addsection_secs', 'addsection_secs.id','=','addsubject_secs.subjectsectione')
+                    ->select('addsubject_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname')
+                    ->where('addsubject_secs.schoolid', $schoolId,)->get();
+    
+            $getAllTeachersWithSubject = TeacherSubjects::join('users', 'users.id','=','teacher_subjects.user_id')
+                                        ->join('addsubject_secs', 'addsubject_secs.id','=','teacher_subjects.subject_id')
+                                        ->join('classlist_secs', "classlist_secs.id",'=','teacher_subjects.classid')
+                                        ->leftJoin('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id')
+                                        ->where('school_id', Auth::user()->schoolid)
+                                        ->select('teacher_subjects.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname')->get();
+    
+    
+            return response()->json(['classesAll'=>$classesAll, 'addsection_sec'=>$addsection_sec, 'addsubject_sec'=>$addsubject_sec, 'getAllTeachersWithSubject'=>$getAllTeachersWithSubject]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>'error']);
+        }
     }
 
     public function confirmTeacherRegNumber(Request $request){
         
-
         $validator = Validator::make($request->all(),[
-            'masterallocatedclass' => 'required|string',
-            'masterallocatedsection' => 'required|string',
             'mastersystemnumber' => 'required|string'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
+            return response()->json(['response'=>$validator->errors()->keys()]);
         }
 
         $userdetailfetch = $this->user->where('id', $request->input('mastersystemnumber'))->get();
@@ -93,16 +109,16 @@ class TeachersController_sec extends Controller
         if (count($userdetailfetch) > 0) {
 
             if (count($addstudent_sec) > 0) {
-                return response()->json(['exist'=>'noaccount']);
+                return response()->json(['response'=>'noaccount']);
             }else{
-                return response()->json(['create'=>$userdetailfetch]);
+                return response()->json(['userdetailfetch'=>$userdetailfetch]);
             }
             
         }else{
-            return response()->json(['noaccount'=>'noaccount']);
+            return response()->json(['response'=>'noaccount']);
         }
 
-        return response()->json($userdetailfetch, 200);
+        return response()->json(['userdetailfetch'=>$userdetailfetch], 200);
     }
 
     public function allocateFormMaster(Request $request){
@@ -162,12 +178,14 @@ class TeachersController_sec extends Controller
 
         $validator = Validator::make($request->all(),[
             'subject_id' => 'required',
-            'user_id' => 'required'
+            'user_id' => 'required',
+            'section' => 'required',
+            'allocatedclass' => 'required'
         ]);
         
 
         if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
+            return response()->json(['response'=>'fields']);
         }
 
             
@@ -192,7 +210,7 @@ class TeachersController_sec extends Controller
 
         }
 
-           $teacherSubjectCheck = $this->teacherSubjects->where(['user_id' => $request->user_id, "subject_id" => $request->subject_id])->get();
+           $teacherSubjectCheck = $this->teacherSubjects->where(['user_id' => $request->user_id, "subject_id" => $request->subject_id, 'section_id'=>$request->section])->get();
 
             if ($teacherSubjectCheck->count() < 1) {
                 
@@ -212,13 +230,14 @@ class TeachersController_sec extends Controller
                     $addTeacher->subject_id = (int)$request->subject_id;
                     $addTeacher->classid = (int)$getclassid->classid;
                     $addTeacher->usernamesystem=(int)$getTeacherRegNoMain[0]->id;
+                    $addTeacher->section_id = $request->section;
                     $addTeacher->save();
 
                     $user = User::find($request->user_id);
 
                     $user->assignRole('Teacher');
 
-                    return response()->json(['done'=>'done']);
+                    return response()->json(['response'=>'success']);
 
                 } catch (\Throwable $th) {
                     return $th;
@@ -226,7 +245,7 @@ class TeachersController_sec extends Controller
 
             }else{
     
-                return response()->json(['exist'=>'exist']);
+                return response()->json(['response'=>'exist']);
             }
 
     }

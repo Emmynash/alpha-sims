@@ -27,8 +27,13 @@
         "sass-loader": "^7.1.0"
     },
     "dependencies": {
+        "@babel/compat-data": "^7.14.0",
         "mdbreact": "^4.26.1",
+        "react-alert": "^7.0.3",
+        "react-alert-template-basic": "^1.0.2",
+        "react-data-table-component": "^6.11.7",
         "react-router-dom": "^5.2.0",
-        "react-uuid": "^1.0.2"
+        "react-uuid": "^1.0.2",
+        "styled-components": "^5.3.0"
     }
 }

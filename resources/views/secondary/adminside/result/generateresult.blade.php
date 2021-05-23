@@ -67,15 +67,27 @@
                                     <div class="card" style="border-radius: 0px; display: flex; flex-direction: row; align-items: center; border-left: 5px solid green;">
                                         <div style="display: flex; flex-direction: column; margin-left: 10px; padding: 10px;">
                                             <i style="font-style: normal; font-size: 12px; font-weight: bold;">Class: {{ $item->classname }}</i>
-                                            <i style="font-style: normal; font-size: 12px; font-weight: bold;">Status: Pending</i>
+                                            @if (in_array ( $item->id, $checkRecord))
+                                              <i style="font-style: normal; font-size: 12px; font-weight: bold;">Status: Completed</i>
+                                            @else
+                                              <i style="font-style: normal; font-size: 12px; font-weight: bold;">Status: Pending</i>
+                                            @endif
+                                            
                                         </div>
                                         <div style="flex: 1;">
         
                                         </div>
                                         <div style="margin-right: 10px;">
-                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#generateresult{{ $item->id }}">
-                                                Generate
+                                          @if (in_array ( $item->id, $checkRecord))
+                                            <button class="btn btn-sm btn-info">
+                                              Generated
                                             </button>
+                                          @else
+                                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#generateresult{{ $item->id }}">
+                                              Generate
+                                            </button>
+                                          @endif
+
                                         </div>
                                     </div>
                                 </div>

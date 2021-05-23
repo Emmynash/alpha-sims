@@ -12,4 +12,8 @@ const mix = require('laravel-mix');
  */
 
 mix.react('resources/js/app.js', 'public/js')
+   .react('resources/js/app1.js', 'public/js')
+   .react('resources/js/appteachers.js', 'public/js')
+   .react('resources/js/appmarks.js', 'public/js')
+   .react('resources/js/appmanagestaff.js', 'public/js') 
    .sass('resources/sass/app.scss', 'public/css');

@@ -32,6 +32,26 @@
 
         <div class="card" style="border-top: 2px solid #0B887C;">
 
+          <div class="card card-secondary">
+            <div class="card-header">
+              <h3 class="card-title">Continous Assesment</h3>
+            </div>
+            <div class="card-body">
+              <form action="{{ route('update_caset') }}" method="post">
+                @csrf
+                <i style="font-style: normal;">Enable Continous Assessment 3(CA3)?</i>
+                <div class="form-group">
+                  <input type="checkbox" name="caoption" {{$alldetails['addschool'][0]['caset'] == 1 ? "checked":""}}>
+                  <i style="font-style: normal; font-size: 14px;">{{$alldetails['addschool'][0]['caset'] == 1 ? "Enabled":"Disabled"}}</i>
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-sm btn-info">Ok</button>
+                </div>
+              </form>
+              {{-- <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success"> --}}
+            </div>
+          </div>
+
             <div class="row" style="margin: 10px 10px 0 10px;">
                 <div class="col-md-6">
                     <form id="addschoolinitialsform" action="javascript:console.log('submitted');" method="post">

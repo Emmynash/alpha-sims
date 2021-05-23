@@ -229,7 +229,9 @@
                         <thead style="text-align: center;">
                             <tr>
                                 <th style="font-size: 12px;">SUBJECTS</th>
-                                {{-- <th class="text-center  thdesign"><i class="text-center" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Class Assignment</p></th> --}}
+                                @if ($addschool->caset == 1)
+                                    <th class="text-center  thdesign"><i class="text-center" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Class Assignment</p></th>
+                                @endif
                                 <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">First CA</i></th>
                                 <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Second CA</i></th>
                                 <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">EXAM SCORE</i></th>
@@ -258,7 +260,9 @@
                                 @foreach ($subjects as $item)
                                     <tr style='font-size: 12px; width: 150px;'>
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->subjectname }}</center></td>
-                                        {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca3 }}</center></td> --}}
+                                        @if ($addschool->caset == 1)
+                                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca3 }}</center></td>
+                                        @endif
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca2 }}</center></td>
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca1 }}</center></td>
                                         <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->exams }}</center></td>
@@ -290,22 +294,22 @@
                     <i style="margin: 10px 0px 0px 50px; font-style: normal;">Point Avg: {{ $resultAverage == NULL ? "NAN":$resultAverage->average }}</i>
                 </div>
                 <div style="width: 95%; margin: 10px auto;">
-                    @if ($addschool->getGradeDetails($addschool->id)->count() > 0)
-                        @foreach ($addschool->getGradeDetails($addschool->id) as $item)
+                    @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
+                        @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                             <i style="font-size: 10px; font-style: normal;">{{ $item->gpaname }} = ({{ $item->marksfrom }}-{{ $item->marksto }})</i>
                         @endforeach
                     @endif
                 </div>
                 <div style="width: 95%; margin: 3px auto;">
-                    @if ($addschool->getGradeDetails($addschool->id)->count() > 0)
-                        @foreach ($addschool->getGradeDetails($addschool->id) as $item)
+                    @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
+                        @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                             <i style="font-size: 10px; font-style: normal;">({{ $item->marksfrom }}-{{ $item->marksto }}) = {{ $item->point }}</i>
                         @endforeach
                     @endif
                 </div>
                 <div style="width: 95%; margin: 3px auto;">
-                    @if ($addschool->getGradeDetails($addschool->id)->count() > 0)
-                        @foreach ($addschool->getGradeDetails($addschool->id) as $item)
+                    @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
+                        @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                         <i style="font-size: 10px; font-style: normal;">{{ $item->gpaname }} = {{ $item->remark }}</i>
                         @endforeach
                     @endif

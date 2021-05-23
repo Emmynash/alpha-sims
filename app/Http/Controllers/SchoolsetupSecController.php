@@ -66,7 +66,7 @@ class SchoolsetupSecController extends Controller
         $updateterm->term = $request->term;
         $updateterm->save();
 
-        return back();
+        return response()->json(array('sucess' => 'success'), 200);
     }
 
     public function grades_sec(){
@@ -227,5 +227,74 @@ class SchoolsetupSecController extends Controller
 
         $msg = 1;
         return response()->json(array('msg' => $msg), 200);
+    }
+
+    public function updatecaSet(Request $request)
+    {
+
+        if($request->caoption == "on"){
+            $addcaoption = Addpost::find(Auth::user()->schoolid);
+            $addcaoption->caset = 1;
+            $addcaoption->save();
+            return back()->with('success', 'CA3 enabled');
+
+        }else{
+            $addcaoption = Addpost::find(Auth::user()->schoolid);
+            $addcaoption->caset = 0;
+            $addcaoption->save();
+            return back()->with('success', 'CA3 disabled');
+        }
+        
+    }
+
+    public function updateExamsStatus(Request $request)
+    {
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails->exams = $request->examsstatus;
+        $schoolDetails->save();
+
+        return response()->json(['success'=>'success']);
+    }
+
+    public function updateCa1Status(Request $request)
+    {
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails->ca1 = $request->ca1status;
+        $schoolDetails->save();
+
+        return response()->json(['success'=>'success']);
+    }
+
+    public function updateCa2Status(Request $request)
+    {
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails->ca2 = $request->ca2status;
+        $schoolDetails->save();
+
+        return response()->json(['success'=>'success']);
+    }
+
+    public function updateCa3Status(Request $request)
+    {
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails->ca3 = $request->ca3status;
+        $schoolDetails->save();
+
+        return response()->json(['success'=>'success']);
+    }
+
+    public function fetchSchoolDetailsSetUp()
+    {
+        $schoolDetails = Addpost::where('id', Auth::user()->schoolid)->first();
+
+        $classlist = Classlist_sec::where("schoolid", Auth::user()->schoolid)->get();
+
+        $houselist = Addhouse_sec::where("schoolid", Auth::user()->schoolid)->get();
+
+        $classsection = Addsection_sec::where("schoolid", Auth::user()->schoolid)->get();
+
+        $clubs = Addclub_sec::where("schoolid", Auth::user()->schoolid)->get();
+
+        return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'houselist'=>$houselist, 'classsection'=>$classsection, 'clubs'=>$clubs]);
     }
 }

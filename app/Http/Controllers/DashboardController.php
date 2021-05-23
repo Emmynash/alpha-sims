@@ -61,11 +61,11 @@ class DashboardController extends Controller
             'schoolname' => 'required',
             'schoolemail' => 'required',
             'mobilenumber' => 'required',
-            'schoolLogo' => 'image|max:200|mimes:jpeg,png,jpg|required',
+            // 'schoolLogo' => 'image|max:200|mimes:jpeg,png,jpg|required',
             'schoolwebsite' => 'required',
             'dateestablished' => 'required',
             'schooladdress' => 'required',
-            'schoolprincipalsignature' => 'image|max:200|mimes:jpeg,png,jpg|required',
+            // 'schoolprincipalsignature' => 'image|max:200|mimes:jpeg,png,jpg|required',
             'schooltypeselect' => 'required',
             'schoolstate' => 'required'
         ]);
@@ -76,19 +76,19 @@ class DashboardController extends Controller
             return back()->with('error', 'Phone number already exist. Please add unique number for each school.');
         }
 
-        $realImage = $request->file('schoolLogo');
-        $imageSize = getimagesize( $realImage);
-        $widthOfImage = $imageSize[0];
-        $heightOfImage = $imageSize[1];
+        // $realImage = $request->file('schoolLogo');
+        // $imageSize = getimagesize( $realImage);
+        // $widthOfImage = $imageSize[0];
+        // $heightOfImage = $imageSize[1];
 
         // if($widthOfImage != $heightOfImage){
         //     return back()->with('error', 'invalid image dimension');
         // }
 
-        $realImage1 = $request->file('schoolprincipalsignature');
-        $imageSize1 = getimagesize( $realImage1);
-        $widthOfImage1 = $imageSize1[0];
-        $heightOfImage1 = $imageSize1[1];
+        // $realImage1 = $request->file('schoolprincipalsignature');
+        // $imageSize1 = getimagesize( $realImage1);
+        // $widthOfImage1 = $imageSize1[0];
+        // $heightOfImage1 = $imageSize1[1];
 
         // if($widthOfImage1 != $heightOfImage1){
         //     return back()->with('error', 'invalid image dimension');
@@ -129,11 +129,11 @@ class DashboardController extends Controller
         $addschool->schoolemail = $request->input('schoolemail');
         $addschool->schoolstate = $request->input('schoolstate');
         $addschool->mobilenumber = $request->input('mobilenumber');
-        $addschool->schoolLogo = $schoolLogoFinal;
+        // $addschool->schoolLogo = $schoolLogoFinal;
         $addschool->schoolwebsite = $request->input('schoolwebsite');
         $addschool->dateestablished = $request->input('dateestablished');
         $addschool->schooladdress = $request->input('schooladdress');
-        $addschool->schoolprincipalsignature = $principalSignatureFinal;
+        // $addschool->schoolprincipalsignature = $principalSignatureFinal;
         $addschool->status = 'Pending';
         $addschool->periodfrom = '';
         $addschool->periodto = '';

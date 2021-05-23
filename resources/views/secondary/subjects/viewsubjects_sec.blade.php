@@ -57,12 +57,9 @@
                   <table class="table table-hover text-nowrap">
                     <thead>
                       <tr>
-                        <th>Subject Code</th>
                         <th>Subject Name</th>
                         <th>Class</th>
-                        <th>Grade System</th>
-                        <th>Full marks</th>
-                        <th>Pass marks</th>
+                        <th>Subject Type</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -70,12 +67,15 @@
                       @if (count($subjectAll) > 0)
                         @foreach ($subjectAll as $subjectlist)
                             <tr>
-                              <td>{{$subjectlist->subjectcode}}</td>
                               <td>{{$subjectlist->subjectname}}</td>
                               <td>{{$subjectlist->classname}}</td>
-                              <td>{{$subjectlist->gradesystem}}</td>
-                              <td><i style="font-style: normal; font-size: 12px;">Total: {{$subjectlist->totalfull}}</i> <i style="font-style: normal; font-size: 12px;">Exam: {{$subjectlist->examfull}}</i> <i style="font-style: normal; font-size: 12px;">CA1: {{$subjectlist->ca1full}}</i> <i style="font-style: normal; font-size: 12px;">CA2: {{$subjectlist->ca2full}}</i> <i style="font-style: normal; font-size: 12px;">CA3: {{$subjectlist->ca3full}}</i></td>
-                              <td><i style="font-style: normal; font-size: 12px;">Total: {{$subjectlist->totalpass}}</i> <i style="font-style: normal; font-size: 12px;">Exam: {{$subjectlist->exampass}}</i> <i style="font-style: normal; font-size: 12px;">CA1: {{$subjectlist->ca1pass}}</i> <i style="font-style: normal; font-size: 12px;">CA2: {{$subjectlist->ca2pass}}</i> <i style="font-style: normal; font-size: 12px;">CA3: {{$subjectlist->ca3pass}}</i></td>
+                              <td>
+                                @if ($subjectlist->subjecttype == '1')
+                                    Elective
+                                @else
+                                    Core
+                                @endif
+                              </td>
 
                               {{-- delete modal --}}
                               <!-- The Modal -->

@@ -7,7 +7,7 @@ class Main extends React.Component{
         return(
             <div style={{height:'100%'}}>
             {/* <NavbarPage/> */}
-            <MainBodyElearning useridnew = {this.props.userid}/>
+            <MainBodyElearning/>
                 
             </div>
         )

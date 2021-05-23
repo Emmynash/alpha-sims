@@ -1,17 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Main from './main';
-import {BrowserRouter} from 'react-router-dom'
-import 'bootstrap/dist/css/bootstrap.css';
-// import './index.style.scss';
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import "bootstrap-css-only/css/bootstrap.min.css";
-import "mdbreact/dist/css/mdb.css";
+import { render } from 'react-dom'
+import SchoolSetUp from './schoolsetup/schoolsetup';
+import { transitions, positions, Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
 
+const options = {
+    // you can also just use 'bottom center'
+    position: positions.BOTTOM_CENTER,
+    timeout: 5000,
+    offset: '30px',
+    // you can also just use 'scale'
+    transition: transitions.SCALE
+  }
 
-ReactDOM.render(
-    <BrowserRouter>
-        <Main userid={user}/>
-    </BrowserRouter>
-, 
-document.getElementById('root'));
+const Root = () => (
+    <AlertProvider template={AlertTemplate} {...options}>
+      <SchoolSetUp />
+    </AlertProvider>
+  )
+  
+  ReactDOM.render(<Root />, document.getElementById('root'))

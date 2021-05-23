@@ -109,10 +109,12 @@
                             <label for="exampleInputEmail1" style="font-weight: normal;">CA2 fullmark, CA2 passmark (eg. 10, 5)</label>
                             <input type="text" class="form-control" name="ca2marks_sec" id="ca2marks_sec" placeholder="Fullmark, Passmark">
                         </div>
+                        @if ($schoolDetails->caset == 1)
                         <div class="form-group">
                             <label for="exampleInputEmail1" style="font-weight: normal;">CA3 fullmark, CA3 passmark (eg. 5, 3)</label>
                             <input type="text" class="form-control" name="ca3marks_sec" id="ca3marks_sec" placeholder="Fullmark, Passmark">
                         </div>
+                        @endif
                     </div>
                 </div>
                 <button id="addsubjectprocess_secbtn" class="btn btn-sm btn-info" style="margin:0 0 10px 20px;">Submit</button>

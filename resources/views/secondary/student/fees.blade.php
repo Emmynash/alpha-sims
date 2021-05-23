@@ -26,6 +26,8 @@
     </section>
 
     <section class="content">
+
+        @include('layouts.message')
     <!-- /.row -->
     <div class="row">
         <div class="col-12">

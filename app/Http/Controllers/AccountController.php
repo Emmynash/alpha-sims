@@ -431,7 +431,7 @@ class AccountController extends Controller
                         ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
                         ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
                         ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname')
-                        ->where('addstudent_secs.id', $regno)->first();
+                        ->where(['addstudent_secs.id'=> $regno, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])->first();
 
         if ($getStudentData == null) {
         //else
@@ -439,7 +439,7 @@ class AccountController extends Controller
                         ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
                         ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
                         ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname', 'users.profileimg')
-                        ->where('addstudent_secs.admission_no', $regno)->first();
+                        ->where(['addstudent_secs.id'=> $regno, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])->first();
         }
 
         if ($getStudentData == null) {

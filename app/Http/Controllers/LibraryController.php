@@ -55,7 +55,7 @@ class LibraryController extends Controller
 
         if ($request->input('submittype') == "0") { //add offline book
             $validator = Validator::make($request->all(),[
-                'file' => 'required|max:2000|mimes:png,jpeg,jpg',
+                // 'file' => 'required|max:2000|mimes:png,jpeg,jpg',
                 'booktitle'=>'required|string',
                 'bookisbn'=>'required|string',
                 'bookcategory'=>'required|string',
@@ -74,13 +74,13 @@ class LibraryController extends Controller
                 return response()->json(['already'=>'already']);
             }
     
-            if (!$request->hasFile('file')) {
-                return response()->json(['imgerr'=>'imgerr']);
-            }
+            // if (!$request->hasFile('file')) {
+            //     return response()->json(['imgerr'=>'imgerr']);
+            // }
      
-            $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
+            // $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
             
-            $pathProfile = $request->file('file')->storeAs('public/cover', $fileNamecover);
+            // $pathProfile = $request->file('file')->storeAs('public/cover', $fileNamecover);
     
     
             $datemain = Carbon::now();
@@ -95,7 +95,7 @@ class LibraryController extends Controller
             $addpdf->bookauthor = $request->input('bookauthor');
             $addpdf->datebook = $attDate;
             $addpdf->aboutbook = $request->input('editor1');
-            $addpdf->file =  $fileNamecover;
+            $addpdf->file =  "https://www.mswordcoverpages.com/wp-content/uploads/2018/10/Book-cover-page-3-CRC.png";
             $addpdf->quantity = $request->input('quantity');
             $addpdf->available = $request->input('quantity');
             $addpdf->booktype = "hard copy";
@@ -107,7 +107,7 @@ class LibraryController extends Controller
         if($request->input('submittype') == "1"){ // add ebook
 
             $validator = Validator::make($request->all(),[
-                'file' => 'required|max:2000|mimes:png,jpeg,jpg', //book cover
+                // 'file' => 'required|max:2000|mimes:png,jpeg,jpg', //book cover
                 'fileebook'=> 'required|max:2000|mimes:pdf,docx,doc', //pdf book 
                 'booktitle'=>'required|string',
                 'bookisbn'=>'required|string',
@@ -138,14 +138,14 @@ class LibraryController extends Controller
 
             
 
-            if (!$request->hasFile('file')) {
-                return response()->json(['imgerr'=>'imgerr']);
-            }
+            // if (!$request->hasFile('file')) {
+            //     return response()->json(['imgerr'=>'imgerr']);
+            // }
             
             
-            $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
+            // $fileNamecover = time().'.'.request()->file('file')->getClientOriginalExtension();
             
-            $pathProfile = $request->file('file')->storeAs('public/cover', $fileNamecover);
+            // $pathProfile = $request->file('file')->storeAs('public/cover', $fileNamecover);
             
             
 
@@ -157,7 +157,7 @@ class LibraryController extends Controller
             $addpdf->bookauthor = $request->input('bookauthor');
             $addpdf->datebook = $attDate;
             $addpdf->aboutbook = $request->input('editor1');
-            $addpdf->file =  $fileNamecover;
+            $addpdf->file =  "https://www.mswordcoverpages.com/wp-content/uploads/2018/10/Book-cover-page-3-CRC.png";
             $addpdf->quantity = "0";
             $addpdf->fileebook = $fileName;
             $addpdf->booktype = "ebook";
@@ -372,7 +372,7 @@ class LibraryController extends Controller
         $schooltypemain = $schooltype[0]['schooltype'];
 
         if ($schooltypemain == "Primary") {
-            if (Auth::user()->role == "Librarian") {
+            if (Auth::user()->hasRole('Librarian')) {
                 $chatdown = DB::table('addborrows')
                 ->join('addbooks', 'addbooks.id','=','addborrows.bookid')
                 ->join('addstudents', 'addstudents.id','=','addborrows.studentregno')
@@ -392,7 +392,7 @@ class LibraryController extends Controller
                 return response()->json(['data'=>$chatdown]);
             }
         }else{
-            if (Auth::user()->role == "Librarian") {
+            if (Auth::user()->hasRole('Librarian')) {
                 $chatdown = DB::table('addborrows')
                 ->join('addbooks', 'addbooks.id','=','addborrows.bookid')
                 ->join('addstudent_secs', 'addstudent_secs.id','=','addborrows.studentreno')

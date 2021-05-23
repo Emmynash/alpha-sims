@@ -136,27 +136,12 @@
 
             @can('assign subjects')
               <li class="nav-item has-treeview">
-                <a id="subjectsmain" href="#" class="nav-link">
+                <a id="subjectsmainAdd" href="/addsubject_sec" class="nav-link">
                     <i class="fas fa-book nav-icon"></i>
                   <p>
                     Subjects
-                    <i class="fas fa-angle-left right"></i>
                   </p>
                 </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a id="subjectsmainAdd" href="/addsubject_sec" class="nav-link">
-                        <i class="far fa-plus-square nav-icon"></i>
-                      <p>Add New</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a id="subjectsmainview" href="/subject_sec_index" class="nav-link">
-                        <i class="fas fa-clipboard-list nav-icon"></i>
-                      <p>Subject List</p>
-                    </a>
-                  </li>
-                </ul>
               </li>
             @endcan
 
@@ -492,7 +477,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a id="setupmainsetupage" href="{{ route('setupschool_sec') }}" class="nav-link">
+                  <a id="setupmainsetupage" href="{{ route('setup_school_sec') }}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>SetUp School</p>
                   </a>
