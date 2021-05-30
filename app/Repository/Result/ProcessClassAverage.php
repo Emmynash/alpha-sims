@@ -15,6 +15,12 @@ class ProcessClassAverage{
     public function processresult(Request $request)
     {
 
+        //-----------------------------------------------------------------------------------//
+        //                                                                                   //
+        //                        compute averages for each subject                          //
+        //                                                                                   //
+        //-----------------------------------------------------------------------------------//
+
         $classid = $request->classid;
         $schooldata = Addpost::where('id', Auth::user()->schoolid)->first();
         $term = $schooldata->term;

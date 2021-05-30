@@ -330,17 +330,18 @@ class HomeController extends Controller
             if ($user->hasRole('Student')) {
                 $schoolid = Auth::user()->schoolid;
 
-                $addstudentsec = DB::table('addstudent_secs')
-                                ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+               $addstudentsec = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
                                 ->join('addposts', 'addposts.id','=','addstudent_secs.schoolid')
                                 ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection') 
-                                ->where('usernamesystem', Auth::user()->id)
-                                ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addposts.schoolname')->get();
+                                ->where(['addstudent_secs.usernamesystem'=> Auth::user()->id, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
+                                ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addposts.schoolname')->first();
+
+                
 
 
-                $idf = $addstudentsec->toJson();
-                $studentsDetailsMain = json_decode($idf, true)[0];
-                $classid = $studentsDetailsMain['classid'];
+                // $idf = $addstudentsec->toJson();
+                // $studentsDetailsMain = json_decode($idf, true)[0];
+                $classid = $addstudentsec->classid;
 
                 $addsubjects = Addsubject_sec::where('classid', $classid)->get();
 
@@ -416,7 +417,7 @@ class HomeController extends Controller
                 }
 
                 $mainStudentDetails = array(
-                    'studentsDetailsMain'=> $studentsDetailsMain,
+                    'studentsDetailsMain'=> $addstudentsec,
                     'addsubjects' => $addsubjects,
                     'todayMonth' => $todayMonth,
                     'monthcount' => $monthcount,

@@ -18,12 +18,24 @@ function AddMarks() {
     const [selectedsection, setselectedsection] = useState('')
     const [studentlist, setStudentList] = useState([])
     const alert = useAlert()
+    
     const [examsscore, setexamsscore] = useState(0)
     const [ca1score, setca1score] = useState(0)
     const [ca2score, setca2score] = useState(0)
     const [ca3score, setca3score] = useState(0)
+
     const [studentId, setStudentId] = useState('')
     const [markid, setmarkid] = useState('')
+
+    const [examsstatus, setexamsstatus] = useState(0)
+    const [ca1status, setca1status] = useState(0)
+    const [ca2status, setca2status] = useState(0)
+    const [ca3status, setca3status] = useState(0)
+
+    const [examsmark, setExamsMark] = useState(0)
+    const [ca1mark, setCa1Mark] = useState(0)
+    const [ca2mark, setCa2Mark] = useState(0)
+    const [ca3mark, setCa3Mark] = useState(0)
 
 
     useEffect(() => {
@@ -58,6 +70,23 @@ function AddMarks() {
             // setschoolsection(response.data.schoolsection)
             setschoolsession(response.data.schooldetails.schoolsession)
             setschoolterm(response.data.schooldetails.term)
+
+            setexamsstatus(response.data.schooldetails.exams)
+            setca1status(response.data.schooldetails.ca1)
+            setca2status(response.data.schooldetails.ca2)
+            setca3status(response.data.schooldetails.ca3)
+
+            if (response.data.subjectScore == null) {
+                setExamsMark(0)
+                setCa1Mark(0)
+                setCa2Mark(0)
+                setCa3Mark(0)
+            }else{
+                setExamsMark(response.data.subjectScore.examsfull)
+                setCa1Mark(response.data.subjectScore.ca1full)
+                setCa2Mark(response.data.subjectScore.ca2full)
+                setCa3Mark(response.data.subjectScore.ca3full)
+            }
 
 
         }).catch(e=>{
@@ -146,10 +175,30 @@ function AddMarks() {
 
     function addStudentMarksModal(exams, ca1, ca2, ca3, studentId, markid) {
 
-        setexamsscore(exams)
-        setca1score(ca1)
-        setca2score(ca2)
-        setca3score(ca3)
+        if(exams == null){
+            setexamsscore(0)
+        }else{
+            setexamsscore(exams)
+        }
+
+        if(ca1 == null){
+            setca1score(0)
+        }else{
+            setca1score(ca1)
+        }
+
+        if(ca2 == null){
+            setca2score(0)
+        }else{
+            setca2score(ca2)
+        }
+
+        if(ca3 == null){
+            setca3score(0)
+        }else{
+            setca3score(ca3)
+        }
+        
         setStudentId(studentId)
         setmarkid(markid)
         
@@ -165,25 +214,39 @@ function AddMarks() {
 
     function handleChangeExams(e) {
 
-        setexamsscore(e.target.value)
-        
+        if (e.target.value > examsmark) {
+            setexamsscore(0)
+        }else{
+            setexamsscore(e.target.value)
+        }
     }
 
     function handleChangeCa1(e) {
 
-        setca1score(e.target.value)
-        
+        if (e.target.value > ca1mark) {
+            setca1score(0)
+        }else{
+            setca1score(e.target.value)
+        }
     }
 
     function handleChangeCa2(e) {
 
-        setca2score(e.target.value)
+        if (e.target.value > ca2mark) {
+            setca2score(0)
+        }else{
+            setca2score(e.target.value)
+        }
 
     }
 
     function handleChangeCa3(e) {
 
-        setca3score(e.target.value)
+        if (e.target.value > ca3mark) {
+            setca3score(0)
+        }else{
+            setca3score(e.target.value)
+        }
     }
 
 
@@ -278,7 +341,7 @@ function AddMarks() {
                         <div className="col-12">
                             <div className="card">
                             <div className="card-header">
-                                <h3 className="card-title">Students</h3>
+                                <h3 className="card-title">Students {examsstatus}</h3>
                                 <div className="card-tools">
                                 <div className="input-group input-group-sm" style={{width: '150px'}}>
                                     <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
@@ -310,7 +373,7 @@ function AddMarks() {
                                 </thead>
                                 <tbody>
                                     {studentlist.map(student=>(
-                                        <tr>
+                                        <tr key={student.id+"addmarks"}>
                                             <td>{student.firstname} {student.middlename} {student.lastname}</td>
                                             <td>{student.admission_no}</td>
                                             <td>{student.renumberschoolnew}</td>
@@ -348,21 +411,25 @@ function AddMarks() {
                                 </div>
                                 <div className="modal-body">
                                     <div className="row">
-                                            <div className="col-12 col-md-6">
+                                            {examsstatus == 1 ? <div className="col-12 col-md-6">
+                                                <label htmlFor="">Exams Fullmark({examsmark})</label>
                                                 <input type="number" onChange={(e)=>handleChangeExams(e)} className="form-control form-control-sm" value={examsscore} placeholder="exams scrore" />
-                                            </div>
-                                            <div className="col-12 col-md-6">
+                                            </div>:""}
+                                            {ca1status == 1 ? <div className="col-12 col-md-6">
+                                                <label htmlFor="">Ca1 Fullmark({ca1mark})</label>
                                                 <input type="number" onChange={(e)=>handleChangeCa1(e)} className="form-control form-control-sm" value={ca1score} placeholder="ca1" />
-                                            </div>
+                                            </div>:""}
                                     </div>
                                     <br/>
                                     <div className="row">
-                                        <div className="col-12 col-md-6">
+                                        {ca2status == 1 ? <div className="col-12 col-md-6">
+                                            <label htmlFor="">Ca2 Fullmark({ca2mark})</label>
                                             <input type="number" onChange={(e)=>handleChangeCa2(e)} className="form-control form-control-sm" value={ca2score} placeholder="ca2" />
-                                        </div>
-                                        <div className="col-12 col-md-6">
+                                        </div>:""}
+                                        {ca3status == 1 ? <div className="col-12 col-md-6">
+                                            <label htmlFor="">Ca3 Fullmark({ca3mark})</label>
                                             <input type="number" onChange={(e)=>handleChangeCa3(e)} className="form-control form-control-sm" value={ca3score} placeholder="ca3" />
-                                        </div>
+                                        </div>:""}
                                     </div>
                                 </div>
                                 <div className="modal-footer justify-content-between">
@@ -373,7 +440,6 @@ function AddMarks() {
                         </div>
                     </div>
                         
-
           
             </div>:<div className="card">
                         <div className="text-center">

@@ -69354,6 +69354,46 @@ function AddMarks() {
       markid = _useState30[0],
       setmarkid = _useState30[1];
 
+  var _useState31 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState32 = _slicedToArray(_useState31, 2),
+      examsstatus = _useState32[0],
+      setexamsstatus = _useState32[1];
+
+  var _useState33 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState34 = _slicedToArray(_useState33, 2),
+      ca1status = _useState34[0],
+      setca1status = _useState34[1];
+
+  var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState36 = _slicedToArray(_useState35, 2),
+      ca2status = _useState36[0],
+      setca2status = _useState36[1];
+
+  var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState38 = _slicedToArray(_useState37, 2),
+      ca3status = _useState38[0],
+      setca3status = _useState38[1];
+
+  var _useState39 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState40 = _slicedToArray(_useState39, 2),
+      examsmark = _useState40[0],
+      setExamsMark = _useState40[1];
+
+  var _useState41 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState42 = _slicedToArray(_useState41, 2),
+      ca1mark = _useState42[0],
+      setCa1Mark = _useState42[1];
+
+  var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState44 = _slicedToArray(_useState43, 2),
+      ca2mark = _useState44[0],
+      setCa2Mark = _useState44[1];
+
+  var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState46 = _slicedToArray(_useState45, 2),
+      ca3mark = _useState46[0],
+      setCa3Mark = _useState46[1];
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
     return function () {// cleanup
@@ -69385,6 +69425,22 @@ function AddMarks() {
 
       setschoolsession(response.data.schooldetails.schoolsession);
       setschoolterm(response.data.schooldetails.term);
+      setexamsstatus(response.data.schooldetails.exams);
+      setca1status(response.data.schooldetails.ca1);
+      setca2status(response.data.schooldetails.ca2);
+      setca3status(response.data.schooldetails.ca3);
+
+      if (response.data.subjectScore == null) {
+        setExamsMark(0);
+        setCa1Mark(0);
+        setCa2Mark(0);
+        setCa3Mark(0);
+      } else {
+        setExamsMark(response.data.subjectScore.examsfull);
+        setCa1Mark(response.data.subjectScore.ca1full);
+        setCa2Mark(response.data.subjectScore.ca2full);
+        setCa3Mark(response.data.subjectScore.ca3full);
+      }
     })["catch"](function (e) {
       console.log(e);
     });
@@ -69460,10 +69516,30 @@ function AddMarks() {
   }
 
   function addStudentMarksModal(exams, ca1, ca2, ca3, studentId, markid) {
-    setexamsscore(exams);
-    setca1score(ca1);
-    setca2score(ca2);
-    setca3score(ca3);
+    if (exams == null) {
+      setexamsscore(0);
+    } else {
+      setexamsscore(exams);
+    }
+
+    if (ca1 == null) {
+      setca1score(0);
+    } else {
+      setca1score(ca1);
+    }
+
+    if (ca2 == null) {
+      setca2score(0);
+    } else {
+      setca2score(ca2);
+    }
+
+    if (ca3 == null) {
+      setca3score(0);
+    } else {
+      setca3score(ca3);
+    }
+
     setStudentId(studentId);
     setmarkid(markid);
   }
@@ -69476,19 +69552,35 @@ function AddMarks() {
   }
 
   function handleChangeExams(e) {
-    setexamsscore(e.target.value);
+    if (e.target.value > examsmark) {
+      setexamsscore(0);
+    } else {
+      setexamsscore(e.target.value);
+    }
   }
 
   function handleChangeCa1(e) {
-    setca1score(e.target.value);
+    if (e.target.value > ca1mark) {
+      setca1score(0);
+    } else {
+      setca1score(e.target.value);
+    }
   }
 
   function handleChangeCa2(e) {
-    setca2score(e.target.value);
+    if (e.target.value > ca2mark) {
+      setca2score(0);
+    } else {
+      setca2score(e.target.value);
+    }
   }
 
   function handleChangeCa3(e) {
-    setca3score(e.target.value);
+    if (e.target.value > ca3mark) {
+      setca3score(0);
+    } else {
+      setca3score(e.target.value);
+    }
   }
 
   function addStudentMarks() {
@@ -69635,7 +69727,7 @@ function AddMarks() {
       className: "card-header"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", {
       className: "card-title"
-    }, "Students"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "Students ", examsstatus), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "card-tools"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "input-group input-group-sm",
@@ -69659,7 +69751,9 @@ function AddMarks() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "table table-hover text-nowrap"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Admission No"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Roll No"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Exams"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "CA1"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "CA2"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "CA3"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Total"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Position"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Grade"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, studentlist.map(function (student) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.firstname, " ", student.middlename, " ", student.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.admission_no), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.renumberschoolnew), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.exams == 0 ? "---" : student.exams), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.ca1 == 0 ? "---" : student.ca1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.ca2 == 0 ? "---" : student.ca2), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.ca3 == 0 ? "---" : student.ca3), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.totalmarks), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.position), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.grades), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+          key: student.id + "addmarks"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.firstname, " ", student.middlename, " ", student.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.admission_no), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.renumberschoolnew), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.exams == 0 ? "---" : student.exams), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.ca1 == 0 ? "---" : student.ca1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.ca2 == 0 ? "---" : student.ca2), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.ca3 == 0 ? "---" : student.ca3), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.totalmarks), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.position), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, student.grades), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           onClick: function onClick() {
             return addStudentMarksModal(student.exams, student.ca1, student.ca2, student.ca3, student.id, student.markid);
           },
@@ -69694,9 +69788,11 @@ function AddMarks() {
       className: "modal-body"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, examsstatus == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: ""
+    }, "Exams Fullmark(", examsmark, ")"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "number",
       onChange: function onChange(e) {
         return handleChangeExams(e);
@@ -69704,9 +69800,11 @@ function AddMarks() {
       className: "form-control form-control-sm",
       value: examsscore,
       placeholder: "exams scrore"
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    })) : "", ca1status == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: ""
+    }, "Ca1 Fullmark(", ca1mark, ")"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "number",
       onChange: function onChange(e) {
         return handleChangeCa1(e);
@@ -69714,11 +69812,13 @@ function AddMarks() {
       className: "form-control form-control-sm",
       value: ca1score,
       placeholder: "ca1"
-    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    })) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, ca2status == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: ""
+    }, "Ca2 Fullmark(", ca2mark, ")"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "number",
       onChange: function onChange(e) {
         return handleChangeCa2(e);
@@ -69726,9 +69826,11 @@ function AddMarks() {
       className: "form-control form-control-sm",
       value: ca2score,
       placeholder: "ca2"
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    })) : "", ca3status == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: ""
+    }, "Ca3 Fullmark(", ca3mark, ")"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "number",
       onChange: function onChange(e) {
         return handleChangeCa3(e);
@@ -69736,7 +69838,7 @@ function AddMarks() {
       className: "form-control form-control-sm",
       value: ca3score,
       placeholder: "ca3"
-    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    })) : "")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-footer justify-content-between"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: closeModal,

@@ -89,7 +89,7 @@ class UserSeeder extends Seeder
             $addseeduser->phonenumber = Str::random(11);
             $addseeduser->save();
     
-            $rollNumberProcess = Addstudent_sec::where(['schoolid' =>"6", 'classid' => "11"])->get();
+            $rollNumberProcess = Addstudent_sec::where(['schoolid' =>"6", 'classid' => "18"])->get();
     
     
             $a = array();
@@ -108,7 +108,7 @@ class UserSeeder extends Seeder
             }
     
             $Addstudent = new Addstudent_sec();
-            $Addstudent->classid = "11";
+            $Addstudent->classid = "18";
             $Addstudent->schoolid = "6";
             $Addstudent->usernamesystem = $addseeduser->id;
             $Addstudent->renumberschoolnew = $newrolnumber;

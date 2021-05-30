@@ -343,7 +343,9 @@ class ResultController_sec extends Controller
 
         $checkRecord = ResultAverage::where(['session'=>$schoolDetails->schoolsession, 'term'=>$schoolDetails->term, 'schoolid'=>Auth::user()->schoolid])->pluck('classid')->toArray();
 
-        return view('secondary.adminside.result.generateresult', compact('classlist', 'checkRecord'));
+        // return view('secondary.adminside.result.generateresult', compact('classlist', 'checkRecord'));
+
+        return view('secondary.adminside.result.generateresultreact');
     }
 
     public function generateResultMain(Request $request, ProcessClassAverage $processClassAverage, ResultAverageProcess $resultAverageProcess)

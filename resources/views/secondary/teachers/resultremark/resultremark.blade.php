@@ -72,7 +72,7 @@
                       @foreach ($teacherSubject as $teacherSubjects)
                         <tr>
                           <td>{{$teacherSubjects->getSubjectName->subjectname}} {{$teacherSubjects->getSubjectName->subjectcode}}</td>
-                          <td>{{ $teacherSubjects->classname }}</td>
+                          <td>{{ $teacherSubjects->classname }}({{ $teacherSubjects->sectionname == null ? "General": $teacherSubjects->sectionname }})</td>
                           @if (in_array($teacherSubjects->subject_id, $arrayOfSubjectId))
                           <td>Done</td>
                           <td><button class="btn btn-sm btn-success" data-toggle="modal" data-target=""><i class="fas fa-check"></i></button> </td>
@@ -100,6 +100,7 @@
                                         <p>I am done inputing student marks for this subject</p>
                                         <input type="hidden" name="classid" value="{{ $teacherSubjects->classid }}">
                                         <input type="hidden" name="subject_id" value="{{ $teacherSubjects->subject_id }}">
+                                        <input type="hidden" name="section_id" value="{{ $teacherSubjects->sectionid }}">
                                     </form>
                                     </div>
                                     

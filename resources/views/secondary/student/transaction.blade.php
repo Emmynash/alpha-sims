@@ -137,6 +137,7 @@
                       <th>Session</th>
                       <th>Class</th>
                       <th>Status</th>
+                      <th>Date</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -159,10 +160,17 @@
                                   Completed
                               @endif
                           </td>
+                          <td>{{ $item->created_at }}</td>
                           <td>
 
                             @if ($item->status == 0)
-                                <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname">Pay Now</button>
+
+                            <form action="{{ route('make_payment') }}" id="paymentform{{ $item->id }}" method="post">
+                                @csrf
+                                <input type="hidden" name="amount" value="{{ $item->amount }}" >
+                            </form>
+
+                                <button class="btn btn-sm btn-info" form="paymentform{{ $item->id }}" data-toggle="modal" data-target="#editclassname">Pay Now</button>
                             @else
                             <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editclassname"><i class="fas fa-check"></i></button>
                             @endif

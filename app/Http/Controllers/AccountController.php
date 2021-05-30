@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\AmountBalTableTotal;
 use App\FeesInvoiceItems;
+use App\PaymentRecord;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -200,7 +201,7 @@ class AccountController extends Controller
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.accounting.feecollection', compact('schooldetails'));
+        return view('secondary.accounting.feecollectionreact');
     }
 
     public function confirmMoneyReceived(Request $request)
@@ -423,43 +424,85 @@ class AccountController extends Controller
             'identity' => 'required',
         ]);
 
-        $regno = $request->identity;
+        try {
+            $regno = $request->identity;
 
-        //check if identity is regno first
-
-        $getStudentData = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-                        ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
-                        ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
-                        ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname')
-                        ->where(['addstudent_secs.id'=> $regno, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])->first();
-
-        if ($getStudentData == null) {
-        //else
-        $getStudentData = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-                        ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
-                        ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
-                        ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname', 'users.profileimg')
-                        ->where(['addstudent_secs.id'=> $regno, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])->first();
+            //check if identity is regno first
+    
+            $getStudentData = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                            ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+                            ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                            ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname')
+                            ->where(['addstudent_secs.id'=> $regno, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])->first();
+    
+            if ($getStudentData == null) {
+            //else
+            $getStudentData = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                            ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+                            ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                            ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname', 'users.profileimg')
+                            ->where(['addstudent_secs.admission_no'=> $regno, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])->first();
+            }
+    
+            if ($getStudentData == null) {
+                // return back()->with('error', 'Student record not found');
+                return response()->json(['data'=>"record no"]);
+            }
+    
+    
+    
+           $feesummary = AmountTable::where("amount_tables.class_id", $getStudentData->classid)
+                        ->join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+                        ->select('amount_tables.*', 'payment_categories.categoryname')->get();
+    
+            $totalfees = AmountTable::where("amount_tables.class_id", $getStudentData->classid)->sum('amount');
+    
+    
+            $paymentRecord = PaymentRecord::where('regno', $getStudentData->id)->get();
+    
+    
+            return response()->json(['data'=>$getStudentData, 'feesummary'=>$feesummary, 'totalfees'=>$totalfees, 'paymentRecord'=>$paymentRecord]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['data'=>$th]);
         }
-
-        if ($getStudentData == null) {
-            return back()->with('error', 'Student record not found');
-        }
-
-
-
-       $feesummary = AmountTable::where("amount_tables.class_id", $getStudentData->classid)
-                    ->join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
-                    ->select('amount_tables.*', 'payment_categories.categoryname')->get();
-
-        $totalfees = AmountTable::where("amount_tables.class_id", $getStudentData->classid)->sum('amount');
-
-
-        return redirect()->back()->with(['data'=>$getStudentData, 'feesummary'=>$feesummary, 'totalfees'=>$totalfees]);
-
-
-        return response()->json(['data'=>$getStudentData, 'feesummary'=>$feesummary, 'totalfees'=>$totalfees]);
     }
+
+    public function feesPartPayment(Request $request)
+    {
+        try {
+            $schoolDetails = Addpost::find(Auth::user()->schoolid);
+            $studentDetails = Addstudent_sec::find($request->regno);
+
+            $paymentRecordsum = PaymentRecord::where(['regno'=> $request->regno, 'term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession, 'schoolid'=>Auth::user()->schoolid])->sum('amount_paid');
+    
+            if ($request->total_amount - $paymentRecordsum <= 0) {
+                return response()->json(['data'=>'payment done']);
+            }
+
+            if ($request->amount > $request->total_amount) {
+                return response()->json(['data'=>'over charge']);
+            }
+
+            $addPaymentRecord = new PaymentRecord();
+            $addPaymentRecord->regno = $request->regno;
+            $addPaymentRecord->admission_no = $studentDetails->admission_no;
+            $addPaymentRecord->amount_paid = $request->amount;
+            $addPaymentRecord->amount_rem = $request->total_amount - $paymentRecordsum;
+            $addPaymentRecord->total_amount = $request->total_amount;
+            $addPaymentRecord->schoolid = Auth::user()->schoolid; 
+            $addPaymentRecord->term = $schoolDetails->term;
+            $addPaymentRecord->session = $schoolDetails->schoolsession;
+            $addPaymentRecord->save();
+            return response()->json(['data'=>'success']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['data'=>$th]);
+        }
+
+        
+    }
+
 
     public function sendMoneyRequest(Request $request)
     {
@@ -822,5 +865,21 @@ class AccountController extends Controller
         }
 
 
+    }
+
+    public function getStudentListFees($classid, $sectionid)
+    {
+
+        try {
+            $getStudentList = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                        ->where(['addstudent_secs.classid' => $classid, 'addstudent_secs.studentsection'=>$sectionid, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
+                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')->get();
+
+                        return response()->json(['data'=>$getStudentList]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['data'=>$th]);
+        }
+        
     }
 }

@@ -264,10 +264,8 @@ function SchoolSetUp() {
 
     function addSchoolClassList() {
 
-        if (classnamesch !="" && typesch !=0) {
+
             const data = new FormData()
-            data.append("classname", classnamesch),
-            data.append("type", typesch)
             axios.post("/sec/setting/addclasses_sec", data, {
                 headers:{
                     "Content-type": "application/json"
@@ -282,7 +280,7 @@ function SchoolSetUp() {
                 console.log(e)
     
             })
-        }
+    
     }
 
 
@@ -509,17 +507,17 @@ function SchoolSetUp() {
                         <div className="alert alert-warning">
                             <i style={{ fontSize:'13px' }}>Classes school be entered in ascending order(From the lowest to highest)</i>
                         </div>
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <select className="form-control-sm form-control" onChange={(e)=>handleChangeClassType(e)}>
                                 <option value="">Select Level</option>
                                 <option value="1" selected={typesch == 1 ? "selected":""} >Junior Secondary</option>
                                 <option value="2" selected={typesch == 2 ? "selected":""}>Senior Secondary</option>
                             </select>
-                        </div>
-                        <div className="form-group">
+                        </div> */}
+                        {/* <div className="form-group">
                             <input onChange={(e)=>handleChangeClassName(e)} value={classnamesch} className="form-control form-control-sm" placeholder="Enter Class name in ascending Order"/>
-                        </div>
-                        <button onClick={addSchoolClassList} className="btn btn-sm btn-info badge">Save</button>
+                        </div> */}
+                        <button onClick={addSchoolClassList} className="btn btn-sm btn-info badge">Generate Classes</button>
                         <br/>
 
                         {
@@ -528,7 +526,15 @@ function SchoolSetUp() {
                                 <div className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
-                                            <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.classname} </i> <div style={{ flex:'1' }}></div> <button className="btn btn-sm btn-danger badge">Remove</button>
+                                            <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.classname} </i> <div style={{ flex:'1' }}></div>
+
+                                            <div className="form-group">
+                                                <div className="custom-control custom-switch">
+                                                    <input type="checkbox" className="custom-control-input" id={"customSwitchclasses"+d.id} />
+                                                    <label className="custom-control-label" htmlFor={"customSwitchclasses"+d.id}></label>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

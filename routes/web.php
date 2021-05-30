@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PromotionController_sec;
 use Illuminate\Support\Facades\Route;
 
 
@@ -395,11 +396,13 @@ Route::group(['prefix'=>'pay', 'middleware' => 'roles'], function(){
 
 Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
     Route::get('/subject_sec_index', 'SubjectController_sec@index');
-    Route::view('/addsubject_sec', 'secondary.subjects.addsubjectsreact');
+    Route::view('/addsubject_sec', 'secondary.subjects.addsubjectsreact'); 
     Route::get('/get_all_subjects', 'SubjectController_sec@addsubject_sec');
     Route::POST('/subjectprocess_sec', 'SubjectController_sec@store');
+    Route::POST('/add_subject_score_update', 'SubjectController_sec@addSubjectScore');
     Route::POST('/deletesubject_sec', 'SubjectController_sec@deleteSubject');
     Route::POST('/editsubject_sec', 'SubjectController_sec@editSubject_sec');
+    Route::POST('/add_number_of_ellectives', 'SubjectController_sec@addNumberOfEllectives');
 });
 
 
@@ -424,6 +427,7 @@ Route::group(['prefix'=>'pay', 'middleware' => ['auth', 'role:Student']], functi
 // add teachers
 Route::group(['middleware' => ['auth', 'can:assign form teacher']], function () { //
     Route::get('/teacher_sec_index', 'TeachersController_sec@index');
+    Route::get('/form_teacher_sec_index', 'TeachersController_sec@form_teacher_sec_index');
     Route::get('/get_teacher_page_details', 'TeachersController_sec@fetchDataForAddTeachersPage');
     Route::post('/teacher_sec_confirm', 'TeachersController_sec@confirmTeacherRegNumber');
     Route::post('/teachers_sec_confirm', 'TeachersController_sec@confirmTeacherRegNumber2');
@@ -501,7 +505,8 @@ Route::group(['middleware' => ['auth', 'can:take teachers attendance']], functio
 Route::group(['middleware' => ['auth', 'can:student promotion']], function () {
     Route::get('/promotion_student_sec', 'PromotionController_sec@index');
     Route::POST('/promotion_student_ftech_sec', 'PromotionController_sec@fetchstudentforpromotion');
-    // Route::POST('/promotion_next_class_sec', ['uses' => 'PromotionController_sec@fetchnextclass','roles' => ['Admin', 'Teacher']])->middleware('roles');
+    Route::get('/get_school_details', 'PromotionController_sec@getSchoolDetails');
+    Route::post('/update_promotion_average', 'PromotionController_sec@updatePromotionAverage');
     Route::POST('/promotion_main_query', 'PromotionController_sec@promotionmain');
     Route::POST('/promote_jss_ss', 'PromotionController_sec@promotejss3toss1');
 });
@@ -560,6 +565,10 @@ Route::post('/payment/callback', 'PaymentController@handleGatewayCallback');
 // Route::webHooks();
 Route::post('webhook', 'WebhookController@handle');
 
+//profile controller
+Route::get('myprofile', 'MyProfileController@index')->name('myprofile');
+
+
 
 Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
 
@@ -587,7 +596,9 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::get('/inventory', 'AccountController@inventory')->name('inventory')->middleware(['auth', 'can:access inventory']);
          Route::post('/inventory_add_item', 'AccountController@inventory_add_item')->name('inventory_add_item');
          Route::post('/add_invoice_order/{id}', 'AccountController@addInvoiceOrder')->name('add_invoice_order'); 
-         Route::post('/update_invoice_items/{id}', 'AccountController@update_invoice_items')->name('update_invoice_items'); 
+         Route::post('/update_invoice_items/{id}', 'AccountController@update_invoice_items')->name('update_invoice_items');
          Route::post('/order_invoice_checkout', 'AccountController@order_invoice_checkout')->name('order_invoice_checkout');
+         Route::get('/get_student_list_fees/{classid}/{sectionid}', 'AccountController@getStudentListFees')->name('get_student_list_fees');
+         Route::post('/fees_part_payment', 'AccountController@feesPartPayment')->name('fees_part_payment');
 
 });

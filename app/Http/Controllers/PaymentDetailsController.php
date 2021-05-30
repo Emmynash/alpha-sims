@@ -86,7 +86,8 @@ class PaymentDetailsController extends Controller
 
             $paymentDetailsCheck = PaymentDetails::where('schoolid', Auth::user()->schoolid)->get();
 
-            if ($paymentDetailsCheck->count() > 0) {
+
+            if ($paymentDetailsCheck->count() < 1) {
                 return back()->with('error', 'Please contact the school admin');
             }
 

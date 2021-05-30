@@ -26,7 +26,7 @@
           <img id="profileimgmainpix" src="{{asset('storage/schimages/'.Auth::user()->profileimg)}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">{{Auth::user()->firstname}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</a>
+        <a href="{{ route('myprofile') }}" class="d-block">{{Auth::user()->firstname}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</a>
         </div>
       </div>
 
@@ -167,6 +167,12 @@
                       <p>Student List</p>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a id="studentsmainview" href="/viewstudentbyclass" class="nav-link">
+                        <i class="fas fa-clipboard-list nav-icon"></i>
+                      <p>Asign Electives</p>
+                    </a>
+                  </li>
                 </ul>
               </li>
             @endcan
@@ -187,12 +193,12 @@
                       <p>Add New</p>
                     </a>
                   </li>
-                  {{-- <li class="nav-item">
-                    <a href="pages/UI/buttons.html" class="nav-link">
+                  <li class="nav-item">
+                    <a id="formmasteroptionadd" href="/form_teacher_sec_index" class="nav-link">
                         <i class="fas fa-clipboard-list nav-icon"></i>
-                      <p>Teacher Lists</p>
+                      <p>Form Master</p>
                     </a>
-                  </li> --}}
+                  </li>
                 </ul>
               </li>
             @endcan

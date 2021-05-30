@@ -11,6 +11,7 @@ use App\Classlist_sec;
 use App\Addhouse_sec;
 use App\Addsection_sec;
 use App\Addclub_sec;
+use App\Addmark_sec;
 use App\Addpost;
 use App\Addteachers_sec;
 use App\Addsubject_sec;
@@ -78,9 +79,19 @@ class TeachersController_sec extends Controller
                                         ->leftJoin('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id')
                                         ->where('school_id', Auth::user()->schoolid)
                                         ->select('teacher_subjects.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname')->get();
+
+            $getFormMasters = FormTeachers::join('users', 'users.id','=','form_teachers.teacher_id')
+                            ->join('addsection_secs', 'addsection_secs.id','=','form_teachers.form_id')
+                            ->join('classlist_secs','classlist_secs.id','=','form_teachers.class_id')
+                            ->where('form_teachers.school_id', Auth::user()->schoolid)
+                            ->select('form_teachers.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname')->get();
+
+            $houses = Addhouse_sec::where('schoolid', Auth::user()->schoolid)->get();
+
+            $clubs = Addclub_sec::where('schoolid', Auth::user()->schoolid)->get();
     
     
-            return response()->json(['classesAll'=>$classesAll, 'addsection_sec'=>$addsection_sec, 'addsubject_sec'=>$addsubject_sec, 'getAllTeachersWithSubject'=>$getAllTeachersWithSubject]);
+            return response()->json(['classesAll'=>$classesAll, 'addsection_sec'=>$addsection_sec, 'addsubject_sec'=>$addsubject_sec, 'getAllTeachersWithSubject'=>$getAllTeachersWithSubject, 'getFormMasters'=>$getFormMasters, 'houses'=>$houses, 'clubs'=>$clubs]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['response'=>'error']);
@@ -130,13 +141,13 @@ class TeachersController_sec extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
+            return response()->json(['response'=>"fields"]);
         }
 
         $formCheck = $this->formTeachers->where('teacher_id', (int)$request->systemidformmaster)->get();
 
         if ($formCheck->count() > 0) {
-            return response()->json(['exist'=>'exist']);
+            return response()->json(['response'=>'exist']);
         }
 
         $teacherCheck = $this->addteachers_sec->where(['systemid'=> $request->input('systemidformmaster')])->get();
@@ -150,7 +161,7 @@ class TeachersController_sec extends Controller
             $addFormMaster->school_id = (int)Auth::user()->schoolid;
             $addFormMaster->save();
 
-            return response()->json(['done'=>'done']);
+            return response()->json(['response'=>'done']);
         }
 
         $addFormMaster = new FormTeachers();
@@ -170,7 +181,7 @@ class TeachersController_sec extends Controller
         $updateRole->schoolid = Auth::user()->schoolid;
         $updateRole->save();
 
-        return response()->json(['done'=>'done']);
+        return response()->json(['response'=>'done']);
     }
 
     public function allocateSubjectTeacher(Request $request){
@@ -333,7 +344,8 @@ class TeachersController_sec extends Controller
     {
         $teacherSubject = TeacherSubjects::join('addsubject_secs', 'addsubject_secs.id','=','teacher_subjects.subject_id')
                         ->leftjoin("classlist_secs", 'classlist_secs.id','=','addsubject_secs.classid')
-                        ->select('teacher_subjects.*','classlist_secs.id as classid', 'classlist_secs.classname', 'addsubject_secs.id as sub' )
+                        ->leftjoin('addsection_secs', 'addsection_secs.id','=','addsubject_secs.subjectsectione')
+                        ->select('teacher_subjects.*','classlist_secs.id as classid', 'classlist_secs.classname', 'addsubject_secs.id as sub', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid' )
                         ->where('user_id', Auth::user()->id)->get();
 
         $schooldetaild = Addpost::find(Auth::user()->schoolid);
@@ -354,16 +366,60 @@ class TeachersController_sec extends Controller
     {
         $schooldetaild = Addpost::find(Auth::user()->schoolid);
 
-        $enterRecord = new ConfirmSubjectRecordEntered();
-        $enterRecord->session = $schooldetaild->schoolsession;
-        $enterRecord->term = $schooldetaild->term;
-        $enterRecord->subject_id = $request->subject_id;
-        $enterRecord->schoolid = Auth::user()->schoolid;
-        $enterRecord->user_id = Auth::user()->id;
-        $enterRecord->classid = $request->classid;
-        $enterRecord->save();
-        
-        return back();
+
+        // return $request;
+
+        if ($request->section_id == null) {
+
+            //get count of students in the class since the subject is general
+
+            $getCount = Addstudent_sec::where(['classid'=>$request->classid, 'schoolsession'=>$schooldetaild->schoolsession])->get();
+
+            $getMarks = Addmark_sec::where(['term'=>$schooldetaild->term, 'session'=>$schooldetaild->schoolsession, 'classid'=>$request->classid, 'subjectid'=>$request->subject_id])->get();
+
+            if (count($getMarks) == count($getCount) ) {
+
+                $enterRecord = new ConfirmSubjectRecordEntered();
+                $enterRecord->session = $schooldetaild->schoolsession;
+                $enterRecord->term = $schooldetaild->term;
+                $enterRecord->subject_id = $request->subject_id;
+                $enterRecord->schoolid = Auth::user()->schoolid;
+                $enterRecord->user_id = Auth::user()->id;
+                $enterRecord->classid = $request->classid;
+                $enterRecord->save();
+                
+                return back();
+            }else{
+                return back()->with('error', 'result entered not complete yet...');
+            }
+            
+        }else {
+
+            //get count of students in the class since the subject is by class and section
+
+            $getCount = Addstudent_sec::where(['classid'=>$request->classid, 'schoolsession'=>$schooldetaild->schoolsession, 'studentsection'=>$request->section_id])->get();
+
+            $getMarks = Addmark_sec::where(['term'=>$schooldetaild->term, 'session'=>$schooldetaild->schoolsession, 'classid'=>$request->classid, 'subjectid'=>$request->subject_id, 'section'=>$request->section_id])->get();
+
+            if (count($getMarks) == count($getCount) ) {
+
+                $enterRecord = new ConfirmSubjectRecordEntered();
+                $enterRecord->session = $schooldetaild->schoolsession;
+                $enterRecord->term = $schooldetaild->term;
+                $enterRecord->subject_id = $request->subject_id;
+                $enterRecord->schoolid = Auth::user()->schoolid;
+                $enterRecord->user_id = Auth::user()->id;
+                $enterRecord->classid = $request->classid;
+                $enterRecord->save();
+                
+                return back();
+            }else{
+                return back()->with('error', 'result entered not complete yet...');
+            }
+            
+        }
+
+
     }
 
     public function formTeacherMain()
@@ -424,5 +480,10 @@ class TeachersController_sec extends Controller
 
         return back()->with('success', 'process was successfull');
         
+    }
+
+    public function form_teacher_sec_index(Request $request)
+    {
+        return view('secondary.teachers.addformmastersreact');
     }
 }

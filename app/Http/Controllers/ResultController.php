@@ -110,27 +110,6 @@ class ResultController extends Controller
         $regNo = $request->input('regNo');
         $schoolsession = $request->input('session');
         
-        
-//---------------------------------------------------------------------------------
-//                           update classcount here
-//----------------------------------------------------------------------------------
-
-        $classList = Classlist::where('schoolid', Auth::user()->schoolid)->get();
-
-        if(count($classList) > 0){
-            for ($i=0; $i < count($classList); $i++) { 
-                $classidcountupdate = $classList[$i]['id'];
-                
-                $studentcountquery = Addstudent::where('classid', $classidcountupdate)->get();
-                
-                $maincount = count($studentcountquery);
-                
-                $updatecountquery = Classlist::find($classidcountupdate);
-                $updatecountquery->studentcount = $maincount;
-                $updatecountquery->save();
-                
-            }
-        }
 
 //--------------------------------------------------------------------------------
 //                                 process class average

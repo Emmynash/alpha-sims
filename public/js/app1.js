@@ -69357,6 +69357,46 @@ function AddSubject() {
       ca3status = _useState32[0],
       setca3status = _useState32[1];
 
+  var _useState33 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState34 = _slicedToArray(_useState33, 2),
+      examsmark = _useState34[0],
+      setExamsMark = _useState34[1];
+
+  var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState36 = _slicedToArray(_useState35, 2),
+      ca1mark = _useState36[0],
+      setCa1Mark = _useState36[1];
+
+  var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState38 = _slicedToArray(_useState37, 2),
+      ca2mark = _useState38[0],
+      setCa2Mark = _useState38[1];
+
+  var _useState39 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState40 = _slicedToArray(_useState39, 2),
+      ca3mark = _useState40[0],
+      setCa3Mark = _useState40[1];
+
+  var _useState41 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState42 = _slicedToArray(_useState41, 2),
+      classElectives = _useState42[0],
+      setClassElectives = _useState42[1];
+
+  var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState44 = _slicedToArray(_useState43, 2),
+      sectionElectives = _useState44[0],
+      setSectionElectives = _useState44[1];
+
+  var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState46 = _slicedToArray(_useState45, 2),
+      numberElectives = _useState46[0],
+      setNumberElectives = _useState46[1];
+
+  var _useState47 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState48 = _slicedToArray(_useState47, 2),
+      getElectivesSettingNumber = _useState48[0],
+      setgetElectivesSettingNumber = _useState48[1];
+
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
@@ -69366,7 +69406,7 @@ function AddSubject() {
 
   function fetchSchoolDetails() {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_all_subjects').then(function (response) {
-      console.log(response); // console.log(setJ)
+      console.log(response.data.subjectScores); // console.log(setJ)
 
       setClasslist(response.data.classesAll);
       setsubjectcount(response.data.allsubjects.length);
@@ -69378,6 +69418,19 @@ function AddSubject() {
       setca1status(response.data.schoolDetails.ca1);
       setca2status(response.data.schoolDetails.ca2);
       setca3status(response.data.schoolDetails.ca3);
+      setgetElectivesSettingNumber(response.data.getElectivesSettingNumber);
+
+      if (response.data.subjectScores == null) {
+        setExamsMark(0);
+        setCa1Mark(0);
+        setCa2Mark(0);
+        setCa3Mark(0);
+      } else {
+        setExamsMark(response.data.subjectScores.examsfull);
+        setCa1Mark(response.data.subjectScores.ca1full);
+        setCa2Mark(response.data.subjectScores.ca2full);
+        setCa3Mark(response.data.subjectScores.ca3full);
+      }
     })["catch"](function (e) {
       console.log(e);
     });
@@ -69421,6 +69474,34 @@ function AddSubject() {
     setSubjectSectione(e.target.value);
   }
 
+  function handleChangeExamsFull(e) {
+    setExamsMark(e.target.value);
+  }
+
+  function handleChangeCa1Full(e) {
+    setCa1Mark(e.target.value);
+  }
+
+  function handleChangeCa2Full(e) {
+    setCa2Mark(e.target.value);
+  }
+
+  function handleChangeCa3Full(e) {
+    setCa3Mark(e.target.value);
+  }
+
+  function handleClassChangeEllectives(e) {
+    setClassElectives(e.target.value);
+  }
+
+  function handleSectionChangeEllectives(e) {
+    setSectionElectives(e.target.value);
+  }
+
+  function handleNumberEllectivesChangeEllectives(e) {
+    setNumberElectives(e.target.value);
+  }
+
   function addSubjectsMain() {
     if (selectedclass != "" && subjectName != "" && subjectType != "" && subjectSectione) {
       var data = new FormData();
@@ -69456,13 +69537,80 @@ function AddSubject() {
     }
   }
 
+  function updateScoresOrAdd() {
+    var data = new FormData();
+    data.append("examsfull", examsmark);
+    data.append("ca1full", ca1mark);
+    data.append("ca2full", ca2mark);
+    data.append('ca3full', ca3mark);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/add_subject_score_update", data, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+
+      if (response.data.response == "success") {
+        setSubjectName(''); // setSubjectType('')
+        // setselectedclass('')
+
+        fetchSchoolDetails();
+        myalert('Process Successful', 'success');
+      } else {
+        myalert('unknown error', 'error');
+      }
+    })["catch"](function (e) {
+      console.log(e);
+    });
+  }
+
+  function addNumberOfEllectives() {
+    var data = new FormData();
+    data.append("classid", classElectives);
+    data.append("sectionid", sectionElectives);
+    data.append("number_ellectives", numberElectives);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/add_number_of_ellectives", data, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+
+      if (response.data.response == "success") {
+        fetchSchoolDetails();
+        myalert('Process Successful', 'success');
+      } else if (response.data.response == "updated") {
+        fetchSchoolDetails();
+        myalert('Updated successfully', 'success');
+      } else {
+        myalert('unknown error', 'error');
+      }
+    })["catch"](function (e) {
+      console.log(e);
+    });
+  }
+
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "container"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "alert alert-info"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '13px'
+      }
+    }, "Add subjects for each class and section. Click on settings to set the number of electives allowed for each class")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       className: "btn btn-sm btn-info",
       "data-toggle": "modal",
       "data-target": "#modal-default"
-    }, "Add subject")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "Add subject"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      style: {
+        marginLeft: '5px'
+      },
+      className: "btn btn-sm btn-warning",
+      "data-toggle": "modal",
+      "data-target": "#addelectivesmodal"
+    }, "Settings")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-4"
@@ -69529,12 +69677,20 @@ function AddSubject() {
       className: "col-12 col-md-3"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "number",
+      onChange: function onChange(e) {
+        return handleChangeExamsFull(e);
+      },
+      value: examsmark,
       placeholder: "Exams mark",
       className: "form-control form-control-sm"
     })) : "", ca1status == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-3"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "number",
+      onChange: function onChange(e) {
+        return handleChangeCa1Full(e);
+      },
+      value: ca1mark,
       placeholder: "CA1",
       className: "form-control form-control-sm"
     })) : "", ca2status == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -69542,18 +69698,27 @@ function AddSubject() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "number",
       placeholder: "CA2",
+      onChange: function onChange(e) {
+        return handleChangeCa2Full(e);
+      },
+      value: ca2mark,
       className: "form-control form-control-sm"
     })) : "", ca3status == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-3"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "number",
       placeholder: "CA3",
+      onChange: function onChange(e) {
+        return handleChangeCa3Full(e);
+      },
+      value: ca3mark,
       className: "form-control form-control-sm"
     })) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
         margin: '0px 0px 10px 10px'
       }
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: updateScoresOrAdd,
       className: "btn btn-sm btn-info badge"
     }, "Save")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
@@ -69705,6 +69870,118 @@ function AddSubject() {
       onClick: addSubjectsMain,
       type: "button",
       className: "btn btn-info btn-sm"
+    }, "Save changes"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal fade",
+      id: "addelectivesmodal",
+      "data-backdrop": "false"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-dialog"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-content"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-header"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
+      className: "modal-title"
+    }, "Set No. of Electives"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      type: "button",
+      className: "close",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      "aria-hidden": "true"
+    }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-body"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      onChange: function onChange(e) {
+        return handleClassChangeEllectives(e);
+      },
+      name: "",
+      id: "",
+      className: "form-control form-control-sm"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: ""
+    }, "Select a Class"), classlist.length > 0 ? classlist.map(function (d) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          key: d.id + "classlistellectives",
+          value: d.id
+        }, d.classname)
+      );
+    }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: ""
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      onChange: function onChange(e) {
+        return handleSectionChangeEllectives(e);
+      },
+      name: "",
+      id: "",
+      className: "form-control form-control-sm"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: ""
+    }, "Select a Select"), schoolsection.map(function (d) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          key: d.id + "electivessection",
+          value: d.id
+        }, d.sectionname)
+      );
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: "",
+      style: {
+        fontSize: '10px'
+      }
+    }, "No. of allowed ellectives"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      onChange: function onChange(e) {
+        return handleNumberEllectivesChangeEllectives(e);
+      },
+      type: "number",
+      className: "form-control form-control-sm",
+      placeholder: "No. of allowed ellectives"
+    }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "",
+      style: {
+        height: '300px',
+        overflowY: 'scroll'
+      }
+    }, getElectivesSettingNumber.map(function (d) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "card",
+          style: {
+            width: '95%',
+            margin: '5px'
+          }
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          style: {
+            marginLeft: '5px',
+            fontStyle: 'normal'
+          }
+        }, d.classname, d.sectionname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          style: {
+            marginLeft: '5px',
+            fontStyle: 'normal'
+          }
+        }, "No. of allowed electives (", d.number_ellectives, ")"))
+      );
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-footer justify-content-between"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      type: "button",
+      className: "btn btn-default btn-sm",
+      "data-dismiss": "modal"
+    }, "Close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: addNumberOfEllectives,
+      type: "button",
+      className: "btn btn-info btn-sm"
     }, "Save changes"))))))
   );
 }
@@ -69739,7 +70016,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 var options = {
   // you can also just use 'bottom center'
-  position: react_alert__WEBPACK_IMPORTED_MODULE_3__["positions"].BOTTOM_CENTER,
+  position: react_alert__WEBPACK_IMPORTED_MODULE_3__["positions"].BOTTOM_RIGHT,
   timeout: 5000,
   offset: '30px',
   // you can also just use 'scale'

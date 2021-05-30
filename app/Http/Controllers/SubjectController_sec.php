@@ -8,6 +8,8 @@ use App\Addsubject_sec;
 use App\Addmark_sec;
 use App\Addpost;
 use App\Addsection_sec;
+use App\Electives_sec;
+use App\SubjectScoreAllocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Validator;
@@ -54,9 +56,16 @@ class SubjectController_sec extends Controller
         $electivesubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'1'])->get();
 
         $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
+
+        $subjectScores = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
+
+        $getElectivesSettingNumber = Electives_sec::join('classlist_secs', 'classlist_secs.id','=','electives_secs.classid')
+                                    ->join('addsection_secs', 'addsection_secs.id','=','electives_secs.sectionid')
+                                    ->where('electives_secs.schoolid',Auth::user()->schoolid)
+                                    ->select('electives_secs.*', 'addsection_secs.sectionname', 'classlist_secs.classname')->get();
         
 
-        return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'coresubjects'=>$coresubjects, 'electivesubjects'=>$electivesubjects, 'schoolsection'=>$schoolsection]);
+        return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'coresubjects'=>$coresubjects, 'electivesubjects'=>$electivesubjects, 'schoolsection'=>$schoolsection, 'subjectScores'=>$subjectScores, 'getElectivesSettingNumber'=>$getElectivesSettingNumber]);
     }
 
     public function store(Request $request){
@@ -158,6 +167,81 @@ class SubjectController_sec extends Controller
 
 
         return back()->with("success", "Subject updated successfully");
+
+    }
+
+    public function addSubjectScore(Request $request)
+    {
+
+        try {
+            $checkIfHasBeenENteredThenUpdate = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
+
+            if ($checkIfHasBeenENteredThenUpdate == null) {
+                $AddSubjectScore = new SubjectScoreAllocation();
+                $AddSubjectScore->examsfull = $request->examsfull;
+                $AddSubjectScore->ca1full = $request->ca1full;
+                $AddSubjectScore->ca2full = $request->ca2full;
+                $AddSubjectScore->ca3full = $request->ca3full;
+                $AddSubjectScore->schoolid = Auth::user()->schoolid;
+                $AddSubjectScore->save();
+    
+                return response()->json(['response'=>'success']);
+            }else{
+                $checkIfHasBeenENteredThenUpdate->examsfull = $request->examsfull;
+                $checkIfHasBeenENteredThenUpdate->ca1full = $request->ca1full;
+                $checkIfHasBeenENteredThenUpdate->ca2full = $request->ca2full;
+                $checkIfHasBeenENteredThenUpdate->ca3full = $request->ca3full;
+                $checkIfHasBeenENteredThenUpdate->save();
+    
+                return response()->json(['response'=>'success']);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th]);
+        }
+    }
+
+    public function addNumberOfEllectives(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'classid' => 'required',
+            'sectionid' => 'required',
+            'number_ellectives' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['response'=>'fields']);
+        }
+
+        try {
+
+
+            $checkIfAddedAlready = Electives_sec::where(['classid'=>$request->classid, 'sectionid'=>$request->sectionid])->first();
+
+            if ($checkIfAddedAlready == null) {
+
+                $addElectivesEachClass = new Electives_sec();
+                $addElectivesEachClass->classid = $request->classid;
+                $addElectivesEachClass->sectionid = $request->sectionid;
+                $addElectivesEachClass->number_ellectives = $request->number_ellectives;
+                $addElectivesEachClass->schoolid = Auth::user()->schoolid;
+                $addElectivesEachClass->save();
+        
+                return response()->json(['response'=>'success']);
+            }else{
+
+                $checkIfAddedAlready->number_ellectives = $request->number_ellectives;
+                $checkIfAddedAlready->save();
+        
+                return response()->json(['response'=>'updated']);
+            }
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>'error']);
+        }
+
 
     }
 }

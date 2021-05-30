@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Addclub_sec;
+use App\Addhouse_sec;
 use Illuminate\Http\Request;
 use App\Addsection_sec;
 use App\Classlist_sec;
@@ -40,7 +42,7 @@ class PromotionController_sec extends Controller
 
         $oldsessionboth = $oldsessionleft."/".$oldsessionright;
 
-        return view('secondary.promotion_sec')->with(['alldetails'=> $alldetails, 'oldsessionboth'=>$oldsessionboth]);
+        return view('secondary.promotion.promotion_sec');
     }
 
     public function fetchstudentforpromotion(Request $request){
@@ -80,7 +82,7 @@ class PromotionController_sec extends Controller
 
                         if (max($a) == $promofromclass) // check if the id of the class we are promoting from is same as the one we are proting to. if same, no promotion allowed
                         {
-                            return response()->json(['nopromo'=>'nopromo', 'addstudent_sec'=>$addstudent_sec]);
+                            return response()->json(['success'=>'nopromo', 'addstudent_sec'=>$addstudent_sec]);
                         }
 
                         $nextClass=""; // varriable decleration for the next class. i.e the class we are promoting to
@@ -143,7 +145,7 @@ class PromotionController_sec extends Controller
                 $getHostelId = AddStudentToHostel::where('regno', $regnoforpromo[$i])->get();
 
                 if (count($getHostelId) > 0) {
-                    $hostelIdMain = $getHostelId[0][id];
+                    $hostelIdMain = $getHostelId[0]['id'];
 
                     $removeStudentHostel = AddStudentToHostel::find($hostelIdMain);
                     $removeStudentHostel_>delete();
@@ -194,5 +196,48 @@ class PromotionController_sec extends Controller
 
         return response()->json(['success'=>'success']);
 
+    }
+
+    public function getSchoolDetails()
+    {
+        $schoolDetails = Addpost::where('id', Auth::user()->schoolid)->first();
+
+        $classlist = Classlist_sec::where("schoolid", Auth::user()->schoolid)->get();
+
+        $classsection = Addsection_sec::where("schoolid", Auth::user()->schoolid)->get();
+
+        $getPreviousSession = explode("/", $schoolDetails->schoolsession);
+
+        $previousSessionmain = ((int)$getPreviousSession[0]-1)."/".((int)$getPreviousSession[1]-1);
+
+        return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'classsection'=>$classsection, 'previousSessionmain'=>$previousSessionmain]);
+    }
+
+    public function updatePromotionAverage(Request $request)
+    {
+
+        try {
+            if ($request->key == "averageMark") {
+                $schoolDetails = Addpost::find(Auth::user()->schoolid);
+                $schoolDetails->promotionaverage = $request->average;
+                $schoolDetails->save();
+    
+                return response()->json(['response'=>'success']);
+            }else{
+                $schoolDetails = Addpost::find(Auth::user()->schoolid);
+                $schoolDetails->averagestatus = $request->average;
+                $schoolDetails->save();
+    
+                return response()->json(['response'=>'success']);
+            }
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>'error']);
+        }
+
+
+        
     }
 }

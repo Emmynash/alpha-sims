@@ -69704,22 +69704,19 @@ function SchoolSetUp() {
   }
 
   function addSchoolClassList() {
-    if (classnamesch != "" && typesch != 0) {
-      var data = new FormData();
-      data.append("classname", classnamesch), data.append("type", typesch);
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/addclasses_sec", data, {
-        headers: {
-          "Content-type": "application/json"
-        }
-      }).then(function (response) {
-        console.log(response);
-        fetchSchoolDetails();
-        setClassnamesch('');
-        myalert('Process Successful', 'success');
-      })["catch"](function (e) {
-        console.log(e);
-      });
-    }
+    var data = new FormData();
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/addclasses_sec", data, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+      fetchSchoolDetails();
+      setClassnamesch('');
+      myalert('Process Successful', 'success');
+    })["catch"](function (e) {
+      console.log(e);
+    });
   }
 
   function addSchoolHouses() {
@@ -69999,34 +69996,10 @@ function SchoolSetUp() {
       style: {
         fontSize: '13px'
       }
-    }, "Classes school be entered in ascending order(From the lowest to highest)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      className: "form-control-sm form-control",
-      onChange: function onChange(e) {
-        return handleChangeClassType(e);
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: ""
-    }, "Select Level"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "1",
-      selected: typesch == 1 ? "selected" : ""
-    }, "Junior Secondary"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "2",
-      selected: typesch == 2 ? "selected" : ""
-    }, "Senior Secondary"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      onChange: function onChange(e) {
-        return handleChangeClassName(e);
-      },
-      value: classnamesch,
-      className: "form-control form-control-sm",
-      placeholder: "Enter Class name in ascending Order"
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, "Classes school be entered in ascending order(From the lowest to highest)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: addSchoolClassList,
       className: "btn btn-sm btn-info badge"
-    }, "Save"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), classlist.length > 0 ? classlist.map(function (d) {
+    }, "Generate Classes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), classlist.length > 0 ? classlist.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "card radius-15"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -70045,9 +70018,18 @@ function SchoolSetUp() {
           style: {
             flex: '1'
           }
-        }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-          className: "btn btn-sm btn-danger badge"
-        }, "Remove"))))
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "form-group"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "custom-control custom-switch"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          type: "checkbox",
+          className: "custom-control-input",
+          id: "customSwitchclasses" + d.id
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+          className: "custom-control-label",
+          htmlFor: "customSwitchclasses" + d.id
+        }))))))
       );
     }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "card radius-15"

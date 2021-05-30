@@ -14,9 +14,10 @@ use App\Addpost;
 use App\Addstudent;
 use App\AmountTable;
 use App\FeesInvoice;
+use App\Repository\Registration\RegisterStudents;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
 
 class StudentController_sec extends Controller
 {
@@ -38,15 +39,13 @@ class StudentController_sec extends Controller
         $this->addsection_sec = $addsection_sec;
         $this->addclub_sec = $addclub_sec;
         $this->addpost = $addpost;
-
-        
     }
 
     public function index(){
 
         $addschool = Addpost::where('id', Auth::user()->schoolid)->first();
 
-        return view('secondary.studentprocess.addstudent_sec', compact('addschool'));
+        return view('secondary.studentprocess.addstudentreact');
     }
 
     public function viewStudentbyClass(){
@@ -59,15 +58,11 @@ class StudentController_sec extends Controller
     public function confirmStudentRegNumber(Request $request){
 
         $validator = Validator::make($request->all(),[
-            'allocatedclass' => 'required|string',
-            'allocatedsection' => 'required|string',
-            'allocatedshift' => 'required|string',
-            'currentsession' => 'required|string',
-            'systemnumber' => 'required|string',
+            'systemnumber' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
+            return response()->json(['response'=>$validator->errors()->keys()]);
         }
 
         $userdetailfetch = $this->user->where('id', $request->input('systemnumber'))->get();
@@ -77,108 +72,159 @@ class StudentController_sec extends Controller
         if (count($userdetailfetch) > 0) {
 
             if (count($addstudent_sec) > 0) {
-                return response()->json(['exist'=>'noaccount']);
+                return response()->json(['response'=>'noaccount']);
             }else{
-                return response()->json(['create'=>$userdetailfetch]);
+                return response()->json(['response'=>'success', 'userdetailfetch'=>$userdetailfetch]);
             }
             
         }else{
-            return response()->json(['noaccount'=>'noaccount']);
+            return response()->json(['response'=>'noaccount']);
         }
 
-        return response()->json($userdetailfetch, 200);
+        return response()->json(['response'=>'success', 'userdetailfetch'=>$userdetailfetch]);
     }
 
-    public function store(Request $request){
+    public function store(RegisterStudents $registerStudents, Request $request){
 
-        $validatedData = $request->validate([
-            'studentclassallocated' => 'required',
-            'schoolsession' => 'required',
-            'studentsectionallocated' => 'required',
-            'studenttype' => 'required',
-            'studentsystemnumber' => 'required',
-            'studentgender' => 'required',
-            'studentreligion' => 'required',
-            'fathersname' => 'required',
-            'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-            'mothersname' => 'required',
-            'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-            'dateofbirth' => 'required',
-            'bloodgroup' => 'required',
-            'studenthouse' => 'required',
-            'nationality' => 'required',
-            'studentclub' => 'required',
-            'studentaddress_sec' => 'required',
-            'admissionname' => 'required'
-        ]);
-        
-        $checkduplicate = $this->addstudent_sec->where('usernamesystem', $request->input('studentsystemnumber'))->get();
 
-        if (count($checkduplicate) > 0) {
-            return back()->with('error', 'Student already added');
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        if ($request->isRegistered == "2") {
+
+            $validator = Validator::make($request->all(),[
+                'studentclassallocated' => 'required',
+                'studentsectionallocated' => 'required',
+                'studenttype' => 'required',
+                'studentsystemnumber' => 'required',
+                'studentgender' => 'required',
+                'studentreligion' => 'required',
+                'fathersname' => 'required',
+                'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
+                'mothersname' => 'required',
+                'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
+                'dateofbirth' => 'required',
+                'studenthouse' => 'required',
+                'studentclub' => 'required',
+                'studentaddress_sec' => 'required',
+                'admissionname' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['response'=>$validator->errors()->keys()]);
+            }
+            
+            $checkduplicate = $this->addstudent_sec->where('usernamesystem', $request->input('studentsystemnumber'))->get();
+    
+            if (count($checkduplicate) > 0) {
+                return response()->json(['response'=>'already']);
+            }
+    
+    
+            $rollNumberProcess = $this->addstudent_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $request->input('studentclassallocated')])->get();
+    
+    
+                $a = array();
+    
+                for ($i=0; $i < count($rollNumberProcess); $i++) {
+                    
+                    $rollnumber = $rollNumberProcess[$i]['renumberschoolnew'];
+                    array_push($a, $rollnumber);
+                }
+    
+                if (count($a) > 0) {
+                    $maxrollnum = max($a);
+                    $newrolnumber = $maxrollnum + 1;
+                }else{
+                    $newrolnumber = '1';
+                }
+    
+    
+            $Addstudent = new Addstudent_sec();
+            $Addstudent->classid = $request->input('studentclassallocated');
+            $Addstudent->schoolid = Auth::user()->schoolid;
+            $Addstudent->usernamesystem = $request->input('studentsystemnumber');
+            $Addstudent->renumberschoolnew = $newrolnumber;
+            $Addstudent->nationality = $request->input('nationality');
+            $Addstudent->studentsection = $request->input('studentsectionallocated');
+            $Addstudent->schoolsession = $schooldetails->schoolsession;
+            $Addstudent->gender = $request->input('studentgender');
+            $Addstudent->studenthouse = $request->input('studenthouse');
+            $Addstudent->studentreligion = $request->input('studentreligion');
+            $Addstudent->bloodgroup = $request->input('bloodgroup');
+            $Addstudent->studentclub = $request->input('studentclub');
+            $Addstudent->studentshift = $request->input('studenttype');
+            $Addstudent->studentfathername = $request->input('fathersname');
+            $Addstudent->studentfathernumber = $request->input('fathersphonenumber');
+            $Addstudent->studentmothersname = $request->input('mothersname');
+            $Addstudent->studentmothersnumber = $request->input('mothersphonenumber');
+            $Addstudent->studentpresenthomeaddress = $request->input('studentaddress_sec');
+            $Addstudent->studentpermanenthomeaddress = $request->input('studentaddress_sec');
+            $Addstudent->dateOfBirth = $request->input('dateofbirth');
+            $Addstudent->sessionstatus = 0;
+            $Addstudent->admission_no = $request->admissionname;
+            $Addstudent->save();
+    
+            //asign student role
+    
+            $userId = $this->user->where('id', $request->input('studentsystemnumber'))->first();
+            $userIdFinal = $userId->id;
+    
+            //update schoolId field
+            $schoolIdUpdate = $this->user->find($userIdFinal);
+            $schoolIdUpdate->schoolid = Auth::user()->schoolid;;
+            $schoolIdUpdate->role = "Student";
+            $schoolIdUpdate->save();
+    
+            $user = User::find($request->input('studentsystemnumber'));
+    
+            $user->assignRole('Student');
+    
+            return response()->json(['response'=>'success']);
+
+        }else{
+
+            $validator = Validator::make($request->all(),[
+                'studentclassallocated' => 'required',
+                'studentsectionallocated' => 'required',
+                'studenttype' => 'required',
+                'studentgender' => 'required',
+                'studentreligion' => 'required',
+                'fathersname' => 'required',
+                'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
+                'mothersname' => 'required',
+                'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
+                'dateofbirth' => 'required',
+                'studenthouse' => 'required',
+                'studentclub' => 'required',
+                'studentaddress_sec' => 'required',
+                'admissionname' => 'required',
+                'firstname' => 'required',
+                'middlename' => 'required',
+                'lastname' => 'required',
+                'phonenumber' => 'required',
+                'email' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['response'=>$validator->errors()->keys()]);
+            }
+
+            $freshRegistration = $registerStudents->freshStudentRegistrationBySchool($request);
+
+            if ($freshRegistration == "success") {
+                return response()->json(['response'=>'success']);
+            }elseif($freshRegistration == "exist"){
+                return response()->json(['response'=>'exist']);
+            }    elseif($freshRegistration == "admission"){
+                return response()->json(['response'=>'admission']);
+            }else{
+                return response()->json(['errors'=>$freshRegistration]);
+            }
+
         }
 
 
-        $rollNumberProcess = $this->addstudent_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $request->input('studentclassallocated')])->get();
 
-
-            $a = array();
-
-            for ($i=0; $i < count($rollNumberProcess); $i++) {
-                
-                $rollnumber = $rollNumberProcess[$i]['renumberschoolnew'];
-                array_push($a, $rollnumber);
-            }
-
-            if (count($a) > 0) {
-                $maxrollnum = max($a);
-                $newrolnumber = $maxrollnum + 1;
-            }else{
-                $newrolnumber = '1';
-            }
-
-
-        $Addstudent = new Addstudent_sec();
-        $Addstudent->classid = $request->input('studentclassallocated');
-        $Addstudent->schoolid = Auth::user()->schoolid;
-        $Addstudent->usernamesystem = $request->input('studentsystemnumber');
-        $Addstudent->renumberschoolnew = $newrolnumber;
-        $Addstudent->nationality = $request->input('nationality');
-        $Addstudent->studentsection = $request->input('studentsectionallocated');
-        $Addstudent->schoolsession = $request->input('schoolsession');
-        $Addstudent->gender = $request->input('studentgender');
-        $Addstudent->studenthouse = $request->input('studenthouse');
-        $Addstudent->studentreligion = $request->input('studentreligion');
-        $Addstudent->bloodgroup = $request->input('bloodgroup');
-        $Addstudent->studentclub = $request->input('studentclub');
-        $Addstudent->studentshift = $request->input('studenttype');
-        $Addstudent->studentfathername = $request->input('fathersname');
-        $Addstudent->studentfathernumber = $request->input('fathersphonenumber');
-        $Addstudent->studentmothersname = $request->input('mothersname');
-        $Addstudent->studentmothersnumber = $request->input('mothersphonenumber');
-        $Addstudent->studentpresenthomeaddress = $request->input('studentaddress_sec');
-        $Addstudent->studentpermanenthomeaddress = $request->input('studentaddress_sec');
-        $Addstudent->dateOfBirth = $request->input('dateofbirth');
-        $Addstudent->sessionstatus = 0;
-        $Addstudent->admission_no = $request->admissionname;
-        $Addstudent->save();
-
-        //asign student role
-
-        $userId = $this->user->where('id', $request->input('studentsystemnumber'))->first();
-        $userIdFinal = $userId->id;
-
-        //update schoolId field
-        $schoolIdUpdate = $this->user->find($userIdFinal);
-        $schoolIdUpdate->schoolid = Auth::user()->schoolid;;
-        $schoolIdUpdate->role = "Student";
-        $schoolIdUpdate->save();
-
-        $user = User::find($request->input('studentsystemnumber'));
-
-        $user->assignRole('Student');
-
-        return back()->with('success', 'Student added successfully');
     }
 
     public function viewStudentSingleClass(Request $request){

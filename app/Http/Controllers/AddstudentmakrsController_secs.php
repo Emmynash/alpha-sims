@@ -14,6 +14,7 @@ use App\ResultAverage;
 use App\Addstudent_sec;
 use App\PromotionAverage_sec;
 use App\Addteachers_sec;
+use App\SubjectScoreAllocation;
 use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -406,7 +407,7 @@ class AddstudentmakrsController_secs extends Controller
                             $updatestudentresult->ca3 = $ca3marks;
                             $updatestudentresult->totalmarks = $totalmarks;
                             $updatestudentresult->grades = $gradeFInal;
-                            $updatestudentresult->points = $point;
+                            $updatestudentresult->points = (int)$point;
                             $updatestudentresult->save();
 
                             
@@ -578,8 +579,10 @@ class AddstudentmakrsController_secs extends Controller
 
         $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
 
+        $subjectScore = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
 
-        return response()->json(['classlist'=>$classlist, 'subjects'=>$subjects, 'schoolsection'=>$schoolsection, 'schooldetails'=>$schooldetails]);
+
+        return response()->json(['classlist'=>$classlist, 'subjects'=>$subjects, 'schoolsection'=>$schoolsection, 'schooldetails'=>$schooldetails, 'subjectScore'=>$subjectScore]);
         
     }
 
