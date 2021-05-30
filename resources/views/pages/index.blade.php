@@ -422,11 +422,11 @@
 					<div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-12">
 						<div class="section-title default text-center">
 							<div class="section-top">
-								<h1><span>Project</span><b>Our Works</b></h1>
+								<h1><span>Features</span><b>Our most important features</b></h1>
 							</div>
 							<div class="section-bottom">
 								<div class="text">
-									<p>Lorem Ipsum Dolor Sit Amet, Conse Ctetur Adipiscing Elit, Sed Do Eiusmod Tempor Ares Incididunt Utlabore. Dolore Magna Ones Baliqua</p>
+									{{-- <p>Lorem Ipsum Dolor Sit Amet, Conse Ctetur Adipiscing Elit, Sed Do Eiusmod Tempor Ares Incididunt Utlabore. Dolore Magna Ones Baliqua</p> --}}
 								</div>
 							</div>
 						</div>
