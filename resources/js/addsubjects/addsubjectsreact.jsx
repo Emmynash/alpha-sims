@@ -31,6 +31,7 @@ function AddSubject() {
     const [sectionElectives, setSectionElectives] = useState(0)
     const [numberElectives, setNumberElectives] = useState(0)
     const [getElectivesSettingNumber, setgetElectivesSettingNumber] = useState([])
+    const [isLoading, setisLoading] = useState(false)
     const alert = useAlert()
 
     useEffect(() => {
@@ -43,10 +44,11 @@ function AddSubject() {
     }, []);
 
     function fetchSchoolDetails() {
-
+        setisLoading(true)
         axios.get('/get_all_subjects').then(response=> {
             console.log(response.data.subjectScores);
             // console.log(setJ)
+            setisLoading(false)
             setClasslist(response.data.classesAll)
             setsubjectcount(response.data.allsubjects.length)
             setallsubjects(response.data.allsubjects)
@@ -73,6 +75,7 @@ function AddSubject() {
 
         }).catch(e=>{
             console.log(e);
+            setisLoading(false)
         });
 
     } 
@@ -146,7 +149,7 @@ function AddSubject() {
     function addSubjectsMain(){
 
         if (selectedclass !="" && subjectName != "" && subjectType != "" && subjectSectione) {
-
+            setisLoading(true)
             const data = new FormData()
             data.append("subjecttype_sec", subjectType)
             data.append("class_sec", selectedclass)
@@ -158,7 +161,7 @@ function AddSubject() {
                 }
             }).then(response=>{
                 console.log(response)
-
+                setisLoading(false)
                 if (response.data.response == "fields") {
                     myalert('Some fields are empty', 'error');
                 }else if(response.data.response == "duplicate"){
@@ -176,6 +179,7 @@ function AddSubject() {
 
             }).catch(e=>{
                 console.log(e)
+                setisLoading(false)
     
             })
             
@@ -187,7 +191,7 @@ function AddSubject() {
     }
 
     function updateScoresOrAdd() {
-
+        setisLoading(true)
         const data = new FormData()
         data.append("examsfull", examsmark)
         data.append("ca1full", ca1mark)
@@ -199,6 +203,7 @@ function AddSubject() {
             }
         }).then(response=>{
             console.log(response)
+            setisLoading(false)
 
 
             if(response.data.response == "success"){
@@ -213,13 +218,14 @@ function AddSubject() {
 
         }).catch(e=>{
             console.log(e)
+            setisLoading(false)
 
         })
         
     }
 
     function addNumberOfEllectives() {
-
+        setisLoading(true)
         const data = new FormData()
         data.append("classid", classElectives)
         data.append("sectionid", sectionElectives)
@@ -230,7 +236,7 @@ function AddSubject() {
             }
         }).then(response=>{
             console.log(response)
-
+            setisLoading(false)
 
             if(response.data.response == "success"){
 
@@ -247,13 +253,18 @@ function AddSubject() {
 
         }).catch(e=>{
             console.log(e)
-
+            setisLoading(false)
         })
         
     }
 
     return(
-        <div className="container">
+        <div className="">
+
+            {isLoading ? <div style={{ position:'absolute', top:'0', bottom:'0', left:'0', right:'0', background:'white', opacity:'0.4', zIndex:'1000' }}>
+
+            </div>:""}
+
             <div>
                 <div className='alert alert-info'>
                     <i style={{ fontStyle:'normal', fontSize:'13px' }}>Add subjects for each class and section. Click on settings to set the number of electives allowed for each class</i>
@@ -261,6 +272,11 @@ function AddSubject() {
                 <button className="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-default">Add subject</button>
                 <button style={{ marginLeft:'5px' }} className="btn btn-sm btn-warning" data-toggle="modal" data-target="#addelectivesmodal">Settings</button>
             </div>
+
+            {isLoading ? <div className="text-center">
+                <div class="spinner-border"></div>
+            </div>:''}
+
             <br/>
             <div className="row">
                 <div className="col-12 col-md-4">

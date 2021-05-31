@@ -69397,6 +69397,11 @@ function AddSubject() {
       getElectivesSettingNumber = _useState48[0],
       setgetElectivesSettingNumber = _useState48[1];
 
+  var _useState49 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState50 = _slicedToArray(_useState49, 2),
+      isLoading = _useState50[0],
+      setisLoading = _useState50[1];
+
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
@@ -69405,9 +69410,11 @@ function AddSubject() {
   }, []);
 
   function fetchSchoolDetails() {
+    setisLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_all_subjects').then(function (response) {
       console.log(response.data.subjectScores); // console.log(setJ)
 
+      setisLoading(false);
       setClasslist(response.data.classesAll);
       setsubjectcount(response.data.allsubjects.length);
       setallsubjects(response.data.allsubjects);
@@ -69433,6 +69440,7 @@ function AddSubject() {
       }
     })["catch"](function (e) {
       console.log(e);
+      setisLoading(false);
     });
   }
 
@@ -69504,6 +69512,7 @@ function AddSubject() {
 
   function addSubjectsMain() {
     if (selectedclass != "" && subjectName != "" && subjectType != "" && subjectSectione) {
+      setisLoading(true);
       var data = new FormData();
       data.append("subjecttype_sec", subjectType);
       data.append("class_sec", selectedclass);
@@ -69515,6 +69524,7 @@ function AddSubject() {
         }
       }).then(function (response) {
         console.log(response);
+        setisLoading(false);
 
         if (response.data.response == "fields") {
           myalert('Some fields are empty', 'error');
@@ -69531,6 +69541,7 @@ function AddSubject() {
         }
       })["catch"](function (e) {
         console.log(e);
+        setisLoading(false);
       });
     } else {
       myalert('All fields are required', 'error');
@@ -69538,6 +69549,7 @@ function AddSubject() {
   }
 
   function updateScoresOrAdd() {
+    setisLoading(true);
     var data = new FormData();
     data.append("examsfull", examsmark);
     data.append("ca1full", ca1mark);
@@ -69549,6 +69561,7 @@ function AddSubject() {
       }
     }).then(function (response) {
       console.log(response);
+      setisLoading(false);
 
       if (response.data.response == "success") {
         setSubjectName(''); // setSubjectType('')
@@ -69561,10 +69574,12 @@ function AddSubject() {
       }
     })["catch"](function (e) {
       console.log(e);
+      setisLoading(false);
     });
   }
 
   function addNumberOfEllectives() {
+    setisLoading(true);
     var data = new FormData();
     data.append("classid", classElectives);
     data.append("sectionid", sectionElectives);
@@ -69575,6 +69590,7 @@ function AddSubject() {
       }
     }).then(function (response) {
       console.log(response);
+      setisLoading(false);
 
       if (response.data.response == "success") {
         fetchSchoolDetails();
@@ -69587,12 +69603,24 @@ function AddSubject() {
       }
     })["catch"](function (e) {
       console.log(e);
+      setisLoading(false);
     });
   }
 
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "container"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: ""
+    }, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      style: {
+        position: 'absolute',
+        top: '0',
+        bottom: '0',
+        left: '0',
+        right: '0',
+        background: 'white',
+        opacity: '0.4',
+        zIndex: '1000'
+      }
+    }) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "alert alert-info"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       style: {
@@ -69610,7 +69638,11 @@ function AddSubject() {
       className: "btn btn-sm btn-warning",
       "data-toggle": "modal",
       "data-target": "#addelectivesmodal"
-    }, "Settings")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "Settings")), isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "text-center"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      "class": "spinner-border"
+    })) : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-4"
