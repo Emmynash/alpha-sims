@@ -604,3 +604,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::post('/fees_part_payment', 'AccountController@feesPartPayment')->name('fees_part_payment');
 
 });
+
+Route::get('/foo', function () {
+    Artisan::call('storage:link');
+});
