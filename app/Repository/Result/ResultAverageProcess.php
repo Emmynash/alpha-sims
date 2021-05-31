@@ -14,6 +14,7 @@ use App\ResultAverage;
 use App\Addstudent_sec;
 use App\PromotionAverage_sec;
 use App\Addteachers_sec;
+use App\ResultReadyModel;
 use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,21 +26,21 @@ class ResultAverageProcess{
     {
 
 
-        
         $classid = $request->classid;
+        $section = $request->section_id;
         $schooldata = Addpost::where('id', Auth::user()->schoolid)->first();
         $term = $schooldata->term;
         $schoolsession = $schooldata->schoolsession;
 
 
 
-        $checkaverage = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession])->get();
+        $checkaverage = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->get();
     
         if (count($checkaverage) > 0) {
             return 'already';
         }
     
-        $studentregnumberarray = Addstudent_sec::where(['classid'=>$classid, 'schoolsession'=>$schoolsession])->pluck('id'); // get id/regno of students in class
+        $studentregnumberarray = Addstudent_sec::where(['classid'=>$classid, 'schoolsession'=>$schoolsession, 'studentsection'=>$section])->pluck('id'); // get id/regno of students in class
     
         // return response()->json(['studentregnumberarray'=>$studentregnumberarray]);
     
@@ -72,10 +73,11 @@ class ResultAverageProcess{
             $resultAverageAdd->sumofmarks = $coursesum;
             $resultAverageAdd->average = $averagevalue;
             $resultAverageAdd->position = "0";
+            $resultAverageAdd->section_id = $section;
             $resultAverageAdd->save();  
         }
     
-            $processposition = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession])->orderBy('average', 'desc')->get();
+            $processposition = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->orderBy('average', 'desc')->get();
             
             $positiondeterminantarray = array();
     
@@ -95,12 +97,17 @@ class ResultAverageProcess{
             $updateposition->position = $positiongotten + 1;
             $updateposition->save();
         }
+
+        //change status of result ready model 
+        $resultReady = ResultReadyModel::find($request->notif_id);
+        $resultReady->status = 1;
+        $resultReady->save();
         
         if ($request->input('processterm') == "3") {
             
             for ($i=0; $i < count($studentregnumberarray); $i++) { 
     
-                $fetchAllStudentAverageMarkAndProcess = ResultAverage::where(['regno'=> $studentregnumberarray[$i], 'session'=>$schoolsession])->sum('average');
+                $fetchAllStudentAverageMarkAndProcess = ResultAverage::where(['regno'=> $studentregnumberarray[$i], 'session'=>$schoolsession, 'section_id'=>$section])->sum('average');
     
                 $promomarks = $fetchAllStudentAverageMarkAndProcess / 3;
     

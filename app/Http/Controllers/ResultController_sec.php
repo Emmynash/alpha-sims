@@ -351,7 +351,6 @@ class ResultController_sec extends Controller
     public function generateResultMain(Request $request, ProcessClassAverage $processClassAverage, ResultAverageProcess $resultAverageProcess)
     {
 
-
         //--------------------------------------------------------------------------------
         //                                 process class average
         //--------------------------------------------------------------------------------
@@ -373,10 +372,10 @@ class ResultController_sec extends Controller
             $getReadyResults = ResultReadyModel::join('classlist_secs', 'classlist_secs.id','=','result_ready_models.classid')
                             ->join('addsection_secs', 'addsection_secs.id','=','result_ready_models.sectionid')
                             ->where('result_ready_models.schoolid', Auth::user()->schoolid)
-                            ->select('result_ready_models.*', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
+                            ->select('result_ready_models.*', 'classlist_secs.classname', 'classlist_secs.id as classid', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')->get();
 
             return response()->json(['getReadyResults' => $getReadyResults]);
-            
+
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['getReadyResults' => $th]);

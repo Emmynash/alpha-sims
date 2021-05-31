@@ -69374,8 +69374,28 @@ function GenerateResult() {
     });
   }
 
+  function generateResultMain(classidMain, sectionidMain, notif_id) {
+    setisLoading(true);
+    var data = new FormData();
+    data.append("classid", classidMain);
+    data.append('section_id', sectionidMain);
+    data.append('notif_id', notif_id);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/result/generate_result_main", data, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+      setisLoading(false);
+      getReadyResult();
+    })["catch"](function (e) {
+      console.log(e);
+      setisLoading(false);
+    });
+  }
+
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      "class": "text-center"
+      className: "text-center"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       "class": "spinner-border"
     })) : '', isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -69428,14 +69448,17 @@ function GenerateResult() {
             fontStyle: 'normal',
             fontSize: '13px'
           }
-        }, "Date Generated: ", d.status != 0 ? d.created_at : "Not Generated")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, "Date Generated: ", d.status != 0 ? d.updated_at : "Not Generated")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "form-group",
           style: {
             marginRight: '10px'
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-          className: "btn btn-sm btn-success badge"
-        }, "Generate")))
+          onClick: function onClick() {
+            return generateResultMain(d.classid, d.sectionid, d.id);
+          },
+          className: d.status != 0 ? "btn btn-sm btn-warning badge" : "btn btn-sm btn-success badge"
+        }, " ", d.status != 0 ? "Generated" : "Generate")))
       );
     })))))
   );
