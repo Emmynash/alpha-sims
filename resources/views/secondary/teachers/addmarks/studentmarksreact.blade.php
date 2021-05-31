@@ -11,7 +11,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Add Teachers</h1>
+            <h1 class="m-0 text-dark">Add Marks</h1>
             {{-- <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Addsubjects"
                 data-content="On this module, you are required to enter all subjects offered by your school according to the classes you have.">Need help?</button> --}}
                     
@@ -19,7 +19,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Add Teachers</li>
+              <li class="breadcrumb-item active">Add Marks</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -32,7 +32,9 @@
       <div class="container-fluid" id="addmarksroot">
 
 
-
+        <div class="text-center">
+          <div class="spinner-border"></div>
+        </div>
   
       </div><!-- /.container-fluid -->
     </section>

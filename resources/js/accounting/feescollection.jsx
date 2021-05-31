@@ -128,6 +128,8 @@ function FeesCollection() {
                 myalert('Does not match any record', 'error')
             }else{
 
+
+
                 setStudentDetails(response.data.data)
                 setpaymentamount(response.data.feesummary)
                 settotalfees(response.data.totalfees)

@@ -17,6 +17,7 @@ function AddMarks() {
     const [selectedsubject, setselectedsubject] = useState('')
     const [selectedsection, setselectedsection] = useState('')
     const [studentlist, setStudentList] = useState([])
+    const [isLoading, seIsLoading] = useState(false)
     const alert = useAlert()
     
     const [examsscore, setexamsscore] = useState(0)
@@ -61,10 +62,11 @@ function AddMarks() {
     }
 
     function fetchSchoolDetails() {
-
+        seIsLoading(true)
         axios.get('/get_school_basic_details').then(response=> {
             console.log(response);
             // console.log(setJ)
+            seIsLoading(false)
             setClasslist(response.data.classlist)
             // setSubjects(response.data.subjects)
             // setschoolsection(response.data.schoolsection)
@@ -91,6 +93,7 @@ function AddMarks() {
 
         }).catch(e=>{
             console.log(e);
+            seIsLoading(false)
         });
 
     } 
@@ -119,24 +122,29 @@ function AddMarks() {
 
     function getSubjectForClass(classid){
         setSubjects([])
+        seIsLoading(true)
         axios.get('/fetch_students_marks/'+classid).then(response=> {
             console.log(response);
             // console.log(setJ)
             // setClasslist(response.data.classlist)
+            seIsLoading(false)
             setSubjects(response.data.subjectlist)
 
         }).catch(e=>{
             console.log(e);
+            seIsLoading(false)
         });
 
     }
 
     function getSection(subjectid){
         setschoolsection([])
+        seIsLoading(true)
         axios.get('/fetch_student_sections/'+subjectid).then(response=> {
             console.log(response);
             // console.log(setJ)
             // setClasslist(response.data.classlist)
+            seIsLoading(false)
             if (response.data.schoolsection == "notallocatedtoyou") {
                 myalert('Subject not allocated to you', 'error')
             }else{
@@ -147,11 +155,13 @@ function AddMarks() {
 
         }).catch(e=>{
             console.log(e);
+            seIsLoading(false)
         });
 
     }
 
     function fetchAllStudentInClass(){
+        seIsLoading(true)
         const data = new FormData()
         data.append("selected_class", selectedClass)
         data.append("selected_subject", selectedsubject)
@@ -164,12 +174,18 @@ function AddMarks() {
             }
         }).then(response=>{
             console.log(response)
-            setStudentList(response.data.studentlist)
+            seIsLoading(false)
+            if (response.data.response == "feilds") {
+                myalert('All fields required', 'error')
+            }else{
+                myalert('success', 'success')
+                setStudentList(response.data.studentlist)
+            }
 
 
         }).catch(e=>{
             console.log(e)
-
+            seIsLoading(false)
         })
     }
 
@@ -251,6 +267,7 @@ function AddMarks() {
 
 
     function addStudentMarks(){
+        seIsLoading(true)
         const data = new FormData()
         data.append("classidmain", selectedClass)
         data.append("currentsessionform", schoolschool)
@@ -270,18 +287,27 @@ function AddMarks() {
         }).then(response=>{
             console.log(response)
             // setStudentList(response.data.studentlist)
+            seIsLoading(false)
             fetchAllStudentInClass()
 
 
         }).catch(e=>{
             console.log(e)
-
+            seIsLoading(false)
         })
     }
 
 
     return(
         <div>
+            {isLoading ? <div style={{ zIndex:'1000', position:'absolute', top:'0', bottom:'0', left:'0', right:'0', background:'white', opacity:'0.4' }}>
+
+            </div>:""}
+            {isLoading ? <div>
+                <div class="text-center">
+                    <div class="spinner-border"></div>
+                </div>
+            </div>:""}
             <div className="card">
                 <div className="row" style={{ margin:'10px' }}> 
                     <div className="col-12 col-md-4">

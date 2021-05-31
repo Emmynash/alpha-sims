@@ -118,7 +118,7 @@ class AddstudentmakrsController_secs extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
+            return response()->json(['response'=>"feilds"]);
         }
 
         $session = $request->input('currentsession');

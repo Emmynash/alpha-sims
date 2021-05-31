@@ -69322,77 +69322,82 @@ function AddMarks() {
       studentlist = _useState18[0],
       setStudentList = _useState18[1];
 
-  var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
-
-  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState20 = _slicedToArray(_useState19, 2),
-      examsscore = _useState20[0],
-      setexamsscore = _useState20[1];
+      isLoading = _useState20[0],
+      seIsLoading = _useState20[1];
+
+  var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
 
   var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState22 = _slicedToArray(_useState21, 2),
-      ca1score = _useState22[0],
-      setca1score = _useState22[1];
+      examsscore = _useState22[0],
+      setexamsscore = _useState22[1];
 
   var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState24 = _slicedToArray(_useState23, 2),
-      ca2score = _useState24[0],
-      setca2score = _useState24[1];
+      ca1score = _useState24[0],
+      setca1score = _useState24[1];
 
   var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState26 = _slicedToArray(_useState25, 2),
-      ca3score = _useState26[0],
-      setca3score = _useState26[1];
+      ca2score = _useState26[0],
+      setca2score = _useState26[1];
 
-  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState28 = _slicedToArray(_useState27, 2),
-      studentId = _useState28[0],
-      setStudentId = _useState28[1];
+      ca3score = _useState28[0],
+      setca3score = _useState28[1];
 
   var _useState29 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState30 = _slicedToArray(_useState29, 2),
-      markid = _useState30[0],
-      setmarkid = _useState30[1];
+      studentId = _useState30[0],
+      setStudentId = _useState30[1];
 
-  var _useState31 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState31 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState32 = _slicedToArray(_useState31, 2),
-      examsstatus = _useState32[0],
-      setexamsstatus = _useState32[1];
+      markid = _useState32[0],
+      setmarkid = _useState32[1];
 
   var _useState33 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState34 = _slicedToArray(_useState33, 2),
-      ca1status = _useState34[0],
-      setca1status = _useState34[1];
+      examsstatus = _useState34[0],
+      setexamsstatus = _useState34[1];
 
   var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState36 = _slicedToArray(_useState35, 2),
-      ca2status = _useState36[0],
-      setca2status = _useState36[1];
+      ca1status = _useState36[0],
+      setca1status = _useState36[1];
 
   var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState38 = _slicedToArray(_useState37, 2),
-      ca3status = _useState38[0],
-      setca3status = _useState38[1];
+      ca2status = _useState38[0],
+      setca2status = _useState38[1];
 
   var _useState39 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState40 = _slicedToArray(_useState39, 2),
-      examsmark = _useState40[0],
-      setExamsMark = _useState40[1];
+      ca3status = _useState40[0],
+      setca3status = _useState40[1];
 
   var _useState41 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState42 = _slicedToArray(_useState41, 2),
-      ca1mark = _useState42[0],
-      setCa1Mark = _useState42[1];
+      examsmark = _useState42[0],
+      setExamsMark = _useState42[1];
 
   var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState44 = _slicedToArray(_useState43, 2),
-      ca2mark = _useState44[0],
-      setCa2Mark = _useState44[1];
+      ca1mark = _useState44[0],
+      setCa1Mark = _useState44[1];
 
   var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState46 = _slicedToArray(_useState45, 2),
-      ca3mark = _useState46[0],
-      setCa3Mark = _useState46[1];
+      ca2mark = _useState46[0],
+      setCa2Mark = _useState46[1];
+
+  var _useState47 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState48 = _slicedToArray(_useState47, 2),
+      ca3mark = _useState48[0],
+      setCa3Mark = _useState48[1];
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
@@ -69417,9 +69422,11 @@ function AddMarks() {
   }
 
   function fetchSchoolDetails() {
+    seIsLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_school_basic_details').then(function (response) {
       console.log(response); // console.log(setJ)
 
+      seIsLoading(false);
       setClasslist(response.data.classlist); // setSubjects(response.data.subjects)
       // setschoolsection(response.data.schoolsection)
 
@@ -69443,6 +69450,7 @@ function AddMarks() {
       }
     })["catch"](function (e) {
       console.log(e);
+      seIsLoading(false);
     });
   }
 
@@ -69470,21 +69478,27 @@ function AddMarks() {
 
   function getSubjectForClass(classid) {
     setSubjects([]);
+    seIsLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetch_students_marks/' + classid).then(function (response) {
       console.log(response); // console.log(setJ)
       // setClasslist(response.data.classlist)
 
+      seIsLoading(false);
       setSubjects(response.data.subjectlist);
     })["catch"](function (e) {
       console.log(e);
+      seIsLoading(false);
     });
   }
 
   function getSection(subjectid) {
     setschoolsection([]);
+    seIsLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetch_student_sections/' + subjectid).then(function (response) {
       console.log(response); // console.log(setJ)
       // setClasslist(response.data.classlist)
+
+      seIsLoading(false);
 
       if (response.data.schoolsection == "notallocatedtoyou") {
         myalert('Subject not allocated to you', 'error');
@@ -69493,10 +69507,12 @@ function AddMarks() {
       }
     })["catch"](function (e) {
       console.log(e);
+      seIsLoading(false);
     });
   }
 
   function fetchAllStudentInClass() {
+    seIsLoading(true);
     var data = new FormData();
     data.append("selected_class", selectedClass);
     data.append("selected_subject", selectedsubject);
@@ -69509,9 +69525,17 @@ function AddMarks() {
       }
     }).then(function (response) {
       console.log(response);
-      setStudentList(response.data.studentlist);
+      seIsLoading(false);
+
+      if (response.data.response == "feilds") {
+        myalert('All fields required', 'error');
+      } else {
+        myalert('success', 'success');
+        setStudentList(response.data.studentlist);
+      }
     })["catch"](function (e) {
       console.log(e);
+      seIsLoading(false);
     });
   }
 
@@ -69584,6 +69608,7 @@ function AddMarks() {
   }
 
   function addStudentMarks() {
+    seIsLoading(true);
     var data = new FormData();
     data.append("classidmain", selectedClass);
     data.append("currentsessionform", schoolschool);
@@ -69603,13 +69628,30 @@ function AddMarks() {
     }).then(function (response) {
       console.log(response); // setStudentList(response.data.studentlist)
 
+      seIsLoading(false);
       fetchAllStudentInClass();
     })["catch"](function (e) {
       console.log(e);
+      seIsLoading(false);
     });
   }
 
-  return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      style: {
+        zIndex: '1000',
+        position: 'absolute',
+        top: '0',
+        bottom: '0',
+        left: '0',
+        right: '0',
+        background: 'white',
+        opacity: '0.4'
+      }
+    }) : "", isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      "class": "text-center"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      "class": "spinner-border"
+    }))) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "card"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row",
