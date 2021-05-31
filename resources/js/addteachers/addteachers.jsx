@@ -17,6 +17,7 @@ const AddTeachers=()=>{
     const [classid, setclassid] = useState(0)
     const [subjectid, setSubjectId] = useState(0)
     const [sectionmain, setSection] = useState('')
+    const [isLoading, setisLoading] = useState(false)
     const alert = useAlert()
 
     useEffect(() => {
@@ -29,10 +30,11 @@ const AddTeachers=()=>{
     }, []);
 
     function fetchPageDetails() {
-
+        setisLoading(true)
         axios.get('/get_teacher_page_details').then(response=> {
             console.log(response);
             // console.log(setJ)
+            setisLoading(false)
             setAllClasses(response.data.classesAll)
             setallsubjects(response.data.addsubject_sec)
             setSection_sec(response.data.addsection_sec)
@@ -42,6 +44,7 @@ const AddTeachers=()=>{
 
         }).catch(e=>{
             console.log(e);
+            setisLoading(false)
         });
 
     } 
@@ -78,8 +81,10 @@ const AddTeachers=()=>{
     function confirmTeachersReg() {
 
         if (systemNumber !="") {
+            setisLoading(true)
             setisloadingTeacher(true)
             setverified(false)
+            
             const data = new FormData()
             data.append("mastersystemnumber", systemNumber)
             axios.post("/teacher_sec_confirm", data, {
@@ -88,7 +93,7 @@ const AddTeachers=()=>{
                 }
             }).then(response=>{
                 console.log(response)
-
+                setisLoading(false)
                 if (response.data.response == "noaccount") {
                     myalert('no account was found', 'error');
                     setisloadingTeacher(false)
@@ -104,6 +109,7 @@ const AddTeachers=()=>{
                 console.log(e)
                 setisloadingTeacher(false)
                 closeModal()
+                setisLoading(false)
                 
             })
             
@@ -120,12 +126,12 @@ const AddTeachers=()=>{
         setSystemNumber('')
         setTeacherdetails([])
         setverified(false)
-    }
+    } // un_asign_a_subject
 
     function asignSubjectToTeacher() {
 
         if (systemNumber !="" && subjectid != 0 && systemNumber !=0 && classid !=0) {
-
+            setisLoading(true)
             const data = new FormData()
             data.append("subject_id", subjectid)
             data.append("user_id", systemNumber)
@@ -137,7 +143,7 @@ const AddTeachers=()=>{
                 }
             }).then(response=>{
                 console.log(response)
-
+                setisLoading(false)
                 if (response.data.response == "fields") {
                     myalert('All fields are required', 'error');
 
@@ -153,7 +159,7 @@ const AddTeachers=()=>{
 
             }).catch(e=>{
                 console.log(e)
-                
+                setisLoading(false)
             })
             
         }else{
@@ -161,6 +167,46 @@ const AddTeachers=()=>{
             myalert('All fields are required', 'error');
 
         }
+        
+    }
+
+    function unasignSubjectToTeacher(tableid) {
+
+        // if (systemNumber !="" && subjectid != 0 && systemNumber !=0 && classid !=0) {
+            setisLoading(true)
+            const data = new FormData()
+            data.append("tableid", tableid)
+            axios.post("/un_asign_a_subject", data, {
+                headers:{
+                    "Content-type": "application/json"
+                }
+            }).then(response=>{
+                console.log(response)
+                setisLoading(false)
+                if (response.data.response == "success") {
+                    fetchPageDetails()
+                    myalert('Subject success fully unasigned', 'success');
+
+                }else if(response.data.response == "error"){
+                    myalert('Unknown Error', 'error');
+                }
+                else if(response.data.response == "success"){
+                    myalert('Unknown Error', 'error');
+
+                    
+
+                }
+
+            }).catch(e=>{
+                console.log(e)
+                setisLoading(false)
+            })
+            
+        // }else{
+
+        //     myalert('All fields are required', 'error');
+
+        // }
         
     }
 
@@ -173,7 +219,16 @@ const AddTeachers=()=>{
 
 
     return(
-        <div className="container">
+        <div className="">
+
+        {isLoading ? <div class="text-center">
+                <div class="spinner-border"></div>
+        </div>:""}
+
+            {isLoading ? <div style={{ position:'absolute', top:'0', bottom:'0', left:'0', right:'0', background:'white', opacity:'0.4', zIndex:'1000' }}>
+
+            </div>:""}
+
             <div>
                 <button className="btn btn-sm btn-info" data-toggle="modal" data-target="#asign-subject">Add Teacher</button>
             </div>
@@ -222,7 +277,7 @@ const AddTeachers=()=>{
                                         <td>{teachers.classname}</td>
                                         <td>{teachers.sectionname == null ? "General": teachers.sectionname}</td>
                                         <td>
-                                            <button className="btn btn-sm btn-danger badge">Unasign</button>
+                                            <button onClick={()=>unasignSubjectToTeacher(teachers.id)} className="btn btn-sm btn-danger badge">Unasign</button>
                                         </td>
                                     </tr>
 

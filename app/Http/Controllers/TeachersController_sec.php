@@ -184,6 +184,22 @@ class TeachersController_sec extends Controller
         return response()->json(['response'=>'done']);
     }
 
+
+    public function unAsignASubject(Request $request)
+    {
+
+        try {
+
+            $getSubjectToRemoveFromTeacher = TeacherSubjects::find($request->tableid);
+            $getSubjectToRemoveFromTeacher->delete();
+            return response()->json(['response'=>'success']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>'error']);
+        }
+        
+    }
+
     public function allocateSubjectTeacher(Request $request){
 
 

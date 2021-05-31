@@ -32,7 +32,9 @@
       <div class="container-fluid" id="addteachersroot">
 
 
-
+        <div class="text-center">
+          <div class="spinner-border"></div>
+        </div>
   
       </div><!-- /.container-fluid -->
     </section>

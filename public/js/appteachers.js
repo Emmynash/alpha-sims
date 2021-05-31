@@ -69332,6 +69332,11 @@ var AddTeachers = function AddTeachers() {
       sectionmain = _useState22[0],
       setSection = _useState22[1];
 
+  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState24 = _slicedToArray(_useState23, 2),
+      isLoading = _useState24[0],
+      setisLoading = _useState24[1];
+
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchPageDetails();
@@ -69340,15 +69345,18 @@ var AddTeachers = function AddTeachers() {
   }, []);
 
   function fetchPageDetails() {
+    setisLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_teacher_page_details').then(function (response) {
       console.log(response); // console.log(setJ)
 
+      setisLoading(false);
       setAllClasses(response.data.classesAll);
       setallsubjects(response.data.addsubject_sec);
       setSection_sec(response.data.addsection_sec);
       setAllTeachersWithSubject(response.data.getAllTeachersWithSubject);
     })["catch"](function (e) {
       console.log(e);
+      setisLoading(false);
     });
   }
 
@@ -69386,6 +69394,7 @@ var AddTeachers = function AddTeachers() {
 
   function confirmTeachersReg() {
     if (systemNumber != "") {
+      setisLoading(true);
       setisloadingTeacher(true);
       setverified(false);
       var data = new FormData();
@@ -69396,6 +69405,7 @@ var AddTeachers = function AddTeachers() {
         }
       }).then(function (response) {
         console.log(response);
+        setisLoading(false);
 
         if (response.data.response == "noaccount") {
           myalert('no account was found', 'error');
@@ -69411,6 +69421,7 @@ var AddTeachers = function AddTeachers() {
         console.log(e);
         setisloadingTeacher(false);
         closeModal();
+        setisLoading(false);
       });
     } else {
       myalert('All fields are required', 'error');
@@ -69421,10 +69432,12 @@ var AddTeachers = function AddTeachers() {
     setSystemNumber('');
     setTeacherdetails([]);
     setverified(false);
-  }
+  } // un_asign_a_subject
+
 
   function asignSubjectToTeacher() {
     if (systemNumber != "" && subjectid != 0 && systemNumber != 0 && classid != 0) {
+      setisLoading(true);
       var data = new FormData();
       data.append("subject_id", subjectid);
       data.append("user_id", systemNumber);
@@ -69436,6 +69449,7 @@ var AddTeachers = function AddTeachers() {
         }
       }).then(function (response) {
         console.log(response);
+        setisLoading(false);
 
         if (response.data.response == "fields") {
           myalert('All fields are required', 'error');
@@ -69447,10 +69461,40 @@ var AddTeachers = function AddTeachers() {
         }
       })["catch"](function (e) {
         console.log(e);
+        setisLoading(false);
       });
     } else {
       myalert('All fields are required', 'error');
     }
+  }
+
+  function unasignSubjectToTeacher(tableid) {
+    // if (systemNumber !="" && subjectid != 0 && systemNumber !=0 && classid !=0) {
+    setisLoading(true);
+    var data = new FormData();
+    data.append("tableid", tableid);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/un_asign_a_subject", data, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+      setisLoading(false);
+
+      if (response.data.response == "success") {
+        fetchPageDetails();
+        myalert('Subject success fully unasigned', 'success');
+      } else if (response.data.response == "error") {
+        myalert('Unknown Error', 'error');
+      } else if (response.data.response == "success") {
+        myalert('Unknown Error', 'error');
+      }
+    })["catch"](function (e) {
+      console.log(e);
+      setisLoading(false);
+    }); // }else{
+    //     myalert('All fields are required', 'error');
+    // }
   }
 
   var formatter = new Intl.DateTimeFormat("en-GB", {
@@ -69459,8 +69503,23 @@ var AddTeachers = function AddTeachers() {
     day: "2-digit"
   });
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "container"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: ""
+    }, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      "class": "text-center"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      "class": "spinner-border"
+    })) : "", isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      style: {
+        position: 'absolute',
+        top: '0',
+        bottom: '0',
+        left: '0',
+        right: '0',
+        background: 'white',
+        opacity: '0.4',
+        zIndex: '1000'
+      }
+    }) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       className: "btn btn-sm btn-info",
       "data-toggle": "modal",
       "data-target": "#asign-subject"
@@ -69501,6 +69560,9 @@ var AddTeachers = function AddTeachers() {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: teachers.id
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.firstname, " ", teachers.middlename, " ", teachers.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.user_id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, formatter.format(Date.parse(teachers.created_at))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.subjectname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.classname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.sectionname == null ? "General" : teachers.sectionname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          onClick: function onClick() {
+            return unasignSubjectToTeacher(teachers.id);
+          },
           className: "btn btn-sm btn-danger badge"
         }, "Unasign")))
       );
