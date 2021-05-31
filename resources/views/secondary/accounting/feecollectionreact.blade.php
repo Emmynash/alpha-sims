@@ -31,7 +31,9 @@
     <section class="content">
       <div class="container-fluid" id="feesrootroot">
 
-
+        <div class="text-center">
+          <div class="spinner-border"></div>
+        </div>
 
   
       </div><!-- /.container-fluid -->

@@ -42,6 +42,8 @@ function FeesCollection() {
     const [partamount, setpartamount] = useState(0)
     const [paymentRecord, setPaymentRecord] = useState([])
     const [totalamount, setTotalAmount] = useState(0)
+    const [paymentRecordsum, setpaymentRecordsum] = useState(0)
+    const [isLoading, setIsLoading] = useState(false)
     const alert = useAlert()
     
 
@@ -69,7 +71,7 @@ function FeesCollection() {
 
 
     function fetchPageDetails() {
-
+        setIsLoading(true)
         axios.get('/get_teacher_page_details').then(response=> {
             console.log(response);
             // console.log(setJ)
@@ -77,11 +79,12 @@ function FeesCollection() {
             // setallsubjects(response.data.addsubject_sec)
             setaddsection_sec(response.data.addsection_sec)
             // setAllTeachersWithSubject(response.data.getAllTeachersWithSubject)
-            
+            setIsLoading(false)
 
 
         }).catch(e=>{
             console.log(e);
+            setIsLoading(false)
         });
 
     } 
@@ -111,6 +114,7 @@ function FeesCollection() {
     function getStudent(identityno) {
         setSingleStudent(false)
         setEntireClass(false)
+        setIsLoading(true)
         const data = new FormData()
         data.append("identity", identityno)
         axios.post("/gen/fetchstudentdataforfee", data, {
@@ -119,19 +123,27 @@ function FeesCollection() {
             }
         }).then(response=>{
             console.log(response)
+            setIsLoading(false)
+            if (response.data.data == "record no") {
+                myalert('Does not match any record', 'error')
+            }else{
+
+                setStudentDetails(response.data.data)
+                setpaymentamount(response.data.feesummary)
+                settotalfees(response.data.totalfees)
+                setTotalAmount(response.data.totalfees)
+                setPaymentRecord(response.data.paymentRecord)
+                setpaymentRecordsum(response.data.paymentRecordsum)
+                setSingleStudent(true)
+            }
             
-            setStudentDetails(response.data.data)
-            setpaymentamount(response.data.feesummary)
-            settotalfees(response.data.totalfees)
-            setTotalAmount(response.data.totalfees)
-            setPaymentRecord(response.data.paymentRecord)
-            setSingleStudent(true)
+
 
 
 
         }).catch(e=>{
             console.log(e)
-
+            setIsLoading(false)
             
         })
     }
@@ -139,9 +151,12 @@ function FeesCollection() {
     function getStudentByClass() {
        
             setEntireClass(false)
+            setPaymentRecord([])
+            setSingleStudent(false)
+            setIsLoading(true)
             axios.get('/gen/get_student_list_fees/'+classSelected+"/"+selectedSection).then(response=> {
                 console.log(response);
-
+                setIsLoading(false)
                 setStudentList(response.data.data)
 
                 setEntireClass(true)
@@ -153,11 +168,12 @@ function FeesCollection() {
     
             }).catch(e=>{
                 console.log(e);
+                setIsLoading(false)
             });
     }
 
     function partPayment(regno) {
-
+        setIsLoading(true)
         const data = new FormData()
         data.append("regno", regno)
         data.append("amount", partamount)
@@ -168,6 +184,7 @@ function FeesCollection() {
             }
         }).then(response=>{
             console.log(response)
+            setIsLoading(false)
             if (response.data.data == "over charge") {
                 myalert("Over charge","error")
             }else if(response.data.data == "payment done"){
@@ -181,6 +198,7 @@ function FeesCollection() {
             
         }).catch(e=>{
             console.log(e)
+            setIsLoading(false)
             myalert("Unknown Error. Try again later","error")
         })
     }
@@ -211,13 +229,47 @@ function FeesCollection() {
         })
     }
 
+    function payfeesInFull(systemnumberUser) {
+        setIsLoading(true)
+        const data = new FormData()
+        data.append("usernamesystem", systemnumberUser)
+        data.append("amount", totalamount)
+        axios.post("/gen/confirm_money_received_fees", data, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response)
+            setIsLoading(false)
+            if (response.data.data == "success") {
+                myalert("Payment Successfull","success")
+            }else if(response.data.data == "payment done"){
+                myalert("Payment already done","error")
+            }else{
+                myalert("Unknown Error","error")
+            }
+        }).catch(e=>{
+            console.log(e)
+            setIsLoading(false)
+
+            
+        })
+    }
+
     return(
         <div>
+
+            {isLoading ? <div style={{ position:'absolute', zIndex:'1000', top:'0', bottom:'0', right:'0', left:'0', background:'white', opacity:'0.4' }}>
+
+            </div>:""}
             
             <div className="container">
                 <div className="alert alert-info">
                     <p style={{ margin:'0px' }}>Get student using either addmission number or by querying the entireclass</p>
                 </div>
+
+                {isLoading ? <div className="text-center"><div class="spinner-border"></div></div>:""}
+
                 <div className="card">
                     <div className="row" style={{ margin:'10px' }}>
                         <div className="col-12 col-md-6">
@@ -330,11 +382,11 @@ function FeesCollection() {
                             <div className="col-12 col-md-6">
                                 <p>Payment Details</p>
                                 <div style={{ height:'300px', overflowY:'scroll' }}>
-                                    {paymentamount.map(payment=>(
+                                    {paymentamount.length > 0 ? paymentamount.map(payment=>(
                                         <div key={payment.id+"payment"} className="card" style={{ margin:'5px' }}>
                                             <i style={{ padding:'5px', fontStyle:'normal' }}>{payment.categoryname} (N{payment.amount})</i>
                                         </div>
-                                    ))}
+                                    )):""}
                                 </div>
                                 <div className="card">
                                     <i style={{ padding:'5px', fontStyle:'normal' }}>Total Fees (N{totalfees})</i>  
@@ -345,7 +397,7 @@ function FeesCollection() {
                                 <button className="btn btn-sm btn-info badge" data-toggle="modal" data-target="#modal-xl">View all and print</button>
                                 <div style={{ height:'300px', overflowY:'scroll' }}>
                                
-                                    {paymentRecord.map(record=>(
+                                    {paymentRecord.length > 0 ? paymentRecord.map(record=>(
                                         
                                         <div key={record.id+"record"} className="card" style={{ margin:'5px' }}>
                                             <div style={{ display:'flex', flexDirection:'column', margin:'5px' }}>
@@ -357,21 +409,21 @@ function FeesCollection() {
                                             </div>
                                         </div>
                                         
-                                    )) }
+                                    )):"" }
                                     
                                     {/* <PDFViewer>
                                         <MyDocument />
                                     </PDFViewer> */}
                                 </div>
                                 <div className="card">
-                                    <i style={{ padding:'5px', fontStyle:'normal' }}>Total Fees (N{totalfees})</i>  
+                                    <i style={{ padding:'5px', fontStyle:'normal' }}>Amount Paid (N{paymentRecordsum})</i>  
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div style={{ margin:'10px' }}>
-                        <button className="btn btn-sm btn-info">Confirm Full Payment</button> 
+                        <button onClick={()=>payfeesInFull(studentDetails.usernamesystem)} className="btn btn-sm btn-info">Confirm Full Payment</button> 
                         <button className="btn btn-sm btn-warning" data-toggle="modal" data-target="#partpayment">Part Payment</button>
                     </div>
 
