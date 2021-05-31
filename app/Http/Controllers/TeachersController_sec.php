@@ -18,6 +18,7 @@ use App\Addsubject_sec;
 use App\TeacherSubjects;
 use App\FormTeachers;
 use App\ConfirmSubjectRecordEntered;
+use App\ResultReadyModel;
 use App\ResultReadySubject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -477,21 +478,20 @@ class TeachersController_sec extends Controller
             return back()->with('error', 'Student marks for each subject not fully entered');
         }
 
-
-
-        $checkConfirm = ResultReadySubject::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession])->get();
+        $checkConfirm = ResultReadyModel::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$classid, 'term'=>$term, 'sectionid'=>$request->sectionid, 'session'=>$schoolsession])->get();
 
         if ($checkConfirm->count() > 0) {
             return back()->with('error', 'Process already done');
         }
 
 
-
-        $addconfirmation = new ResultReadySubject();
+        $addconfirmation = new ResultReadyModel();
         $addconfirmation->schoolid = Auth::user()->schoolid;
         $addconfirmation->classid = $classid;
         $addconfirmation->term = $term;
         $addconfirmation->session = $schoolsession;
+        $addconfirmation->sectionid= $request->sectionid;
+        $addconfirmation->status = 0;
         $addconfirmation->save();
 
         return back()->with('success', 'process was successfull');

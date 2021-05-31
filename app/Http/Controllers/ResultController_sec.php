@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Repository\Result\ProcessClassAverage;
 use App\Repository\Result\ResultAverageProcess;
-
+use App\ResultReadyModel;
 
 class ResultController_sec extends Controller
 {
@@ -365,13 +365,22 @@ class ResultController_sec extends Controller
             return $process_class_average;
         }
 
+    }
 
+    public function get_result_ready_section()
+    {
+        try {
+            $getReadyResults = ResultReadyModel::join('classlist_secs', 'classlist_secs.id','=','result_ready_models.classid')
+                            ->join('addsection_secs', 'addsection_secs.id','=','result_ready_models.sectionid')
+                            ->where('result_ready_models.schoolid', Auth::user()->schoolid)
+                            ->select('result_ready_models.*', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
 
-
-
-
-
-
+            return response()->json(['getReadyResults' => $getReadyResults]);
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['getReadyResults' => $th]);
+        }
     }
 
 

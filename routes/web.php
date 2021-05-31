@@ -343,6 +343,7 @@ Route::group(['prefix' => 'sec'], function () {
         Route::Post('/result_print_single_sec', 'ResultController_sec@viewSingleResult')->name('result_print_single_sec');
         Route::get('/result_by_class', 'ResultController_sec@result_by_class')->name('result_by_class');
         Route::get('/generate_result', 'ResultController_sec@generateResult')->name('generate_result');
+        Route::get('/get_result_ready_section', 'ResultController_sec@get_result_ready_section');
         Route::post('/generate_result_main', 'ResultController_sec@generateResultMain')->name('generate_result_main');
      });
 
