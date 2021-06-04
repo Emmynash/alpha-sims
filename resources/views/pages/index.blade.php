@@ -101,7 +101,7 @@
 											<!-- Image Logo -->
 											<div class="img-logo">
 												<a href="index.html">
-													<img src="img/logo" alt="#">
+													<img src="images/logo.jpeg" alt="#" width="70px" height="70px">
 												</a>
 											</div>
 										</div>								
@@ -229,12 +229,12 @@
 								<div class="welcome-text"> 
 									<div class="hero-text"> 
 										<h4>Your time is so important for us</h4>
-										<h1>Build Your WorldClass Brand with Bizwheel</h1>
+										<h1>Sign Up your school with Alpha-SIMS for better experience</h1>
 										<div class="p-text">
-											<p>Nunc tincidunt venenatis elit. Etiam venenatis quam vel maximus bibendum Pellentesque elementum dapibus diam tristique</p>
+											<p>Education is what remains after one has forgotten what one has learned in school.</p>
 										</div>
 										<div class="button">
-											<a href="blog.html" class="bizwheel-btn theme-1 effect">Read our blog</a>
+											<a href="/register" class="bizwheel-btn theme-1 effect">Get Started</a>
 										</div>
 									</div>
 								</div>
@@ -251,12 +251,12 @@
 								<div class="welcome-text"> 
 									<div class="hero-text"> 
 										<h4>Our experties are waiting for you</h4>
-										<h1 class="text-white">Best Way to Represent your Next Business </h1>
+										<h1 class="text-white">Best Way to Represent your School </h1>
 										<div class="p-text">
-											<p>Nunc tincidunt venenatis elit. Etiam venenatis quam vel maximus bibendum Pellentesque elementum dapibus diam tristique</p>
+											<p>Education is the passport to the future, for tomorrow belongs to those who prepare for it today</p>
 										</div>
 										<div class="button">
-											<a href="team.html" class="bizwheel-btn theme-2 effect">Our Leaders</a>
+											<a href="/register" class="bizwheel-btn theme-2 effect">Get Started</a>
 										</div>
 									</div>
 								</div>
@@ -808,7 +808,7 @@
 								<div class="logo">
 									<div class="img-logo">
 										<a class="logo" href="index.html">
-											<img class="img-responsive" src="img/logo2.png" alt="logo">
+											<img class="image-responsive" src="images/logo.jpeg" alt="#" width="70px" height="70px">
 										</a>
 									</div>
 								</div>
