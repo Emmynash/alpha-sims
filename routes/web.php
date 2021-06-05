@@ -398,7 +398,7 @@ Route::group(['prefix'=>'pay', 'middleware' => 'roles'], function(){
 
 Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
     Route::get('/subject_sec_index', 'SubjectController_sec@index');
-    Route::view('/addsubject_sec', 'SubjectController_sec@addsubject_sec_page'); 
+    Route::get('/addsubject_sec', 'SubjectController_sec@addsubject_sec_page'); 
     Route::get('/get_all_subjects', 'SubjectController_sec@addsubject_sec');
     Route::POST('/subjectprocess_sec', 'SubjectController_sec@store');
     Route::POST('/add_subject_score_update', 'SubjectController_sec@addSubjectScore');
