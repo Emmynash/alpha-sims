@@ -41,7 +41,10 @@ function AddStudents() {
         lastname:'',
         isRegistered: '',
         phonenumber: '',
-        email: ''
+        email: '',
+        states: '',
+        lga:'',
+        hometown:''
     })
 
     useEffect(() => {
@@ -76,6 +79,11 @@ function AddStudents() {
 
     function handleChangeStates(e) {
         setLgaStates(NaijaStates.lgas(e.target.value).lgas)
+
+        setRegForm({
+            ...regForm,
+            [e.target.name]:e.target.value
+        })
     }
 
     function myalert(msg, type) {
@@ -156,7 +164,10 @@ function AddStudents() {
                         lastname:'',
                         isRegistered: '',
                         phonenumber: '',
-                        email: ''
+                        email: '',
+                        states: '',
+                        lga:'',
+                        hometown:''
                     })
                     setuserdetailfetch([])
                     myalert('account Created successfully', 'success')
@@ -344,7 +355,7 @@ function AddStudents() {
                             <i>Student Details</i>
                             <div className="row">
                                 <div className="col-12 col-md-4">
-                                    <select onChange={(e)=>handleChangeStates(e)} name="" id="" className="form-control form-control-sm">
+                                    <select onChange={(e)=>handleChangeStates(e)} name="states" value={regForm.states} id="" className="form-control form-control-sm">
                                         <option value="">Select State</option>
                                         {statesNigeria.map(d=>(
                                             <option key={d+"states"} value={d}>{d}</option>
@@ -352,7 +363,7 @@ function AddStudents() {
                                     </select>
                                 </div>
                                 <div className="col-12 col-md-4">
-                                    <select name="" id="" className="form-control form-control-sm">
+                                    <select name="lga" onChange={handleChange} id="" value={regForm.lga} className="form-control form-control-sm">
                                         <option value="">Select LGA</option>
                                         {lgaStates.map(d=>(
                                             <option key={d+"lgas"} value={d}>{d}</option>
@@ -360,7 +371,7 @@ function AddStudents() {
                                     </select>
                                 </div>
                                 <div className="col-12 col-md-4">
-                                    <input type="text" className="form-control form-control-sm" placeholder="Home Town"/>
+                                    <input type="text" name="hometown" onChange={handleChange} value={regForm.hometown} className="form-control form-control-sm" placeholder="Home Town"/>
                                 </div>
                             </div>
                             <br />

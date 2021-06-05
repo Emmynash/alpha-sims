@@ -1,8 +1,12 @@
-@extends('layouts.app_sec')
+@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@include('layouts.aside_sec')
+@if ($schooldetails->schooltype == "Primary")
+@include('layouts.asideside') 
+@else
+  @include('layouts.aside_sec')
+@endif
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -51,8 +55,8 @@
 
   <script>
     function scrollocation(){
-      document.getElementById('teachersmain').className = "nav-link active"
-      document.getElementById('addteachersmain').className = "nav-link active"
+      document.getElementById('studentsmain').className = "nav-link active"
+      document.getElementById('studentsmainadd').className = "nav-link active"
     }
 </script>
     

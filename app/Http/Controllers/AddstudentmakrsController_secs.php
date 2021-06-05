@@ -56,8 +56,9 @@ class AddstudentmakrsController_secs extends Controller
            $arrayOfClassesMain = array_unique($arrayOfSubjects);
 
         //    return view('secondary.teachers.addmarks.studentmarks', compact('addpost', 'arrayOfClassesMain'));
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.teachers.addmarks.studentmarksreact');
+        return view('secondary.teachers.addmarks.studentmarksreact', compact('schooldetails'));
 
 
        }
@@ -65,7 +66,9 @@ class AddstudentmakrsController_secs extends Controller
 
         // return view('secondary.adminside.markmanage_secs', compact('addpost'));
 
-        return view('secondary.adminside.managemarkreact');
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.adminside.managemarkreact', compact('schooldetails'));
     
     }
 

@@ -96,6 +96,9 @@
 
         <button class="btn btn-info btn-block my-4" type="submit" style="color: #fff;"  
         data-action='submit'>Login</button>
+        <div>
+          <button type="button" class="btn btn-sm btn-info badge">Admin Login</button>
+        </div>
 
 
       </form>

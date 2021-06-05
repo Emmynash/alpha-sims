@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PromotionController_sec;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,12 +22,12 @@ Route::get('/', "PagesController@index");
 Route::group(['prefix' => 'pri'], function () {
 
     Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
-        Route::get('/viewclasslist', 'SubjectController@viewClass')->name('viewclasslist');
+        Route::get('/viewclasslist', 'ClassesController@index')->name('viewclasslist');
     });
 
-    Route::group(['middleware' => ['auth', 'can:asign subjects']], function () {
+    Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
             //subject controller 
-        Route::get('/addsubject', 'SubjectController@index')->name('addsubject');
+        Route::get('/addsubject', 'SubjectController_sec@addsubject_sec_page')->name('addsubject');
         Route::Post('/addsubjectpost', 'SubjectController@store')->name('addsubjectpost');
         Route::get('/subjectlist', 'SubjectController@subjectList')->name('subjectlist');
         Route::POST('/updatesubject', 'SubjectController@updateSubject')->name('updatesubject');
@@ -35,7 +36,7 @@ Route::group(['prefix' => 'pri'], function () {
     Route::group(['middleware' => ['auth', 'can:add students']], function () { //
         Route::get('/viewstudent', 'StudentController@viewlist')->name('viewstudent');
         Route::POST('/studentreg', 'StudentController@store')->name('studentreg');
-        Route::get('/addstudent', 'StudentController@index')->name('addstudent');
+        Route::get('/addstudent', 'StudentController_sec@index')->name('addstudent');
 
         //student
         // Route::get('/addstudent', ['uses' => 'StudentController@index','roles' => ['Admin', 'Teacher']])->middleware('roles');
@@ -46,8 +47,8 @@ Route::group(['prefix' => 'pri'], function () {
 
     });
 
-    Route::group(['middleware' => ['auth', 'can:asign form teacher']], function () { //
-        Route::get('/addteacher', 'TeachersController@index')->name('addteacher');
+    Route::group(['middleware' => ['auth', 'can:assign form teacher']], function () { //
+        Route::get('/addteacher', 'TeachersController_sec@index')->name('addteacher');
         Route::POST('addteachersverify', 'TeachersController@verifyTeacher')->name('addteachersverify');
         Route::POST('addteachermain', 'TeachersController@store')->name('addteachermain');
         Route::get('/viewteachers', 'TeachersController@viewteachers')->name('viewteachers');
@@ -68,7 +69,7 @@ Route::group(['prefix' => 'pri'], function () {
         //                                 marks controller
         //-------------------------------------------------------------------------------------
 
-        Route::get('/managemarks', 'MarksController@index')->name('managemarks');
+        Route::get('/managemarks', 'AddstudentmakrsController_secs@index')->name('managemarks');
         Route::POST('/getclasssubject', 'MarksController@getClassSubject')->name('getclasssubject');
         Route::POST('/getsubjectmarks', 'MarksController@getsubjectmarks')->name('getsubjectmarks');
         Route::POST('/fetchusersbyclass', 'MarksController@getclassStudentsbyname')->name('fetchusersbyclass');
@@ -81,7 +82,7 @@ Route::group(['prefix' => 'pri'], function () {
     });
 
     Route::group(['middleware' => ['auth', 'can:add psychomotor']], function () { // 
-        Route::get('/moto', 'PysoController@index')->name('moto');
+        Route::get('/moto', 'MotoController_sec@index')->name('moto');
         Route::get('/motosettings', 'PysoController@motosettings')->name('motosettings');
         Route::POST('/fetchstudentdata', 'PysoController@fetchStudentData')->name('fetchstudentdata');
         Route::POST('/addmoto', ['uses' => 'PysoController@addmoto','roles' => ['Admin', 'Teacher']])->middleware('roles');
@@ -93,7 +94,7 @@ Route::group(['prefix' => 'pri'], function () {
 
 
     Route::group(['middleware' => ['auth']], function () { //, 'can:manage staff'
-        Route::get('/addstaff', 'TeachersController@addStaff')->name('addstaff');
+        Route::get('/addstaff', 'PagesController@manageStaff')->name('addstaff');
         Route::POST('/addstaffdata', 'TeachersController@addstaffdata')->name('addstaffdata');
         Route::POST('/addstaffrecord', 'TeachersController@addroles')->name('addstaffrecord');
     });
@@ -107,7 +108,7 @@ Route::group(['prefix' => 'pri'], function () {
         Route::POST('/deletegrade', 'PagesController@deleteGrade')->name('deletegrade');
         Route::POST('/addsession', 'PagesController@addsession')->name('addsession');
         Route::get('/allusers', 'AllUsersController@index')->name('allusers');
-        Route::get('/setupschool', 'PagesController@setUpSchool')->name('setupschool');
+        Route::get('/setupschool', 'SchoolsetupSecController@setup_school_sec')->name('setupschool');
         Route::POST('/add_term', 'PagesController@addTerm')->name('add_term');
         Route::get('/payment_details', 'PaymentDetailsController@index')->name('payment_details');
         Route::post('/add_details', 'PaymentDetailsController@addDetails')->name('add_details');
@@ -117,7 +118,7 @@ Route::group(['prefix' => 'pri'], function () {
 
     Route::group(['middleware' => ['auth']], function () { //, 'can:student promotion'
         // promotion controller 
-        Route::get('/promotion', 'PromotionController@index')->name('promotion');
+        Route::get('/promotion', 'PromotionController_sec@index')->name('promotion');
         Route::POST('/fetchstudentspromotion', 'PromotionController@fetchstudentsforpromotion')->name('fetchstudentspromotion');
         Route::POST('/promotemain', 'PromotionController@promotemain')->name('promotemain');
     });
@@ -301,7 +302,7 @@ Route::group(['prefix' => 'sec'], function () {
 
         Route::get('/setupschool_sec', 'SchoolsetupSecController@index')->name('setupschool_sec');
         Route::get('/fetchschooldata', 'SchoolsetupSecController@fetchSchoolDetailsSetUp')->name('setupschool_sec'); // Route::view('/stagetwo', 'voting.competition.step_two_main');
-        Route::view('/setup_school_sec', 'secondary.setupschool.schoolsetupreact')->name('setup_school_sec');
+        Route::get('/setup_school_sec', 'SchoolsetupSecController@setup_school_sec')->name('setup_school_sec');
         Route::get('/grades_sec', 'SchoolsetupSecController@grades_sec')->name('grades_sec');
         Route::POST('/submitgrades_sec', 'PagesController@submitMark_sec')->name('submitgrades_sec');
         Route::POST('/addschoolinitials', 'SchoolsetupSecController@addSchoolInitials')->name('addschoolinitials');
@@ -333,7 +334,7 @@ Route::group(['prefix' => 'sec'], function () {
         Route::POST('/get_students_for_pyco', 'MotoController_sec@get_students_for_psyco')->name('get_students_for_pyco');
         Route::POST('/addmoto_main', 'MotoController_sec@addmotomain','roles')->name('addmoto_main');
         Route::get('/view_student/{id}', 'MotoController_sec@addFunNowMain')->name('view_student');
-        Route::POST('/add_student_moto/{id}', 'MotoController_sec@addmotomain')->name('add_student_moto');
+        Route::POST('/add_student_moto', 'MotoController_sec@addmotomain')->name('add_student_moto');
 
      }); 
 
@@ -397,7 +398,7 @@ Route::group(['prefix'=>'pay', 'middleware' => 'roles'], function(){
 
 Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
     Route::get('/subject_sec_index', 'SubjectController_sec@index');
-    Route::view('/addsubject_sec', 'secondary.subjects.addsubjectsreact'); 
+    Route::view('/addsubject_sec', 'SubjectController_sec@addsubject_sec_page'); 
     Route::get('/get_all_subjects', 'SubjectController_sec@addsubject_sec');
     Route::POST('/subjectprocess_sec', 'SubjectController_sec@store');
     Route::POST('/add_subject_score_update', 'SubjectController_sec@addSubjectScore');
@@ -605,6 +606,6 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
 
 });
 
-Route::get('/foo', function () {
-    Artisan::call('storage:link');
+Route::group(['prefix' => 'admin'], function () {
+    Route::post('/login', 'AccountController@feesPartPayment')->name('fees_part_payment');
 });

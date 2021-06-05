@@ -45,7 +45,9 @@ class StudentController_sec extends Controller
 
         $addschool = Addpost::where('id', Auth::user()->schoolid)->first();
 
-        return view('secondary.studentprocess.addstudentreact');
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.studentprocess.addstudentreact', compact('schooldetails'));
     }
 
     public function viewStudentbyClass(){
@@ -106,7 +108,10 @@ class StudentController_sec extends Controller
                 'studenthouse' => 'required',
                 'studentclub' => 'required',
                 'studentaddress_sec' => 'required',
-                'admissionname' => 'required'
+                'admissionname' => 'required',
+                'states' => 'required',
+                'lga' => 'required',
+                'hometown' => 'required'
             ]);
 
             if ($validator->fails()) {
@@ -162,6 +167,9 @@ class StudentController_sec extends Controller
             $Addstudent->dateOfBirth = $request->input('dateofbirth');
             $Addstudent->sessionstatus = 0;
             $Addstudent->admission_no = $request->admissionname;
+            $Addstudent->states = $request->states;
+            $Addstudent->lga = $request->lga;
+            $Addstudent->hometown = $request->hometown;
             $Addstudent->save();
     
             //asign student role
@@ -202,7 +210,10 @@ class StudentController_sec extends Controller
                 'middlename' => 'required',
                 'lastname' => 'required',
                 'phonenumber' => 'required',
-                'email' => 'required'
+                'email' => 'required',
+                'states' => 'required',
+                'lga' => 'required',
+                'hometown' => 'required'
             ]);
 
             if ($validator->fails()) {
@@ -222,9 +233,6 @@ class StudentController_sec extends Controller
             }
 
         }
-
-
-
     }
 
     public function viewStudentSingleClass(Request $request){

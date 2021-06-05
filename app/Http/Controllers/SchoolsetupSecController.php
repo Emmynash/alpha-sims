@@ -134,28 +134,59 @@ class SchoolsetupSecController extends Controller
 
         //automatic class setup
 
-        $classlist = array("JSSS1", "JSSS2", "JSSS3", "SSS1", "SSS2", "SSS3");
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
-        $classlisttype = array("1", "1", "1", "2", "2", "2");
+        if ($schoolDetails->schooltype == "Secondary") {
 
-        for ($i=0; $i < count($classlist); $i++) { 
+            $classlist = array("JSSS1", "JSSS2", "JSSS3", "SSS1", "SSS2", "SSS3");
 
-            $classlistCheck = Classlist_sec::where(['classname' => strtoupper($classlist[$i]), 'schoolid' => Auth::user()->schoolid])->get();
-
-            if (count($classlistCheck) < 1) {
-
-                $addclasses_sec = new Classlist_sec();
-                $addclasses_sec->schoolid = Auth::user()->schoolid;
-                $addclasses_sec->classname = strtoupper($classlist[$i]);
-                $addclasses_sec->studentcount = 0;
-                $addclasses_sec->classtype = (int)$classlisttype[$i];
-                $addclasses_sec->status = 1;
-                $addclasses_sec->save();
+            $classlisttype = array("1", "1", "1", "2", "2", "2");
+    
+            for ($i=0; $i < count($classlist); $i++) { 
+    
+                $classlistCheck = Classlist_sec::where(['classname' => strtoupper($classlist[$i]), 'schoolid' => Auth::user()->schoolid])->get();
+    
+                if (count($classlistCheck) < 1) {
+    
+                    $addclasses_sec = new Classlist_sec();
+                    $addclasses_sec->schoolid = Auth::user()->schoolid;
+                    $addclasses_sec->classname = strtoupper($classlist[$i]);
+                    $addclasses_sec->studentcount = 0;
+                    $addclasses_sec->classtype = (int)$classlisttype[$i];
+                    $addclasses_sec->status = 1;
+                    $addclasses_sec->save();
+                }
+    
             }
+    
+            return back()->with('success', 'process was successfull');
+        }else{
 
+            $classlist = array("", "JSSS2", "JSSS3", "SSS1", "SSS2", "SSS3");
+
+            $classlisttype = array("1", "1", "1", "2", "2", "2");
+    
+            for ($i=0; $i < count($classlist); $i++) { 
+    
+                $classlistCheck = Classlist_sec::where(['classname' => strtoupper($classlist[$i]), 'schoolid' => Auth::user()->schoolid])->get();
+    
+                if (count($classlistCheck) < 1) {
+    
+                    $addclasses_sec = new Classlist_sec();
+                    $addclasses_sec->schoolid = Auth::user()->schoolid;
+                    $addclasses_sec->classname = strtoupper($classlist[$i]);
+                    $addclasses_sec->studentcount = 0;
+                    $addclasses_sec->classtype = (int)$classlisttype[$i];
+                    $addclasses_sec->status = 1;
+                    $addclasses_sec->save();
+                }
+    
+            }
+    
+            return back()->with('success', 'process was successfull');
         }
 
-        return back()->with('success', 'process was successfull');
+
 
     }
 
@@ -307,5 +338,13 @@ class SchoolsetupSecController extends Controller
         $clubs = Addclub_sec::where("schoolid", Auth::user()->schoolid)->get();
 
         return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'houselist'=>$houselist, 'classsection'=>$classsection, 'clubs'=>$clubs]);
+    }
+
+    public function setup_school_sec()
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.setupschool.schoolsetupreact', compact('schooldetails'));
+        
     }
 }

@@ -114,7 +114,7 @@
 
           @can('access inventory')
             <li class="nav-item has-treeview">
-              <a id="feecollection" href="{{ route('inventory') }}" class="nav-link">
+              <a id="inventory" href="{{ route('inventory') }}" class="nav-link">
                 <i class="fas fa-dolly-flatbed nav-icon"></i>
                 <p>
                   Inventory

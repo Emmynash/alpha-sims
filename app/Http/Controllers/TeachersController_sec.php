@@ -56,8 +56,10 @@ class TeachersController_sec extends Controller
 
 
     public function index(){
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
         
-        return view('secondary.teachers.addteachersreact');
+        return view('secondary.teachers.addteachersreact', compact('schooldetails'));
     }
 
     public function fetchDataForAddTeachersPage()
@@ -500,6 +502,8 @@ class TeachersController_sec extends Controller
 
     public function form_teacher_sec_index(Request $request)
     {
-        return view('secondary.teachers.addformmastersreact');
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.teachers.addformmastersreact', compact('schooldetails'));
     }
 }

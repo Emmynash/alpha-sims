@@ -93,6 +93,9 @@ class RegisterStudents{
             $Addstudent->dateOfBirth = $request->input('dateofbirth');
             $Addstudent->sessionstatus = 0;
             $Addstudent->admission_no = $request->admissionname;
+            $Addstudent->states = $request->states;
+            $Addstudent->lga = $request->lga;
+            $Addstudent->hometown = $request->hometown;
             $Addstudent->save();
     
             //asign student role
@@ -104,12 +107,8 @@ class RegisterStudents{
             // return back()->with('success', 'Student added successfully');
         } catch (\Throwable $th) {
             //throw $th;
-            
             return $th;
         }
-
-
-
     }
 
 }

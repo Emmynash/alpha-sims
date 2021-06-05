@@ -361,7 +361,9 @@ class PagesController extends Controller
 
         $role = Role::all();
 
-        return view('secondary.managestaff.managestaff');
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.managestaff.managestaff', compact('schooldetails'));
     }
 
     public function manageStaffRole(Request $request){

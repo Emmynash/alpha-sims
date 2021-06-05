@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Addpost;
 use Illuminate\Http\Request;
 use App\Classlist_sec;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,9 @@ class ClassesController extends Controller
 
         $classesAll = $this->classlist_sec->where('schoolid', Auth::user()->schoolid)->get();
 
-        return view('secondary.studentclasses.classes', compact('classesAll'));
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.studentclasses.classes', compact('classesAll', 'schooldetails'));
     }
     
     public function editClassName(Request $request){

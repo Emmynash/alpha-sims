@@ -202,7 +202,7 @@ class AccountController extends Controller
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.accounting.feecollectionreact');
+        return view('secondary.accounting.feecollectionreact', compact('schooldetails'));
     }
 
     public function confirmMoneyReceived(FeePayment $feePayment, Request $request)

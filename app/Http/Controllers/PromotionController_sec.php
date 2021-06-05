@@ -19,30 +19,32 @@ class PromotionController_sec extends Controller
 {
     public function index(){
 
-        $classlist_sec = Classlist_sec::where('schoolid',Auth::user()->schoolid)->get();
-        $addsection_sec = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
-        $addpost = Addpost::where('id', Auth::user()->schoolid)->get();
+        // $classlist_sec = Classlist_sec::where('schoolid',Auth::user()->schoolid)->get();
+        // $addsection_sec = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
+        // $addpost = Addpost::where('id', Auth::user()->schoolid)->get();
 
-        if ($addpost[0]['schoolsession'] == NULL) {
-            return back()->with('error', 'School Session not set');
-        }
+        // if ($addpost[0]['schoolsession'] == NULL) {
+        //     return back()->with('error', 'School Session not set');
+        // }
 
-        $alldetails = array(
-            'classlist_sec'=>$classlist_sec,
-            'addsection_sec'=>$addsection_sec,
-            'addpost'=>$addpost
-        );
+        // $alldetails = array(
+        //     'classlist_sec'=>$classlist_sec,
+        //     'addsection_sec'=>$addsection_sec,
+        //     'addpost'=>$addpost
+        // );
 
-        $currentsession = $alldetails['addpost'][0]['schoolsession'];
+        // $currentsession = $alldetails['addpost'][0]['schoolsession'];
 
-        $explodesession = explode("/", $currentsession);
+        // $explodesession = explode("/", $currentsession);
 
-        $oldsessionleft = $explodesession[0] - 1;
-        $oldsessionright = $explodesession[1] - 1;
+        // $oldsessionleft = $explodesession[0] - 1;
+        // $oldsessionright = $explodesession[1] - 1;
 
-        $oldsessionboth = $oldsessionleft."/".$oldsessionright;
+        // $oldsessionboth = $oldsessionleft."/".$oldsessionright;
 
-        return view('secondary.promotion.promotion_sec');
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.promotion.promotion_sec', compact('schooldetails'));
     }
 
     public function fetchstudentforpromotion(Request $request){

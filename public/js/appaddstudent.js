@@ -69428,7 +69428,10 @@ function AddStudents() {
     lastname: '',
     isRegistered: '',
     phonenumber: '',
-    email: ''
+    email: '',
+    states: '',
+    lga: '',
+    hometown: ''
   }),
       _useState20 = _slicedToArray(_useState19, 2),
       regForm = _useState20[0],
@@ -69457,6 +69460,7 @@ function AddStudents() {
 
   function handleChangeStates(e) {
     setLgaStates(naija_state_local_government__WEBPACK_IMPORTED_MODULE_4___default.a.lgas(e.target.value).lgas);
+    setRegForm(_objectSpread({}, regForm, _defineProperty({}, e.target.name, e.target.value)));
   }
 
   function myalert(msg, type) {
@@ -69535,7 +69539,10 @@ function AddStudents() {
             lastname: '',
             isRegistered: '',
             phonenumber: '',
-            email: ''
+            email: '',
+            states: '',
+            lga: '',
+            hometown: ''
           });
           setuserdetailfetch([]);
           myalert('account Created successfully', 'success');
@@ -69853,7 +69860,8 @@ function AddStudents() {
       onChange: function onChange(e) {
         return handleChangeStates(e);
       },
-      name: "",
+      name: "states",
+      value: regForm.states,
       id: "",
       className: "form-control form-control-sm"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -69867,8 +69875,10 @@ function AddStudents() {
     }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-4"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      name: "",
+      name: "lga",
+      onChange: handleChange,
       id: "",
+      value: regForm.lga,
       className: "form-control form-control-sm"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: ""
@@ -69882,6 +69892,9 @@ function AddStudents() {
       className: "col-12 col-md-4"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "text",
+      name: "hometown",
+      onChange: handleChange,
+      value: regForm.hometown,
       className: "form-control form-control-sm",
       placeholder: "Home Town"
     }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

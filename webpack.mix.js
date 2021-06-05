@@ -20,5 +20,6 @@ mix.react('resources/js/app.js', 'public/js')
    .react('resources/js/appfees.js', 'public/js')  
    .react('resources/js/appresult.js', 'public/js')
    .react('resources/js/appformmaster.js', 'public/js') 
-   .react('resources/js/appaddstudent.js', 'public/js')  
+   .react('resources/js/appaddstudent.js', 'public/js')
+   .react('resources/js/appmoto.js', 'public/js')  
    .sass('resources/sass/app.scss', 'public/css');

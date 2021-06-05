@@ -40,6 +40,14 @@ class SubjectController_sec extends Controller
         return view('secondary.subjects.viewsubjects_sec', compact('subjectAll', 'classesAll', 'schoolDetails'));
     }
 
+    public function addsubject_sec_page()
+    {
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.subjects.addsubjectsreact', compact('schooldetails'));
+    }
+
     public function addsubject_sec(){
         
         $classesAll = $this->classlist_sec->where('schoolid', Auth::user()->schoolid)->get();

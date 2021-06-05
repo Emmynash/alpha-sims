@@ -56,29 +56,15 @@
               </li>
             @endcan
 
-            @can('asign subjects')
+            @can('assign subjects')
               <li class="nav-item has-treeview">
-                <a id="subjectpage" href="" class="nav-link">
+                <a id="subjectsmainAdd" href="{{ route('addsubject') }}" class="nav-link">
                   <i class="fas fa-poll-h"></i> 
                   <p>
                     Subject
-                    <i class="right fas fa-angle-left"></i>
+                    {{-- <i class="right fas fa-angle-left"></i> --}}
                   </p>
                 </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a id="addnewsubject" href="{{ route('addsubject') }}" class="nav-link">
-                      <i class="fas fa-plus"></i> 
-                      <p>Add New</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a id="viewsubjectside" href="{{ route('subjectlist') }}" class="nav-link">
-                      <i class="fas fa-clipboard-list"></i> 
-                      <p>Subject list</p>
-                    </a>
-                  </li>
-                </ul>
               </li>
             @endcan
 
@@ -165,7 +151,7 @@
 
             @can('add students')
               <li class="nav-item has-treeview">
-                <a id="studentaside" href="#" class="nav-link">
+                <a id="studentsmain" href="#" class="nav-link">
                   <i class="fas fa-user-graduate"></i> 
                   <p>
                     Student
@@ -174,7 +160,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a id="addstudentaside" href="{{ route('addstudent') }}" class="nav-link">
+                    <a id="studentsmainadd" href="{{ route('addstudent') }}" class="nav-link">
                       <i class="fas fa-plus"></i> 
                       <p>Add New</p>
                     </a>
@@ -189,9 +175,9 @@
               </li>
             @endcan
 
-            @can('asign form teacher')
+            @can('assign form teacher')
               <li class="nav-item has-treeview">
-                <a id="teachersaside" href="#" class="nav-link">
+                <a id="teachersmain" href="#" class="nav-link">
                   <i class="fas fa-chalkboard-teacher"></i> 
                   <p>
                     Teacher
@@ -200,15 +186,15 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a id="addteacheraside" href="{{ route('addteacher') }}" class="nav-link">
+                    <a id="addteachersmain" href="{{ route('addteacher') }}" class="nav-link">
                       <i class="fas fa-plus"></i> 
                       <p>Add New</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a id="viewteacheraside" href="{{ route('viewteachers') }}" class="nav-link">
+                    <a id="formmasteroptionadd" href="/form_teacher_sec_index" class="nav-link">
                       <i class="fas fa-clipboard-list"></i> 
-                      <p>Teacher list</p>
+                      <p>Form Teacher</p>
                     </a>
                   </li>
                 </ul>
@@ -282,33 +268,18 @@
 
               @can('manage marks')
                 <li class="nav-item has-treeview">
-                  <a id="viewmarks" href="#" class="nav-link">
+                  <a id="managemarkscroll" href="{{ route('managemarks') }}" class="nav-link">
                     <i class="fas fa-check-double"></i> 
                     <p>
                       Mark Manage
-                      <i class="right fas fa-angle-left"></i>
                     </p>
                   </a>
-                  <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                      <a id="viewmarksadd" href="{{ route('managemarks') }}" class="nav-link">
-                        <i class="fas fa-plus"></i> 
-                        <p>Add New</p>
-                      </a>
-                    </li>
-                    {{-- <li class="nav-item">
-                      <a id="viewmarkslist" href="/viewmarks" class="nav-link">
-                        <i class="fas fa-clipboard-list"></i> 
-                        <p>Mark list</p>
-                      </a>
-                    </li> --}}
-                  </ul>
                 </li>
               @endcan
 
               @can('manage staff')
                 <li class="nav-item has-treeview">
-                  <a id="managestaffaside" href="{{ route('addstaff') }}" class="nav-link">
+                  <a id="managestaffscroll" href="{{ route('addstaff') }}" class="nav-link">
                     <i class="fas fa-user-tie"></i> 
                     <p>
                       Manage Staff
@@ -319,7 +290,7 @@
 
             @can('add psychomotor')
               <li class="nav-item has-treeview">
-                <a id="pychomotoraside" href="#" class="nav-link">
+                <a id="psyhcomoto" href="#" class="nav-link">
                     <i class="fas fa-home"></i> 
                   <p>
                     Pychomotor
@@ -328,13 +299,13 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a id="affectivedomainaside" href="{{ route('moto') }}" class="nav-link">
+                    <a id="psyhcomotoadd" href="{{ route('student_moto') }}" class="nav-link">
                       <i class="fas fa-plus"></i> 
-                      <p>affective domain</p>
+                      <p>add</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a id="affectivedomainasidesetting" href="{{ route('motosettings') }}" class="nav-link">
+                    <a id="psyhcomotosettings" href="{{ route('setting_moto') }}" class="nav-link">
                       <i class="fas fa-plus"></i> 
                       <p>settings</p>
                     </a>
@@ -371,7 +342,7 @@
 
             @can('student promotion')
               <li class="nav-item has-treeview">
-                <a id="promotionaside" href="{{ route('promotion') }}" class="nav-link">
+                <a id="promotionscroll" href="{{ route('promotion') }}" class="nav-link">
                   <i class="fas fa-exchange-alt"></i> 
                   <p>
                     Promotion
