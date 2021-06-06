@@ -287,6 +287,16 @@
                   </a>
                 </li>
               @endcan
+              
+
+              <li class="nav-item">
+                  <a id="calender" href="{{ route('calender_index') }}" class="nav-link">
+                      <i class="fas fa-check-double nav-icon"></i>
+                    <p>
+                      Calender
+                    </p>
+                  </a>
+              </li>
 
             @can('add psychomotor')
               <li class="nav-item has-treeview">

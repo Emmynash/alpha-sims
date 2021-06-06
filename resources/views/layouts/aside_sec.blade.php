@@ -266,6 +266,15 @@
               </li>
             @endcan
 
+            <li class="nav-item">
+                <a id="calender" href="{{ route('calender_index') }}" class="nav-link">
+                    <i class="fas fa-check-double nav-icon"></i>
+                  <p>
+                    Calender
+                  </p>
+                </a>
+            </li>
+
             @can('access library')
               <li class="nav-item has-treeview">
                 <a href="{{ route('school_library') }}" class="nav-link">

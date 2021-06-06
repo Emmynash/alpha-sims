@@ -604,6 +604,13 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::get('/get_student_list_fees/{classid}/{sectionid}', 'AccountController@getStudentListFees')->name('get_student_list_fees');
          Route::post('/fees_part_payment', 'AccountController@feesPartPayment')->name('fees_part_payment');
 
+         Route::group(['middleware' => ['can:add event']], function () { // library module
+            Route::post('/post_event', 'CalenderController@postAnEvent')->name('post_event');
+        });
+         //calender routes
+         Route::get('/calender_index', 'CalenderController@index')->name('calender_index');
+         Route::get('/get_all_posts', 'CalenderController@getAllEvents')->name('get_all_posts');
+
 });
 
 Route::group(['prefix' => 'admin'], function () {
