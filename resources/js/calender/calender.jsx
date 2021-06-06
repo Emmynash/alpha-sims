@@ -6,6 +6,7 @@ import { useAlert } from 'react-alert'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter } from 'mdbreact';
 
 
 function Calender() {
@@ -14,6 +15,7 @@ function Calender() {
     const [eventsmodel, seteventsmodel] = useState([])
     const [isLoading, setisLoading] = useState(false)
     const [usercanpost, setUsercanpost] = useState(false)
+    const [modal, setmodal] = useState(false)
     const alert = useAlert();
 
     const [eventValue, setEventValue] = useState({
@@ -59,6 +61,7 @@ function Calender() {
                     endtime:''
                 })
                 myalert('success', 'success')
+                setAllEvents([])
                 getAllEvents()
             }
 
@@ -67,6 +70,10 @@ function Calender() {
             console.log(e)
 
         })
+    }
+
+    function toggle(){
+        setmodal(!modal);
     }
 
     function myalert(msg, type) {
@@ -119,20 +126,29 @@ function Calender() {
         <div>
 
             {isLoading ? <div style={{ zIndex:'1000', position:'absolute', top:'0', bottom:'0', left:'0', right:'0', background:'white', opacity:'0.4' }}>
+                {/* <div style={{ zIndex:'3000' }}>
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div> */}
 
             </div>:""}
-            {isLoading ? <div>
-                <div className="text-center">
-                    <div className="spinner-border"></div>
+            {/* {isLoading ? 
+            <div>
+                <div className="spinner-border" role="status">
+                    <span className="sr-only">Loading...</span>
                 </div>
-            </div>:""}
+            </div>
+            :""} */}
+
+            {/* <button onClick={toggle}>toggle</button> */}
 
             <div className="row">
                 <div className="col-12 col-md-3">
                     {usercanpost ? <button className="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-default">Add Event</button>:""}
                     
                     {allevents.map(d=>(
-                        <div key={d.id+"events"} className="card" style={{ margin:'5px', background:d.color }}>
+                        <div key={d.date+d.title} className="card" style={{ margin:'5px', background:d.color }}>
                             <i style={{ margin:'10px', fontStyle:'normal', color:'white' }}>{d.title}</i>
                         </div>
                     ))}
@@ -145,8 +161,7 @@ function Calender() {
                 allDayText="false"
                     timeZone='UTC'
                     plugins={[ dayGridPlugin, timeGridPlugin ]}
-                    // initialView="dayGridMonth"
-                    defaultView="dayGridMonth"
+                    initialView="dayGridMonth"
                     weekends={true}
                     events={allevents}
                 />
@@ -223,14 +238,12 @@ function Calender() {
                     </div>
                     <div className="modal-footer justify-content-between">
                         <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                        {isLoading ? <div className="spinner-border"></div>:<button type="button" onClick={postAnEvent} className="btn btn-info btn-sm">Save changes</button>}
+                        {isLoading ? <div className="spinner-border"></div>:<button type="button" onClick={postAnEvent} className="btn btn-info btn-sm" data-dismiss="modal">Save changes</button>}
                         
                     </div>
                     </div>
                 </div>
             </div>
-
-
 
             <br />
         </div>

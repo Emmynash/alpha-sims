@@ -45,7 +45,7 @@ class CalenderController extends Controller
 
     public function getAllEvents()
     {
-        $getAllEvent = CalenderModel::where('schoolid', Auth::user()->schoolid)->get();
+        $getAllEvent = CalenderModel::where('schoolid', Auth::user()->schoolid)->orderBy('created_at', 'desc')->get();
 
         $user = User::find(Auth::user()->id);
 
