@@ -71,7 +71,7 @@
                     @if (count($entirestudent) > 0)
                       @foreach ($entirestudent as $entirestudentm)
                         <tr>
-                          <td>{{$entirestudentm->id}}</td>
+                          <td>{{$entirestudentm->admission_no}}</td>
                           <td>{{$entirestudentm->getStudentName->firstname}} {{$entirestudentm->getStudentName->middlename}} {{$entirestudentm->getStudentName->lastname}}</td>
                           <td>{{$entirestudentm->getClassName->classname}} {{ $entirestudentm->getSectionName->sectionname }}</td>
             

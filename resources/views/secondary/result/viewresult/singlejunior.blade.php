@@ -179,16 +179,22 @@
                                     <td><i id="studentclass" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->getClassName->classname }} {{ $studentdetails->getSectionName->sectionname }}</i></td>
                                 </tr>
                                 <tr>
-                                    <td><i style="font-size: 12px; font-style: normal;">Next Term Fee:</i></td>
-                                    <td></td>
+                                    <td><i style="font-size: 12px; font-style: normal;">Next Term Resumes:</i></td>
+                                    <td>
+                                        @if ($term == 1)
+                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermstarts }}</i> 
+                                        @elseif ($term == 2)
+                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermstarts }}</i>
+                                        @elseif ($term == 3)
+                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
+                                        @else
+                                            <i style="font-style: normal; font-weight: bold;">NAN</i>
+                                        @endif
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Sex:</i></td>
                                     <td><i id="studentgender" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->gender }}</i></td>
-                                </tr>
-                                <tr>
-                                    <td><i style="font-size: 12px; font-style: normal;">Addmission No:</i></td>
-                                    <td><i id="studentgender" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->admission_no }}</i></td>
                                 </tr>
                             </table>
                         </div>
@@ -212,8 +218,8 @@
                                     </i></td>
                                 </tr>
                                 <tr>
-                                    <td><i style="font-size: 12px; font-style: normal;">Registration No:</i></td>
-                                    <td><i id="regno" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->id }}</i></td>
+                                    <td><i style="font-size: 12px; font-style: normal;">Addmission No:</i></td>
+                                    <td><i id="regno" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->admission_no }}</i></td>
                                 </tr>
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Position:</i></td>

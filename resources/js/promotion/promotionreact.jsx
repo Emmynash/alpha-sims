@@ -16,6 +16,8 @@ function Promotion() {
     const [promotionFromClass, setPromotionClass] = useState(0)
     const [poromotionToClass, setPromotionToClass] = useState('')
     const [promotionFromSection, setPromotionSection] = useState(0)
+    const [promotionToId, setPromotionToId] = useState('')
+    const [addstudentSec, setaddstudent_sec] = useState([])
 
     useEffect(() => {
         fetchSchoolDetails()
@@ -49,6 +51,7 @@ function Promotion() {
             setClassList(response.data.classlist)
             setClassSection(response.data.classsection)
             setpreviousSessionmain(response.data.previousSessionmain)
+            
 
 
         }).catch(e=>{
@@ -97,6 +100,8 @@ function Promotion() {
                 setPromotionToClass("GRAD")
             }else{
                 setPromotionToClass(response.data.success.classlist_secs[0].classname)
+                setPromotionToId(response.data.success.classlist_secs[0].id)
+                setaddstudent_sec(response.data.success.addstudent_sec)
             }
         }).catch(e=>{
             console.log(e)
@@ -129,14 +134,11 @@ function Promotion() {
     
             }).catch(e=>{
                 console.log(e)
-    
             })
         }
-
     }
 
     function updatePromotionAverageStatus(status) { //update_promotion_average
-
 
         if (promotionAverage == 0) {
             myalert("Must not be Zero", 'error')
@@ -157,13 +159,40 @@ function Promotion() {
                 }else{
                     myalert("Unknown Error", 'error')
                 }
-    
             }).catch(e=>{
                 console.log(e)
-    
             })
         }
+    }
 
+    function promoteStudent() {
+        
+        const data = new FormData()
+        data.append("classfrom", promotionFromClass),
+        data.append("classto", promotionToId),
+        data.append("promofromsection", promotionFromSection),
+        data.append("previoussession", previousSessionmain),
+        data.append("newsession", schoolSession),
+        data.append("promotionaverage", promotionAverage),
+        data.append("promotewithaverage", averagestatus),
+        data.append("nextClassDisplayname", poromotionToClass)
+        axios.post("/promotion_main_query", data, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response)
+            if (response.data.response == "success") {
+                myalert("Promotion Successful", 'success')
+            }else{
+                myalert("Unknown Error", 'error')
+            }
+
+
+        }).catch(e=>{
+            console.log(e)
+            myalert("Unknown Error", 'error')
+        })
     }
 
     return(
@@ -210,7 +239,7 @@ function Promotion() {
                             </div>
                         </div>
                         <div>
-                        <button className="btn btn-sm btn-info">Proceed</button>
+                        <button onClick={promoteStudent} className="btn btn-sm btn-info">Proceed</button>
                         </div>
                     </div>
                 </div>
@@ -276,12 +305,15 @@ function Promotion() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>183</td>
-                                <td>John Doe</td>
-                                <td>11-7-2014</td>
-                                <td><span className="tag tag-success">Approved</span></td>
-                            </tr>
+
+                            {addstudentSec.map(d=>(
+                                <tr key={d.id+"promotable"}>
+                                    <td>{d.admission_no}</td>
+                                    <td>{d.firstname} {d.middlename} {d.lastname}</td>
+                                    <td>{d.promomarks}</td>
+                                    <td><button className="btn btn-sm btn-info badge">Promote</button></td>
+                                </tr>
+                            ))}
 
                         </tbody>
                         </table>

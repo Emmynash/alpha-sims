@@ -158,6 +158,9 @@
                         <i style="font-size: 30px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schoolname}}</i>
                             <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schooladdress}}, {{$addschool->mobilenumber}}, {{$addschool->schoolemail}}</i>, 
                             <i style="font-size: 15px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;"></i>
+                            <div>
+                                <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Senior Secondary School Termly Report</i>
+                            </div>
                     </div>
                 </div>
                 <br>
@@ -175,8 +178,18 @@
                                     <td><i id="studentclass" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->getClassName->classname }} {{ $studentdetails->getSectionName->sectionname }}</i></td>
                                 </tr>
                                 <tr>
-                                    <td><i style="font-size: 12px; font-style: normal;">Next Term Fee:</i></td>
-                                    <td></td>
+                                    <td><i style="font-size: 12px; font-style: normal;">Next Term Resumes:</i></td>
+                                    <td>
+                                        @if ($term == 1)
+                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermstarts }}</i> 
+                                        @elseif ($term == 2)
+                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermstarts }}</i>
+                                        @elseif ($term == 3)
+                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
+                                        @else
+                                            <i style="font-style: normal; font-weight: bold;">NAN</i>
+                                        @endif
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Sex:</i></td>
@@ -204,8 +217,8 @@
                                     </i></td>
                                 </tr>
                                 <tr>
-                                    <td><i style="font-size: 12px; font-style: normal;">Registration No:</i></td>
-                                    <td><i id="regno" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->id }}</i></td>
+                                    <td><i style="font-size: 12px; font-style: normal;">Admission No:</i></td>
+                                    <td><i id="regno" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->admission_no }}</i></td>
                                 </tr>
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Position:</i></td>

@@ -99,7 +99,7 @@ class SchoolsetupSecController extends Controller
 
     public function addSchoolSession(Request $request){
 
-        $schoolsessioninput = $request->input('schoolsessioninput');
+        $schoolsessioninput = $request->session;
 
         if (empty($schoolsessioninput)) {
             $msg = 0;
@@ -116,7 +116,13 @@ class SchoolsetupSecController extends Controller
         $schoolId = Auth::user()->schoolid;
 
         $updateSchoolSession = Addpost::find($schoolId);
-        $updateSchoolSession->schoolsession = $schoolsessioninput;
+        $updateSchoolSession->schoolsession = $request->session;
+        $updateSchoolSession->firsttermstarts = $request->firsttermstarts;
+        $updateSchoolSession->firsttermends = $request->firsttermends;
+        $updateSchoolSession->secondtermstarts = $request->secondtermstarts;
+        $updateSchoolSession->secondtermends = $request->secondtermends;
+        $updateSchoolSession->thirdtermstarts = $request->thirdtermstarts;
+        $updateSchoolSession->thirdtermends = $request->thirdtermends;
         $updateSchoolSession->save();
 
         $msg = 1;

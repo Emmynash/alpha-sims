@@ -69375,6 +69375,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_alert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-alert */ "./node_modules/react-alert/dist/esm/react-alert.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -69496,6 +69502,20 @@ function SchoolSetUp() {
       setisupdatingca3 = _useState42[1];
 
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
+
+  var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+    session: '',
+    firsttermstarts: '',
+    firsttermends: '',
+    secondtermstarts: '',
+    secondtermends: '',
+    thirdtermstarts: '',
+    thirdtermends: ''
+  }),
+      _useState44 = _slicedToArray(_useState43, 2),
+      sessiondata = _useState44[0],
+      setsessiondata = _useState44[1];
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
     return function () {// cleanup
@@ -69513,6 +69533,15 @@ function SchoolSetUp() {
       setclubs(response.data.clubs);
       setSchoolInitials(response.data.schoolDetails.shoolinitial);
       setschoolsessioninput(response.data.schoolDetails.schoolsession);
+      setsessiondata(_objectSpread({}, sessiondata, {
+        session: response.data.schoolDetails.schoolsession,
+        firsttermstarts: response.data.schoolDetails.firsttermstarts,
+        firsttermends: response.data.schoolDetails.firsttermends,
+        secondtermstarts: response.data.schoolDetails.secondtermstarts,
+        secondtermends: response.data.schoolDetails.secondtermends,
+        thirdtermstarts: response.data.schoolDetails.thirdtermstarts,
+        thirdtermends: response.data.schoolDetails.thirdtermends
+      }));
 
       if (response.data.schoolDetails.exams == 1) {
         setexamscheck(true);
@@ -69576,6 +69605,11 @@ function SchoolSetUp() {
 
   function handleChangeSchoolClubs(e) {
     setschoolclubs(e.target.value);
+  }
+
+  function handleChange(evt) {
+    var value = evt.target.value;
+    setsessiondata(_objectSpread({}, sessiondata, _defineProperty({}, evt.target.name, value)));
   }
 
   function handleExamChange(e) {
@@ -69661,23 +69695,20 @@ function SchoolSetUp() {
   function updateSchoolSession() {
     //
     if (schoolsessioninput != "") {
-      if (schooldetails.schoolsession != schoolsessioninput) {
-        var data = new FormData();
-        data.append("schoolsessioninput", schoolsessioninput);
-        axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/addschoolsession", data, {
-          headers: {
-            "Content-type": "application/json"
-          }
-        }).then(function (response) {
-          console.log(response);
-          fetchSchoolDetails();
-          myalert('Process Successful', 'success');
-        })["catch"](function (e) {
-          console.log(e);
-        });
-      } else {
-        myalert('Noting was changed', 'warning');
-      }
+      // if ( schooldetails.schoolsession != schoolsessioninput) {
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/addschoolsession", sessiondata, {
+        headers: {
+          "Content-type": "application/json"
+        }
+      }).then(function (response) {
+        console.log(response); // fetchSchoolDetails()
+
+        myalert('Process Successful', 'success');
+      })["catch"](function (e) {
+        console.log(e);
+      }); // }else{
+      //     myalert('Noting was changed', 'warning');
+      // }
     }
   }
 
@@ -69871,12 +69902,131 @@ function SchoolSetUp() {
       className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       className: "form-control form-control-sm",
-      value: schoolsessioninput,
-      onChange: function onChange(e) {
-        return handleChangeSchoolSchoolsession(e);
-      },
+      name: "session",
+      value: sessiondata.session,
+      onChange: handleChange,
       placeholder: "School Session"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group",
+      style: {
+        margin: '5px'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '10px'
+      }
+    }, "1st term begins"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "date",
+      onChange: handleChange,
+      value: sessiondata.firsttermstarts,
+      name: "firsttermstarts",
+      id: "",
+      className: "form-control form-control-sm"
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group",
+      style: {
+        margin: '5px'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '10px'
+      }
+    }, "1st term ends"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "date",
+      onChange: handleChange,
+      value: sessiondata.firsttermends,
+      name: "firsttermends",
+      id: "",
+      className: "form-control form-control-sm"
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group",
+      style: {
+        margin: '5px'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '10px'
+      }
+    }, "2nd term begins"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "date",
+      onChange: handleChange,
+      value: sessiondata.secondtermstarts,
+      name: "secondtermstarts",
+      id: "",
+      className: "form-control form-control-sm"
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group",
+      style: {
+        margin: '5px'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '10px'
+      }
+    }, "2nd term ends"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "date",
+      onChange: handleChange,
+      value: sessiondata.secondtermends,
+      name: "secondtermends",
+      id: "",
+      className: "form-control form-control-sm"
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group",
+      style: {
+        margin: '5px'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '10px'
+      }
+    }, "3rd term begins"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "date",
+      onChange: handleChange,
+      value: sessiondata.thirdtermstarts,
+      name: "thirdtermstarts",
+      id: "",
+      className: "form-control form-control-sm"
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group",
+      style: {
+        margin: '5px'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '10px'
+      }
+    }, "3rd term ends"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "date",
+      onChange: handleChange,
+      value: sessiondata.thirdtermends,
+      name: "thirdtermends",
+      id: "",
+      className: "form-control form-control-sm"
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       className: "btn btn-sm btn-info badge",
       onClick: updateSchoolSession
     }, "Save"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

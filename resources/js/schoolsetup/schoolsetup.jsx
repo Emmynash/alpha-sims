@@ -30,6 +30,16 @@ function SchoolSetUp() {
     const [isupdatingca3, setisupdatingca3] = useState(false)
     const alert = useAlert()
 
+    const [sessiondata, setsessiondata] = useState({
+        session:'',
+        firsttermstarts:'',
+        firsttermends:'',
+        secondtermstarts:'',
+        secondtermends:'',
+        thirdtermstarts:'',
+        thirdtermends:''
+    })
+
     useEffect(() => {
 
         fetchSchoolDetails()
@@ -38,6 +48,8 @@ function SchoolSetUp() {
             // cleanup
         };
     }, []);
+
+
 
     function fetchSchoolDetails() {
 
@@ -51,6 +63,16 @@ function SchoolSetUp() {
             setclubs(response.data.clubs)
             setSchoolInitials(response.data.schoolDetails.shoolinitial)
             setschoolsessioninput(response.data.schoolDetails.schoolsession)
+
+            setsessiondata({
+                ...sessiondata, session:response.data.schoolDetails.schoolsession,
+                firsttermstarts:response.data.schoolDetails.firsttermstarts,
+                firsttermends:response.data.schoolDetails.firsttermends,
+                secondtermstarts:response.data.schoolDetails.secondtermstarts,
+                secondtermends:response.data.schoolDetails.secondtermends,
+                thirdtermstarts:response.data.schoolDetails.thirdtermstarts,
+                thirdtermends:response.data.schoolDetails.thirdtermends
+            })
 
             if (response.data.schoolDetails.exams ==1) {
                 setexamscheck(true)
@@ -114,6 +136,14 @@ function SchoolSetUp() {
     function handleChangeSchoolClubs(e) {
         setschoolclubs(e.target.value);
     }
+
+    function handleChange(evt) {
+        const value = evt.target.value;
+        setsessiondata({
+            ...sessiondata,
+          [evt.target.name]: value
+        });
+      }
     
     function handleExamChange(e) {
         console.log(e.target.value)
@@ -211,25 +241,24 @@ function SchoolSetUp() {
 
         if (schoolsessioninput !="") {
             
-            if ( schooldetails.schoolsession != schoolsessioninput) {
-                const data = new FormData()
-                data.append("schoolsessioninput", schoolsessioninput)
-                axios.post("/sec/setting/addschoolsession", data, {
+            // if ( schooldetails.schoolsession != schoolsessioninput) {
+
+                axios.post("/sec/setting/addschoolsession", sessiondata, {
                     headers:{
                         "Content-type": "application/json"
                     }
                 }).then(response=>{
                     console.log(response)
-                    fetchSchoolDetails()
+                    // fetchSchoolDetails()
                     myalert('Process Successful', 'success');
                 
                 }).catch(e=>{
                     console.log(e)
 
                 })
-            }else{
-                myalert('Noting was changed', 'warning');
-            }
+            // }else{
+            //     myalert('Noting was changed', 'warning');
+            // }
         }
     } 
 
@@ -445,7 +474,52 @@ function SchoolSetUp() {
                     </div>
                     <div className="col-12 col-md-4">
                         <div className="form-group">
-                            <input className="form-control form-control-sm" value={schoolsessioninput} onChange={(e)=>handleChangeSchoolSchoolsession(e)} placeholder="School Session"/>
+                            <input className="form-control form-control-sm" name="session" value={sessiondata.session} onChange={handleChange} placeholder="School Session"/>
+                            {/* first term */}
+                            <div className="row"> 
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>1st term begins</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.firsttermstarts} name="firsttermstarts" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>1st term ends</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.firsttermends} name="firsttermends" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                            </div>
+                            {/* second term */}
+                            <div className="row"> 
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>2nd term begins</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.secondtermstarts} name="secondtermstarts" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>2nd term ends</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.secondtermends} name="secondtermends" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                            </div>
+                            {/* third term */}
+                            <div className="row"> 
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>3rd term begins</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.thirdtermstarts} name="thirdtermstarts" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>3rd term ends</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.thirdtermends} name="thirdtermends" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                            </div>
                             <button className="btn btn-sm btn-info badge" onClick={updateSchoolSession}>Save</button>
                         </div>
                     </div>

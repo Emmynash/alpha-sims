@@ -114,58 +114,133 @@ class PromotionController_sec extends Controller
     public function promotionmain(Request $request){
 
 
-        $validator = Validator::make($request->all(),[
-            'nextsession' => 'required',
-            'nextClassDisplay' => 'required',
-            'studentsforpromotion' => 'required',
-            'nextClassDisplayname' => 'required'
-        ]);
 
-        if ($validator->fails()) {
-            return back()->with('error', 'An error occured');
-        }
+        if ($request->promotewithaverage == "0") {
 
-        $regnoforpromo = explode(",", $request->input('studentsforpromotion'));
-        
-        if (count($regnoforpromo) < 1) // check if there is student in the currently selected class for promotion...
-        {
-            return back('warning', 'No student in the selected class');
-        }
-        
-        
+            $addstudent_sec = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                            ->join('users','users.id','=','addstudent_secs.usernamesystem')
+                            ->leftjoin('promotion_average_secs',['promotion_average_secs.regno'=>'addstudent_secs.id', 'promotion_average_secs.session'=>'addstudent_secs.schoolsession'])
+                            ->select('addstudent_secs.*', 'classlist_secs.classname', 'users.firstname', 'users.middlename', 'users.lastname', 'promotion_average_secs.promomarks')
+                            ->where(['addstudent_secs.classid'=>$request->classfrom, 'addstudent_secs.studentsection'=>$request->promofromsection, 'addstudent_secs.schoolsession'=>$request->previoussession, 'sessionstatus'=>"0"])->get();
 
-        for ($i=0; $i < count($regnoforpromo); $i++) 
-        { 
 
-            if ($request->input('nextClassDisplayname') == "GRAD") // check if the student is in final year in the school. Remove student from hostel if done with school
-            {
 
-                $promoteStudentNow = Addstudent_sec::find($regnoforpromo[$i]);
-                $promoteStudentNow->sessionstatus = "1";
-                $promoteStudentNow->save();
+                    if (count($addstudent_sec) < 1) // check if there is student in the currently selected class for promotion...
+                    {
+                        return back('warning', 'No student in the selected class');
+                    }
 
-                $getHostelId = AddStudentToHostel::where('regno', $regnoforpromo[$i])->get();
 
-                if (count($getHostelId) > 0) {
-                    $hostelIdMain = $getHostelId[0]['id'];
+                    for ($i=0; $i < count($addstudent_sec); $i++) 
+                    { 
 
-                    $removeStudentHostel = AddStudentToHostel::find($hostelIdMain);
-                    $removeStudentHostel_>delete();
+                        if ((int)$addstudent_sec[$i]->promomarks >= (int)$request->promotionaverage) {
+
+                            if ($request->input('nextClassDisplayname') == "GRAD") // check if the student is in final year in the school. Remove student from hostel if done with school
+                            {
+    
+                                $promoteStudentNow = Addstudent_sec::find($addstudent_sec[$i]->id);
+                                $promoteStudentNow->sessionstatus = "1";
+                                $promoteStudentNow->save();
+    
+                                $getHostelId = AddStudentToHostel::where('regno', $addstudent_sec[$i]->id)->get();
+    
+                                if (count($getHostelId) > 0) {
+                                    $hostelIdMain = $getHostelId[0]['id'];
+    
+                                    $removeStudentHostel = AddStudentToHostel::find($hostelIdMain);
+                                    $removeStudentHostel->delete();
+    
+                                }
+                                
+                            }else{
+    
+                                $promoteStudentNow = Addstudent_sec::find($addstudent_sec[$i]->id);
+                                $promoteStudentNow->classid = $request->classto;
+                                $promoteStudentNow->schoolsession = $request->newsession;
+                                $promoteStudentNow->save();
+    
+                            }
+                            
+                        }
+
+                    }
+
+                    if ((int)$addstudent_sec[$i]->promomarks == null) {
+                        return response()->json(['response'=>'error']);
+                    }else{
+                        return response()->json(['response'=>'success']);
+                    }
+
+                    
+
+
+            
+        }elseif ($request->promotewithaverage == "1") {
+
+            $addstudent_sec = DB::table('addstudent_secs')
+                    ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                    ->join('users','users.id','=','addstudent_secs.usernamesystem')
+                    ->leftjoin('promotion_average_secs',['promotion_average_secs.regno'=>'addstudent_secs.id', 'promotion_average_secs.session'=>'addstudent_secs.schoolsession'])
+                    ->select('addstudent_secs.*', 'classlist_secs.classname', 'users.firstname', 'users.middlename', 'users.lastname', 'promotion_average_secs.promomarks')
+                    ->where(['addstudent_secs.classid'=>$request->classfrom, 'addstudent_secs.studentsection'=>$request->promofromsection, 'addstudent_secs.schoolsession'=>$request->previoussession, 'sessionstatus'=>"0"])->get();
+
+
+                return $addstudent_sec;
+
+
+                if (count($addstudent_sec) < 1) // check if there is student in the currently selected class for promotion...
+                {
+                    return back('warning', 'No student in the selected class');
+                }
+
+
+                for ($i=0; $i < count($addstudent_sec); $i++) 
+                { 
+
+                    if ($request->input('nextClassDisplayname') == "GRAD") // check if the student is in final year in the school. Remove student from hostel if done with school
+                    {
+
+                        $promoteStudentNow = Addstudent_sec::find($addstudent_sec[$i]->id);
+                        $promoteStudentNow->sessionstatus = "1";
+                        $promoteStudentNow->save();
+
+                        $getHostelId = AddStudentToHostel::where('regno', $addstudent_sec[$i]->id)->get();
+
+                        if (count($getHostelId) > 0) {
+                            $hostelIdMain = $getHostelId[0]['id'];
+
+                            $removeStudentHostel = AddStudentToHostel::find($hostelIdMain);
+                            $removeStudentHostel->delete();
+
+                        }
+                        
+                    }else{
+
+                        $promoteStudentNow = Addstudent_sec::find($addstudent_sec[$i]->id);
+                        $promoteStudentNow->classid = $request->classto;
+                        $promoteStudentNow->schoolsession = $request->newsession;
+                        $promoteStudentNow->save();
+
+                    }
 
                 }
-                
-            }else{
 
-                $promoteStudentNow = Addstudent_sec::find($regnoforpromo[$i]);
-                $promoteStudentNow->classid = $request->input('nextClassDisplay');
-                $promoteStudentNow->schoolsession = $request->input('nextsession');
-                $promoteStudentNow->save();
 
-            }
+                if ((int)$addstudent_sec[$i]->promomarks == null) {
+                    return response()->json(['response'=>'error']);
+                }else{
+                    return response()->json(['response'=>'success']);
+                }
             
-
+        }else {
+            return response()->json(['response'=>'error']);
         }
-        return back()->with('success', 'Students successfully promoted');
+
+
+
+
+
     }
 
     public function promotejss3toss1(Request $request){

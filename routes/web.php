@@ -371,10 +371,6 @@ Route::group(['prefix' => 'sec'], function () {
         Route::POST('/delete_room', 'DometoryController@deleteRoom')->name('delete_room');
         Route::POST('/delete_hostel', 'DometoryController@deleteHostel')->name('delete_hostel');
     });
-
-
-
-
 });
 
 
@@ -494,8 +490,6 @@ Route::group(['middleware' => ['auth', 'can:manage marks']], function () {
 });
 
 
-
-
 //teachers attendance
 Route::group(['middleware' => ['auth', 'can:take teachers attendance']], function () {
     Route::get('/teacher_add_attendance', 'AttendanceTeachers@index');
@@ -513,6 +507,7 @@ Route::group(['middleware' => ['auth', 'can:student promotion']], function () {
     Route::POST('/promotion_main_query', 'PromotionController_sec@promotionmain');
     Route::POST('/promote_jss_ss', 'PromotionController_sec@promotejss3toss1');
 });
+
 
 Route::group(['middleware' => ['auth', 'can:access library']], function () { // library module
     Route::get('/school_library', 'LibraryController@index')->name('school_library');
@@ -537,7 +532,6 @@ Route::group(['middleware' => ['auth', 'role:Librarian']], function () {
 });
 
 // secondary school result computation
-
 
     Route::get('/result_view_sec', ['uses' => 'ResultController_sec@index','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
     Route::Post('/result_print_sec', ['uses' => 'ResultController_sec@viewResult','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');

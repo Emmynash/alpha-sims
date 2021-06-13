@@ -69437,6 +69437,16 @@ function Promotion() {
       promotionFromSection = _useState18[0],
       setPromotionSection = _useState18[1];
 
+  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState20 = _slicedToArray(_useState19, 2),
+      promotionToId = _useState20[0],
+      setPromotionToId = _useState20[1];
+
+  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState22 = _slicedToArray(_useState21, 2),
+      addstudentSec = _useState22[0],
+      setaddstudent_sec = _useState22[1];
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
     return function () {// cleanup
@@ -69511,6 +69521,8 @@ function Promotion() {
         setPromotionToClass("GRAD");
       } else {
         setPromotionToClass(response.data.success.classlist_secs[0].classname);
+        setPromotionToId(response.data.success.classlist_secs[0].id);
+        setaddstudent_sec(response.data.success.addstudent_sec);
       }
     })["catch"](function (e) {
       console.log(e);
@@ -69565,6 +69577,27 @@ function Promotion() {
         console.log(e);
       });
     }
+  }
+
+  function promoteStudent() {
+    var data = new FormData();
+    data.append("classfrom", promotionFromClass), data.append("classto", promotionToId), data.append("promofromsection", promotionFromSection), data.append("previoussession", previousSessionmain), data.append("newsession", schoolSession), data.append("promotionaverage", promotionAverage), data.append("promotewithaverage", averagestatus), data.append("nextClassDisplayname", poromotionToClass);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/promotion_main_query", data, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+
+      if (response.data.response == "success") {
+        myalert("Promotion Successful", 'success');
+      } else {
+        myalert("Unknown Error", 'error');
+      }
+    })["catch"](function (e) {
+      console.log(e);
+      myalert("Unknown Error", 'error');
+    });
   }
 
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -69647,6 +69680,7 @@ function Promotion() {
       className: "form-control form-control-sm",
       readOnly: true
     })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: promoteStudent,
       className: "btn btn-sm btn-info"
     }, "Proceed")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
@@ -69734,9 +69768,14 @@ function Promotion() {
       className: "card-body table-responsive p-0"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "table table-hover text-nowrap"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Admission No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Average"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "183"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "John Doe"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "11-7-2014"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-      className: "tag tag-success"
-    }, "Approved"))))))))))
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Admission No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Average"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, addstudentSec.map(function (d) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+          key: d.id + "promotable"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.admission_no), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.firstname, " ", d.middlename, " ", d.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.promomarks), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "btn btn-sm btn-info badge"
+        }, "Promote")))
+      );
+    }))))))))
   );
 }
 
