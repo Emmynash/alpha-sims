@@ -193,6 +193,8 @@ class StudentController_sec extends Controller
 
         }else{
 
+            // return $request;
+
             $validator = Validator::make($request->all(),[
                 'studentclassallocated' => 'required',
                 'studentsectionallocated' => 'required',
