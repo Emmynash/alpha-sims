@@ -75,7 +75,7 @@ class RegisterStudents{
             $Addstudent->schoolid = Auth::user()->schoolid;
             $Addstudent->usernamesystem = $createAccount->id;
             $Addstudent->renumberschoolnew = $newrolnumber;
-            $Addstudent->nationality = $request->input('nationality');
+            $Addstudent->nationality = "Nigerian";
             $Addstudent->studentsection = $request->input('studentsectionallocated');
             $Addstudent->schoolsession = $schooldetails->schoolsession;
             $Addstudent->gender = $request->input('studentgender');
