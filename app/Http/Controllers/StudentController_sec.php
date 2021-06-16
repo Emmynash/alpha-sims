@@ -213,7 +213,7 @@ class StudentController_sec extends Controller
                 'firstname' => 'required',
                 // 'middlename' => 'required',
                 'lastname' => 'required',
-                'phonenumber' => 'required',
+                // 'phonenumber' => 'required',
                 'email' => 'required',
                 'states' => 'required',
                 'lga' => 'required',
