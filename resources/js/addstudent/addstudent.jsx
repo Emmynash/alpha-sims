@@ -167,7 +167,8 @@ function AddStudents() {
                         email: '',
                         states: '',
                         lga:'',
-                        hometown:''
+                        hometown:'',
+                        admissiondate:''
                     })
                     setuserdetailfetch([])
                     myalert('account Created successfully', 'success')
@@ -349,6 +350,12 @@ function AddStudents() {
                                     <input type="text" name="admissionname" onChange={handleChange} value={regForm.admissionname} className="form-control form-control-sm" placeholder="Admission number"/>
                                 </div>
                             </div>
+                            <div className="col-12 col-md-3">
+                                <div className="form-group">
+                                    <label htmlFor="">Admission Date</label>
+                                    <input type="date" name="admissiondate" onChange={handleChange} value={regForm.admissiondate} className="form-control form-control-sm" placeholder="Admission date"/>
+                                </div>
+                            </div>
                         </div>
                         <div style={{ margin:'10px' }}>
                             <hr />
@@ -403,6 +410,7 @@ function AddStudents() {
                             <div className="row">
                                 <div className="col-12 col-md-4">
                                     <div className="form-group">
+                                        <label htmlFor="">Date of Birth</label>
                                         <input type="date" name="dateofbirth" onChange={handleChange} className="form-control form-control-sm" value={regForm.dateofbirth}/>
                                     </div>
                                 </div>

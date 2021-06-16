@@ -96,6 +96,7 @@ class RegisterStudents{
             $Addstudent->states = $request->states;
             $Addstudent->lga = $request->lga;
             $Addstudent->hometown = $request->hometown;
+            $Addstudent->admissiondate = $request->admissiondate;
             $Addstudent->save();
     
             //asign student role

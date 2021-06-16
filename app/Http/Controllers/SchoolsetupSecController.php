@@ -144,7 +144,7 @@ class SchoolsetupSecController extends Controller
 
         if ($schoolDetails->schooltype == "Secondary") {
 
-            $classlist = array("JSSS1", "JSSS2", "JSSS3", "SSS1", "SSS2", "SSS3");
+            $classlist = array("JSS1", "JSS2", "JSS3", "SSS1", "SSS2", "SSS3");
 
             $classlisttype = array("1", "1", "1", "2", "2", "2");
     

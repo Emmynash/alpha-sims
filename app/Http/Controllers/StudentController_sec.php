@@ -111,7 +111,8 @@ class StudentController_sec extends Controller
                 'admissionname' => 'required',
                 'states' => 'required',
                 'lga' => 'required',
-                'hometown' => 'required'
+                'hometown' => 'required',
+                'admissiondate'=>'required'
             ]);
 
             if ($validator->fails()) {
@@ -169,6 +170,7 @@ class StudentController_sec extends Controller
             $Addstudent->admission_no = $request->admissionname;
             $Addstudent->states = $request->states;
             $Addstudent->lga = $request->lga;
+            $Addstudent->admissiondate = $request->admissiondate;
             $Addstudent->hometown = $request->hometown;
             $Addstudent->save();
     
@@ -213,7 +215,8 @@ class StudentController_sec extends Controller
                 'email' => 'required',
                 'states' => 'required',
                 'lga' => 'required',
-                'hometown' => 'required'
+                'hometown' => 'required',
+                'admissiondate'=>'required'
             ]);
 
             if ($validator->fails()) {

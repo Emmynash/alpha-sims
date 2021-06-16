@@ -69542,7 +69542,8 @@ function AddStudents() {
             email: '',
             states: '',
             lga: '',
-            hometown: ''
+            hometown: '',
+            admissiondate: ''
           });
           setuserdetailfetch([]);
           myalert('account Created successfully', 'success');
@@ -69848,6 +69849,19 @@ function AddStudents() {
       value: regForm.admissionname,
       className: "form-control form-control-sm",
       placeholder: "Admission number"
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-3"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: ""
+    }, "Admission Date"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "date",
+      name: "admissiondate",
+      onChange: handleChange,
+      value: regForm.admissiondate,
+      className: "form-control form-control-sm",
+      placeholder: "Admission date"
     })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
         margin: '10px'
@@ -69949,7 +69963,9 @@ function AddStudents() {
       className: "col-12 col-md-4"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: ""
+    }, "Date of Birth"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "date",
       name: "dateofbirth",
       onChange: handleChange,
