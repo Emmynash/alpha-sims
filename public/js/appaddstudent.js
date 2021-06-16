@@ -69856,12 +69856,12 @@ function AddStudents() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
       htmlFor: ""
     }, "Admission Date"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "date",
+      type: "text",
       name: "admissiondate",
       onChange: handleChange,
       value: regForm.admissiondate,
       className: "form-control form-control-sm",
-      placeholder: "Admission date"
+      placeholder: "2020/2021"
     })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
         margin: '10px'

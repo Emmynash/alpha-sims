@@ -353,7 +353,7 @@ function AddStudents() {
                             <div className="col-12 col-md-3">
                                 <div className="form-group">
                                     <label htmlFor="">Admission Date</label>
-                                    <input type="date" name="admissiondate" onChange={handleChange} value={regForm.admissiondate} className="form-control form-control-sm" placeholder="Admission date"/>
+                                    <input type="text" name="admissiondate" onChange={handleChange} value={regForm.admissiondate} className="form-control form-control-sm" placeholder="2020/2021"/>
                                 </div>
                             </div>
                         </div>
