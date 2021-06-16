@@ -13,6 +13,7 @@ use App\Addstudent;
 use App\Addsubject;
 use App\Addmarks;
 use App\Addgrades;
+use App\Http\Middleware\Roles;
 use Auth;
 use Redirect;
 use Carbon\Carbon;
@@ -48,7 +49,37 @@ class AllUsersController extends Controller
 
         $allusers = User::where('schoolid', $id)->paginate(10);
 
-        return view('secondary.viewallusers')->with('allusers', $allusers);
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.allusers.allusers', compact('schooldetails'));
+    }
+    public function fetch_all_student()
+    {
+        $allusers = User::where('schoolid', Auth::user()->shoolid)->get();
+
+
+        $usersListMain = array();
+
+        for ($i=0; $i < count($allusers); $i++) { 
+
+            $user = User::find($allusers[$i]['id']);
+            $role = $user->roles->pluck('name');
+
+            $newObject = array(
+                "name" => $allusers[$i]['firstname']." ".$allusers[$i]['middlename']." ".$allusers[$i]['lastname'],
+                "role" => $role,
+                "id" => $allusers[$i]['id'],
+                "phonenumber" => $allusers[$i]['phonenumber'],
+                "email" => $allusers[$i]['email']
+            );
+
+            array_push($usersListMain, $newObject);
+
+        
+        }
+
+
+        return response()->json(['allusers' => collect($usersListMain)]);
     }
 
     public function fetchuser_sec(Request $request){

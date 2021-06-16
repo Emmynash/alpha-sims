@@ -320,6 +320,7 @@ Route::group(['prefix' => 'sec'], function () {
         Route::POST('/update_caset', 'SchoolsetupSecController@updatecaSet')->name('update_caset');
 
         Route::get('/allusers_sec', 'AllUsersController@index_sec')->name('allusers_sec');
+        Route::get('/fetch_all_student', 'AllUsersController@fetch_all_student')->name('fetch_all_student');
         Route::POST('/allusers_sec_fetch', 'AllUsersController@fetchuser_sec')->name('allusers_sec_fetch');
     
     });
