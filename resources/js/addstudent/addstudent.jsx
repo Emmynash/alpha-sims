@@ -137,6 +137,8 @@ function AddStudents() {
                     myalert('Admission number already taken', 'error')
                 }else if(response.data.response == "exist"){
                     myalert('Already added', 'error')
+                }else if(response.data.response == "erroremail"){
+                    myalert('An error occured. Invalid email', 'error')
                 }
                 else if(response.data.response == "success"){
 
@@ -178,7 +180,7 @@ function AddStudents() {
             }).catch(e=>{
                 console.log(e)
                 setIsverifying(false)
-                myalert('Unknown Error', 'error')
+                myalert('Ensure all fields are filled', 'error')
             })
         }else{
             myalert('Select if the student has registered or not', 'error')

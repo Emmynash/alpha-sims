@@ -19,6 +19,8 @@ class RegisterStudents{
         try {
             $generatePassword = 'password';//rand(5, 10);
 
+            
+
             $checkEmailExist = User::where('email', $request->email)->get();
 
             if (count($checkEmailExist) > 0) {

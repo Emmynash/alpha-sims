@@ -214,7 +214,7 @@ class StudentController_sec extends Controller
                 // 'middlename' => 'required',
                 'lastname' => 'required',
                 // 'phonenumber' => 'required',
-                'email' => 'required',
+                'email' => 'required|email',
                 'states' => 'required',
                 // 'lga' => 'required',
                 // 'hometown' => 'required',
@@ -222,7 +222,8 @@ class StudentController_sec extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['response'=>$validator->errors()->keys()]);
+                // return response()->json(['response'=>$validator->errors()->keys()]);
+                return response()->json(['response'=>'erroremail']);
             }
 
             $freshRegistration = $registerStudents->freshStudentRegistrationBySchool($request);
