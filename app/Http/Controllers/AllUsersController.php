@@ -56,7 +56,7 @@ class AllUsersController extends Controller
     }
     public function fetch_all_student()
     {
-        $allusers = User::where(['schoolid' => Auth::user()->schoolid])->get();
+        $allusers = User::where(['schoolid' => Auth::user()->schoolid])->orderBy('created_at', 'desc')->get();
 
 
         $usersListMain = array();
