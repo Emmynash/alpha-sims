@@ -69901,6 +69901,7 @@ function AddSubject() {
     }, "Close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: addSubjectsMain,
       type: "button",
+      "data-dismiss": "modal",
       className: "btn btn-info btn-sm"
     }, "Save changes"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal fade",
