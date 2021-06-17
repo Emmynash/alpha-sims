@@ -19,7 +19,7 @@ class ClassesController extends Controller
 
     public function index(){
 
-        $classesAll = $this->classlist_sec->where('schoolid', Auth::user()->schoolid)->get();
+        $classesAll = $this->classlist_sec->where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 

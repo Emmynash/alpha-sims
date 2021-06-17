@@ -50,7 +50,7 @@ class SubjectController_sec extends Controller
 
     public function addsubject_sec(){
         
-        $classesAll = $this->classlist_sec->where('schoolid', Auth::user()->schoolid)->get();
+        $classesAll = $this->classlist_sec->where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
 
         $schoolDetails = Addpost::find(Auth::user()->schoolid);
 

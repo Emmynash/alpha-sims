@@ -131,14 +131,6 @@ class SchoolsetupSecController extends Controller
     }
 
     public function addClasses(Request $request){
-        
-        // $validatedData = $request->validate([
-        //     'classname' => 'required',
-        //     'type' => 'required'
-        // ]);
-
-
-        //automatic class setup
 
         $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
@@ -191,8 +183,28 @@ class SchoolsetupSecController extends Controller
     
             return back()->with('success', 'process was successfull');
         }
+    }
 
+    public function disableClass($id)
+    {
+        
+        try {
+            $classlist = Classlist_sec::find($id);
 
+            if ($classlist->status == 0) {
+                $classlist->status = 1;
+                $classlist->save();
+                return response()->json(['response'=>"success"]);
+            }else{
+                $classlist->status = 0;
+                $classlist->save();
+                return response()->json(['response'=>"success"]);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+            return response()->json(['response'=>"error"]);
+        }
 
     }
 

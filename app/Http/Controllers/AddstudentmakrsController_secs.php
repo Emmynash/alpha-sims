@@ -576,7 +576,7 @@ class AddstudentmakrsController_secs extends Controller
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        $classlist = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
+        $classlist = Classlist_sec::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
 
         $subjects = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->get();
 

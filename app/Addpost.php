@@ -19,7 +19,7 @@ class Addpost extends Model
             $classlist_sec = Classlist::where('schoolid', $schoolid)->get();
             return $classlist_sec;
         } else {
-            $classlist_sec = Classlist_sec::where('schoolid', $schoolid)->get();
+            $classlist_sec = Classlist_sec::where(['schoolid'=> $schoolid, 'status'=>1])->get();
             return $classlist_sec;
         }
         

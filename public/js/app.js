@@ -69431,7 +69431,7 @@ function SchoolSetUp() {
       schoolsessioninput = _useState14[0],
       setschoolsessioninput = _useState14[1];
 
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState16 = _slicedToArray(_useState15, 2),
       term = _useState16[0],
       setterm = _useState16[1];
@@ -69501,9 +69501,19 @@ function SchoolSetUp() {
       isupdatingca3 = _useState42[0],
       setisupdatingca3 = _useState42[1];
 
+  var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState44 = _slicedToArray(_useState43, 2),
+      selectedclassid = _useState44[0],
+      setSelectedClassId = _useState44[1];
+
+  var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState46 = _slicedToArray(_useState45, 2),
+      selectedclassname = _useState46[0],
+      setSelectedClassName = _useState46[1];
+
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
 
-  var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+  var _useState47 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     session: '',
     firsttermstarts: '',
     firsttermends: '',
@@ -69512,9 +69522,9 @@ function SchoolSetUp() {
     thirdtermstarts: '',
     thirdtermends: ''
   }),
-      _useState44 = _slicedToArray(_useState43, 2),
-      sessiondata = _useState44[0],
-      setsessiondata = _useState44[1];
+      _useState48 = _slicedToArray(_useState47, 2),
+      sessiondata = _useState48[0],
+      setsessiondata = _useState48[1];
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
@@ -69873,6 +69883,21 @@ function SchoolSetUp() {
     });
   }
 
+  function handleClickClass(classid) {
+    setSelectedClassId(classid);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/sec/setting/classstatus/' + classid).then(function (response) {
+      if (response.data.response == "success") {
+        fetchSchoolDetails();
+        myalert('Process Successful', 'success');
+      } else {
+        myalert('Unknown error', 'error');
+      }
+    })["catch"](function (e) {
+      myalert('Unknown error', 'error');
+    });
+    console.log(classid);
+  }
+
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "container"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -70035,20 +70060,18 @@ function SchoolSetUp() {
       className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
       className: "form-control form-control-sm",
+      value: term,
       onChange: function onChange(e) {
         return handleChangeSchoolTerm(e);
       }
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: ""
     }, "Select a term"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "1",
-      selected: term == 1 ? "selected" : ""
+      value: "1"
     }, "1(first)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "2",
-      selected: term == 2 ? "selected" : ""
+      value: "2"
     }, "2(Second)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "3",
-      selected: term == 3 ? "selected" : ""
+      value: "3"
     }, "3(Third)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: updateSchoolTerm,
       className: "btn btn-sm btn-info badge"
@@ -70070,7 +70093,7 @@ function SchoolSetUp() {
       onChange: function onChange(e) {
         return handleExamChange(e);
       },
-      checked: examscheck ? "checked" : "",
+      checked: schooldetails.exams == 1 ? true : false,
       className: "custom-control-input",
       id: "customSwitch1"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -70089,7 +70112,7 @@ function SchoolSetUp() {
       onChange: function onChange(e) {
         return handleCa1Change(e);
       },
-      checked: ca1check ? "checked" : "",
+      checked: schooldetails.ca1 == 1 ? true : false,
       className: "custom-control-input",
       id: "customSwitch2"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -70108,7 +70131,7 @@ function SchoolSetUp() {
       onChange: function onChange(e) {
         return handleCa2Change(e);
       },
-      checked: ca2check == true ? "checked" : "",
+      checked: schooldetails.ca2 == 1 ? true : false,
       className: "custom-control-input",
       id: "customSwitch3"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -70127,7 +70150,7 @@ function SchoolSetUp() {
       onChange: function onChange(e) {
         return handleCa3Change(e);
       },
-      checked: ca3check == true ? "checked" : "",
+      checked: schooldetails.ca3 == 1 ? true : false,
       className: "custom-control-input",
       id: "customSwitch4"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -70151,6 +70174,7 @@ function SchoolSetUp() {
       className: "btn btn-sm btn-info badge"
     }, "Generate Classes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), classlist.length > 0 ? classlist.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: d.id + "classlist",
           className: "card radius-15"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "card-body"
@@ -70174,7 +70198,11 @@ function SchoolSetUp() {
           className: "custom-control custom-switch"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           type: "checkbox",
+          defaultChecked: d.status == 1 ? true : false,
           className: "custom-control-input",
+          onClick: function onClick() {
+            return handleClickClass(d.id);
+          },
           id: "customSwitchclasses" + d.id
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
           className: "custom-control-label",
@@ -70347,7 +70375,36 @@ function SchoolSetUp() {
         fontStyle: 'normal',
         fontSize: '10px'
       }
-    }, " Setup clubs "))))))))
+    }, " Setup clubs "))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal fade",
+      id: "updateclassstatus"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-dialog"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-content"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-header"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
+      className: "modal-title"
+    }, "Toggle Class Status"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      type: "button",
+      className: "close",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      "aria-hidden": "true"
+    }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-body"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "You are about to disable ", selectedclassname, ", click proceed to continue ")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-footer justify-content-between"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      type: "button",
+      className: "btn btn-default btn-sm",
+      "data-dismiss": "modal"
+    }, "Close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      type: "button",
+      className: "btn btn-info btn-sm"
+    }, "Proceed"))))))
   );
 }
 

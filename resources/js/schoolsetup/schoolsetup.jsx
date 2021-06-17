@@ -14,7 +14,7 @@ function SchoolSetUp() {
     const [clubs, setclubs] = useState([])
     const [schoolinitials, setSchoolInitials] = useState('')
     const [schoolsessioninput, setschoolsessioninput] = useState('')
-    const [term, setterm] = useState(0)
+    const [term, setterm] = useState('')
     const [classnamesch, setClassnamesch] = useState('')
     const [typesch, setTypesch] = useState(0)
     const [houses, setHouses] = useState('')
@@ -28,6 +28,8 @@ function SchoolSetUp() {
     const [isupdatingca2, setisupdatingca2] = useState(false)
     const [ca3check, setca3check] = useState(Boolean)
     const [isupdatingca3, setisupdatingca3] = useState(false)
+    const [selectedclassid, setSelectedClassId] = useState('')
+    const [selectedclassname, setSelectedClassName] = useState('')
     const alert = useAlert()
 
     const [sessiondata, setsessiondata] = useState({
@@ -460,6 +462,28 @@ function SchoolSetUp() {
     }
 
 
+    function handleClickClass(classid) {
+
+        setSelectedClassId(classid)
+
+        axios.get('/sec/setting/classstatus/'+classid).then(response=>{
+
+            if (response.data.response == "success") {
+                fetchSchoolDetails()
+                myalert('Process Successful', 'success');
+            }else{
+                myalert('Unknown error', 'error');
+            }
+
+        }).catch(e=>{
+            myalert('Unknown error', 'error');
+        })
+
+        console.log(classid)
+        
+    }
+
+
 
 
     return(
@@ -526,23 +550,24 @@ function SchoolSetUp() {
                     <div className="col-12 col-md-4">
                         <div className="form-group">
                             {/* <input className="form-control form-control-sm" value={schooldetails.term} placeholder="School term"/> */}
-                            <select className="form-control form-control-sm" onChange={(e)=>handleChangeSchoolTerm(e)}>
+                            <select className="form-control form-control-sm" value={term} onChange={(e)=>handleChangeSchoolTerm(e)}>
                                 <option value="">Select a term</option>
-                                <option value="1" selected={term == 1 ? "selected":""}>1(first)</option>
-                                <option value="2" selected={term == 2 ? "selected":""}>2(Second)</option>
-                                <option value="3" selected={term == 3 ? "selected":""}>3(Third)</option>
+                                <option value="1">1(first)</option>
+                                <option value="2">2(Second)</option>
+                                <option value="3">3(Third)</option>
                             </select>
                             <button onClick={updateSchoolTerm} className="btn btn-sm btn-info badge">Save</button>
                         </div>
                     </div>
 
                 </div>
+                {/* <p>{schooldetails.exams}</p> */}
                 <hr/>
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-3">
                         {isupdatingexams ? <div className="spinner-border"></div>: <div className="form-group">
                             <div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleExamChange(e)} checked={examscheck ? "checked":""} className="custom-control-input" id="customSwitch1" />
+                                <input type="checkbox" onChange={(e)=>handleExamChange(e)} checked={schooldetails.exams == 1 ? true:false} className="custom-control-input" id="customSwitch1" />
                                 <label className="custom-control-label" htmlFor="customSwitch1">Exams</label>
                             </div>
                         </div>}
@@ -551,7 +576,7 @@ function SchoolSetUp() {
                     <div className="col-12 col-md-3">
                     <div className="form-group">
                             {isupdatingca1 ? <div className="spinner-border"></div>:<div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleCa1Change(e)} checked={ca1check ? "checked":""} className="custom-control-input" id="customSwitch2" />
+                                <input type="checkbox" onChange={(e)=>handleCa1Change(e)} checked={schooldetails.ca1 == 1 ? true:false} className="custom-control-input" id="customSwitch2" />
                                 <label className="custom-control-label" htmlFor="customSwitch2">CA1</label>
                             </div>}
                         </div>
@@ -559,7 +584,7 @@ function SchoolSetUp() {
                     <div className="col-12 col-md-3">
                     <div className="form-group">
                             {isupdatingca2 ? <div className="spinner-border"></div>:<div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleCa2Change(e)} checked={ca2check == true ? "checked":""} className="custom-control-input" id="customSwitch3" />
+                                <input type="checkbox" onChange={(e)=>handleCa2Change(e)} checked={schooldetails.ca2 == 1 ? true:false} className="custom-control-input" id="customSwitch3" />
                                 <label className="custom-control-label" htmlFor="customSwitch3">CA2</label>
                             </div>}
                         </div>
@@ -567,7 +592,7 @@ function SchoolSetUp() {
                     <div className="col-12 col-md-3">
                     <div className="form-group">
                             {isupdatingca3 ? <div className="spinner-border"></div>:<div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleCa3Change(e)} checked={ca3check == true ? "checked":""} className="custom-control-input" id="customSwitch4" />
+                                <input type="checkbox" onChange={(e)=>handleCa3Change(e)} checked={schooldetails.ca3 == 1 ? true:false} className="custom-control-input" id="customSwitch4" />
                                 <label className="custom-control-label" htmlFor="customSwitch4">CA3</label>
                             </div>}
                         </div>
@@ -597,14 +622,14 @@ function SchoolSetUp() {
                         {
                             classlist.length > 0 ? 
                             classlist.map(d => (
-                                <div className="card radius-15">
+                                <div key={d.id+"classlist"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
                                             <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.classname} </i> <div style={{ flex:'1' }}></div>
 
                                             <div className="form-group">
                                                 <div className="custom-control custom-switch">
-                                                    <input type="checkbox" className="custom-control-input" id={"customSwitchclasses"+d.id} />
+                                                    <input type="checkbox" defaultChecked={d.status == 1 ? true:false} className="custom-control-input" onClick={()=>handleClickClass(d.id)} id={"customSwitchclasses"+d.id} />
                                                     <label className="custom-control-label" htmlFor={"customSwitchclasses"+d.id}></label>
                                                 </div>
                                             </div>
@@ -719,6 +744,29 @@ function SchoolSetUp() {
                     </div>
                 </div>
             </div>
+
+
+            <div className="modal fade" id="updateclassstatus">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h4 className="modal-title">Toggle Class Status</h4>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <p>You are about to disable {selectedclassname}, click proceed to continue </p>
+                    </div>
+                    <div className="modal-footer justify-content-between">
+                        <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-info btn-sm">Proceed</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     );
 

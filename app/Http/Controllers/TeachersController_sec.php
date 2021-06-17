@@ -67,7 +67,7 @@ class TeachersController_sec extends Controller
         try {
             $schoolId = Auth::user()->schoolid;
 
-            $classesAll = $this->classlist_sec->where('schoolid', Auth::user()->schoolid)->get();
+            $classesAll = $this->classlist_sec->where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
             $addsection_sec = $this->addsection_sec->where('schoolid', Auth::user()->schoolid)->get();
             $addschool = $this->addpost->where('id', Auth::user()->schoolid)->get();
             $addsubject_sec = DB::table('addsubject_secs')

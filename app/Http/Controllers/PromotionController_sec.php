@@ -73,7 +73,7 @@ class PromotionController_sec extends Controller
                         
                         // fetch classes in ascending order depends on if schools are entered in ascending order as instructed
 
-                        $classlist_secs = Classlist_sec::where('schoolid', Auth::user()->schoolid)->orderBy("id", "ASC")->get();
+                        $classlist_secs = Classlist_sec::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->orderBy("id", "ASC")->get();
                         $a = array();
                         for ($i=0; $i < count($classlist_secs); $i++) { 
                             $addsubjectid = $classlist_secs[$i]['id'];
@@ -279,7 +279,7 @@ class PromotionController_sec extends Controller
     {
         $schoolDetails = Addpost::where('id', Auth::user()->schoolid)->first();
 
-        $classlist = Classlist_sec::where("schoolid", Auth::user()->schoolid)->get();
+        $classlist = Classlist_sec::where(["schoolid"=> Auth::user()->schoolid, 'status'=>1])->get();
 
         $classsection = Addsection_sec::where("schoolid", Auth::user()->schoolid)->get();
 

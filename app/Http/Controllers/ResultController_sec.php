@@ -207,28 +207,35 @@ class ResultController_sec extends Controller
         ]);
 
 
-        $classid = $request->input('classid');
-        $term = $request->input('term');
-        $regNo = $request->input('student_reg_no');
-        $schoolsession = $request->input('session');
+        try {
+            $classid = $request->input('classid');
+            $term = $request->input('term');
+            $regNo = $request->input('student_reg_no');
+            $schoolsession = $request->input('session');
+    
+            $checkclasstype = Classlist_sec::find($classid);
+    
+            $studentdetails = Addstudent_sec::find($regNo);
+    
+            $addschool = Addpost::find(Auth::user()->schoolid);
+            $subjects = Addsubject_sec::where('classid', $classid)->get();
+    
+            $motolist = MotoList::where('schoolid', Auth::user()->schoolid)->get();
+    
+            $resultAverage = ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();
 
-        $checkclasstype = Classlist_sec::find($classid);
+    
+            $studentClass = Classlist_sec::find($classid);
+    
+            if ($checkclasstype->classtype == 1) {
+                return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolist', 'resultAverage', 'studentClass'));
+            } else {
+                return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolist', 'resultAverage', 'studentClass'));
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
 
-        $studentdetails = Addstudent_sec::find($regNo);
-
-        $addschool = Addpost::find(Auth::user()->schoolid);
-        $subjects = Addsubject_sec::where('classid', $classid)->get();
-
-        $motolist = MotoList::where('schoolid', Auth::user()->schoolid)->get();
-
-        $resultAverage = ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();
-
-        $studentClass = Classlist_sec::find($classid);
-
-        if ($checkclasstype->classtype == 1) {
-            return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolist', 'resultAverage', 'studentClass'));
-        } else {
-            return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolist', 'resultAverage', 'studentClass'));
+            return back()->with('error', 'Result not ready');
         }
         
         

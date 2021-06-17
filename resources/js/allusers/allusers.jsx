@@ -129,7 +129,7 @@ function AllUsers() {
       }
 
       function handleClick(e) {
-          console.log()
+          console.log(e)
       }
 
     return(
@@ -148,6 +148,8 @@ function AllUsers() {
                     data={filteredUsers}
                     paginationTotalRows={filteredUsers.length}
                     pagination={true}
+                    Clicked
+                    onRowClicked={handleClick}
                 />
                 </div>
             </div>

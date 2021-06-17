@@ -313,6 +313,7 @@ Route::group(['prefix' => 'sec'], function () {
         Route::POST('/addschoolsession', 'SchoolsetupSecController@addSchoolSession')->name('addschoolsession');
         Route::POST('/addclasses_sec', 'SchoolsetupSecController@addClasses')->name('addclasses_sec');
         Route::POST('/addhouses_sec', 'SchoolsetupSecController@addhouses_sec')->name('addhouses_sec');
+        Route::get('/classstatus/{id}', 'SchoolsetupSecController@disableClass')->name('classstatus');
         Route::POST('/addsection_sec', 'SchoolsetupSecController@addsection_sec')->name('addsection_sec');
         Route::POST('/addclub_sec', 'SchoolsetupSecController@addclub_sec')->name('addclub_sec');
         Route::get('/addschool_sec', 'DashboardController@addschool')->middleware('auth')->middleware('verified')->name('addschool_sec');
