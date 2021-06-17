@@ -14,7 +14,11 @@ function AllUsers() {
         };
     }, []);
 
+
+
     const [datamain, setDatamain] = useState([]);
+    const [search, setSearch] = useState("");
+    const [filteredUsers, setFilteredUsers] = useState([]);
 
     const [datatable, setDatatable] = React.useState({
         columns: [
@@ -94,6 +98,15 @@ function AllUsers() {
         ];
 
 
+        useEffect(() => {
+          setFilteredUsers(
+            datamain.filter((users) =>
+            users.name.toLowerCase().includes(search.toLowerCase())
+            )
+          );
+        }, [search, datamain]);
+
+
       function fetch_all_student() {
 
         axios.get('/sec/setting/fetch_all_student').then(response=>{
@@ -119,25 +132,27 @@ function AllUsers() {
           console.log()
       }
 
-
     return(
         <div>
             <div className="card">
                 <div style={{ margin:'10px' }}>
+                <div className="row">
+                  <div className="col-12 col-md-4">
+                    <div className="form-group">
+                      <input type="text" className="form-control form-control-sm" onChange={(e) => setSearch(e.target.value)} placeholder="Search student name"/>
+                    </div>
+                  </div>
+                </div>
                 <DataTable
-                    title=""
                     columns={columns}
-                    data={data}
-                    paginationTotalRows={data.length}
-                  
-                    // selectableRows
+                    data={filteredUsers}
+                    paginationTotalRows={filteredUsers.length}
                     pagination={true}
                 />
                 </div>
             </div>
         </div>
     )
-    
 }
 
 export default AllUsers
