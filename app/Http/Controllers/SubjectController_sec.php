@@ -95,7 +95,7 @@ class SubjectController_sec extends Controller
                 return response()->json(['response'=>'fields']);
             }
 
-            $checkExist = Addsubject_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$request->input('class_sec'), 'subjectname'=>strtoupper($request->input('subjectnamesec')), 'subjecttype' => $request->subjecttype_sec])->get();
+            $checkExist = Addsubject_sec::where(['schoolid'=>Auth::user()->schoolid, 'subjectsectione'=>$request->input('subjectsectione'), 'classid'=>$request->input('class_sec'), 'subjectname'=>strtoupper($request->input('subjectnamesec')), 'subjecttype' => $request->subjecttype_sec])->get();
 
             if ($checkExist->count()>0) {
                 return response()->json(['response'=>'duplicate']);
@@ -223,6 +223,9 @@ class SubjectController_sec extends Controller
 
         try {
 
+            if ($request->number_ellectives < 1) {
+                return response()->json(['response'=>'error']);
+            }
 
             $checkIfAddedAlready = Electives_sec::where(['classid'=>$request->classid, 'sectionid'=>$request->sectionid])->first();
 

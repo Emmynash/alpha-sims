@@ -363,6 +363,12 @@
               <p>Transactions</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('payment_history') }}" class="nav-link">
+              <i class="fas fa-wallet nav-icon"></i>
+              <p>Manage Subjects</p>
+            </a>
+          </li>
           @endif
 
           @can('manage marks')
