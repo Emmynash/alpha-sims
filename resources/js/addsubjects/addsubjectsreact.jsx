@@ -440,7 +440,7 @@ function AddSubject() {
                     </div>
                     <div className="modal-footer justify-content-between">
                         <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                        <button onClick={addSubjectsMain} type="button" className="btn btn-info btn-sm">Save changes</button>
+                        <button onClick={addSubjectsMain} type="button" data-dismiss="modal" className="btn btn-info btn-sm">Save changes</button>
                     </div>
                     </div>
                 </div>
