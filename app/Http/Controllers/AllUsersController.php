@@ -14,11 +14,11 @@ use App\Addsubject;
 use App\Addmarks;
 use App\Addgrades;
 use App\Http\Middleware\Roles;
-use Auth;
 use Redirect;
 use Carbon\Carbon;
 use App\Studentattendance;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class AllUsersController extends Controller
 {
@@ -49,18 +49,19 @@ class AllUsersController extends Controller
 
         $allusers = User::where('schoolid', $id)->paginate(10);
 
+
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
         return view('secondary.allusers.allusers', compact('schooldetails'));
     }
     public function fetch_all_student()
     {
-        $allusers = User::where('schoolid', Auth::user()->shoolid)->get();
+        $allusers = User::where(['schoolid' => Auth::user()->schoolid])->get();
 
 
         $usersListMain = array();
 
-        for ($i=0; $i < count($allusers); $i++) { 
+        for ($i=0; $i < $allusers->count(); $i++) { 
 
             $user = User::find($allusers[$i]['id']);
             $role = $user->roles->pluck('name');
@@ -79,7 +80,7 @@ class AllUsersController extends Controller
         }
 
 
-        return response()->json(['allusers' => collect($usersListMain)]);
+        return response()->json(['allusers' => $usersListMain]);
     }
 
     public function fetchuser_sec(Request $request){

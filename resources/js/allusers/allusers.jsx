@@ -129,6 +129,7 @@ function AllUsers() {
                     columns={columns}
                     data={data}
                     paginationTotalRows={data.length}
+                  
                     // selectableRows
                     pagination={true}
                 />
