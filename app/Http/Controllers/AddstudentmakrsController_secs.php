@@ -72,7 +72,7 @@ class AddstudentmakrsController_secs extends Controller
     
     }
 
-    public function fetchstudentssubject(Request $request, $classid){
+    public function fetchstudentssubject(Request $request, $classid, $sectionid){
         
         //---------------------------------------------------------------------------------------------------//
         //                                fetch subjects for each class                                      //
@@ -96,7 +96,8 @@ class AddstudentmakrsController_secs extends Controller
             
         // }
 
-        $subjectlist = $this->addsubject_sec->where(['schoolid'=> Auth::user()->schoolid, 'classid'=>$classid])->get();
+        $subjectlist = $this->addsubject_sec->where(['schoolid'=> Auth::user()->schoolid, 'classid'=>$classid, 'subjectsectione'=>$sectionid])->get();
+        
         return response()->json(['subjectlist'=>$subjectlist]);
     }
 

@@ -483,7 +483,7 @@ Route::group(['middleware' => ['auth', 'can:manage marks']], function () {
 
     Route::get('/student_add_marks', 'AddstudentmakrsController_secs@index');
     Route::get('get_school_basic_details', 'AddstudentmakrsController_secs@getSchoolBasicDetails');
-    Route::get('/fetch_students_marks/{id}', 'AddstudentmakrsController_secs@fetchstudentssubject');
+    Route::get('/fetch_students_marks/{id}/{sectionid}', 'AddstudentmakrsController_secs@fetchstudentssubject');
     Route::get('fetch_student_sections/{id}', 'AddstudentmakrsController_secs@fetchStudentSections');
     Route::POST('/fetch_subject_details', 'AddstudentmakrsController_secs@fetchsubjectdetails');
     Route::POST('/fetch_subject_student_details', 'AddstudentmakrsController_secs@getallstudentsandmarks');

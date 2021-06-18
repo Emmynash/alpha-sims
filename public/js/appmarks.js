@@ -69333,6 +69333,11 @@ function AddMarks() {
       ca3mark = _useState48[0],
       setCa3Mark = _useState48[1];
 
+  var _useState49 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+      _useState50 = _slicedToArray(_useState49, 2),
+      notallocated = _useState50[0],
+      setNotAllocated = _useState50[1];
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
     return function () {// cleanup
@@ -69362,8 +69367,8 @@ function AddMarks() {
 
       seIsLoading(false);
       setClasslist(response.data.classlist); // setSubjects(response.data.subjects)
-      // setschoolsection(response.data.schoolsection)
 
+      setschoolsection(response.data.schoolsection);
       setschoolsession(response.data.schooldetails.schoolsession);
       setschoolterm(response.data.schooldetails.term);
       setexamsstatus(response.data.schooldetails.exams);
@@ -69390,7 +69395,7 @@ function AddMarks() {
 
   function fetchSubjectForClass(e) {
     setSelectedClass(e.target.value);
-    getSubjectForClass(e.target.value);
+    setselectedsection('');
   }
 
   function handleChangeSubject(e) {
@@ -69400,6 +69405,7 @@ function AddMarks() {
 
   function handleChangeSection(e) {
     setselectedsection(e.target.value);
+    getSubjectForClass(e.target.value);
   }
 
   function handleChangeTerm(e) {
@@ -69410,10 +69416,10 @@ function AddMarks() {
     setschoolsession(e.target.value);
   }
 
-  function getSubjectForClass(classid) {
+  function getSubjectForClass(sectionid) {
     setSubjects([]);
     seIsLoading(true);
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetch_students_marks/' + classid).then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetch_students_marks/' + selectedClass + "/" + sectionid).then(function (response) {
       console.log(response); // console.log(setJ)
       // setClasslist(response.data.classlist)
 
@@ -69428,6 +69434,7 @@ function AddMarks() {
   function getSection(subjectid) {
     setschoolsection([]);
     seIsLoading(true);
+    setNotAllocated(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetch_student_sections/' + subjectid).then(function (response) {
       console.log(response); // console.log(setJ)
       // setClasslist(response.data.classlist)
@@ -69435,8 +69442,10 @@ function AddMarks() {
       seIsLoading(false);
 
       if (response.data.schoolsection == "notallocatedtoyou") {
+        setNotAllocated(true);
         myalert('Subject not allocated to you', 'error');
       } else {
+        setNotAllocated(false);
         setschoolsection(response.data.schoolsection);
       }
     })["catch"](function (e) {
@@ -69617,6 +69626,28 @@ function AddMarks() {
       className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
       onChange: function onChange(e) {
+        return handleChangeSection(e);
+      },
+      name: "",
+      value: selectedsection,
+      className: "form-control form-control-sm",
+      id: ""
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: ""
+    }, "Select a Section"), selectedClass != "" ? schoolsection.length > 0 ? schoolsection.map(function (sectionsingle) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          key: sectionsingle.id,
+          value: sectionsingle.id
+        }, sectionsingle.sectionname)
+      );
+    }) : "" : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "General"
+    }, "General")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-4"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      onChange: function onChange(e) {
         return handleChangeSubject(e);
       },
       name: "",
@@ -69656,25 +69687,6 @@ function AddMarks() {
       className: "col-12 col-md-4"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      onChange: function onChange(e) {
-        return handleChangeSection(e);
-      },
-      name: "",
-      className: "form-control form-control-sm",
-      id: ""
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: ""
-    }, "Select a Section"), schoolsection.length > 0 ? schoolsection.map(function (sectionsingle) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-          key: sectionsingle.id,
-          value: sectionsingle.id
-        }, sectionsingle.sectionname)
-      );
-    }) : ""))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-4"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "text",
       onChange: function onChange(e) {
@@ -69689,6 +69701,7 @@ function AddMarks() {
       }
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: fetchAllStudentInClass,
+      disabled: notallocated ? true : false,
       className: "btn btn-sm btn-info"
     }, "Submit"))), studentlist.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: fetchAllStudentInClass,

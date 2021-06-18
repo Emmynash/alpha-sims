@@ -37,6 +37,7 @@ function AddMarks() {
     const [ca1mark, setCa1Mark] = useState(0)
     const [ca2mark, setCa2Mark] = useState(0)
     const [ca3mark, setCa3Mark] = useState(0)
+    const [notallocated, setNotAllocated] = useState(true)
 
 
     useEffect(() => {
@@ -69,7 +70,7 @@ function AddMarks() {
             seIsLoading(false)
             setClasslist(response.data.classlist)
             // setSubjects(response.data.subjects)
-            // setschoolsection(response.data.schoolsection)
+            setschoolsection(response.data.schoolsection)
             setschoolsession(response.data.schooldetails.schoolsession)
             setschoolterm(response.data.schooldetails.term)
 
@@ -100,7 +101,7 @@ function AddMarks() {
 
     function fetchSubjectForClass(e){
         setSelectedClass(e.target.value)
-        getSubjectForClass(e.target.value)
+        setselectedsection('')
     }
 
     function handleChangeSubject(e) {
@@ -110,6 +111,7 @@ function AddMarks() {
 
     function handleChangeSection(e) {
         setselectedsection(e.target.value)
+        getSubjectForClass(e.target.value)
     }
 
     function handleChangeTerm(e) {
@@ -120,10 +122,10 @@ function AddMarks() {
         setschoolsession(e.target.value)
     }
 
-    function getSubjectForClass(classid){
+    function getSubjectForClass(sectionid){
         setSubjects([])
         seIsLoading(true)
-        axios.get('/fetch_students_marks/'+classid).then(response=> {
+        axios.get('/fetch_students_marks/'+selectedClass+"/"+sectionid).then(response=> {
             console.log(response);
             // console.log(setJ)
             // setClasslist(response.data.classlist)
@@ -140,14 +142,17 @@ function AddMarks() {
     function getSection(subjectid){
         setschoolsection([])
         seIsLoading(true)
+        setNotAllocated(true)
         axios.get('/fetch_student_sections/'+subjectid).then(response=> {
             console.log(response);
             // console.log(setJ)
             // setClasslist(response.data.classlist)
             seIsLoading(false)
             if (response.data.schoolsection == "notallocatedtoyou") {
+                setNotAllocated(true)
                 myalert('Subject not allocated to you', 'error')
             }else{
+                setNotAllocated(false)
                 setschoolsection(response.data.schoolsection)
             }
             
@@ -322,6 +327,17 @@ function AddMarks() {
                     </div>
                     <div className="col-12 col-md-4">
                         <div className="form-group">
+                            <select onChange={(e)=>handleChangeSection(e)} name="" value={selectedsection} className="form-control form-control-sm" id="">
+                                <option value="">Select a Section</option>
+                                { selectedClass != "" ? schoolsection.length > 0 ?  schoolsection.map(sectionsingle=>(
+                                    <option key={sectionsingle.id} value={sectionsingle.id}>{sectionsingle.sectionname}</option>
+                                )):"":""}
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4">
+                        <div className="form-group">
                             <select onChange={(e)=>handleChangeSubject(e)} name="" className="form-control form-control-sm" id="">
                                 <option value="">Select a Subject</option>
                                     {subjects.map(subject=>(
@@ -340,16 +356,7 @@ function AddMarks() {
                             </select>
                         </div>
                     </div>
-                    <div className="col-12 col-md-4">
-                        <div className="form-group">
-                            <select onChange={(e)=>handleChangeSection(e)} name="" className="form-control form-control-sm" id="">
-                                <option value="">Select a Section</option>
-                                { schoolsection.length > 0 ?  schoolsection.map(sectionsingle=>(
-                                    <option key={sectionsingle.id} value={sectionsingle.id}>{sectionsingle.sectionname}</option>
-                                )):""}
-                            </select>
-                        </div>
-                    </div>
+
                     <div className="col-12 col-md-4">
                         <div className="form-group">
                             <input type="text" onChange={(e)=>handleChangeSession(e)} value={schoolschool} className="form-control form-control-sm" placeholder="Session"/>
@@ -357,7 +364,7 @@ function AddMarks() {
                     </div>
                 </div>
                 <div style={{ margin:'0px 0px 10px 10px' }}>
-                    <button onClick={fetchAllStudentInClass} className="btn btn-sm btn-info">Submit</button>
+                    <button onClick={fetchAllStudentInClass} disabled={notallocated ? true:false} className="btn btn-sm btn-info">Submit</button>
                 </div>
             </div>
 
