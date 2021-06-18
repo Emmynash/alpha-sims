@@ -56,7 +56,7 @@ class SubjectController_sec extends Controller
 
         $allsubjects = Addsubject_sec::join('classlist_secs', 'classlist_secs.id', '=', 'addsubject_secs.classid')
                 ->leftJoin('addsection_secs', 'addsection_secs.id','=','addsubject_secs.subjectsectione')
-                ->select('addsubject_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname')
+                ->select('addsubject_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')
                 ->where('addsubject_secs.schoolid', Auth::user()->schoolid)->get();
 
         $coresubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'2'])->get();
@@ -120,41 +120,48 @@ class SubjectController_sec extends Controller
 
     public function deleteSubject(Request $request){
 
-        $subjectId = $request->input('subjectid_sec');
+        $subjectid = $request->subjectid;
+        $classid = $request->classid;
+        $sectionid = $request->sectionid;
+        $subjectname = $request->subjectname;
+        $subjecttype = $request->subjecttype;
+
+
         
-        $checkIfSubjectHasAMarkRecord = $this->addmark_sec->where(["subjectid"=>$subjectId, "schoolid"=>Auth::user()->schoolid])->get();
+        $checkIfSubjectHasAMarkRecord = $this->addmark_sec->where(["subjectid"=>$subjectid, "schoolid"=>Auth::user()->schoolid])->get();
         
         if(count($checkIfSubjectHasAMarkRecord) > 0){
             
-            return back()->with("error", "subject cannot be deleted because students record for the subject has been added...");
+            return response()->json(['response'=>"Student scores already added"], 401);
             
         }
 
-        $deletesubject = $this->addsubject_sec->find($subjectId);
+        $deletesubject = $this->addsubject_sec->find($subjectid);
         $deletesubject->delete();
-        return back()->with('success', 'subject deleted successfully');
+
+        return response()->json(['response'=>"Subject deleted successfully"], 200);
 
     }
 
     public function editSubject_sec(Request $request){
 
-        
-        $newclass_sec = $request->input('newclass_sec');
-        $newsubjectname_sec = $request->input('newsubjectname_sec');
-        $newsubjectcode_sec = $request->input('newsubjectcode_sec');
-        $subjectid_sec = $request->input('subjectid_sec');
 
-        $checksubjectcode = Addsubject_sec::where(['subjectcode'=> $newsubjectcode_sec, 'schoolid'=>Auth::user()->schoolid])->get();
+        $subjectid_sec = $request->subjectid;
+        $newclass_sec = $request->classid;
+        $sectionid = $request->sectionid;
+        $newsubjectname_sec = $request->subjectname;
+        $subjecttype = $request->subjecttype;
+
+
+
+        $checksubjectcode = Addsubject_sec::where(['classid'=>$newclass_sec, 'subjectname'=>$newsubjectname_sec, 'schoolid'=>Auth::user()->schoolid])->get();
 
         if (count($checksubjectcode) > 0) {
-            return back()->with("error", "Subject code already exist");
+            return response()->json(['response'=>'Subject already exist for the selected class'], 401);
         }
 
         if ($newclass_sec == "") {
-            $updatesubject_sec = $this->addsubject_sec->find($subjectid_sec);
-            $updatesubject_sec->subjectname = $newsubjectname_sec;
-            $updatesubject_sec->subjectcode = $newsubjectcode_sec;
-            $updatesubject_sec->save();
+            return response()->json(['response'=>'Class cannot be empty'], 401);
         }else{
             
             $checkIfSubjectHasAMarkRecord = $this->addmark_sec->where(["subjectid"=>$subjectid_sec, "schoolid"=>Auth::user()->schoolid])->get();
@@ -162,19 +169,22 @@ class SubjectController_sec extends Controller
             
             if(count($checkIfSubjectHasAMarkRecord) > 0){
             
-                return back()->with("error", "subject cannot be asigned to a new class because sudent record has been added...");
+                return response()->json(['response'=>"subject cannot be asigned to a new class because sudent record has been added..."], 401);
             
             }
             
             $updatesubject_sec = $this->addsubject_sec->find($subjectid_sec);
             $updatesubject_sec->classid = $newclass_sec;
             $updatesubject_sec->subjectname = $newsubjectname_sec;
-            $updatesubject_sec->subjectcode = $newsubjectcode_sec;
+            $updatesubject_sec->subjecttype = $subjecttype;
+            $updatesubject_sec->subjectsectione = $sectionid;
             $updatesubject_sec->save();
+
+            return response()->json(['response', 'Subject updated successfully'], 200);
         }
 
 
-        return back()->with("success", "Subject updated successfully");
+        
 
     }
 
@@ -182,6 +192,13 @@ class SubjectController_sec extends Controller
     {
 
         try {
+
+            $sumScoreCheck = (int)$request->examsfull + (int)$request->ca1full + (int)$request->ca2full + (int)$request->ca3full;
+
+            if ($sumScoreCheck > 100 || $sumScoreCheck < 1) {
+                return response()->json(['response'=>'invalid']);
+            }
+
             $checkIfHasBeenENteredThenUpdate = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
 
             if ($checkIfHasBeenENteredThenUpdate == null) {

@@ -3,6 +3,21 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import { useAlert } from 'react-alert'
+import DataTable from 'react-data-table-component';
+// import Modal from 'react-modal';
+import { Button, Modal, Footer, Header } from 'react-bootstrap';
+
+const customStyles = {
+    content: {
+      top: '25%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+  
 
 
 function AddSubject() {
@@ -32,7 +47,69 @@ function AddSubject() {
     const [numberElectives, setNumberElectives] = useState(0)
     const [getElectivesSettingNumber, setgetElectivesSettingNumber] = useState([])
     const [isLoading, setisLoading] = useState(false)
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    let subtitle;
+
+    const [updatesubject, setUpdatesubject] = useState({
+        subjectname: '',
+        classid: '',
+        subjecttype:'',
+        sectionid:'',
+        subjectid:''
+    })
+    
     const alert = useAlert()
+
+
+    const columns = [
+        {
+            name: 'Subject Name',
+            selector: 'subjectname',
+            sortable: true,
+        },
+        {
+            name: 'Class.',
+            selector: 'classname',
+            sortable: true,
+            right: true,
+        },
+        {
+            name: 'Subject Type',
+            selector: 'subjecttype',
+            sortable: true,
+            right: true,
+        },
+        {
+            name: 'Section.',
+            selector: 'sectionname',
+            sortable: true,
+            right: true,
+        },
+        {
+            name: 'Action',
+            selector: '',
+            sortable: true,
+            right: true,
+        },
+    ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     useEffect(() => {
 
@@ -212,7 +289,10 @@ function AddSubject() {
                 // setselectedclass('')
                 fetchSchoolDetails()
                 myalert('Process Successful', 'success');
-            }else{
+            }else if(response.data.response == "invalid"){
+                myalert('Invalid scores entered', 'error');
+            }
+            else{
                 myalert('unknown error', 'error');
             }
 
@@ -258,6 +338,78 @@ function AddSubject() {
         
     }
 
+    function afterOpenModal() {
+        // references are now sync'd and can be accessed.
+        // subtitle.style.color = '#f00';
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
+    const handleShow = (evt) => {
+
+        console.log(evt)
+
+        setUpdatesubject({
+            ...updatesubject,
+          subjectname: evt.subjectname,
+          classid: evt.classid,
+          subjecttype: evt.subjecttype,
+          sectionid:evt.sectionid,
+          subjectid:evt.id
+        });
+
+        setShow(true);
+    }
+
+    function handleChangeUpdateSubject(evt) {
+        setUpdatesubject({
+            ...updatesubject,
+          [evt.target.name]: evt.target.value,
+        });
+    }
+
+    function updateSubjectCommand() {
+        setShow(false);
+        setisLoading(true)
+        axios.post('/editsubject_sec', updatesubject, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        } ).then(response=>{
+            if (response.status == 200) {
+                myalert('Subject updated successfully', 'success');
+                fetchSchoolDetails()
+            }
+            console.log(response)
+        }).catch(e=>{
+            console.log(e)
+            myalert('Unknown Error', 'error');
+            setisLoading(false)
+        })
+    }
+
+    function deleteSubjectCommand() {
+        setShow(false);
+        setisLoading(true)
+        axios.post('/deletesubject_sec', updatesubject, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        } ).then(response=>{
+            if (response.status == 200) {
+                myalert('Subject deleted successfully', 'success');
+                fetchSchoolDetails()
+            }
+            console.log(response)
+        }).catch(e=>{
+            console.log(e)
+            myalert('Unknown Error', 'error');
+            setisLoading(false)
+        })
+    }
+
     return(
         <div className="">
 
@@ -274,7 +426,7 @@ function AddSubject() {
             </div>
 
             {isLoading ? <div className="text-center">
-                <div class="spinner-border"></div>
+                <div className="spinner-border"></div>
             </div>:''}
 
             <br/>
@@ -324,10 +476,10 @@ function AddSubject() {
                 </div>
 
 
-            <div className="row">
-                <div className="col-12">
-                    <div className="card">
-                    <div className="card-header">
+            <div>
+                {/* <div className="col-12"> */}
+                    {/* <div className="card"> */}
+                    {/* <div className="card-header">
                         <h3 className="card-title">Subjects</h3>
                         <div className="card-tools">
                         <div className="input-group input-group-sm" style={{width: '150px'}}>
@@ -339,10 +491,33 @@ function AddSubject() {
                             </div>
                         </div>
                         </div>
+                    </div> */}
+                    <br />
+                    <div className="alert alert-warning">
+                        <i>Note: subject type 2 core, 1 elective</i>
                     </div>
+                    <div className="row">
+                        <div className="col-12 col-md-4">
+                            <div className="form-group">
+                                <input type="text" placeholder="Search subjects" onChange={(e) => setSearch(e.target.value)} className="form-control form-control-sm" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <DataTable
+                        title="Subject List"
+                        columns={columns}
+                        data={filteredSubjects}
+                        paginationTotalRows={filteredSubjects.length}
+                        pagination={true}
+                        Clicked
+                        onRowClicked={handleShow}
+                    />  
+
+                    <br />
                     
-                    <div className="card-body table-responsive p-0">
-                        <table className="table table-hover text-nowrap">
+                    {/* <div className="card-body table-responsive p-0"> */}
+                        {/* <table className="table table-hover text-nowrap">
                         <thead>
                             <tr>
                                 <th>Subject Name</th>
@@ -352,8 +527,8 @@ function AddSubject() {
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {filteredSubjects.length > 0 ? 
+                        <tbody> */}
+                            {/* {filteredSubjects.length > 0 ? 
                             filteredSubjects.map(d => (
                                 <tr>
                                     <td>{d.subjectname}</td>
@@ -365,20 +540,162 @@ function AddSubject() {
                             ))
                             :
                             <tr></tr>
-                            }
-                        </tbody>
-                        </table>
-                    </div>
+                            } */}
+
+            
+
+
+                        {/* </tbody>
+                        </table> */}
+                    {/* </div> */}
                   
-                    </div>
+                    {/* </div> */}
                 
-                </div>
+                {/* </div> */}
             </div>
 
                 {/* <DataTablePage subjectdata={allsubjects}/> */}
                
 
             </div>
+
+            {/* <div className="container">
+                <Modal
+                    ariaHideApp={false}
+                    isOpen={modalIsOpen}
+                    onAfterOpen={afterOpenModal}
+                    onRequestClose={closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal">
+                    
+                    <form action="">
+                        <div className="row">
+                            <div className="col-12 col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="">Subject name</label>
+                                    <input type="text" name="subjectname" value={setUpdatesubject.subjectname} className="form-control form-control-sm" />
+                                </div>
+                            </div>
+                            <div className="col-12 col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="">Section/Arm</label>
+                                    <select onChange={handleChangeSection} className="form-control form-control-sm">
+                                        <option value="">Select Arm</option>
+                                        { schoolsection.map(d=>(
+                                            <option value={d.id}>{d.sectionname}</option>
+                                        ))}
+                                        <option value="General">General</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12 col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="">Class</label>
+                                    <select onChange={(e)=>handleChangeClasslist(e)} className="form-control form-control-sm">
+                                        <option value="">Select a class</option>
+                                        {classlist.length > 0 ? classlist.map(d => (
+                                            <option key={d.id} value={d.id}>{d.classname}</option>
+                                        ))
+                                        :
+                                        <option value=""></option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-12 col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="">Subject Type</label>
+                                    <select onChange={(e)=>handleChangeSubjectType(e)} className="form-control form-control-sm">
+                                        <option value="">Subject type</option>
+                                        <option value="1">Elective</option>
+                                        <option value="2">Core</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button className="btn btn-sm btn-danger" style={{ borderRadius:'0px' }}>Delete</button>
+                            <button className="btn btn-sm btn-info" style={{ borderRadius:'0px' }}>Update</button>
+                        </div>
+                    </form>
+
+                </Modal>
+            </div> */}
+
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                <Modal.Title>Update Subject</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="alert alert-info">
+                        <i style={{ fontStyle:'normal', fontSize:'13px' }}>Note: Subject name can be edited at all times, however, other details can't be edited once student record for the subject has been recorded.</i>
+                    </div>
+                    <div>
+                            <div className="row">
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group">
+                                        <label htmlFor="">Subject name</label>
+                                        <input type="text" name="subjectname" onChange={handleChangeUpdateSubject} defaultValue={updatesubject.subjectname} className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group">
+                                        <label htmlFor="">Section/Arm</label>
+                                        <select onChange={handleChangeUpdateSubject} defaultValue={updatesubject.sectionid} className="form-control form-control-sm">
+                                            <option value="">Select Arm</option>
+                                            { schoolsection.map(d=>(
+                                                <option value={d.id}>{d.sectionname}</option>
+                                            ))}
+                                            <option value="General">General</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group">
+                                        <label htmlFor="">Class</label>
+                                        <select onChange={handleChangeUpdateSubject} name="classid" defaultValue={updatesubject.classid} className="form-control form-control-sm">
+                                            <option value="">Select a class</option>
+                                            {classlist.length > 0 ? classlist.map(d => (
+                                                <option key={d.id} value={d.id}>{d.classname}</option>
+                                            ))
+                                            :
+                                            <option value=""></option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="subjectid" defaultValue={updatesubject.subjectid} />
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group">
+                                        <label htmlFor="">Subject Type</label>
+                                        <select onChange={handleChangeUpdateSubject} name="subjectype" defaultValue={updatesubject.subjecttype} className="form-control form-control-sm">
+                                            <option value="">Subject type</option>
+                                            <option value="1">Elective</option>
+                                            <option value="2">Core</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" className="btn-sm" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="primary" className="btn-sm btn-info" onClick={updateSubjectCommand}>
+                    Update Changes
+                </Button>
+                <Button variant="primary" className="btn-sm btn-danger" onClick={deleteSubjectCommand}>
+                    Delete
+                </Button>
+                </Modal.Footer>
+            </Modal>
+
 
             <div className="modal fade" id="modal-default" data-backdrop="false">
                 <div className="modal-dialog">
