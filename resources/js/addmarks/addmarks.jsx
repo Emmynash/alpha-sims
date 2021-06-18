@@ -393,7 +393,7 @@ function AddMarks() {
                                     <tr>
                                     <th>Name</th>
                                     <th>Admission No</th>
-                                    <th>Roll No</th>
+                                    {/* <th>Roll No</th> */}
                                     <th>Exams</th>
                                     <th>CA1</th>
                                     <th>CA2</th>
@@ -409,7 +409,7 @@ function AddMarks() {
                                         <tr key={student.id+"addmarks"}>
                                             <td>{student.firstname} {student.middlename} {student.lastname}</td>
                                             <td>{student.admission_no}</td>
-                                            <td>{student.renumberschoolnew}</td>
+                                            {/* <td>{student.renumberschoolnew}</td> */}
                                             <td>{student.exams == 0 ? "---":student.exams}</td>
                                             <td>{student.ca1 == 0 ? "---":student.ca1}</td>
                                             <td>{student.ca2 == 0 ? "---":student.ca2}</td>

@@ -524,7 +524,7 @@ class HomeController extends Controller
 
             $addteachers_secs = Addteachers_sec::where('schoolid', Auth::user()->schoolid)->get();
             $addstudent_secs = Addstudent_sec::where('schoolid', Auth::user()->schoolid)->get();
-            $addsubject_secs = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->get();
+            $addsubject_secs = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->pluck('subjectname')->toArray();
             $classlist_sec = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
 
             $detailsArray = array(
