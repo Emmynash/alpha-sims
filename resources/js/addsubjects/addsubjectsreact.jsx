@@ -430,6 +430,7 @@ function AddSubject() {
             </div>:''}
 
             <br/>
+            
             <div className="row">
                 <div className="col-12 col-md-4">
                     <div className="card" style={{ borderRadius:'0px', borderLeft:'5px solid green' }}>

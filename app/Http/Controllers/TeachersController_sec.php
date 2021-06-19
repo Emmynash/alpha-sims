@@ -83,6 +83,10 @@ class TeachersController_sec extends Controller
                                         ->where('school_id', Auth::user()->schoolid)
                                         ->select('teacher_subjects.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname')->get();
 
+            $getAllTeachers = Addteachers_sec::join('users', 'users.id','=','addteachers_secs.systemid')
+                              ->where('addteachers_secs.schoolid', Auth::user()->schoolid)
+                              ->select('addteachers_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')->get();
+
             $getFormMasters = FormTeachers::join('users', 'users.id','=','form_teachers.teacher_id')
                             ->join('addsection_secs', 'addsection_secs.id','=','form_teachers.form_id')
                             ->join('classlist_secs','classlist_secs.id','=','form_teachers.class_id')
@@ -94,7 +98,7 @@ class TeachersController_sec extends Controller
             $clubs = Addclub_sec::where('schoolid', Auth::user()->schoolid)->get();
     
     
-            return response()->json(['classesAll'=>$classesAll, 'addsection_sec'=>$addsection_sec, 'addsubject_sec'=>$addsubject_sec, 'getAllTeachersWithSubject'=>$getAllTeachersWithSubject, 'getFormMasters'=>$getFormMasters, 'houses'=>$houses, 'clubs'=>$clubs]);
+            return response()->json(['classesAll'=>$classesAll, 'addsection_sec'=>$addsection_sec, 'addsubject_sec'=>$addsubject_sec, 'getAllTeachersWithSubject'=>$getAllTeachersWithSubject, 'getFormMasters'=>$getFormMasters, 'houses'=>$houses, 'clubs'=>$clubs, 'getAllTeachers'=>$getAllTeachers]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['response'=>'error']);
@@ -113,23 +117,32 @@ class TeachersController_sec extends Controller
 
         $userdetailfetch = $this->user->where('id', $request->input('mastersystemnumber'))->get();
         // check if this system number is for a student
-        $addstudent_sec = $this->addstudent_sec->where('usernamesystem', $request->input('mastersystemnumber'))->get();
-        $addstudentPrimary = $this->addstudent->where('usernamesystem', $request->input('mastersystemnumber'))->get();
+        // $addstudent_sec = $this->addstudent_sec->where('usernamesystem', $request->input('mastersystemnumber'))->get();
+        // $addstudentPrimary = $this->addstudent->where('usernamesystem', $request->input('mastersystemnumber'))->get();
         
-        if(count($addstudentPrimary) > 0){
-            return response()->json(['exist'=>'noaccount']);
-        }
+        // if(count($addstudentPrimary) > 0){
+        //     return response()->json(['exist'=>'noaccount']);
+        // }
 
-        if (count($userdetailfetch) > 0) {
+        $roles = $userdetailfetch[0]->getRoleNames();
 
-            if (count($addstudent_sec) > 0) {
-                return response()->json(['response'=>'noaccount']);
-            }else{
+        if ($roles->count() > 0) {
+
+            if ($roles[0] == "Teacher") {
+                $userschoolid = $userdetailfetch[0]->schoolid;
+
+                if ($userschoolid != Auth::user()->schoolid) {
+
+                    return response()->json(['response'=>'noaccount']);
+
+                }
+
                 return response()->json(['userdetailfetch'=>$userdetailfetch]);
+            }else {
+                return response()->json(['response'=>'noaccount']);
             }
-            
-        }else{
-            return response()->json(['response'=>'noaccount']);
+        }else {
+            return response()->json(['userdetailfetch'=>$userdetailfetch]);
         }
 
         return response()->json(['userdetailfetch'=>$userdetailfetch], 200);
@@ -278,6 +291,27 @@ class TeachersController_sec extends Controller
                 return response()->json(['response'=>'exist']);
             }
 
+    }
+
+    public function fetchTeacherSubject($userid)
+    {
+
+        try {
+            
+            $teacherSubjects = TeacherSubjects::join('addsubject_secs', 'addsubject_secs.id','=','teacher_subjects.subject_id')
+                            ->join('classlist_secs', 'classlist_secs.id', 'teacher_subjects.classid')
+                            ->leftjoin('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id')
+                            ->where('teacher_subjects.user_id', $userid)
+                            ->select('teacher_subjects.*', 'classlist_secs.classname', 'addsubject_secs.subjectname', 'addsection_secs.sectionname')->get();
+
+            return response()->json(['response'=>$teacherSubjects]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            return response()->json(['response'=>$th]);
+        }
+        
     }
 
     public function confirmTeacherRegNumber2(Request $request){

@@ -69271,6 +69271,16 @@ var AddTeachers = function AddTeachers() {
       isLoading = _useState24[0],
       setisLoading = _useState24[1];
 
+  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState26 = _slicedToArray(_useState25, 2),
+      teacherList = _useState26[0],
+      setTeacherList = _useState26[1];
+
+  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState28 = _slicedToArray(_useState27, 2),
+      isUnasigning = _useState28[0],
+      setUnasigning = _useState28[1];
+
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchPageDetails();
@@ -69286,8 +69296,9 @@ var AddTeachers = function AddTeachers() {
       setisLoading(false);
       setAllClasses(response.data.classesAll);
       setallsubjects(response.data.addsubject_sec);
-      setSection_sec(response.data.addsection_sec);
-      setAllTeachersWithSubject(response.data.getAllTeachersWithSubject);
+      setSection_sec(response.data.addsection_sec); // setAllTeachersWithSubject(response.data.getAllTeachersWithSubject)
+
+      setTeacherList(response.data.getAllTeachers);
     })["catch"](function (e) {
       console.log(e);
       setisLoading(false);
@@ -69436,12 +69447,25 @@ var AddTeachers = function AddTeachers() {
     month: "long",
     day: "2-digit"
   });
+
+  function fetch_teacher_subjects(selectedteacher) {
+    setUnasigning(true);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetch_teacher_subjects/' + selectedteacher).then(function (response) {
+      console.log(response);
+      setUnasigning(false);
+      setAllTeachersWithSubject(response.data.response);
+    })["catch"](function (e) {
+      setUnasigning(false);
+      console.log(e);
+    });
+  }
+
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: ""
     }, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      "class": "text-center"
+      className: "text-center"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      "class": "spinner-border"
+      className: "spinner-border"
     })) : "", isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
         position: 'absolute',
@@ -69490,15 +69514,17 @@ var AddTeachers = function AddTeachers() {
       className: "card-body table-responsive p-0"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "table table-hover text-nowrap"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Teachers Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Sys No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Date Asigned"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Subject"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Class"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Section"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, allTeachersWithSubject.length > 0 ? allTeachersWithSubject.map(function (teachers) {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Teachers Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Sys No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Date Asigned"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, teacherList.length > 0 ? teacherList.map(function (teachers) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: teachers.id
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.firstname, " ", teachers.middlename, " ", teachers.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.user_id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, formatter.format(Date.parse(teachers.created_at))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.subjectname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.classname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.sectionname == null ? "General" : teachers.sectionname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.firstname, " ", teachers.middlename, " ", teachers.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.systemid), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, formatter.format(Date.parse(teachers.created_at))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          "data-toggle": "modal",
           onClick: function onClick() {
-            return unasignSubjectToTeacher(teachers.id);
+            return fetch_teacher_subjects(teachers.systemid);
           },
-          className: "btn btn-sm btn-danger badge"
-        }, "Unasign")))
+          "data-target": "#viewsubject",
+          className: "btn btn-sm btn-info badge"
+        }, "view")))
       );
     }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal fade",
@@ -69649,7 +69675,80 @@ var AddTeachers = function AddTeachers() {
       type: "button",
       onClick: asignSubjectToTeacher,
       className: "btn btn-info btn-sm"
-    }, "Save changes")))))))
+    }, "Save changes"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal fade",
+      id: "viewsubject"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-dialog"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-content"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-header"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
+      className: "modal-title"
+    }, "Teachers Subject"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      type: "button",
+      className: "close",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      "aria-hidden": "true"
+    }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-body"
+    }, isUnasigning ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      style: {
+        position: 'absolute',
+        top: '0',
+        bottom: '0',
+        left: '0',
+        right: '0',
+        zIndex: '1000',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "spinner-border"
+    })) : "", allTeachersWithSubject.length > 0 ? allTeachersWithSubject.map(function (d) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "card"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          style: {
+            display: 'flex',
+            padding: '10px'
+          }
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          style: {
+            fontStyle: 'normal',
+            fontSize: '14px'
+          }
+        }, d.subjectname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          style: {
+            flex: 0.5
+          }
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          style: {
+            fontStyle: 'normal',
+            fontSize: '14px'
+          }
+        }, d.classname, d.sectionname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          style: {
+            flex: 1
+          }
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          onClick: function onClick() {
+            return unasignSubjectToTeacher(d.id);
+          },
+          className: "btn btn-sm badge btn-danger"
+        }, "Unasign")))
+      );
+    }) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-footer justify-content-between"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      type: "button",
+      className: "btn btn-default btn-sm",
+      "data-dismiss": "modal"
+    }, "Close")))))))
   );
 };
 

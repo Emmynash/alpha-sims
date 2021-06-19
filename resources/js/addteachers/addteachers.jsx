@@ -18,6 +18,8 @@ const AddTeachers=()=>{
     const [subjectid, setSubjectId] = useState(0)
     const [sectionmain, setSection] = useState('')
     const [isLoading, setisLoading] = useState(false)
+    const [teacherList, setTeacherList] = useState([])
+    const [isUnasigning, setUnasigning] = useState(false)
     const alert = useAlert()
 
     useEffect(() => {
@@ -38,7 +40,8 @@ const AddTeachers=()=>{
             setAllClasses(response.data.classesAll)
             setallsubjects(response.data.addsubject_sec)
             setSection_sec(response.data.addsection_sec)
-            setAllTeachersWithSubject(response.data.getAllTeachersWithSubject)
+            // setAllTeachersWithSubject(response.data.getAllTeachersWithSubject)
+            setTeacherList(response.data.getAllTeachers)
             
 
 
@@ -217,12 +220,33 @@ const AddTeachers=()=>{
           day: "2-digit"
         });
 
+        function fetch_teacher_subjects(selectedteacher) {
+
+            setUnasigning(true)
+
+            axios.get('/fetch_teacher_subjects/'+selectedteacher).then(response=>{
+
+                console.log(response)
+
+                setUnasigning(false)
+
+                setAllTeachersWithSubject(response.data.response)
+
+            }).catch(e=>{
+                setUnasigning(false)
+
+                console.log(e)
+
+            })
+            
+        }
+
 
     return(
         <div className="">
 
-        {isLoading ? <div class="text-center">
-                <div class="spinner-border"></div>
+        {isLoading ? <div className="text-center">
+                <div className="spinner-border"></div>
         </div>:""}
 
             {isLoading ? <div style={{ position:'absolute', top:'0', bottom:'0', left:'0', right:'0', background:'white', opacity:'0.4', zIndex:'1000' }}>
@@ -258,26 +282,20 @@ const AddTeachers=()=>{
                             <th>Teachers Name</th>
                             <th>Sys No.</th>
                             <th>Date Asigned</th>
-                            <th>Subject</th>
-                            <th>Class</th>
-                            <th>Section</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                            { allTeachersWithSubject.length > 0 ? 
+                            { teacherList.length > 0 ? 
                             
-                                allTeachersWithSubject.map(teachers=>(
+                            teacherList.map(teachers=>(
 
                                     <tr key={teachers.id}>
                                         <td>{teachers.firstname} {teachers.middlename} {teachers.lastname}</td>
-                                        <td>{teachers.user_id}</td>
+                                        <td>{teachers.systemid}</td>
                                         <td>{formatter.format(Date.parse(teachers.created_at))}</td>
-                                        <td>{teachers.subjectname}</td>
-                                        <td>{teachers.classname}</td>
-                                        <td>{teachers.sectionname == null ? "General": teachers.sectionname}</td>
                                         <td>
-                                            <button onClick={()=>unasignSubjectToTeacher(teachers.id)} className="btn btn-sm btn-danger badge">Unasign</button>
+                                            <button data-toggle="modal" onClick={()=>fetch_teacher_subjects(teachers.systemid)} data-target="#viewsubject" className="btn btn-sm btn-info badge">view</button>
                                         </td>
                                     </tr>
 
@@ -397,6 +415,53 @@ const AddTeachers=()=>{
                     {/* /.modal-dialog */}
                 </div>
                 {/* /.modal */}
+
+
+                <div className="modal fade" id="viewsubject">
+
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title">Teachers Subject</h4>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+
+                        {isUnasigning ?
+                            <div style={{ position:'absolute', top:'0', bottom:'0', left:'0', right:'0', zIndex:'1000', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                                <div className="spinner-border"></div>
+                            </div>:""
+                        }
+
+                            {
+                                allTeachersWithSubject.length > 0 ? allTeachersWithSubject.map(d=>(
+
+                                    <div className="card">
+                                        <div style={{ display:'flex', padding:'10px' }}>
+                                            <i style={{ fontStyle:'normal', fontSize:'14px' }}>{d.subjectname}</i>
+                                            <div style={{ flex:0.5 }}></div>
+                                            <i style={{ fontStyle:'normal', fontSize:'14px' }}>{d.classname}{d.sectionname}</i>
+                                            <div style={{ flex:1 }}></div>
+                                            <button onClick={()=>unasignSubjectToTeacher(d.id)} className="btn btn-sm badge btn-danger">Unasign</button>
+                                        </div>
+                                    </div>
+
+                                )):""
+                            }
+                            
+
+                        </div>
+                        <div className="modal-footer justify-content-between">
+                            <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                            {/* <button type="button" onClick={()=>fetch_teacher_subjects(d.systemid)} className="btn btn-info btn-sm">Refresh</button> */}
+                        </div>
+                        </div>
+
+                    </div>
+                </div>
+
 
 
 
