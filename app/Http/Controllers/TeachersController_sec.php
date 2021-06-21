@@ -396,9 +396,9 @@ class TeachersController_sec extends Controller
 
     public function resultremark()
     {
-        $teacherSubject = TeacherSubjects::join('addsubject_secs', 'addsubject_secs.id','=','teacher_subjects.subject_id')
-                        ->leftjoin("classlist_secs", 'classlist_secs.id','=','addsubject_secs.classid')
-                        ->leftjoin('addsection_secs', 'addsection_secs.id','=','addsubject_secs.subjectsectione')
+       $teacherSubject = TeacherSubjects::join('addsubject_secs', 'addsubject_secs.id','=','teacher_subjects.subject_id')
+                        ->leftjoin("classlist_secs", 'classlist_secs.id','=','teacher_subjects.classid')
+                        ->leftjoin('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id')
                         ->select('teacher_subjects.*','classlist_secs.id as classid', 'classlist_secs.classname', 'addsubject_secs.id as sub', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid' )
                         ->where('user_id', Auth::user()->id)->get();
 
@@ -419,7 +419,6 @@ class TeachersController_sec extends Controller
     public function resultremarkpost(Request $request)
     {
         $schooldetaild = Addpost::find(Auth::user()->schoolid);
-
 
         // return $request;
 

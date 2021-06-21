@@ -72,7 +72,7 @@
                       @foreach ($teacherSubject as $teacherSubjects)
                         <tr>
                           <td>{{$teacherSubjects->getSubjectName->subjectname}} {{$teacherSubjects->getSubjectName->subjectcode}}</td>
-                          <td>{{ $teacherSubjects->classname }}({{ $teacherSubjects->sectionname == null ? "General": $teacherSubjects->sectionname }})</td>
+                          <td>{{ $teacherSubjects->classname }}{{ $teacherSubjects->sectionname }}</td>
                           @if (in_array($teacherSubjects->subject_id, $arrayOfSubjectId))
                           <td>Done</td>
                           <td><button class="btn btn-sm btn-success" data-toggle="modal" data-target=""><i class="fas fa-check"></i></button> </td>
