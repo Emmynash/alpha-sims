@@ -13,6 +13,8 @@ use App\Addclub_sec;
 use App\Addpost;
 use App\Addstudent;
 use App\AmountTable;
+use App\CLassSubjects;
+use App\ElectiveAdd;
 use App\FeesInvoice;
 use App\Repository\Registration\RegisterStudents;
 use Illuminate\Support\Facades\Auth;
@@ -347,6 +349,52 @@ class StudentController_sec extends Controller
             return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails'));
         }
 
+
+    }
+
+    public function manage_subject_student()
+    {
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $subjects = CLassSubjects::join('addsubject_secs', 'addsubject_secs.id','=','c_lass_subjects.subjectid')
+                    ->where(['c_lass_subjects.schoolid'=>Auth::user()->schoolid, 'c_lass_subjects.subjecttype'=>1])
+                    ->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
+
+        $myelectives = ElectiveAdd::join('addsubject_secs', 'addsubject_secs.id','=','elective_adds.subjectid')
+                       ->select('elective_adds.*', 'addsubject_secs.subjectname')
+                       ->where('elective_adds.userid', Auth::user()->id )->get();
+
+        return view('secondary.student.electivesmanage', compact('schooldetails', 'subjects', 'myelectives'));
+    }
+
+    public function electiveadd(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'subjectid' => 'required'
+        ]); 
+        
+
+        $getStudentId = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+
+        $checkelectiveAdded = ElectiveAdd::where(['userid'=>Auth::user()->id, 'classid'=>$getStudentId->classid])->get();
+
+        if ($checkelectiveAdded->count() > 0) {
+            return back();
+        }
+
+        $addElective = new ElectiveAdd();
+        $addElective->userid = Auth::user()->id;
+        $addElective->regno = $getStudentId->id;
+        $addElective->subjectid = $request->subjectid;
+        $addElective->schoolid = Auth::user()->schoolid;
+        $addElective->subjecttype = 1;
+        $addElective->classid = $getStudentId->classid;
+        $addElective->sectionid = $getStudentId->studentsection;
+        $addElective->save();
+
+        return back();
 
     }
 }

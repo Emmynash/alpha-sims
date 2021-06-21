@@ -8,6 +8,7 @@ use App\Addsubject_sec;
 use App\Addmark_sec;
 use App\Addpost;
 use App\Addsection_sec;
+use App\CLassSubjects;
 use App\Electives_sec;
 use App\SubjectScoreAllocation;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,8 @@ class SubjectController_sec extends Controller
                 ->select('addsubject_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')
                 ->where('addsubject_secs.schoolid', Auth::user()->schoolid)->get();
 
+        $allSubjectmain = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->get();
+
         $coresubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'2'])->get();
 
         $electivesubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'1'])->get();
@@ -73,21 +76,25 @@ class SubjectController_sec extends Controller
                                     ->select('electives_secs.*', 'addsection_secs.sectionname', 'classlist_secs.classname')->get();
         
 
-        return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'coresubjects'=>$coresubjects, 'electivesubjects'=>$electivesubjects, 'schoolsection'=>$schoolsection, 'subjectScores'=>$subjectScores, 'getElectivesSettingNumber'=>$getElectivesSettingNumber]);
+        return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'coresubjects'=>$coresubjects, 'electivesubjects'=>$electivesubjects, 'schoolsection'=>$schoolsection, 'subjectScores'=>$subjectScores, 'getElectivesSettingNumber'=>$getElectivesSettingNumber, 'allSubjectmain'=>$allSubjectmain]);
     }
 
     public function store(Request $request){
 
         try {
 
+
+            // return $request;
+
+
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
             
                 $validator = Validator::make($request->all(),[
-                    'subjecttype_sec' => 'required|string',
-                    'subjectnamesec' => 'required|string',
-                    'class_sec' => 'required|string',
-                    'subjectsectione' => 'required|string'
+                    'sectionclasstype' => 'required|string',
+                    'subjectname' => 'required|string',
+                    // 'class_sec' => 'required|string',
+                    // 'subjectsectione' => 'required|string'
                 ]);
 
     
@@ -95,20 +102,20 @@ class SubjectController_sec extends Controller
                 return response()->json(['response'=>'fields']);
             }
 
-            $checkExist = Addsubject_sec::where(['schoolid'=>Auth::user()->schoolid, 'subjectsectione'=>$request->input('subjectsectione'), 'classid'=>$request->input('class_sec'), 'subjectname'=>strtoupper($request->input('subjectnamesec')), 'subjecttype' => $request->subjecttype_sec])->get();
+            // $checkExist = Addsubject_sec::where(['schoolid'=>Auth::user()->schoolid, 'subjectsectione'=>$request->input('subjectsectione'), 'classid'=>$request->input('class_sec'), 'subjectname'=>strtoupper($request->input('subjectnamesec')), 'subjecttype' => $request->subjecttype_sec])->get();
 
-            if ($checkExist->count()>0) {
-                return response()->json(['response'=>'duplicate']);
-            }
+            // if ($checkExist->count()>0) {
+            //     return response()->json(['response'=>'duplicate']);
+            // }
 
     
             $Addsubject_sec = new Addsubject_sec();
             $Addsubject_sec->schoolid =Auth::user()->schoolid;
-            $Addsubject_sec->classid = $request->input('class_sec');
-            $Addsubject_sec->subjectcode = strtoupper($request->input('subjectcodesec'));
-            $Addsubject_sec->subjectname = strtoupper($request->input('subjectnamesec'));
-            $Addsubject_sec->subjecttype = $request->input('subjecttype_sec');
-            $Addsubject_sec->subjectsectione = $request->input('subjectsectione');
+            // $Addsubject_sec->classid = $request->input('class_sec');
+            // $Addsubject_sec->subjectcode = strtoupper($request->input('subjectcodesec'));
+            $Addsubject_sec->subjectname = strtoupper($request->subjectname);
+            $Addsubject_sec->sectionclasstype = $request->sectionclasstype;
+            // $Addsubject_sec->subjectsectione = $request->input('subjectsectione');
             $Addsubject_sec->save();
 
     
@@ -269,7 +276,49 @@ class SubjectController_sec extends Controller
             //throw $th;
             return response()->json(['response'=>'error']);
         }
+    }
+
+    public function asignSubjectToClass(Request $request)
+    {
+
+        $validator = Validator::make($request->all(),[
+            'classid' => 'required',
+            'sectionid' => 'required',
+            'subjectid' => 'required',
+            'subjecttype' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['response'=>'fields']);
+        }
+
+        $classSubject = CLassSubjects::where(['classid'=>$request->classid, 'sectionid'=>$request->sectionid, 'subjectid'=>$request->subjectid])->get();
+
+        if (count($classSubject) > 0) {
+            return response()->json(['response'=>'already']);
+        }
 
 
+        $asignSubjects = new CLassSubjects();
+        $asignSubjects->classid = $request->classid;
+        $asignSubjects->sectionid = $request->sectionid;
+        $asignSubjects->subjectid = $request->subjectid;
+        $asignSubjects->schoolid = Auth::user()->schoolid;
+        $asignSubjects->subjecttype = $request->subjecttype;
+        $asignSubjects->save();
+
+
+        return response()->json(['response'=>'success']);
+    }
+
+    public function getClassForSubject($subjectid)
+    {
+        $getClass = CLassSubjects::join('classlist_secs', 'classlist_secs.id','=','c_lass_subjects.classid')
+                    ->join('addsection_secs', 'addsection_secs.id','=','c_lass_subjects.sectionid')
+                    ->where('subjectid', $subjectid)
+                    ->select('c_lass_subjects.*', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
+
+        return response()->json(['response'=>$getClass]);
+        
     }
 }

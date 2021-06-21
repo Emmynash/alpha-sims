@@ -14,6 +14,7 @@ use App\ResultAverage;
 use App\Addstudent_sec;
 use App\PromotionAverage_sec;
 use App\Addteachers_sec;
+use App\CLassSubjects;
 use App\SubjectScoreAllocation;
 use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
@@ -96,9 +97,16 @@ class AddstudentmakrsController_secs extends Controller
             
         // }
 
-        $subjectlist = $this->addsubject_sec->where(['schoolid'=> Auth::user()->schoolid, 'classid'=>$classid, 'subjectsectione'=>$sectionid])->get();
+        $classAllocatedSubject = CLassSubjects::where(['classid'=>$classid, 'sectionid'=>$sectionid])->pluck('subjectid')->toArray();
+
+        $subjectsmain = array();
+
+        for ($i=0; $i < count($classAllocatedSubject); $i++) { 
+            $subjectlistsingle = Addsubject_sec::find($classAllocatedSubject[$i]);
+            array_push($subjectsmain, $subjectlistsingle);
+        }
         
-        return response()->json(['subjectlist'=>$subjectlist]);
+        return response()->json(['subjectlist'=>$subjectsmain]);
     }
 
     public function fetchsubjectdetails(Request $request){

@@ -403,6 +403,8 @@ Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
     Route::POST('/deletesubject_sec', 'SubjectController_sec@deleteSubject');
     Route::POST('/editsubject_sec', 'SubjectController_sec@editSubject_sec');
     Route::POST('/add_number_of_ellectives', 'SubjectController_sec@addNumberOfEllectives');
+    Route::POST('/asign_subject_to_class', 'SubjectController_sec@asignSubjectToClass');
+    Route::get('/get_subject_to_class/{subjectid}', 'SubjectController_sec@getClassForSubject');
 });
 
 
@@ -411,6 +413,8 @@ Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
 
 Route::group(['prefix'=>'pay', 'middleware' => ['auth', 'role:Student']], function(){ 
     Route::get('/student_fees', 'StudentController_sec@feePayment')->name('student_fees');
+    Route::get('/manage_subject_student', 'StudentController_sec@manage_subject_student')->name('manage_subject_student');
+    Route::post('/add_electives', 'StudentController_sec@electiveadd')->name('add_electives');
  });
 
  Route::group(['middleware' => ['auth', 'can:add students']], function () {

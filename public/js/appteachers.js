@@ -69294,8 +69294,8 @@ var AddTeachers = function AddTeachers() {
       console.log(response); // console.log(setJ)
 
       setisLoading(false);
-      setAllClasses(response.data.classesAll);
-      setallsubjects(response.data.addsubject_sec);
+      setAllClasses(response.data.classesAll); // setallsubjects(response.data.addsubject_sec)
+
       setSection_sec(response.data.addsection_sec); // setAllTeachersWithSubject(response.data.getAllTeachersWithSubject)
 
       setTeacherList(response.data.getAllTeachers);
@@ -69335,6 +69335,21 @@ var AddTeachers = function AddTeachers() {
 
   function handleChangeSection(e) {
     setSection(e.target.value);
+    getSubject4SelectedClass(e.target.value);
+    console.log(e.target.value);
+  }
+
+  function getSubject4SelectedClass(sectionidt) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetch_students_marks/' + classid + "/" + sectionidt).then(function (response) {
+      console.log(response); // console.log(setJ)
+      // setClasslist(response.data.classlist)
+      // seIsLoading(false)
+
+      setallsubjects(response.data.subjectlist);
+    })["catch"](function (e) {
+      console.log(e);
+      seIsLoading(false);
+    });
   }
 
   function confirmTeachersReg() {
@@ -69614,7 +69629,7 @@ var AddTeachers = function AddTeachers() {
     }))))) : ""), verified ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-6"
+      className: "col-12 col-md-12"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
@@ -69634,6 +69649,21 @@ var AddTeachers = function AddTeachers() {
       className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
       onChange: function onChange(e) {
+        return handleChangeSection(e);
+      },
+      className: "form-control-sm form-control"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: ""
+    }, "Select a section"), section_sec.map(function (singlesection) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          key: singlesection.id,
+          value: singlesection.id
+        }, singlesection.sectionname)
+      );
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      onChange: function onChange(e) {
         return handleChangeSubjectId(e);
       },
       className: "form-control-sm form-control"
@@ -69646,25 +69676,10 @@ var AddTeachers = function AddTeachers() {
         }, singlesubject.subjectname, "/", singlesubject.classname, "/", singlesubject.sectionname == null ? "General" : singlesubject.sectionname == 1 ? "Elective" : "Core", "/")
       );
     })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-6"
+      className: "col-12 col-md-12"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      onChange: function onChange(e) {
-        return handleChangeSection(e);
-      },
-      className: "form-control-sm form-control"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: ""
-    }, "Select a section"), section_sec.map(function (singlesection) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-          key: singlesection.id,
-          value: singlesection.id
-        }, singlesection.sectionname)
-      );
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "General"
-    }, "General"))))) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }))) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-footer justify-content-between"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       type: "button",

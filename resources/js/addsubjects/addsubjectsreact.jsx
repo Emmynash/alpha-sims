@@ -48,6 +48,7 @@ function AddSubject() {
     const [getElectivesSettingNumber, setgetElectivesSettingNumber] = useState([])
     const [isLoading, setisLoading] = useState(false)
     const [modalIsOpen, setIsOpen] = React.useState(false);
+    const [classSubjectFetched, setclassSubjectFetched] = useState([])
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -60,6 +61,18 @@ function AddSubject() {
         sectionid:'',
         subjectid:''
     })
+
+    const [addsubjectdata, setSubjectData] = useState({
+        subjectname:'',
+        sectionclasstype:''
+    })
+
+    const [asignSubjectClass, setasignSubjectClass] = useState({
+        subjectid:'',
+        classid:'',
+        sectionid:'',
+        subjecttype:''
+    })
     
     const alert = useAlert()
 
@@ -71,20 +84,8 @@ function AddSubject() {
             sortable: true,
         },
         {
-            name: 'Class.',
-            selector: 'classname',
-            sortable: true,
-            right: true,
-        },
-        {
-            name: 'Subject Type',
-            selector: 'subjecttype',
-            sortable: true,
-            right: true,
-        },
-        {
-            name: 'Section.',
-            selector: 'sectionname',
+            name: 'Type',
+            selector: 'sectionclasstype',
             sortable: true,
             right: true,
         },
@@ -103,7 +104,19 @@ function AddSubject() {
 
 
 
+    function handleSubjectAddChange(evt) {
+        setSubjectData({
+            ...addsubjectdata,
+          [evt.target.name]: evt.target.value,
+        });
+    }
 
+    function handleAsignSubject(evt) {
+        setasignSubjectClass({
+            ...asignSubjectClass,
+          [evt.target.name]: evt.target.value,
+        });
+    }
 
 
 
@@ -123,12 +136,12 @@ function AddSubject() {
     function fetchSchoolDetails() {
         setisLoading(true)
         axios.get('/get_all_subjects').then(response=> {
-            console.log(response.data.subjectScores);
+            console.log(response);
             // console.log(setJ)
             setisLoading(false)
             setClasslist(response.data.classesAll)
             setsubjectcount(response.data.allsubjects.length)
-            setallsubjects(response.data.allsubjects)
+            setallsubjects(response.data.allSubjectmain)
             setCoreSubjects(response.data.coresubjects.length)
             setelectivesubjectscount(response.data.electivesubjects.length)
             setschoolsection(response.data.schoolsection)
@@ -225,14 +238,11 @@ function AddSubject() {
 
     function addSubjectsMain(){
 
-        if (selectedclass !="" && subjectName != "" && subjectType != "" && subjectSectione) {
+        // if (selectedclass !="" && subjectName != "" && subjectType != "" && subjectSectione) {
+
+
             setisLoading(true)
-            const data = new FormData()
-            data.append("subjecttype_sec", subjectType)
-            data.append("class_sec", selectedclass)
-            data.append("subjectnamesec", subjectName)
-            data.append('subjectsectione', subjectSectione)
-            axios.post("/subjectprocess_sec", data, {
+            axios.post("/subjectprocess_sec", addsubjectdata, {
                 headers:{
                     "Content-type": "application/json"
                 }
@@ -260,11 +270,11 @@ function AddSubject() {
     
             })
             
-        }else{
+        // }else{
 
-            myalert('All fields are required', 'error');
+        //     myalert('All fields are required', 'error');
 
-        }
+        // }
     }
 
     function updateScoresOrAdd() {
@@ -361,6 +371,30 @@ function AddSubject() {
         });
 
         setShow(true);
+
+        getClassForSubject(evt.id)
+
+
+    }
+
+    function getClassForSubject(subjectid) {
+
+        axios.get('/get_subject_to_class/'+subjectid).then(response=>{
+
+            if (response.data.response) {
+
+                setclassSubjectFetched(response.data.response)
+                
+            }
+
+            console.log(response)
+
+        }).catch(e=>{
+
+            console.log(e)
+
+        })
+        
     }
 
     function handleChangeUpdateSubject(evt) {
@@ -408,6 +442,32 @@ function AddSubject() {
             myalert('Unknown Error', 'error');
             setisLoading(false)
         })
+    }
+
+    function asign_subject_to_class() {
+
+        const data = new FormData()
+        data.append("classid", asignSubjectClass.classid)
+        data.append("sectionid", asignSubjectClass.sectionid)
+        data.append("subjectid", updatesubject.subjectid)
+        data.append("subjecttype", asignSubjectClass.subjecttype)
+
+        axios.post('/asign_subject_to_class', data, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+
+            getClassForSubject(updatesubject.subjectid)
+
+            console.log(response)
+
+        }).catch(e=>{
+
+            console.log(e)
+
+        })
+        
     }
 
     return(
@@ -478,21 +538,6 @@ function AddSubject() {
 
 
             <div>
-                {/* <div className="col-12"> */}
-                    {/* <div className="card"> */}
-                    {/* <div className="card-header">
-                        <h3 className="card-title">Subjects</h3>
-                        <div className="card-tools">
-                        <div className="input-group input-group-sm" style={{width: '150px'}}>
-                            <input type="text" name="table_search" className="form-control float-right" onChange={(e) => setSearch(e.target.value)} placeholder="Search" />
-                            <div className="input-group-append">
-                            <button type="submit" className="btn btn-default">
-                                <i className="fas fa-search" />
-                            </button>
-                            </div>
-                        </div>
-                        </div>
-                    </div> */}
                     <br />
                     <div className="alert alert-warning">
                         <i>Note: subject type 2 core, 1 elective</i>
@@ -516,43 +561,7 @@ function AddSubject() {
                     />  
 
                     <br />
-                    
-                    {/* <div className="card-body table-responsive p-0"> */}
-                        {/* <table className="table table-hover text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>Subject Name</th>
-                                <th>Class</th>
-                                <th>Subject Type</th>
-                                <th>Section</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody> */}
-                            {/* {filteredSubjects.length > 0 ? 
-                            filteredSubjects.map(d => (
-                                <tr>
-                                    <td>{d.subjectname}</td>
-                                    <td>{d.classname}</td>
-                                    <td>{d.subjecttype == 2 ? "Core":"Elective"}</td>
-                                    <td>{d.sectionname}</td>
-                                    <td><span className="tag tag-success">Approved</span></td>
-                                </tr>
-                            ))
-                            :
-                            <tr></tr>
-                            } */}
 
-            
-
-
-                        {/* </tbody>
-                        </table> */}
-                    {/* </div> */}
-                  
-                    {/* </div> */}
-                
-                {/* </div> */}
             </div>
 
                 {/* <DataTablePage subjectdata={allsubjects}/> */}
@@ -560,129 +569,81 @@ function AddSubject() {
 
             </div>
 
-            {/* <div className="container">
-                <Modal
-                    ariaHideApp={false}
-                    isOpen={modalIsOpen}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={customStyles}
-                    contentLabel="Example Modal">
-                    
-                    <form action="">
-                        <div className="row">
-                            <div className="col-12 col-md-6">
-                                <div className="form-group">
-                                    <label htmlFor="">Subject name</label>
-                                    <input type="text" name="subjectname" value={setUpdatesubject.subjectname} className="form-control form-control-sm" />
-                                </div>
-                            </div>
-                            <div className="col-12 col-md-6">
-                                <div className="form-group">
-                                    <label htmlFor="">Section/Arm</label>
-                                    <select onChange={handleChangeSection} className="form-control form-control-sm">
-                                        <option value="">Select Arm</option>
-                                        { schoolsection.map(d=>(
-                                            <option value={d.id}>{d.sectionname}</option>
-                                        ))}
-                                        <option value="General">General</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-12 col-md-6">
-                                <div className="form-group">
-                                    <label htmlFor="">Class</label>
-                                    <select onChange={(e)=>handleChangeClasslist(e)} className="form-control form-control-sm">
-                                        <option value="">Select a class</option>
-                                        {classlist.length > 0 ? classlist.map(d => (
-                                            <option key={d.id} value={d.id}>{d.classname}</option>
-                                        ))
-                                        :
-                                        <option value=""></option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="col-12 col-md-6">
-                                <div className="form-group">
-                                    <label htmlFor="">Subject Type</label>
-                                    <select onChange={(e)=>handleChangeSubjectType(e)} className="form-control form-control-sm">
-                                        <option value="">Subject type</option>
-                                        <option value="1">Elective</option>
-                                        <option value="2">Core</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <button className="btn btn-sm btn-danger" style={{ borderRadius:'0px' }}>Delete</button>
-                            <button className="btn btn-sm btn-info" style={{ borderRadius:'0px' }}>Update</button>
-                        </div>
-                    </form>
 
-                </Modal>
-            </div> */}
-
-
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} size="xl">
                 <Modal.Header closeButton>
                 <Modal.Title>Update Subject</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="alert alert-info">
-                        <i style={{ fontStyle:'normal', fontSize:'13px' }}>Note: Subject name can be edited at all times, however, other details can't be edited once student record for the subject has been recorded.</i>
-                    </div>
+
                     <div>
-                            <div className="row">
-                                <div className="col-12 col-md-6">
-                                    <div className="form-group">
-                                        <label htmlFor="">Subject name</label>
-                                        <input type="text" name="subjectname" onChange={handleChangeUpdateSubject} defaultValue={updatesubject.subjectname} className="form-control form-control-sm" />
+                        <div className="row">
+                            <div className="col-12 col-md-6">
+
+                                <div className="row">
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <select onChange={handleAsignSubject} name="classid" defaultValue={updatesubject.classid} className="form-control form-control-sm">
+                                                <option value="">Select a class</option>
+                                                {classlist.length > 0 ? classlist.map(d => (
+                                                    <option key={d.id} value={d.id}>{d.classname}</option>
+                                                ))
+                                                :
+                                                <option value=""></option>
+                                                }
+                                            </select>
+                                        </div>
                                     </div>
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <select onChange={handleAsignSubject} name="sectionid" value={asignSubjectClass.sectionid} className="form-control form-control-sm">
+                                                <option value="">Select Arm</option>
+                                                { schoolsection.map(d=>(
+                                                    <option value={d.id}>{d.sectionname}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <select onChange={handleAsignSubject} name="subjecttype" value={asignSubjectClass.subjecttype} className="form-control form-control-sm">
+                                                <option value="">Select Subject type</option>
+                                                <option value="1">Elective</option>
+                                                <option value="2">Core</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
-                                <div className="col-12 col-md-6">
-                                    <div className="form-group">
-                                        <label htmlFor="">Section/Arm</label>
-                                        <select onChange={handleChangeUpdateSubject} defaultValue={updatesubject.sectionid} className="form-control form-control-sm">
-                                            <option value="">Select Arm</option>
-                                            { schoolsection.map(d=>(
-                                                <option value={d.id}>{d.sectionname}</option>
-                                            ))}
-                                            <option value="General">General</option>
-                                        </select>
+                                <button onClick={asign_subject_to_class} className="btn btn-sm btn-info">Asign</button>
+
+                            </div>
+                        </div>
+                        <hr />
+                        <div className="row">
+                            <div className="col-12 col-md-6">
+                                <div className="card">
+                                    <i style={{ fontStyle:'normal', fontSize:'14px', padding:'10px' }}>Classes Offering the subject</i>
+                                </div>
+                                {classSubjectFetched.length > 0 ? classSubjectFetched.map(d=>(
+                                    <div style={{ display:'flex', margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'14px' }}>{d.classname}</i><i>{d.sectionname}</i><div style={{ flex:'0.5' }}></div> <i style={{ fontStyle:'normal', fontSize:'14px' }}>{d.subjecttype == 1 ? "Elective":"Core"}</i>
+                                        <div style={{ flex:'1' }}></div>
+                                        <button className="btn btn-sm btn-danger badge">Remove</button>
                                     </div>
+                                )):<div><p>Not allocated</p></div>}
+                                <br/>
+                            </div>
+                            <div className="col-12 col-md-6">
+                                <div className="card">
+                                    <i style={{ fontStyle:'normal', fontSize:'14px', padding:'10px' }}>Teachers </i>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-12 col-md-6">
-                                    <div className="form-group">
-                                        <label htmlFor="">Class</label>
-                                        <select onChange={handleChangeUpdateSubject} name="classid" defaultValue={updatesubject.classid} className="form-control form-control-sm">
-                                            <option value="">Select a class</option>
-                                            {classlist.length > 0 ? classlist.map(d => (
-                                                <option key={d.id} value={d.id}>{d.classname}</option>
-                                            ))
-                                            :
-                                            <option value=""></option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="subjectid" defaultValue={updatesubject.subjectid} />
-                                <div className="col-12 col-md-6">
-                                    <div className="form-group">
-                                        <label htmlFor="">Subject Type</label>
-                                        <select onChange={handleChangeUpdateSubject} name="subjectype" defaultValue={updatesubject.subjecttype} className="form-control form-control-sm">
-                                            <option value="">Subject type</option>
-                                            <option value="1">Elective</option>
-                                            <option value="2">Core</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
                     </div>
+
+
                 </Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" className="btn-sm" onClick={handleClose}>
@@ -712,25 +673,21 @@ function AddSubject() {
                             <div className="row" style={{ margin:'10px' }}>
                                 <div className="col-12 col-md-6">
                                     <div className="form-group">
-                                        <select onChange={(e)=>handleChangeClasslist(e)} className="form-control form-control-sm">
+                                        <select onChange={handleSubjectAddChange} value={addsubjectdata.sectionclasstype} name="sectionclasstype" className="form-control form-control-sm">
                                             <option value="">Select a class</option>
-                                            {classlist.length > 0 ? classlist.map(d => (
-                                                <option key={d.id} value={d.id}>{d.classname}</option>
-                                            ))
-                                            :
-                                            <option value=""></option>
-                                            }
+                                            <option value="1">Junior Secondary</option>
+                                            <option value="2">Senior Secondary</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-6">
                                     <div className="form-group">
-                                        <input onChange={(e)=>handleChangeSubjectName(e)} value={subjectName} style={{ textTransform:'uppercase' }} className="form-control form-control-sm" placeholder="Enter subject name"/>
+                                        <input onChange={handleSubjectAddChange} value={addsubjectdata.subjectname} name="subjectname" style={{ textTransform:'uppercase' }} className="form-control form-control-sm" placeholder="Enter subject name"/>
                                     </div>
                                 </div>
                             </div>
                             <div className="row" style={{ margin:'10px' }}>
-                                <div className="col-12 col-md-6">
+                                {/* <div className="col-12 col-md-6">
                                     <div className="form-group">
                                         <select onChange={(e)=>handleChangeSubjectType(e)} className="form-control form-control-sm">
                                             <option value="">Subject type</option>
@@ -738,9 +695,9 @@ function AddSubject() {
                                             <option value="2">Core</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="col-12 col-md-6">
-                                    <div className="form-group">
+                                    {/* <div className="form-group">
                                         <select onChange={(e)=>handleChangeSection(e)} className="form-control form-control-sm">
                                             <option value="">Select Arm</option>
                                             { schoolsection.map(d=>(
@@ -748,7 +705,7 @@ function AddSubject() {
                                             ))}
                                             <option value="General">General</option>
                                         </select>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             {/* <div style={{ margin:'10px' }}>

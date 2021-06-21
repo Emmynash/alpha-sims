@@ -364,7 +364,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('payment_history') }}" class="nav-link">
+            <a href="{{ route('manage_subject_student') }}" class="nav-link">
               <i class="fas fa-wallet nav-icon"></i>
               <p>Manage Subjects</p>
             </a>

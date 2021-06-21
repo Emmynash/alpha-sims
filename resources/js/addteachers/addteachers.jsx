@@ -38,7 +38,7 @@ const AddTeachers=()=>{
             // console.log(setJ)
             setisLoading(false)
             setAllClasses(response.data.classesAll)
-            setallsubjects(response.data.addsubject_sec)
+            // setallsubjects(response.data.addsubject_sec)
             setSection_sec(response.data.addsection_sec)
             // setAllTeachersWithSubject(response.data.getAllTeachersWithSubject)
             setTeacherList(response.data.getAllTeachers)
@@ -79,6 +79,24 @@ const AddTeachers=()=>{
 
     function handleChangeSection(e) {
         setSection(e.target.value);
+        getSubject4SelectedClass(e.target.value)
+        console.log(e.target.value)
+    }
+
+    function getSubject4SelectedClass(sectionidt) {
+
+        axios.get('/fetch_students_marks/'+classid+"/"+sectionidt).then(response=> {
+            console.log(response);
+            // console.log(setJ)
+            // setClasslist(response.data.classlist)
+            // seIsLoading(false)
+            setallsubjects(response.data.subjectlist)
+
+        }).catch(e=>{
+            console.log(e);
+            seIsLoading(false)
+        });
+        
     }
 
     function confirmTeachersReg() {
@@ -369,7 +387,7 @@ const AddTeachers=()=>{
                             {verified ? 
                               
                                 <div className="row">
-                                    <div className="col-12 col-md-6">
+                                    <div className="col-12 col-md-12">
                                         <div className="form-group">
                                             <select onChange={(e)=>handleChangeClassid(e)} className="form-control-sm form-control">
                                                 <option value="">Select a Class</option>
@@ -378,6 +396,17 @@ const AddTeachers=()=>{
                                                 ))}
                                             </select>
                                         </div>
+
+                                        <div className="form-group">
+                                            <select onChange={(e)=>handleChangeSection(e)} className="form-control-sm form-control">
+                                                    <option value="">Select a section</option>
+                                                    {section_sec.map(singlesection=>(
+                                                        <option key={singlesection.id} value={singlesection.id}>{singlesection.sectionname}</option>
+                                                    ))}
+                                                    {/* <option value="General">General</option> */}
+                                            </select>
+                                        </div>
+
                                         <div className="form-group">
                                             <select onChange={(e)=>handleChangeSubjectId(e)} className="form-control-sm form-control">
                                                 <option value="">Select a Subject</option>
@@ -387,15 +416,9 @@ const AddTeachers=()=>{
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="col-12 col-md-6">
+                                    <div className="col-12 col-md-12">
                                         <div className="form-group">
-                                            <select onChange={(e)=>handleChangeSection(e)} className="form-control-sm form-control">
-                                                <option value="">Select a section</option>
-                                                {section_sec.map(singlesection=>(
-                                                    <option key={singlesection.id} value={singlesection.id}>{singlesection.sectionname}</option>
-                                                ))}
-                                                <option value="General">General</option>
-                                            </select>
+
                                         </div>
                                     </div>
                                 </div>

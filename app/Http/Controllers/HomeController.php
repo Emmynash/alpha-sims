@@ -480,7 +480,7 @@ class HomeController extends Controller
                 
 
                 
-               $subjectTeacherOffer = TeacherSubjects::where('user_id', Auth::user()->id)->get();
+                $subjectTeacherOffer = TeacherSubjects::where('user_id', Auth::user()->id)->get();
                 
 
                 

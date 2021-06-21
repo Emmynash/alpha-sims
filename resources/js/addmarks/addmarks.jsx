@@ -106,7 +106,7 @@ function AddMarks() {
 
     function handleChangeSubject(e) {
         setselectedsubject(e.target.value)
-        getSection(e.target.value)
+        // getSection(e.target.value)
     }
 
     function handleChangeSection(e) {
@@ -364,7 +364,7 @@ function AddMarks() {
                     </div>
                 </div>
                 <div style={{ margin:'0px 0px 10px 10px' }}>
-                    <button onClick={fetchAllStudentInClass} disabled={notallocated ? true:false} className="btn btn-sm btn-info">Submit</button>
+                    <button onClick={fetchAllStudentInClass} className="btn btn-sm btn-info">Submit</button>
                 </div>
             </div>
 

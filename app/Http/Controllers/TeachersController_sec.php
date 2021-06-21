@@ -219,6 +219,7 @@ class TeachersController_sec extends Controller
     public function allocateSubjectTeacher(Request $request){
 
 
+
         $validator = Validator::make($request->all(),[
             'subject_id' => 'required',
             'user_id' => 'required',
@@ -271,7 +272,7 @@ class TeachersController_sec extends Controller
                     $addTeacher ->user_id = (int)$request->user_id;
                     $addTeacher->school_id = (int)Auth::user()->schoolid;
                     $addTeacher->subject_id = (int)$request->subject_id;
-                    $addTeacher->classid = (int)$getclassid->classid;
+                    $addTeacher->classid = (int)$request->allocatedclass;
                     $addTeacher->usernamesystem=(int)$getTeacherRegNoMain[0]->id;
                     $addTeacher->section_id = $request->section;
                     $addTeacher->save();

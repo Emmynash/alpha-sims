@@ -69399,8 +69399,7 @@ function AddMarks() {
   }
 
   function handleChangeSubject(e) {
-    setselectedsubject(e.target.value);
-    getSection(e.target.value);
+    setselectedsubject(e.target.value); // getSection(e.target.value)
   }
 
   function handleChangeSection(e) {
@@ -69701,7 +69700,6 @@ function AddMarks() {
       }
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: fetchAllStudentInClass,
-      disabled: notallocated ? true : false,
       className: "btn btn-sm btn-info"
     }, "Submit"))), studentlist.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: fetchAllStudentInClass,

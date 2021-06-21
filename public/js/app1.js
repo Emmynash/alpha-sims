@@ -86499,10 +86499,15 @@ function AddSubject() {
       modalIsOpen = _React$useState2[0],
       setIsOpen = _React$useState2[1];
 
-  var _useState51 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+  var _useState51 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState52 = _slicedToArray(_useState51, 2),
-      show = _useState52[0],
-      setShow = _useState52[1];
+      classSubjectFetched = _useState52[0],
+      setclassSubjectFetched = _useState52[1];
+
+  var _useState53 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState54 = _slicedToArray(_useState53, 2),
+      show = _useState54[0],
+      setShow = _useState54[1];
 
   var handleClose = function handleClose() {
     return setShow(false);
@@ -86510,16 +86515,34 @@ function AddSubject() {
 
   var subtitle;
 
-  var _useState53 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+  var _useState55 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     subjectname: '',
     classid: '',
     subjecttype: '',
     sectionid: '',
     subjectid: ''
   }),
-      _useState54 = _slicedToArray(_useState53, 2),
-      updatesubject = _useState54[0],
-      setUpdatesubject = _useState54[1];
+      _useState56 = _slicedToArray(_useState55, 2),
+      updatesubject = _useState56[0],
+      setUpdatesubject = _useState56[1];
+
+  var _useState57 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+    subjectname: '',
+    sectionclasstype: ''
+  }),
+      _useState58 = _slicedToArray(_useState57, 2),
+      addsubjectdata = _useState58[0],
+      setSubjectData = _useState58[1];
+
+  var _useState59 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+    subjectid: '',
+    classid: '',
+    sectionid: '',
+    subjecttype: ''
+  }),
+      _useState60 = _slicedToArray(_useState59, 2),
+      asignSubjectClass = _useState60[0],
+      setasignSubjectClass = _useState60[1];
 
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   var columns = [{
@@ -86527,18 +86550,8 @@ function AddSubject() {
     selector: 'subjectname',
     sortable: true
   }, {
-    name: 'Class.',
-    selector: 'classname',
-    sortable: true,
-    right: true
-  }, {
-    name: 'Subject Type',
-    selector: 'subjecttype',
-    sortable: true,
-    right: true
-  }, {
-    name: 'Section.',
-    selector: 'sectionname',
+    name: 'Type',
+    selector: 'sectionclasstype',
     sortable: true,
     right: true
   }, {
@@ -86547,6 +86560,15 @@ function AddSubject() {
     sortable: true,
     right: true
   }];
+
+  function handleSubjectAddChange(evt) {
+    setSubjectData(_objectSpread({}, addsubjectdata, _defineProperty({}, evt.target.name, evt.target.value)));
+  }
+
+  function handleAsignSubject(evt) {
+    setasignSubjectClass(_objectSpread({}, asignSubjectClass, _defineProperty({}, evt.target.name, evt.target.value)));
+  }
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
     return function () {// cleanup
@@ -86556,12 +86578,12 @@ function AddSubject() {
   function fetchSchoolDetails() {
     setisLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_all_subjects').then(function (response) {
-      console.log(response.data.subjectScores); // console.log(setJ)
+      console.log(response); // console.log(setJ)
 
       setisLoading(false);
       setClasslist(response.data.classesAll);
       setsubjectcount(response.data.allsubjects.length);
-      setallsubjects(response.data.allsubjects);
+      setallsubjects(response.data.allSubjectmain);
       setCoreSubjects(response.data.coresubjects.length);
       setelectivesubjectscount(response.data.electivesubjects.length);
       setschoolsection(response.data.schoolsection);
@@ -86655,41 +86677,35 @@ function AddSubject() {
   }
 
   function addSubjectsMain() {
-    if (selectedclass != "" && subjectName != "" && subjectType != "" && subjectSectione) {
-      setisLoading(true);
-      var data = new FormData();
-      data.append("subjecttype_sec", subjectType);
-      data.append("class_sec", selectedclass);
-      data.append("subjectnamesec", subjectName);
-      data.append('subjectsectione', subjectSectione);
-      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/subjectprocess_sec", data, {
-        headers: {
-          "Content-type": "application/json"
-        }
-      }).then(function (response) {
-        console.log(response);
-        setisLoading(false);
+    // if (selectedclass !="" && subjectName != "" && subjectType != "" && subjectSectione) {
+    setisLoading(true);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/subjectprocess_sec", addsubjectdata, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+      setisLoading(false);
 
-        if (response.data.response == "fields") {
-          myalert('Some fields are empty', 'error');
-        } else if (response.data.response == "duplicate") {
-          myalert('Subject already added', 'error');
-        } else if (response.data.response == "success") {
-          setSubjectName(''); // setSubjectType('')
-          // setselectedclass('')
+      if (response.data.response == "fields") {
+        myalert('Some fields are empty', 'error');
+      } else if (response.data.response == "duplicate") {
+        myalert('Subject already added', 'error');
+      } else if (response.data.response == "success") {
+        setSubjectName(''); // setSubjectType('')
+        // setselectedclass('')
 
-          fetchSchoolDetails();
-          myalert('Process Successful', 'success');
-        } else {
-          myalert('unknown error', 'error');
-        }
-      })["catch"](function (e) {
-        console.log(e);
-        setisLoading(false);
-      });
-    } else {
-      myalert('All fields are required', 'error');
-    }
+        fetchSchoolDetails();
+        myalert('Process Successful', 'success');
+      } else {
+        myalert('unknown error', 'error');
+      }
+    })["catch"](function (e) {
+      console.log(e);
+      setisLoading(false);
+    }); // }else{
+    //     myalert('All fields are required', 'error');
+    // }
   }
 
   function updateScoresOrAdd() {
@@ -86771,7 +86787,20 @@ function AddSubject() {
       subjectid: evt.id
     }));
     setShow(true);
+    getClassForSubject(evt.id);
   };
+
+  function getClassForSubject(subjectid) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_subject_to_class/' + subjectid).then(function (response) {
+      if (response.data.response) {
+        setclassSubjectFetched(response.data.response);
+      }
+
+      console.log(response);
+    })["catch"](function (e) {
+      console.log(e);
+    });
+  }
 
   function handleChangeUpdateSubject(evt) {
     setUpdatesubject(_objectSpread({}, updatesubject, _defineProperty({}, evt.target.name, evt.target.value)));
@@ -86816,6 +86845,24 @@ function AddSubject() {
       console.log(e);
       myalert('Unknown Error', 'error');
       setisLoading(false);
+    });
+  }
+
+  function asign_subject_to_class() {
+    var data = new FormData();
+    data.append("classid", asignSubjectClass.classid);
+    data.append("sectionid", asignSubjectClass.sectionid);
+    data.append("subjectid", updatesubject.subjectid);
+    data.append("subjecttype", asignSubjectClass.subjecttype);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/asign_subject_to_class', data, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      getClassForSubject(updatesubject.subjectid);
+      console.log(response);
+    })["catch"](function (e) {
+      console.log(e);
     });
   }
 
@@ -86989,59 +87036,22 @@ function AddSubject() {
       onRowClicked: handleShow
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Modal"], {
       show: show,
-      onHide: handleClose
+      onHide: handleClose,
+      size: "xl"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Modal"].Header, {
       closeButton: true
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Modal"].Title, null, "Update Subject")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Modal"].Body, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "alert alert-info"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-      style: {
-        fontStyle: 'normal',
-        fontSize: '13px'
-      }
-    }, "Note: Subject name can be edited at all times, however, other details can't be edited once student record for the subject has been recorded.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Modal"].Title, null, "Update Subject")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Modal"].Body, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      htmlFor: ""
-    }, "Subject name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "text",
-      name: "subjectname",
-      onChange: handleChangeUpdateSubject,
-      defaultValue: updatesubject.subjectname,
-      className: "form-control form-control-sm"
-    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-6"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      htmlFor: ""
-    }, "Section/Arm"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      onChange: handleChangeUpdateSubject,
-      defaultValue: updatesubject.sectionid,
-      className: "form-control form-control-sm"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: ""
-    }, "Select Arm"), schoolsection.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-          value: d.id
-        }, d.sectionname)
-      );
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "General"
-    }, "General"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "row"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-6"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      htmlFor: ""
-    }, "Class"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      onChange: handleChangeUpdateSubject,
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      onChange: handleAsignSubject,
       name: "classid",
       defaultValue: updatesubject.classid,
       className: "form-control form-control-sm"
@@ -87055,28 +87065,91 @@ function AddSubject() {
       );
     }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: ""
-    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "hidden",
-      name: "subjectid",
-      defaultValue: updatesubject.subjectid
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      htmlFor: ""
-    }, "Subject Type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      onChange: handleChangeUpdateSubject,
-      name: "subjectype",
-      defaultValue: updatesubject.subjecttype,
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      onChange: handleAsignSubject,
+      name: "sectionid",
+      value: asignSubjectClass.sectionid,
       className: "form-control form-control-sm"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: ""
-    }, "Subject type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    }, "Select Arm"), schoolsection.map(function (d) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: d.id
+        }, d.sectionname)
+      );
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      onChange: handleAsignSubject,
+      name: "subjecttype",
+      value: asignSubjectClass.subjecttype,
+      className: "form-control form-control-sm"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: ""
+    }, "Select Subject type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: "1"
     }, "Elective"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: "2"
-    }, "Core"))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Modal"].Footer, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Button"], {
+    }, "Core"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: asign_subject_to_class,
+      className: "btn btn-sm btn-info"
+    }, "Asign"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "card"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '14px',
+        padding: '10px'
+      }
+    }, "Classes Offering the subject")), classSubjectFetched.length > 0 ? classSubjectFetched.map(function (d) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          style: {
+            display: 'flex',
+            margin: '5px'
+          }
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          style: {
+            fontStyle: 'normal',
+            fontSize: '14px'
+          }
+        }, d.classname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", null, d.sectionname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          style: {
+            flex: '0.5'
+          }
+        }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+          style: {
+            fontStyle: 'normal',
+            fontSize: '14px'
+          }
+        }, d.subjecttype == 1 ? "Elective" : "Core"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          style: {
+            flex: '1'
+          }
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "btn btn-sm btn-danger badge"
+        }, "Remove"))
+      );
+    }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Not allocated")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "card"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '14px',
+        padding: '10px'
+      }
+    }, "Teachers ")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Modal"].Footer, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["Button"], {
       variant: "secondary",
       className: "btn-sm",
       onClick: handleClose
@@ -87121,29 +87194,24 @@ function AddSubject() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      onChange: function onChange(e) {
-        return handleChangeClasslist(e);
-      },
+      onChange: handleSubjectAddChange,
+      value: addsubjectdata.sectionclasstype,
+      name: "sectionclasstype",
       className: "form-control form-control-sm"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: ""
-    }, "Select a class"), classlist.length > 0 ? classlist.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-          key: d.id,
-          value: d.id
-        }, d.classname)
-      );
-    }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: ""
-    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "Select a class"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "1"
+    }, "Junior Secondary"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "2"
+    }, "Senior Secondary")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      onChange: function onChange(e) {
-        return handleChangeSubjectName(e);
-      },
-      value: subjectName,
+      onChange: handleSubjectAddChange,
+      value: addsubjectdata.subjectname,
+      name: "subjectname",
       style: {
         textTransform: 'uppercase'
       },
@@ -87156,38 +87224,7 @@ function AddSubject() {
       }
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      onChange: function onChange(e) {
-        return handleChangeSubjectType(e);
-      },
-      className: "form-control form-control-sm"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: ""
-    }, "Subject type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "1"
-    }, "Elective"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "2"
-    }, "Core")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-6"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      onChange: function onChange(e) {
-        return handleChangeSection(e);
-      },
-      className: "form-control form-control-sm"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: ""
-    }, "Select Arm"), schoolsection.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-          value: d.id
-        }, d.sectionname)
-      );
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "General"
-    }, "General"))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-footer justify-content-between"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       type: "button",
