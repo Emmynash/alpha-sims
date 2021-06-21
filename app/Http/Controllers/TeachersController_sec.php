@@ -254,7 +254,7 @@ class TeachersController_sec extends Controller
 
         }
 
-           $teacherSubjectCheck = $this->teacherSubjects->where(['user_id' => $request->user_id, "subject_id" => $request->subject_id, 'section_id'=>$request->section])->get();
+           $teacherSubjectCheck = $this->teacherSubjects->where(['user_id' => $request->user_id, 'section_id'=>$request->section])->get();
 
             if ($teacherSubjectCheck->count() < 1) {
                 
