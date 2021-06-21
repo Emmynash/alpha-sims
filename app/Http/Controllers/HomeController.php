@@ -480,7 +480,9 @@ class HomeController extends Controller
                 
 
                 
-                $subjectTeacherOffer = TeacherSubjects::where('user_id', Auth::user()->id)->get();
+                $subjectTeacherOffer = TeacherSubjects::join('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id')
+                                        ->select('teacher_subjects.*', 'addsection_secs.sectionname')
+                                        ->where('user_id', Auth::user()->id)->get();
                 
 
                 
