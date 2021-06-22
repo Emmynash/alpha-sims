@@ -412,25 +412,25 @@
                         Form Teacher Remark: <i style="font-style: normal;" id="teacherscommentMain"></i>
                     </div>
 
-                    <div style="width: 95%; margin: 0 auto;" id="teachersremark" class="collapse">
+                    {{-- <div style="width: 95%; margin: 0 auto;" id="teachersremark" class="collapse">
                         <center><input type="text" onkeydown="teachercomment(this)" style="width: 95%; margin-top: 2px;" placeholder="From teacher comment"></center>
-                    </div>
+                    </div> --}}
 
                     <br>
                     <div data-toggle="collapse" data-target="#housemastersremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
                         House Master Remark: <i style="font-style: normal;" id="housemastercommentMain"></i>
                     </div>
-                    <div style="width: 95%; margin: 0 auto;" id="housemastersremark" class="collapse">
+                    {{-- <div style="width: 95%; margin: 0 auto;" id="housemastersremark" class="collapse">
                         <center><input type="text" onkeydown="housemastercomment(this)" style="width: 95%; margin-top: 2px;" placeholder="From teacher comment"></center>
-                    </div>
+                    </div> --}}
 
                     <br>
                     <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
                         Honours Or Prizes Won: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
                     </div>
-                    <div style="width: 95%; margin: 0 auto;" id="honourorpricesremark" class="collapse">
+                    {{-- <div style="width: 95%; margin: 0 auto;" id="honourorpricesremark" class="collapse">
                         <center><input type="text" onkeydown="honourorprices(this)" style="width: 95%; margin-top: 2px;" placeholder="From teacher comment"></center>
-                    </div>
+                    </div> --}}
                     
                 </div>
                 <br>
