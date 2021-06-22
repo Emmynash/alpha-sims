@@ -171,7 +171,7 @@
                             <table>
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Name of Student:</i></td>
-                                    <td><i id="studentname" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->getStudentName->firstname }} {{ $studentdetails->getStudentName->middlename }} {{ $studentdetails->getStudentName->lastname }}</i></td>
+                                    <td><i id="studentname" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ ucfirst($studentdetails->getStudentName->firstname) }} {{ $studentdetails->getStudentName->middlename == "null" ? "":ucfirst($studentdetails->getStudentName->middlename) }} {{ ucfirst($studentdetails->getStudentName->lastname) }}</i></td>
                                 </tr>
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Class:</i></td>

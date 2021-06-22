@@ -30,7 +30,7 @@ class Addsubject_sec extends Model
             return "NAN";
         } else {
             $username = User::find($getTeacherId->user_id);
-            return $username->firstname;
+            return ucfirst($username->firstname);
         }
     }
 
