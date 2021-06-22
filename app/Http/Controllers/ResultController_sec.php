@@ -221,7 +221,7 @@ class ResultController_sec extends Controller
             $addschool = Addpost::find(Auth::user()->schoolid);
 
             //get subject list
-            $getSubjectList = CLassSubjects::where('classid', $classid)->pluck('subjectid')->toArray();
+            $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$studentdetails->studentsection])->pluck('subjectid')->toArray();
 
             $subject = array();
 
