@@ -475,7 +475,7 @@ class TeachersController_sec extends Controller
 
     }
 
-    public function formTeacherMain()
+    public function formTeacherMain($classid, $sectionid)
     {
 
         $formClass = FormTeachers::where('teacher_id', Auth::user()->id)->first();
@@ -493,8 +493,6 @@ class TeachersController_sec extends Controller
         for ($i=0; $i < $getEnteredSubjects->count(); $i++) { 
             array_push($arrayOfSubjectId, $getEnteredSubjects[$i]);
         }
-
-        
 
         return view('secondary.teachers.formteacher', compact('formClass', 'arrayOfSubjectId'));
     }
@@ -539,5 +537,19 @@ class TeachersController_sec extends Controller
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
         return view('secondary.teachers.addformmastersreact', compact('schooldetails'));
+    }
+
+    public function form_teacher_multiple()
+    {
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+       $classSubject = FormTeachers::join('classlist_secs', 'classlist_secs.id','=','form_teachers.class_id')
+                        ->join('addsection_secs', 'addsection_secs.id','=','form_teachers.form_id')
+                        ->where('teacher_id', Auth::user()->id)
+                        ->select('form_teachers.*', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
+
+
+        return view('secondary.teachers.managemultiple', compact('schooldetails', 'classSubject'));
     }
 }

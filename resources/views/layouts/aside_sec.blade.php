@@ -307,7 +307,7 @@
 
             @can('form teacher')
               <li class="nav-item">
-                <a id="formmasteroption" href="{{ route('form_teacher') }}" class="nav-link">
+                <a id="formmasteroption" href="{{ route('form_teacher_multiple') }}" class="nav-link">
                     <i class="fas fa-users nav-icon"></i>
                   <p>
                     Form Master

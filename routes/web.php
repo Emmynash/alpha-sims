@@ -353,7 +353,8 @@ Route::group(['prefix' => 'sec'], function () {
      Route::group(['prefix' => 'teacher', 'middleware' => ['auth', 'role:Teacher']], function () { 
         Route::get('/teacher_sec_remark', 'TeachersController_sec@resultremark')->name('teacher_sec_remark');
         Route::post('/resultremarkpost', 'TeachersController_sec@resultremarkpost')->name('resultremarkpost');
-        Route::get('/form_teacher', 'TeachersController_sec@formTeacherMain')->name('form_teacher')->middleware('can:form teacher');
+        Route::get('/form_teacher/{classid}/{sectionid}', 'TeachersController_sec@formTeacherMain')->name('form_teacher')->middleware('can:form teacher');
+        Route::get('/form_teacher_multiple', 'TeachersController_sec@form_teacher_multiple')->name('form_teacher_multiple')->middleware('can:form teacher');
         Route::post('/form_teacher_result_confirm', 'TeachersController_sec@confirmSubjectRecordEntered')->name('form_teacher_result_confirm');
      });
 
