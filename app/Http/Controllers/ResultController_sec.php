@@ -10,6 +10,7 @@ use App\Addsubject_sec;
 use App\Addstudent_sec;
 use App\Addmark_sec;
 use App\Addmoto_sec;
+use App\CLassSubjects;
 use App\MotoList;
 use App\ResultAverage;
 use Illuminate\Support\Facades\Auth;
@@ -218,7 +219,20 @@ class ResultController_sec extends Controller
             $studentdetails = Addstudent_sec::find($regNo);
     
             $addschool = Addpost::find(Auth::user()->schoolid);
-            $subjects = Addsubject_sec::where('classid', $classid)->get();
+
+            //get subject list
+            $getSubjectList = CLassSubjects::where('classid', $classid)->pluck('subjectid')->toArray();
+
+            $subject = array();
+
+            for ($i=0; $i < count($getSubjectList); $i++) { 
+                
+                $getSingleSubject = Addsubject_sec::find($getSubjectList[$i]);
+
+                array_push($subject, $getSingleSubject);
+            }
+            $subjects = collect($subject);
+
     
             $motolist = MotoList::where('schoolid', Auth::user()->schoolid)->get();
     
@@ -235,7 +249,7 @@ class ResultController_sec extends Controller
         } catch (\Throwable $th) {
             //throw $th;
 
-            return back()->with('error', 'Result not ready');
+            return $th;
         }
         
         
