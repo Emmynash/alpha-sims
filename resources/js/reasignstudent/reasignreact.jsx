@@ -13,6 +13,8 @@ function ReasignClass() {
 
     const [studentDetails, setUpStudentDetails] = useState({
         admissionno: '',
+        classid:'',
+        sectionid:''
     })
 
 
@@ -96,6 +98,33 @@ function ReasignClass() {
         
     }
 
+    function reasign_confirm() {
+
+        if(studentDetails.classid != '' && studentDetails.sectionid !=''){
+            setisLoading(true)
+            axios.post('/reasign_confirm', studentDetails, {
+                headers:{
+                    "Content-type": "application/json"
+                }
+            }).then(response=>{
+                setisLoading(false)
+                console.log(response)
+                if(response.data.response == "success"){
+                    setStudentRecord({})
+                    myalert("Success", 'success')
+                }
+    
+            }).catch(e=>{
+                setisLoading(false)
+                console.log(e)
+                myalert("Unknown error", 'error')
+    
+            })
+        }else{
+            myalert("all fields are required", 'error')
+        }
+    }
+
     return(
         <div>
 
@@ -126,31 +155,33 @@ function ReasignClass() {
                             <i style={{ fontStyle:'normal', fontSize:'14px' }}>{gottenStudentRecord.firstname} {gottenStudentRecord.middlename} {gottenStudentRecord.lastname}</i>
                             <i style={{ fontStyle:'normal', fontSize:'14px' }}>{gottenStudentRecord.classname}{gottenStudentRecord.sectionname}</i>
                         </div>
-                        <div className="form-group">
-                            <select name="" className="form-control form-control-sm" id="">
-                                <option value="">Select class</option>
-                                {
-                                    classlist.map(d=>(
-                                        <option key={d.id+"classreasign"} value={d.id}>{d.classname}</option>
-                                    ))
-                                }
-                            </select>
-                        </div>
+                        {gottenStudentRecord.firstname != null ? <div>
+                            <div className="form-group">
+                                <select name="" className="form-control form-control-sm" onChange={handleChange} name="classid" value={studentDetails.classid} id="">
+                                    <option value="">Select class</option>
+                                    {
+                                        classlist.map(d=>(
+                                            <option key={d.id+"classreasign"} value={d.id}>{d.classname}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
 
-                        <div className="form-group">
-                            <select name="" className="form-control form-control-sm" id="">
-                                <option value="">Select arm/section</option>
-                                {
-                                    schoolsection.map(d=>(
-                                        <option key={d.id+"sectionreasign"} value={d.id}>{d.sectionname}</option>
-                                    ))
-                                }
-                            </select>
-                        </div>
+                            <div className="form-group">
+                                <select name="" className="form-control form-control-sm" name="sectionid" onChange={handleChange} value={studentDetails.sectionid} id="">
+                                    <option value="">Select arm/section</option>
+                                    {
+                                        schoolsection.map(d=>(
+                                            <option key={d.id+"sectionreasign"} value={d.id}>{d.sectionname}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
 
-                        <div className="form-group">
-                            <button className="btn btn-sm btn-info">Confirm Reasign</button>
-                        </div>
+                            <div className="form-group">
+                                <button onClick={reasign_confirm} className="btn btn-sm btn-info">Confirm Reasign</button>
+                            </div>
+                        </div>:""}
                     </div>
 
                 </div>

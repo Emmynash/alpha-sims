@@ -427,6 +427,7 @@ Route::group(['prefix'=>'pay', 'middleware' => ['auth', 'role:Student']], functi
     Route::POST('/add_astudent_modal', 'StudentController_sec@addStudentModal');
     Route::get('/reasign_class', 'StudentController_sec@reasign_class')->name('reasign_class');
     Route::post('/confirm_admission_no', 'StudentController_sec@confirmAdmissionNumber');
+    Route::post('/reasign_confirm', 'StudentController_sec@reasignConfirm');
 });
 
 

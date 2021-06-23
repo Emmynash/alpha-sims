@@ -69327,6 +69327,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 function ReasignClass() {
+  var _React$createElement, _React$createElement2;
+
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
       isLoading = _useState2[0],
@@ -69350,7 +69352,9 @@ function ReasignClass() {
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_2__["useAlert"])();
 
   var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
-    admissionno: ''
+    admissionno: '',
+    classid: '',
+    sectionid: ''
   }),
       _useState10 = _slicedToArray(_useState9, 2),
       studentDetails = _useState10[0],
@@ -69421,6 +69425,31 @@ function ReasignClass() {
     });
   }
 
+  function reasign_confirm() {
+    if (studentDetails.classid != '' && studentDetails.sectionid != '') {
+      setisLoading(true);
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/reasign_confirm', studentDetails, {
+        headers: {
+          "Content-type": "application/json"
+        }
+      }).then(function (response) {
+        setisLoading(false);
+        console.log(response);
+
+        if (response.data.response == "success") {
+          setStudentRecord({});
+          myalert("Success", 'success');
+        }
+      })["catch"](function (e) {
+        setisLoading(false);
+        console.log(e);
+        myalert("Unknown error", 'error');
+      });
+    } else {
+      myalert("all fields are required", 'error');
+    }
+  }
+
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       style: {
         position: 'absolute',
@@ -69479,13 +69508,13 @@ function ReasignClass() {
         fontStyle: 'normal',
         fontSize: '14px'
       }
-    }, gottenStudentRecord.classname, gottenStudentRecord.sectionname)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    }, gottenStudentRecord.classname, gottenStudentRecord.sectionname)), gottenStudentRecord.firstname != null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("select", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("select", (_React$createElement = {
       name: "",
       className: "form-control form-control-sm",
-      id: ""
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
+      onChange: handleChange
+    }, _defineProperty(_React$createElement, "name", "classid"), _defineProperty(_React$createElement, "value", studentDetails.classid), _defineProperty(_React$createElement, "id", ""), _React$createElement), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
       value: ""
     }, "Select class"), classlist.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
@@ -69495,11 +69524,10 @@ function ReasignClass() {
       );
     }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "form-group"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("select", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("select", (_React$createElement2 = {
       name: "",
-      className: "form-control form-control-sm",
-      id: ""
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
+      className: "form-control form-control-sm"
+    }, _defineProperty(_React$createElement2, "name", "sectionid"), _defineProperty(_React$createElement2, "onChange", handleChange), _defineProperty(_React$createElement2, "value", studentDetails.sectionid), _defineProperty(_React$createElement2, "id", ""), _React$createElement2), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
       value: ""
     }, "Select arm/section"), schoolsection.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
@@ -69510,8 +69538,9 @@ function ReasignClass() {
     }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+      onClick: reasign_confirm,
       className: "btn btn-sm btn-info"
-    }, "Confirm Reasign"))))))
+    }, "Confirm Reasign"))) : ""))))
   );
 }
 

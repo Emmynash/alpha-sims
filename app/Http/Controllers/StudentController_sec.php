@@ -414,7 +414,7 @@ class StudentController_sec extends Controller
         $getStudentDetails = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
                             ->leftjoin('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
                             ->leftjoin('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
-                            ->where(['admission_no'=>$request->admissionno])
+                            ->where(['admission_no'=>$request->admissionno, 'schoolid'=>Auth::user()->schoolid])
                             ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
 
         if (count($getStudentDetails)>1) {
@@ -427,5 +427,23 @@ class StudentController_sec extends Controller
 
         return response()->json(['response'=>'success', 'student'=>$getStudentDetails[0]]);
         
+    }
+
+    public function reasignConfirm(Request $request)
+    {
+        try {
+            $admissionNo = $request->admissionno;
+
+            $getStudentDetails = Addstudent_sec::where(['schoolid'=>Auth::user()->schoolid, 'admission_no'=>$admissionNo])->first();
+            $getStudentDetails->classid = $request->classid;
+            $getStudentDetails->studentsection = $request->sectionid;
+            $getStudentDetails->save();
+
+            return response()->json(['response'=>'success']);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th]);
+        }
     }
 }
