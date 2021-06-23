@@ -33,7 +33,7 @@
 
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid" id="addmarksroot">
+      <div class="container-fluid" id="addmarksteachersroot">
 
 
         <div class="text-center">
@@ -53,7 +53,7 @@
     </div>
   </footer>
 
-  <script src="{{ asset('js/appmarks.js') }}"></script>
+  <script src="{{ asset('js/appmarksteachers.js') }}"></script>
 
   <script>
       function scrollocation(){

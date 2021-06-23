@@ -552,4 +552,22 @@ class TeachersController_sec extends Controller
 
         return view('secondary.teachers.managemultiple', compact('schooldetails', 'classSubject'));
     }
+
+    public function fetchTeachersSubject()
+    {
+        try {
+            $subjectTeacherOffer = TeacherSubjects::join('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id')
+                                ->leftjoin('addposts', 'addposts.id','=','teacher_subjects.school_id')
+                                ->join('classlist_secs', 'classlist_secs.id','=','teacher_subjects.classid')
+                                ->join('addsubject_secs', 'addsubject_secs.id','=','teacher_subjects.subject_id')
+                                ->select('teacher_subjects.*', 'addsection_secs.sectionname', 'addposts.term', 'addposts.schoolsession', 'classlist_secs.classname', 'addsubject_secs.subjectname')
+                                ->where('user_id', Auth::user()->id)->get();
+
+            return response()->json(['response'=>$subjectTeacherOffer]);
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            return response()->json(['response'=>$th]);
+        }
+    }
 }
