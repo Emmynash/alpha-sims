@@ -13,6 +13,7 @@ use App\Addstudent;
 use App\Addsubject;
 use App\Addmarks;
 use App\Addgrades;
+use App\Addstudent_sec;
 use App\Http\Middleware\Roles;
 use Redirect;
 use Carbon\Carbon;
@@ -56,7 +57,11 @@ class AllUsersController extends Controller
     }
     public function fetch_all_student()
     {
+        try {
+
         $allusers = User::where(['schoolid' => Auth::user()->schoolid])->orderBy('firstname', 'asc')->get();
+
+        
 
 
         $usersListMain = array();
@@ -64,23 +69,41 @@ class AllUsersController extends Controller
         for ($i=0; $i < $allusers->count(); $i++) { 
 
             $user = User::find($allusers[$i]['id']);
-            $role = $user->roles->pluck('name');
+           $role = $user->roles->pluck('name');
+
+           $addmisNo = '';
+
+           if ($role[0] == "Student") {
+
+                $student = Addstudent_sec::where('usernamesystem', $user->id)->first();
+                $addmisNo = $student->admission_no;
+               
+           }
+
+            
 
             $newObject = array(
                 "name" => $allusers[$i]['firstname']." ".$allusers[$i]['middlename']." ".$allusers[$i]['lastname'],
                 "role" => $role,
                 "id" => $allusers[$i]['id'],
                 "phonenumber" => $allusers[$i]['phonenumber'],
-                "email" => $allusers[$i]['email']
+                "email" => $allusers[$i]['email'],
+                "addmins"=>$addmisNo
             );
 
             array_push($usersListMain, $newObject);
 
-        
+
         }
 
 
-        return response()->json(['allusers' => $usersListMain]);
+            return response()->json(['allusers' => $usersListMain]);
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            return response()->json(['response' => $th]);
+
+        }
     }
 
     public function fetchuser_sec(Request $request){
