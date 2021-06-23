@@ -145,7 +145,7 @@ function AllUsers() {
       function confirmAddmissionnumber(e) {
 
         // setisLoading(true)
-        // setStudentRecord({})\
+        setStudentRecord({})
         setShow(true)
         const data = new FormData()
         data.append("admissionno", e.addmins)

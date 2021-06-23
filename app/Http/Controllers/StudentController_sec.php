@@ -447,7 +447,6 @@ class StudentController_sec extends Controller
             $getStudentDetails->classid = $request->classid;
             $getStudentDetails->studentsection = $request->sectionid;
             $getStudentDetails->schoolsession = $studentDetails->schoolsession;
-            $getStudentDetails->term = $studentDetails->term;
             $getStudentDetails->save();
 
             return response()->json(['response'=>'success']);
