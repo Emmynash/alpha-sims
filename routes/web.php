@@ -425,6 +425,8 @@ Route::group(['prefix'=>'pay', 'middleware' => ['auth', 'role:Student']], functi
     Route::get('/viewstudentbyclass', 'StudentController_sec@viewStudentbyClass');
     Route::POST('/viewstudentsingleclass', 'StudentController_sec@viewStudentSingleClass');
     Route::POST('/add_astudent_modal', 'StudentController_sec@addStudentModal');
+    Route::get('/reasign_class', 'StudentController_sec@reasign_class')->name('reasign_class');
+    Route::post('/confirm_admission_no', 'StudentController_sec@confirmAdmissionNumber');
 });
 
 
@@ -496,6 +498,8 @@ Route::group(['middleware' => ['auth', 'can:manage marks']], function () {
     Route::POST('/add_marks_main', 'AddstudentmakrsController_secs@addmarksmiain')->name('add_marks_main');
     Route::POST('/marks_process_main', 'AddstudentmakrsController_secs@processPosition');
 });
+
+
 
 
 //teachers attendance

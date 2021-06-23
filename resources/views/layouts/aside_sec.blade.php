@@ -168,9 +168,9 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a id="studentsmainview" href="/viewstudentbyclass" class="nav-link">
+                    <a id="studentsmainview" href="{{ route('reasign_class') }}" class="nav-link">
                         <i class="fas fa-clipboard-list nav-icon"></i>
-                      <p>Asign Electives</p>
+                      <p>Reasign Class</p>
                     </a>
                   </li>
                 </ul>

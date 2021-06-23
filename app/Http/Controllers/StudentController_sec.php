@@ -397,4 +397,35 @@ class StudentController_sec extends Controller
         return back();
 
     }
+
+    public function reasign_class()
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        return view('secondary.student.reasignreact', compact('schooldetails'));
+    }
+
+    public function confirmAdmissionNumber(Request $request)
+    {
+
+        if ($request->admissionno == "") {
+            return response()->json(['response'=>'noaddmissionno']);
+        }
+
+        $getStudentDetails = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                            ->leftjoin('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                            ->leftjoin('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+                            ->where(['admission_no'=>$request->admissionno])
+                            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
+
+        if (count($getStudentDetails)>1) {
+            return response()->json(['response'=>'duplicate']);
+        }
+
+        if (count($getStudentDetails)<1) {
+            return response()->json(['response'=>'doesnotexist']);
+        }
+
+        return response()->json(['response'=>'success', 'student'=>$getStudentDetails[0]]);
+        
+    }
 }
