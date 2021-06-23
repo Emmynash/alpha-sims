@@ -276,7 +276,7 @@ class AddstudentmakrsController_secs extends Controller
             
                                 // get student position
             
-                                $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain])->orderBy('totalmarks', 'desc')->get();
+                                $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
             
                                 $subjectscrorearray = array();
                                 
@@ -340,7 +340,7 @@ class AddstudentmakrsController_secs extends Controller
             
             
             
-                                    $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm')])->orderBy('totalmarks', 'desc')->get();
+                                    $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm'), 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
             
                                     $subjectscrorearray = array();
                                     
@@ -424,7 +424,7 @@ class AddstudentmakrsController_secs extends Controller
 
                             
             
-                            $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm')])->orderBy('totalmarks', 'desc')->get();
+                            $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm'), 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
             
                             $subjectscrorearray = array();
                             
@@ -485,7 +485,7 @@ class AddstudentmakrsController_secs extends Controller
             
                             // get student subject position
             
-                            $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm')])->orderBy('totalmarks', 'desc')->get();
+                            $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm'), 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
             
                             $subjectscrorearray = array();
                             

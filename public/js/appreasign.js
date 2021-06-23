@@ -69402,6 +69402,7 @@ function ReasignClass() {
 
   function confirmAddmissionnumber() {
     setisLoading(true);
+    setStudentRecord({});
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/confirm_admission_no', studentDetails, {
       headers: {
         "Content-type": "application/json"

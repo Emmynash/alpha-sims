@@ -69,7 +69,7 @@ function ReasignClass() {
     function confirmAddmissionnumber() {
 
         setisLoading(true)
-
+        setStudentRecord({})
         axios.post('/confirm_admission_no', studentDetails, {
             headers:{
                 "Content-type": "application/json"
