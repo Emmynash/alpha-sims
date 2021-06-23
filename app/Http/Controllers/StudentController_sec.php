@@ -407,25 +407,32 @@ class StudentController_sec extends Controller
     public function confirmAdmissionNumber(Request $request)
     {
 
-        if ($request->admissionno == "") {
-            return response()->json(['response'=>'noaddmissionno']);
+        try {
+
+            if ($request->admissionno == "") {
+                return response()->json(['response'=>'noaddmissionno']);
+            }
+    
+            $getStudentDetails = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                                ->leftjoin('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                                ->leftjoin('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+                                ->where(['addstudent_secs.admission_no'=>$request->admissionno, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
+                                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
+    
+            if (count($getStudentDetails)>1) {
+                return response()->json(['response'=>'duplicate']);
+            }
+    
+            if (count($getStudentDetails)<1) {
+                return response()->json(['response'=>'doesnotexist']);
+            }
+    
+            return response()->json(['response'=>'success', 'student'=>$getStudentDetails[0]]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th]);
         }
-
-        $getStudentDetails = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
-                            ->leftjoin('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-                            ->leftjoin('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
-                            ->where(['admission_no'=>$request->admissionno, 'schoolid'=>Auth::user()->schoolid])
-                            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
-
-        if (count($getStudentDetails)>1) {
-            return response()->json(['response'=>'duplicate']);
-        }
-
-        if (count($getStudentDetails)<1) {
-            return response()->json(['response'=>'doesnotexist']);
-        }
-
-        return response()->json(['response'=>'success', 'student'=>$getStudentDetails[0]]);
         
     }
 
