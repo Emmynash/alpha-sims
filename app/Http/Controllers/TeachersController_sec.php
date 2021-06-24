@@ -391,6 +391,10 @@ class TeachersController_sec extends Controller
         $updateteachers->residentialaddress = $request->input('addressedit');
         $updateteachers->save(); 
 
+        $updateUser = User::find(Auth::user()->id);
+        $updateUser->email = $request->emailnameedit;
+        $updateUser->save();
+
         return back();
     }
 
@@ -568,6 +572,51 @@ class TeachersController_sec extends Controller
             //throw $th;
 
             return response()->json(['response'=>$th]);
+        }
+    }
+
+    public function viewClassFormMaster($classid, $sectionid)
+    {
+
+        $formClass = FormTeachers::where(['teacher_id'=> Auth::user()->id, 'form_id'=>$sectionid, 'class_id'=>$classid])->first();
+
+        $getStudentList = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                            ->where(['classid'=>$classid, 'studentsection'=>$sectionid])
+                            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'users.id as userid')->get();
+
+        return view('secondary.teachers.viewstudentformteacher', compact('formClass', 'getStudentList'));
+    }
+
+    public function updateStudentData(Request $request)
+    {
+
+        try {
+
+            if ($request->key == 1) {
+
+                $updateUser = User::find($request->user_id);
+                $updateUser->delete();
+
+                $deleteStudent = Addstudent_sec::where('usernamesystem', $request->user_id)->first();
+                $deleteStudent->delete();
+        
+                return back()->with('success', 'deleted successfully');
+
+            }else{
+
+                $updateUser = User::find($request->user_id);
+                $updateUser->firstname = $request->firstname;
+                $updateUser->middlename = $request->middlename;
+                $updateUser->lastname = $request->lastname;
+                $updateUser->save();
+        
+                return back()->with('success', 'Updated successfully');
+            }
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            // return $th;
+            return back()->with('error', "Unknown Error");
         }
     }
 }

@@ -43,7 +43,7 @@
         <div class="row">
           <div class="col-12">
 
-            <div class="card" style="margin: 10px; border-radius: 0px;">
+            {{-- <div class="card" style="margin: 10px; border-radius: 0px;">
               <div class="row">
                 <div class="col-12 col-md-4">
                   <div class="card" style="margin: 5px;">
@@ -70,26 +70,26 @@
                       <i style="padding: 5px 0px 5px 10px; font-style: normal;">{{ $formClass->getClassCount($formClass->class_id) }}</i>
                     </div>
                   </div>
-                </div>
+                </div> //
 
               </div>
-            </div>
+            </div> --}}
 
 
-            <div class="container">
+            {{-- <div class="container">
               <div class="alert alert-info alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Info!</strong> Click on the notify button below to send a notification the admin that all results in your class has been processed...
               </div>
               <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#notifymodal">Notify</button>
-              <a href="{{ route('view_student_form', ['classid'=>$formClass->class_id, 'sectionid'=>$formClass->form_id]) }}"><button class="btn btn-success btn-sm">View Student </button></a>
-              <hr>
-            </div>
+              {{-- <a href="{{ route('view_student_form') }}"><button class="btn btn-success btn-sm">View Student </button></a> --}}
+              {{-- <hr>
+            </div> --}}
 
 
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">My Subjects</h3>
+                <h3 class="card-title">Student List</h3>
 
                 <div class="card-tools">
                   <div class="input-group input-group-sm" style="width: 150px;">
@@ -107,28 +107,68 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>Subject</th>
-                      <th>Status</th>
+                      <th>Name</th>
+                      <th>Admission No.</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @if (count($formClass->getSubjectList($formClass->class_id)) > 0)
-                      @foreach ($formClass->getSubjectList($formClass->class_id) as $subjects)
-                        <tr>
-                          <td>{{$subjects->subjectname}} {{$subjects->subjectcode}}</td>
-                          @if (in_array($subjects->id, $arrayOfSubjectId))
-                          <td>Done</td>
-                          <td><button class="btn btn-sm btn-success" data-toggle="modal" data-target=""><i class="fas fa-check"></i></button> </td>
-                          @else
-                          <td>Pending</td>
-                          <td><button class="btn btn-sm btn-danger"><i class="fas fa-stop"></i></button> </td>
-                          @endif
-                      
 
+                    @foreach ($getStudentList as $item)
+
+                        <tr>
+                            <td>{{ $item->firstname }} {{ $item->middlename }} {{ $item->lastname }}</td>
+                            <td>{{ $item->admission_no }}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_Student{{ $item->id }}">edit</button>
+                            </td>
                         </tr>
-                      @endforeach
-                    @endif
+
+                        <div class="modal fade" id="edit_Student{{ $item->id }}">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h4 class="modal-title">Default Modal</h4>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <form action="{{ route('update_student_form') }}" method="post" id="updateStudent{{ $item->id }}">
+                                      @csrf
+                                      <div class="">
+                                        <div class="form-group">
+                                            <input type="text" name="firstname" value="{{ $item->firstname }}" class="form-control form-control-sm" placeholder="first name">
+                                        </div>
+                                        <div class="form-group">
+                                          <input type="text" name="middlename" value="{{ $item->middlename }}" class="form-control form-control-sm" placeholder="middlename name">
+                                      </div>
+                                      <div class="form-group">
+                                          <input type="text" name="lastname" value="{{ $item->lastname }}" class="form-control form-control-sm" placeholder="lastname name">
+                                      </div>
+                                      <input type="hidden" name="user_id" value="{{ $item->userid }}">
+                                    </div>
+                                  </form>
+                                  <form action="{{ route('update_student_form') }}" method="post" id="deleteStudent{{ $item->id }}">
+                                      @csrf
+                                      <input type="hidden" name="user_id" value="{{ $item->userid }}">
+                                      <input type="hidden" name="key" value="1">
+                                  </form>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                  <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-danger btn-sm" form="deleteStudent{{ $item->id }}">Delete</button>
+                                  <button type="submit" class="btn btn-info btn-sm" form="updateStudent{{ $item->id }}">Save changes</button>
+                                </div>
+                              </div>
+                              <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                          </div>
+                          <!-- /.modal -->
+                        
+                    @endforeach
+
                   </tbody>
                 </table>
               </div>
