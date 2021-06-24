@@ -2,6 +2,7 @@ import Axios from 'axios';
 import React, {useState} from 'react';
 import { useEffect } from 'react';
 import { Button, Modal, Footer, Header } from 'react-bootstrap';
+import './style.css';
 
 
 function AddMarksTeachers() {
@@ -34,6 +35,9 @@ function AddMarksTeachers() {
     const [selectedsubject, setselectedsubject] = useState('')
     const [selectedsection, setselectedsection] = useState('')
     const [selectedScoreObject, setselectedScoreObject] = useState({})
+    const [filteredUsers, setFilteredUsers] = useState([]);
+    const [search, setSearch] = useState("");
+    const [enteringfor, setenteringfor] = useState('')
 
     const handleClose = () => setShow(false);
 
@@ -44,6 +48,14 @@ function AddMarksTeachers() {
         };
     }, []);
 
+    useEffect(() => {
+        setFilteredUsers(
+            studentlist.filter((users) =>
+          users.firstname.toLowerCase().includes(search.toLowerCase())
+          )
+        );
+      }, [search, studentlist]);
+
     function getStudentForMarks(evt) {
         
 
@@ -51,7 +63,7 @@ function AddMarksTeachers() {
         setSelectedClass(evt.classid)
         setselectedsection(evt.section_id)
         setselectedScoreObject(evt)
-        setShow(true);
+        // setShow(true);
 
         console.log(evt.classid)
 
@@ -107,7 +119,7 @@ function AddMarksTeachers() {
         
     }
 
-    function addStudentMarksModal(exams, ca1, ca2, ca3, studentId, markid) {
+    function addStudentMarksModal(exams, ca1, ca2, ca3, studentId, markid, name) {
 
         if(exams == null){
             setexamsscore(0)
@@ -135,6 +147,7 @@ function AddMarksTeachers() {
         
         setStudentId(studentId)
         setmarkid(markid)
+        setenteringfor(name)
         
     }
 
@@ -251,6 +264,28 @@ function AddMarksTeachers() {
 
     } 
 
+    const convertFirstCharacterToUppercase = (stringToConvert) => {
+        var firstCharacter = stringToConvert.substring(0, 1);
+        var restString = stringToConvert.substring(1);
+      
+        return firstCharacter.toUpperCase() + restString;
+      }
+
+    const capitalize = (s) => {
+        var name = s.split(' ')
+        var index = name.indexOf('null')
+
+        if (index > -1) {
+            name.splice(index, 1);
+         }
+
+        const convertedWordsArray = name.map(word => {
+            return convertFirstCharacterToUppercase(word);
+        });
+
+        return convertedWordsArray.join(' ');
+    }
+
     return(
         <div>
 
@@ -269,7 +304,7 @@ function AddMarksTeachers() {
             {
                 subjectlist.map(d=>(
 
-                    <div className="card" onClick={()=>getStudentForMarks(d)}>
+                    <div className="card" onClick={()=>getStudentForMarks(d)} data-toggle="modal" data-target="#modal-addmarks">
                         <i style={{ fontStyle:'normal', fontSize:'14px', padding:'5px' }}>{d.subjectname}</i>
                         <i style={{ fontStyle:'normal', fontSize:'14px', padding:'5px' }}>{d.classname}{d.sectionname}</i>
                     </div>
@@ -277,7 +312,7 @@ function AddMarksTeachers() {
                 ))
             }
 
-            <Modal show={show} onHide={handleClose} size="xl">
+            <Modal show={show} onHide={handleClose} size="xl" style={{ overflow: 'auto !important' }}>
                 <Modal.Header closeButton>
                 <Modal.Title>Enter Student Scores</Modal.Title>
                 </Modal.Header>
@@ -289,7 +324,11 @@ function AddMarksTeachers() {
                     </div>
                 </div>:""}
 
-
+                <div className="row">
+                    <div className="col-12 col-md-3">
+                        <input type="text" placeholder="Search by name" onChange={(e) => setSearch(e.target.value)} className="form-control form-control-sm" />
+                    </div>
+                </div>
                 <div className="card-body table-responsive p-0">
                     <table className="table table-hover text-nowrap">
                     <thead>
@@ -309,9 +348,9 @@ function AddMarksTeachers() {
                     <tbody>
 
                         {
-                            studentlist.map(d=>(
-                                <tr>
-                                    <td>{d.firstname} {d.middlename} {d.lastname}</td>
+                            filteredUsers.map(d=>(
+                                <tr key={d.id+"subjectsstudents"}>
+                                    <td>{capitalize(d.firstname+" "+d.middlename+" "+d.lastname)}</td>
                                     <td>{d.admission_no}</td>
                                     <td>{d.ca3 == 0 ? "---":d.ca3}</td>
                                     <td>{d.ca2}</td>
@@ -329,7 +368,104 @@ function AddMarksTeachers() {
                     </table>
                 </div>
 
-                <div className="modal fade" id="add_student_marks" data-backdrop="false">
+
+
+
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" className="btn-sm" onClick={handleClose}>
+                    Close
+                </Button>
+                {/* <Button variant="primary" className="btn-sm btn-info" onClick={updateSubjectCommand}>
+                    Update Changes
+                </Button> */}
+                {/* <Button variant="primary" className="btn-sm btn-danger" onClick={deleteSubjectCommand}>
+                    Delete
+                </Button> */}
+                </Modal.Footer>
+            </Modal>
+
+
+            <div className="modal fade" id="modal-addmarks" style={{ overflow: 'auto !important' }}>
+            <div className="modal-dialog modal-xl">
+                <div className="modal-content">
+                <div className="modal-header">
+                    <h4 className="modal-title">Enter Student Scores</h4>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div className="modal-body">
+                    
+                {isLoading ? <div>
+                <div className="text-center">
+                    <div className="spinner-border"></div>
+                    </div>
+                </div>:""}
+
+                <div className="row">
+                    <div className="col-12 col-md-3">
+                        <input type="text" placeholder="Search by name" onChange={(e) => setSearch(e.target.value)} className="form-control form-control-sm" />
+                    </div>
+                </div>
+                <div className="card-body table-responsive p-0">
+                    <table className="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                        <th>Name</th>
+                        <th>Admission No</th>
+                        <th>Ca3</th>
+                        <th>Ca2</th>
+                        <th>Ca1</th>
+                        <th>Exams</th>
+                        <th>Total</th>
+                        <th>Position</th>
+                        <th>Grade</th>
+                        <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {
+                            filteredUsers.map(d=>(
+                                <tr key={d.id+"subjectsstudents"}>
+                                    <td>{capitalize(d.firstname+" "+d.middlename+" "+d.lastname)}</td>
+                                    <td>{d.admission_no}</td>
+                                    <td>{d.ca3 == 0 ? "---":d.ca3}</td>
+                                    <td>{d.ca2}</td>
+                                    <td>{d.ca1}</td>
+                                    <td>{d.exams}</td>
+                                    <td>{d.totalmarks}</td>
+                                    <td>{d.position}</td>
+                                    <td>{d.grades}</td>
+                                    <td><button onClick={()=>addStudentMarksModal(d.exams, d.ca1, d.ca2, d.ca3, d.id, d.markid, capitalize(d.firstname+" "+d.middlename+" "+d.lastname))} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button></td>
+                                </tr>
+                            ))
+                        }
+
+                    </tbody>
+                    </table>
+                </div>
+
+
+                </div>
+                <div className="modal-footer justify-content-between">
+                    <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    {/* <button type="button" className="btn btn-primary">Save changes</button> */}
+                </div>
+                </div>
+                {/* /.modal-content */}
+            </div>
+            {/* /.modal-dialog */}
+            </div>
+            {/* /.modal */}
+
+
+
+
+
+
+            <div className="modal fade" id="add_student_marks" data-backdrop="false" style={{ zIndex:'8000', overflow: 'auto !important' }}>
                         <div className="modal-dialog">
                             <div className="modal-content">
                                 <div className="modal-header">
@@ -339,6 +475,10 @@ function AddMarksTeachers() {
                                     </button>
                                 </div>
                                 <div className="modal-body">
+                                    <div>
+                                        <i style={{ fontSize:'14px', fontStyle:'normal' }}>{enteringfor}</i>
+                                    </div>
+                                    <br />
                                     <div className="row">
                                         
                                             {examsstatus == 1 ? <div className="col-12 col-md-6">
@@ -363,28 +503,13 @@ function AddMarksTeachers() {
                                     </div>
                                 </div>
                                 <div className="modal-footer justify-content-between">
-                                    <button onClick={closeModal} type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button onClick={closeModal} type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
                                     <button onClick={addStudentMarks} type="button" className="btn btn-info btn-sm">Save changes</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
-
-                </Modal.Body>
-                <Modal.Footer>
-                <Button variant="secondary" className="btn-sm" onClick={handleClose}>
-                    Close
-                </Button>
-                {/* <Button variant="primary" className="btn-sm btn-info" onClick={updateSubjectCommand}>
-                    Update Changes
-                </Button> */}
-                {/* <Button variant="primary" className="btn-sm btn-danger" onClick={deleteSubjectCommand}>
-                    Delete
-                </Button> */}
-                </Modal.Footer>
-            </Modal>
 
 
 
