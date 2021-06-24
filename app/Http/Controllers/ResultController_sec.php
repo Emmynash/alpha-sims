@@ -231,8 +231,10 @@ class ResultController_sec extends Controller
 
                 if (count($addmarksCheck) > 0) {
 
-                    $getSingleSubject = Addsubject_sec::find($getSubjectList[$i]);
-                    array_push($subject, $getSingleSubject);
+                    if ((int)$addmarksCheck[0]->totalmarks > 0) {
+                        $getSingleSubject = Addsubject_sec::find($getSubjectList[$i]);
+                        array_push($subject, $getSingleSubject);
+                    }
 
                 }
                 
