@@ -478,7 +478,7 @@ class TeachersController_sec extends Controller
     public function formTeacherMain($classid, $sectionid)
     {
 
-        $formClass = FormTeachers::where(['teacher_id'=> Auth::user()->id, 'form_id'=>$sectionid])->first();
+        $formClass = FormTeachers::where(['teacher_id'=> Auth::user()->id, 'form_id'=>$sectionid, 'class_id'=>$classid])->first();
 
         if ($formClass == NULL) {
             return back()->with('error', 'you are not a form teacher.');
@@ -486,7 +486,7 @@ class TeachersController_sec extends Controller
 
         $schooldetaild = Addpost::find(Auth::user()->schoolid);
 
-        $getEnteredSubjects = ConfirmSubjectRecordEntered::where(['schoolid'=>Auth::user()->schoolid, "term"=>$schooldetaild->term, "session"=>$schooldetaild->schoolsession, 'section_id'=>$sectionid])->pluck('subject_id');
+        $getEnteredSubjects = ConfirmSubjectRecordEntered::where(['schoolid'=>Auth::user()->schoolid, "term"=>$schooldetaild->term, "session"=>$schooldetaild->schoolsession, 'section_id'=>$sectionid, 'classid'=>$classid])->pluck('subject_id');
 
         $arrayOfSubjectId = array();
 

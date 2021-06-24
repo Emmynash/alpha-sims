@@ -226,14 +226,20 @@ class ResultController_sec extends Controller
             $subject = array();
 
             for ($i=0; $i < count($getSubjectList); $i++) { 
-                
-                $getSingleSubject = Addsubject_sec::find($getSubjectList[$i]);
 
-                array_push($subject, $getSingleSubject);
+                $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $request->term, 'session'=>$request->session])->get();
+
+                if (count($addmarksCheck) > 0) {
+
+                    $getSingleSubject = Addsubject_sec::find($getSubjectList[$i]);
+                    array_push($subject, $getSingleSubject);
+
+                }
+                
             }
+
             $subjects = collect($subject);
 
-    
             $motolist = MotoList::where('schoolid', Auth::user()->schoolid)->get();
     
             $resultAverage = ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();

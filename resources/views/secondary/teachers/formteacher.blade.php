@@ -82,6 +82,7 @@
                 <strong>Info!</strong> Click on the notify button below to send a notification the admin that all results in your class has been processed...
               </div>
               <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#notifymodal">Notify</button>
+              <hr>
             </div>
 
 

@@ -39,7 +39,7 @@ class AddstudentmakrsController_secs extends Controller
 
        $addpost = $this->addpost->where('id', Auth::user()->schoolid)->first();
 
-       if (Auth::user()->role == "Teacher") {
+       if (Auth::user()->hasRole('Teacher')) {
            $teachersSubjects = TeacherSubjects::where('user_id', Auth::user()->id)->pluck('subject_id');
 
            $arrayOfSubjects = array();
