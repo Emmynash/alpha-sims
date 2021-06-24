@@ -227,7 +227,7 @@ class ResultController_sec extends Controller
 
             for ($i=0; $i < count($getSubjectList); $i++) { 
 
-                $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $request->term, 'session'=>$request->session])->get();
+               $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $request->term, 'session'=>$request->session])->get();
 
                 if (count($addmarksCheck) > 0) {
 
@@ -240,7 +240,7 @@ class ResultController_sec extends Controller
                 
             }
 
-            $subjects = collect($subject);
+           $subjects = collect($subject);
 
             $motolist = MotoList::where('schoolid', Auth::user()->schoolid)->get();
     
