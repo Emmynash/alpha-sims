@@ -160,7 +160,7 @@ class TeachersController_sec extends Controller
             return response()->json(['response'=>"fields"]);
         }
 
-        $formCheck = $this->formTeachers->where('teacher_id', (int)$request->systemidformmaster)->get();
+        $formCheck = $this->formTeachers->where(['teacher_id'=> (int)$request->systemidformmaster, 'class_id'=>$request->formteacherclass, 'form_id'=>$request->systemidformmaster])->get();
 
         if ($formCheck->count() > 0) {
             return response()->json(['response'=>'exist']);
