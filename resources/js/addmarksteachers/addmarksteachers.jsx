@@ -58,6 +58,7 @@ function AddMarksTeachers() {
 
     function getStudentForMarks(evt) {
         
+        setFilteredUsers([])
 
         setselectedsubject(evt.subject_id)
         setSelectedClass(evt.classid)
