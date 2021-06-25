@@ -307,7 +307,7 @@
                 <br>
                 <div style="">
                     <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal;"></i></i>
-                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ empty($resultAverage) ? "NAN":$resultAverage->average }}</i>
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ round(empty($resultAverage) ? "NAN":$resultAverage->average, 2) }}</i>
                     <i style="margin: 10px 0px 0px 50px; font-style: normal;">Final Grade: {{ $addschool->getGrade(empty($resultAverage) ? "NAN":$resultAverage->average, $studentClass->classtype) }}</i>
                 </div>
                 <center><div class="text-center" style="width: 95%; margin: 10px auto;">
