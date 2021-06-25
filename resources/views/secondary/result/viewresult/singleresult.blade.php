@@ -284,7 +284,7 @@
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->exams }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->totalmarks }}</center></td>
                                             <td  class='text-center thdesign count-me' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getPoints($item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->totalmarks) }}</center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getClassAverageMarkSubject($item->id, $term, $schoolsession) == NULL ? "0":$item->getClassAverageMarkSubject($item->id, $term, $schoolsession)->average }}</center></td>
+                                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getClassAverageMarkSubject($item->id, $term, $schoolsession) == NULL ? "0":round($item->getClassAverageMarkSubject($item->id, $term, $schoolsession)->average, 2) }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->position }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->grades }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getTeacherName($item->id) }}</td>
@@ -310,7 +310,7 @@
                 <div style="display: flex;">
                     <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exams Total: <i id="sum2" style="margin: 10px 0px 0px 5px; font-style: normal;"></i></i>
                     <div style="flex: 1;"></div>
-                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Average: {{ $resultAverage == NULL ? "NAN":$resultAverage->average }}</i>
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Average: {{ $resultAverage == NULL ? "NAN":round($resultAverage->average, 2) }}</i>
                     <i style="margin: 10px 50px 0px 50px; font-style: normal;">Point Avg: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal;"></i></i>
                 </div>
                 <div class="text-center" style="width: 95%; margin: 10px auto;">
@@ -513,7 +513,7 @@
         var sum2 = 0;
         $("#category tr").not(':first').not(':last').each(function() {
         sum1 +=  getnum($(this).find("td:eq(5)").text());
-        sum2 +=  getnum($(this).find("td:eq(3)").text());
+        sum2 +=  getnum($(this).find("td:eq(4)").text());
         function getnum(t){
             if(isNumeric(t)){
                 return parseInt(t,10);
@@ -525,12 +525,14 @@
         }
         });
 
-        $("#sum1").text(sum1/{{ $subjects->count() }});
+        var points = sum1/{{ $subjects->count() }}
+
+        $("#sum1").text(points.toFixed(2));
         $("#sum2").text(sum2);
 
         $( document ).ready(function() {
 
-            
+
             
         })
         
