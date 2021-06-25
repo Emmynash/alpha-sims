@@ -222,8 +222,8 @@
                                     <td><i id="regno" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->admission_no }}</i></td>
                                 </tr>
                                 <tr>
-                                    <td><i style="font-size: 12px; font-style: normal;">Position:</i></td>
-                                    <td><i id="studentposition" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $resultAverage == NULL ? "NAN":$resultAverage->position }} No. in Class {{ $studentdetails->getClassCount($studentdetails->classid, $studentdetails->schoolsession, $studentdetails->studentsection)->count() }}</i></td>
+                                    <td><i style="font-size: 12px; font-style: normal;">Position: {{ $resultAverage == NULL ? "NAN":$resultAverage->position }}</i></td>
+                                    <td><i id="studentposition" style="font-size: 12px; font-style: normal; font-weight: bold;"> No. in Class {{ $studentdetails->getClassCount($studentdetails->classid, $studentdetails->schoolsession, $studentdetails->studentsection)->count() }}</i></td>
                                 </tr>
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Session:</i></td>
