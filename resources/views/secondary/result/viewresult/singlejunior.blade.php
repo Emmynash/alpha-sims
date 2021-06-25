@@ -442,7 +442,7 @@
                                 A good performance but can still do better
 
                             @elseif($resultAverage->average >= 65 && $resultAverage->average <= 69.9)
-                                A good performance but still do better
+                                A good performance but can still do better
 
                             @elseif($resultAverage->average >= 60 && $resultAverage->average <= 64.5)
                                 Fairly good performance but can still do better
