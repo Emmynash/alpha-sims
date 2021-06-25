@@ -223,7 +223,7 @@
                                 </tr>
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Position:</i></td>
-                                    <td><i id="studentposition" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $resultAverage == NULL ? "NAN":$resultAverage->position }}</i></td>
+                                    <td><i id="studentposition" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $resultAverage == NULL ? "NAN":$resultAverage->position }} No. in Class {{ $studentdetails->getClassCount($studentdetails->classid, $studentdetails->schoolsession, $studentdetails->studentsection)->count() }}</i></td>
                                 </tr>
                                 <tr>
                                     <td><i style="font-size: 12px; font-style: normal;">Session:</i></td>
@@ -513,7 +513,7 @@
                 var frameDoc = frame1[0].contentWindow ? frame1[0].contentWindow : frame1[0].contentDocument.document ? frame1[0].contentDocument.document : frame1[0].contentDocument;
                 frameDoc.document.open();
                 //Create a new HTML document.
-                frameDoc.document.write('<html><head><title>Result Online Print</title>');
+                frameDoc.document.write('<html><head><title></title>');
                 frameDoc.document.write('</head><body>');
                 //Append the external CSS file.
                 frameDoc.document.write('<link href="{{ asset('css/print_sec.css') }}" rel="stylesheet" type="text/css" />');

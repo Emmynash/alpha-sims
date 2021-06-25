@@ -17,4 +17,9 @@ class Addstudent_sec extends Model
     public function getSectionName(){
         return $this->hasOne('App\Addsection_sec', 'id', 'studentsection');
     }
+
+    public function getClassCount($classid, $session, $sectionid)
+    {
+        return Addstudent_sec::where(['classid'=>$classid, 'schoolsession'=>$session, 'studentsection'=>$sectionid])->get();
+    }
 }
