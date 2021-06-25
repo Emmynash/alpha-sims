@@ -37,6 +37,16 @@ class ResultAverageProcess{
         $checkaverage = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->get();
     
         if (count($checkaverage) > 0) {
+
+            for ($i=0; $i < count($checkaverage); $i++) { 
+                $deleteAverage = ResultAverage::find($checkaverage[$i]['id']);
+                $deleteAverage->delete();
+            }
+
+            $resultReady = ResultReadyModel::find($request->notif_id);
+            $resultReady->status = 0;
+            $resultReady->save();
+
             return 'already';
         }
     
