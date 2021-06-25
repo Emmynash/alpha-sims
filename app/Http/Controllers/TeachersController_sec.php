@@ -512,9 +512,9 @@ class TeachersController_sec extends Controller
 
         $eachsubjectconfirm = ConfirmSubjectRecordEntered::where(['session'=>$schoolsession, 'term'=>$term, 'classid'=>$classid])->get();
 
-        if ($checkSubjects->count() != $eachsubjectconfirm->count()) {
-            return back()->with('error', 'Student marks for each subject not fully entered');
-        }
+        // if ($checkSubjects->count() != $eachsubjectconfirm->count()) {
+        //     return back()->with('error', 'Student marks for each subject not fully entered');
+        // }
 
         $checkConfirm = ResultReadyModel::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$classid, 'term'=>$term, 'sectionid'=>$request->sectionid, 'session'=>$schoolsession])->get();
 
