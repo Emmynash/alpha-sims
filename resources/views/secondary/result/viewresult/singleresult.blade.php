@@ -428,7 +428,44 @@
                     </div> --}}
                     <br>
                     <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                        Principal's Comments: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                        Principal's Comments: 
+                        <i style="font-style: normal;" id="honourorpricesremarkmain">
+                        @if ($resultAverage != NULL)
+
+                            @if ($resultAverage->average >= 90 && $resultAverage->average <= 100)
+                                An Outstanding performance. Keep it up.
+                            @elseif($resultAverage->average >= 80 && $resultAverage->average <= 89.9)
+                                An excellent performance. Keep it up.
+
+                            @elseif($resultAverage->average >= 70 && $resultAverage->average <= 79.9)
+                                A very good performance. Keep it up.
+
+                            @elseif($resultAverage->average >= 65 && $resultAverage->average <= 69.9)
+                                A good performance but can still do better
+
+                            @elseif($resultAverage->average >= 60 && $resultAverage->average <= 64.5)
+                                Fairly good performance but can still do better
+
+                            @elseif($resultAverage->average >= 50 && $resultAverage->average <= 54.9)
+                                An average performance. Needs to pay more attention to studies.
+
+                            @elseif($resultAverage->average >= 45 && $resultAverage->average <= 49.9)
+                                An average performance. Needs to pay more attention to studies.
+
+                            @elseif($resultAverage->average >= 40 && $resultAverage->average <= 44.9)
+                                A poor performance. Please sit up.
+                            
+                            @elseif ($resultAverage->average >= 35 && $resultAverage->average <= 39.9)
+                                A poor performance. Please sit up.
+
+                            @elseif($resultAverage->average/$subjects->count() >= 0 && $resultAverage->average/$subjects->count() <= 34.9)
+                                A very poor performance. Please sit up.
+                            @endif
+
+                            
+                        @endif
+                        
+                        </i>
                     </div>
                     
                 </div>
