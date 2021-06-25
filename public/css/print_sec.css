@@ -51,6 +51,10 @@ tr, td{
         
     }
 
+    #imagelogo{
+        background-image: url("https://drive.google.com/thumbnail?id=1BggdEUjriRhGioI0EBUe9X42qFFsJ1jg");
+    }
+
     #textText{
         color: red;
         background-color: blue;
