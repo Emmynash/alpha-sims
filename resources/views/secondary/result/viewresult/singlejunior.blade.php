@@ -293,7 +293,7 @@
                                                     <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 2, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 2, $studentdetails->id)->totalmarks }}</i></th>
                                                     <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 3, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 3, $studentdetails->id)->totalmarks }}</i></th>
                                                     <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getAverageScore($item->id, $schoolsession, $studentdetails->id) == NULL ? "0":round($item->getAverageScore($item->id, $schoolsession, $studentdetails->id)) }}</i></th>
-                                                    <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">1</i></th>
+                                                    <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;"></i></th>
                                                 </table>
                                             </td>
                                         <tr>

@@ -238,7 +238,7 @@
                 </div>
                 <br>
                 <div>
-                    <table style="width: 95%; margin: 0 auto;">
+                    <table style="width: 95%; margin: 0 auto;" id="category">
                         <thead style="text-align: center;">
                             <tr>
                                 <th style="font-size: 12px;">SUBJECTS</th>
@@ -273,7 +273,7 @@
                                 @foreach ($subjects as $item)
 
 
-                                    @if ($item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) != NULL)
+                                   
                                         <tr style='font-size: 12px; width: 150px;'>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->subjectname }}</center></td>
                                             @if ($addschool->caset == 1)
@@ -283,7 +283,7 @@
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca1 }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->exams }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->totalmarks }}</center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td>
+                                            <td  class='text-center thdesign count-me' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getPoints($item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->totalmarks) }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getClassAverageMarkSubject($item->id, $term, $schoolsession) == NULL ? "0":$item->getClassAverageMarkSubject($item->id, $term, $schoolsession)->average }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->position }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->grades }}</center></td>
@@ -294,11 +294,11 @@
                                                     <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 2, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 2, $studentdetails->id)->totalmarks }}</i></th>
                                                     <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 3, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 3, $studentdetails->id)->totalmarks }}</i></th>
                                                     <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getAverageScore($item->id, $schoolsession, $studentdetails->id) == NULL ? "0":round($item->getAverageScore($item->id, $schoolsession, $studentdetails->id)) }}</i></th>
-                                                    <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">1</i></th>
+                                                    <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;"></i></th>
                                                 </table>
                                             </td>
                                         <tr>
-                                    @endif
+                                   
 
                                 @endforeach
                                 
@@ -307,25 +307,29 @@
                     </table>
                 </div>
                 <br>
-                <div style="">
+                <div style="display: flex;">
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exams Total: <i id="sum2" style="margin: 10px 0px 0px 5px; font-style: normal;"></i></i>
+                    <div style="flex: 1;"></div>
                     <i style="margin: 10px 0px 0px 50px; font-style: normal;">Average: {{ $resultAverage == NULL ? "NAN":$resultAverage->average }}</i>
-                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Point Avg: {{ $resultAverage == NULL ? "NAN":$resultAverage->average }}</i>
+                    <i style="margin: 10px 50px 0px 50px; font-style: normal;">Point Avg: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal;"></i></i>
                 </div>
-                <div style="width: 95%; margin: 10px auto;">
+                <div class="text-center" style="width: 95%; margin: 10px auto;">
                     @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                         @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                             <i style="font-size: 10px; font-style: normal;">{{ $item->gpaname }} = ({{ $item->marksfrom }}-{{ $item->marksto }})</i>
                         @endforeach
                     @endif
                 </div>
-                <div style="width: 95%; margin: 3px auto;">
+                {{-- <input type="text" value="{{ $subjects->count() }}"> --}}
+                {{-- <p id="sum1"></p> --}}
+                <div class="text-center" style="width: 95%; margin: 3px auto;">
                     @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                         @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                             <i style="font-size: 10px; font-style: normal;">({{ $item->marksfrom }}-{{ $item->marksto }}) = {{ $item->point }}</i>
                         @endforeach
                     @endif
                 </div>
-                <div style="width: 95%; margin: 3px auto;">
+                <div class="text-center" style="width: 95%; margin: 3px auto;">
                     @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                         @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                         <i style="font-size: 10px; font-style: normal;">{{ $item->gpaname }} = {{ $item->remark }}</i>
@@ -337,6 +341,7 @@
                 </div>
                 <br>
                 <div>
+
 
                     <div>
                         <div style="display: flex; flex-direction: row; width: 95%; margin: 0 auto;">
@@ -352,9 +357,9 @@
                                         </thead>
                                         <tbody>
 
-                                            @if ($motolist->count() > 0)
+                                            @if ($motolistbeha->count() > 0)
 
-                                                @foreach ($motolist as $item)
+                                                @foreach ($motolistbeha as $item)
                                                     <tr>
                                                         <td class="thdesign1">{{ $item->name }}</td>
                                                         <td id="punctuation" class="thdesign1">{{ $item->getmotoscore($item->id, $studentdetails->id, $schoolsession, $term) }}</td>
@@ -368,50 +373,25 @@
                             </div>
                             <div class="" style="width: 50%;">
                                 <div style="width: 99%;">
-                                    <table style="width: 100%;">
+                                    <table style="width: 100%">
                                         <thead>
                                             <tr>
-                                                <th style="font-size: 10px; width: 50%;">GRADES</th>
-                                                <th class="text-center  thdesign1"></th>
+                                                <th style="font-size: 10px; width: 50%;">SKILLS</th>
+                                                <th class="text-center  thdesign1">Marks(1-5)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td class="thdesign1">A1</td>
-                                                <td class="thdesign1">Excellent</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">B2</td>
-                                                <td class="thdesign1">V.Good</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">B3</td>
-                                                <td class="thdesign1">Good</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">C4</td>
-                                                <td class="thdesign1">Credit</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">C5</td>
-                                                <td class="thdesign1">Credit</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">C6</td>
-                                                <td class="thdesign1">Credit</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">D7</td>
-                                                <td class="thdesign1">Pass</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">E8</td>
-                                                <td class="thdesign1">Pass</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">F9</td>
-                                                <td class="thdesign1">Fail</td>
-                                            </tr>
+
+                                            @if ($motolistskills->count() > 0)
+
+                                                @foreach ($motolistskills as $item)
+                                                    <tr>
+                                                        <td class="thdesign1">{{ $item->name }}</td>
+                                                        <td id="punctuation" class="thdesign1">{{ $item->getmotoscore($item->id, $studentdetails->id, $schoolsession, $term) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -446,13 +426,18 @@
                     {{-- <div style="width: 95%; margin: 0 auto;" id="honourorpricesremark" class="collapse">
                         <center><input type="text" onkeydown="honourorprices(this)" style="width: 95%; margin-top: 2px;" placeholder="From teacher comment"></center>
                     </div> --}}
+                    <br>
+                    <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
+                        Principal's Comments: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                    </div>
                     
                 </div>
                 <br>
                 <div style="width: 95%; display: flex; flex-direction: row; margin: 0 auto;">
-                    <div class="" style="width: 50%; height: 50px; display: flex; flex-direction: column;">
+                    <div class="" style="width: 50%; height: 50px; display: flex; flex-direction: row; align-items: center;">
                         {{-- <img src="{{asset('storage/schimages/'.$allDetails['addpost'][0]['schoolprincipalsignature'])}}" alt="" width="90px" height="90px"> --}}
                         <i style="font-size: 13px; font-style: normal;">Principal Signature's</i></i>
+                        <img src="{{asset('storage/schimages/'.$addschool->schoolprincipalsignature)}}" alt="" height="50px">
 
                     </div>
                     <div class="" style="width:50%; height: 50px;">
@@ -521,6 +506,40 @@
         function honourorprices(comment){
             document.getElementById('honourorpricesremarkmain').innerHTML = comment.value
         }
+
+
+
+        var sum1 = 0;
+        var sum2 = 0;
+        $("#category tr").not(':first').not(':last').each(function() {
+        sum1 +=  getnum($(this).find("td:eq(5)").text());
+        sum2 +=  getnum($(this).find("td:eq(3)").text());
+        function getnum(t){
+            if(isNumeric(t)){
+                return parseInt(t,10);
+            }
+            return 0;
+                function isNumeric(n) {
+                return !isNaN(parseFloat(n)) && isFinite(n);
+                }
+        }
+        });
+
+        $("#sum1").text(sum1/{{ $subjects->count() }});
+        $("#sum2").text(sum2);
+
+        $( document ).ready(function() {
+
+            
+            
+        })
+        
+
+
     </script>
+
+
+
+
 </body>
 </html>

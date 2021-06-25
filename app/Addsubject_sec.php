@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Addsubject_sec extends Model
@@ -46,6 +47,22 @@ class Addsubject_sec extends Model
         $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session])->sum(DB::raw('totalmarks'));
 
         return $subject/3;
+    }
+
+    public function getPoints($scores)
+    {
+
+        $getPoints = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>2])->get();
+
+        for ($i=0; $i < $getPoints->count(); $i++) { 
+            if ($scores >= $getPoints[$i]['marksfrom'] && $scores <= $getPoints[$i]['marksto']) {
+                return $getPoints[$i]['point'];
+            }
+        }
+
+
+
+     
     }
 
 }
