@@ -548,7 +548,7 @@
         var sum1 = 0;
 
         $("#category tr").not(':first').not(':last').each(function() {
-        sum1 +=  getnum($(this).find("td:eq(3)").text());
+        sum1 +=  getnum($(this).find("td:eq(4)").text());
 
         function getnum(t){
             if(isNumeric(t)){
