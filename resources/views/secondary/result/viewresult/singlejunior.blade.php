@@ -430,33 +430,33 @@
                         <i style="font-style: normal;" id="honourorpricesremarkmain">
                         @if ($resultAverage != NULL)
 
-                            @if ($resultAverage->average/$subjects->count() >= 90 && $resultAverage->average/$subjects->count() <= 100)
+                            @if ($resultAverage->average >= 90 && $resultAverage->average <= 100)
                                 An Outstanding performance. Keep it up.
-                            @elseif($resultAverage->average/$subjects->count() >= 80 && $resultAverage->average/$subjects->count() <= 89.9)
+                            @elseif($resultAverage->average >= 80 && $resultAverage->average <= 89.9)
                                 An excellent performance. Keep it up.
 
-                            @elseif($resultAverage->average/$subjects->count() >= 75 && $resultAverage->average/$subjects->count() <= 79.9)
+                            @elseif($resultAverage->average >= 75 && $resultAverage->average <= 79.9)
                                 A very good performance. Keep it up.
 
-                            @elseif($resultAverage->average/$subjects->count() >= 70 && $resultAverage->average/$subjects->count() <= 74.9)
+                            @elseif($resultAverage->average >= 70 && $resultAverage->average <= 74.9)
                                 A good performance but can still do better
 
-                            @elseif($resultAverage->average/$subjects->count() >= 65 && $resultAverage->average/$subjects->count() <= 69.9)
+                            @elseif($resultAverage->average >= 65 && $resultAverage->average <= 69.9)
                                 A good performance but still do better
 
-                            @elseif($resultAverage->average/$subjects->count() >= 60 && $resultAverage->average/$subjects->count() <= 64.5)
+                            @elseif($resultAverage->average >= 60 && $resultAverage->average <= 64.5)
                                 Fairly good performance but can still do better
 
-                            @elseif($resultAverage->average/$subjects->count() >= 55 && $resultAverage->average/$subjects->count() <= 59.9)
+                            @elseif($resultAverage->average >= 55 && $resultAverage->average <= 59.9)
                                 A fair performance. Needs to pay more attention to studies.
 
-                            @elseif($resultAverage->average/$subjects->count() >= 50 && $resultAverage->average/$subjects->count() <= 54.9)
+                            @elseif($resultAverage->average >= 50 && $resultAverage->average <= 54.9)
                                 An average performance. Needs to pay more attention to studies.
 
-                            @elseif($resultAverage->average/$subjects->count() >= 45 && $resultAverage->average/$subjects->count() <= 49.9)
+                            @elseif($resultAverage->average >= 45 && $resultAverage->average <= 49.9)
                                 An average performance. Needs to pay more attention to studies.
 
-                            @elseif($resultAverage->average/$subjects->count() >= 40 && $resultAverage->average/$subjects->count() <= 44.9)
+                            @elseif($resultAverage->average >= 40 && $resultAverage->average <= 44.9)
                                 A poor performance. Please sit up.
 
                             @elseif($resultAverage->average/$subjects->count() >= 0 && $resultAverage->average/$subjects->count() <= 39.9)
