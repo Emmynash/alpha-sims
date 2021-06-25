@@ -446,7 +446,7 @@
                             @elseif($resultAverage->average >= 60 && $resultAverage->average <= 64.5)
                                 Fairly good performance but can still do better
 
-                            @elseif($resultAverage->average >= 50 && $resultAverage->average <= 54.9)
+                            @elseif($resultAverage->average >= 50 && $resultAverage->average <= 59.9)
                                 An average performance. Needs to pay more attention to studies.
 
                             @elseif($resultAverage->average >= 45 && $resultAverage->average <= 49.9)
