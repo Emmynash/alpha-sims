@@ -243,7 +243,7 @@ class AddstudentmakrsController_secs extends Controller
             //---------------------------------------------------------------------------------
             //                                partial result entry
             //---------------------------------------------------------------------------------
-                                if ($examsmarks < 0 || $ca1marks < 0 || $ca2marks < 0 || $ca3marks < 0) {
+                                if ($examsmarks == 0 || $ca1marks == 0 || $ca2marks == 0 || $ca3marks == 0) {
             
                                 $totalmarks = $examsmarks + $ca1marks + $ca2marks + $ca3marks;
             
@@ -390,7 +390,7 @@ class AddstudentmakrsController_secs extends Controller
         
                             
                             
-                        if ($examsmarks < 0 || $ca1marks < 0 || $ca2marks < 0 || $ca3marks < 0) {
+                        if ($examsmarks == 0 || $ca1marks == 0 || $ca2marks == 0 || $ca3marks == 0) {
         
                             // return $request;
             

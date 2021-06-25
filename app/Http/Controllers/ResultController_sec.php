@@ -227,7 +227,9 @@ class ResultController_sec extends Controller
 
             for ($i=0; $i < count($getSubjectList); $i++) { 
 
-               $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $request->term, 'session'=>$request->session])->get();
+              $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $request->term, 'session'=>$request->session, 'regno'=>$request->student_reg_no])->get();
+
+             
 
                 if (count($addmarksCheck) > 0) {
 
@@ -240,9 +242,11 @@ class ResultController_sec extends Controller
                 
             }
 
-           $subjects = collect($subject);
+            $subjects = collect($subject);
 
-            $motolist = MotoList::where('schoolid', Auth::user()->schoolid)->get();
+            $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+
+            $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
     
             $resultAverage = ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();
 
@@ -250,9 +254,9 @@ class ResultController_sec extends Controller
             $studentClass = Classlist_sec::find($classid);
     
             if ($checkclasstype->classtype == 1) {
-                return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolist', 'resultAverage', 'studentClass'));
+                return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
             } else {
-                return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolist', 'resultAverage', 'studentClass'));
+                return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
             }
         } catch (\Throwable $th) {
             //throw $th;
@@ -384,13 +388,18 @@ class ResultController_sec extends Controller
         //                                 process class average
         //--------------------------------------------------------------------------------
 
-        $resultAverage = $resultAverageProcess->processResultAverage($request);
+        try {
+            $resultAverage = $resultAverageProcess->processResultAverage($request);
 
-        if ($resultAverage == "success") {
-            
-            $process_class_average = $processClassAverage->processresult($request);
-
-            return $process_class_average;
+            if ($resultAverage == "success") {
+                
+                $process_class_average = $processClassAverage->processresult($request);
+    
+                return $process_class_average;
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
         }
 
     }

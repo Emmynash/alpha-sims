@@ -8,6 +8,7 @@ use App\Addsubject_sec;
 use Illuminate\Support\Facades\Auth;
 use App\Addmark_sec;
 use App\ClassAverageMark;
+use App\CLassSubjects;
 use Illuminate\Support\Facades\DB;
 
 class ProcessClassAverage{
@@ -22,21 +23,22 @@ class ProcessClassAverage{
         //-----------------------------------------------------------------------------------//
 
         $classid = $request->classid;
+        $section = $request->section_id;
         $schooldata = Addpost::where('id', Auth::user()->schoolid)->first();
         $term = $schooldata->term;
         $schoolsession = $schooldata->schoolsession;
 
-        $subjectarray = Addsubject_sec::where('classid', $classid)->pluck('id');
+        $subjectarray = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$section, 'schoolid'=>Auth::user()->schoolid])->pluck('subjectid');
                 
 
         for ($i=0; $i < count($subjectarray); $i++) {
 
             $subjectidav = $subjectarray[$i];
 
-            $addmarkcounter = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->get();
+            $addmarkcounter = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->where('totalmarks','!=','0')->get();
 
             $addmarkAverage = DB::table('addmark_secs') 
-            ->where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->SUM('totalmarks');
+                            ->where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->where('totalmarks','!=','0')->SUM('totalmarks');
 
             if (count($addmarkcounter) > 0) {
                 $averagemark = $addmarkAverage/count($addmarkcounter);
@@ -45,7 +47,7 @@ class ProcessClassAverage{
 
                 // check if average has already been added.
 
-                $averageCheck = ClassAverageMark::where(['session'=>$schoolsession, 'classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav])->get();
+                $averageCheck = ClassAverageMark::where(['session'=>$schoolsession, 'classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'sectionid'=>$section])->get();
 
                 if (count($averageCheck) > 0) {
 
@@ -65,6 +67,7 @@ class ProcessClassAverage{
                     $addaverage->average = $averagemark;
                     $addaverage->term = $term;
                     $addaverage->session = $schoolsession;
+                    $addaverage->sectionid = $section;
                     $addaverage->save();
 
                 }

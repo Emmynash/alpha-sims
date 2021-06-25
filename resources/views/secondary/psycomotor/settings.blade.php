@@ -43,7 +43,7 @@
             <form id="" action="{{ route('add_setting_moto') }}" method="POST">
               @csrf
 
-              <div class="row" style="margin: 10px">
+              <div class="row" style="margin: 10px 10px 0px 10px">
                   <div class="col-12 col-md-6">
                       <div class="form-group">
                           <label for="">Enter Psycomoto value</label>
@@ -52,7 +52,21 @@
                   </div>
               </div>
 
-                <button type="submit" style="margin:0 0 10px 20px;" id="" class="btn btn-sm btn-info">Query</button>
+              <div class="row" style="margin: 0px 10px 0px 10px">
+                  <div class="col-12 col-md-6">
+                      <div class="form-group">
+                          <label for="">Select Category</label>
+                          <select name="category" class="form-control form-control-sm" name="" id="">
+                            <option value="">Select an option</option>
+                            <option value="behaviour">Behaviour</option>
+                            <option value="skills">Skills</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+
+                <button type="submit" style="margin:0 0 10px 20px;" id="" class="btn btn-sm btn-info">Add</button>
+
             </form>
 
 

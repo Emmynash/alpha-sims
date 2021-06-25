@@ -9,10 +9,9 @@ use App\Addsection_sec;
 use App\AddMoto_sec;
 use App\Addpost;
 use App\MotoList;
+use Illuminate\Support\Facades\Auth;
 use Validator;
-use Auth;
 use DB;
-use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class MotoController_sec extends Controller
 {
@@ -38,10 +37,12 @@ class MotoController_sec extends Controller
         
         $validatedData = $request->validate([
             'name' => 'required',
+            'category' =>'required'
         ]);
 
         $addmoto = new MotoList();
         $addmoto->name = $request->name;
+        $addmoto->category = $request->category;
         $addmoto->schoolid = (int)Auth::user()->schoolid;
         $addmoto->save();
 

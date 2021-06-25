@@ -48,33 +48,36 @@ class ResultAverageProcess{
     
             $singleregno = $studentregnumberarray[$i];
             
-            $studentmarks = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'regno'=>$singleregno, 'session'=>$schoolsession])->get();
+            $studentmarks = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'regno'=>$singleregno, 'session'=>$schoolsession])->pluck('totalmarks')->toArray();
     
             $scoresarraysingle = array();
     
-            for ($d=0; $d < count($studentmarks); $d++) { 
-                $scoremainvalue = $studentmarks[$d]['totalmarks'];
-                array_push($scoresarraysingle, $scoremainvalue);
     
-                $coursesum = array_sum($scoresarraysingle);
-    
-                $allsubjectcount = count($scoresarraysingle);
-    
+            $coursesum = array_sum($studentmarks);
+
+            $allsubjectcount = count($studentmarks);
+
+            if ($allsubjectcount != 0) {
+
                 $averagevalue = $coursesum/$allsubjectcount;
-            }
+
     
-            $resultAverageAdd = new ResultAverage();
-            $resultAverageAdd->regno = $singleregno;
-            $resultAverageAdd->systemnumber = "0";
-            $resultAverageAdd->schoolid = Auth::user()->schoolid;
-            $resultAverageAdd->classid = $classid;
-            $resultAverageAdd->term = $term;
-            $resultAverageAdd->session = $schoolsession;
-            $resultAverageAdd->sumofmarks = $coursesum;
-            $resultAverageAdd->average = $averagevalue;
-            $resultAverageAdd->position = "0";
-            $resultAverageAdd->section_id = $section;
-            $resultAverageAdd->save();  
+                $resultAverageAdd = new ResultAverage();
+                $resultAverageAdd->regno = $singleregno;
+                $resultAverageAdd->systemnumber = "0";
+                $resultAverageAdd->schoolid = Auth::user()->schoolid;
+                $resultAverageAdd->classid = $classid;
+                $resultAverageAdd->term = $term;
+                $resultAverageAdd->session = $schoolsession;
+                $resultAverageAdd->sumofmarks = $coursesum;
+                $resultAverageAdd->average = $averagevalue;
+                $resultAverageAdd->position = "0";
+                $resultAverageAdd->section_id = $section;
+                $resultAverageAdd->save(); 
+                
+            }
+
+ 
         }
     
             $processposition = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->orderBy('average', 'desc')->get();

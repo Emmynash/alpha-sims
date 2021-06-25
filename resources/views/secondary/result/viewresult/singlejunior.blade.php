@@ -273,7 +273,6 @@
 
                                 @foreach ($subjects as $item)
 
-                                    @if ($item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) != NULL)
                                         <tr style='font-size: 12px; width: 150px;'>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->subjectname }}</center></td>
                                             @if ($addschool->caset == 1)
@@ -284,7 +283,7 @@
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->exams }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->totalmarks }}</center></td>
                                             {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getClassAverageMarkSubject($item->id, $term, $schoolsession) == NULL ? "0":$item->getClassAverageMarkSubject($item->id, $term, $schoolsession)->average }}</center></td>
+                                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getClassAverageMarkSubject($item->id, $term, $schoolsession) == NULL ? "0":round($item->getClassAverageMarkSubject($item->id, $term, $schoolsession)->average, 1) }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->position }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->grades }}</center></td>
                                             <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getTeacherName($item->id) }}</td>
@@ -298,7 +297,6 @@
                                                 </table>
                                             </td>
                                         <tr>
-                                    @endif
 
                                 @endforeach
                                 
@@ -353,9 +351,9 @@
                                         </thead>
                                         <tbody>
 
-                                            @if ($motolist->count() > 0)
+                                            @if ($motolistbeha->count() > 0)
 
-                                                @foreach ($motolist as $item)
+                                                @foreach ($motolistbeha as $item)
                                                     <tr>
                                                         <td class="thdesign1">{{ $item->name }}</td>
                                                         <td id="punctuation" class="thdesign1">{{ $item->getmotoscore($item->id, $studentdetails->id, $schoolsession, $term) }}</td>
@@ -369,38 +367,25 @@
                             </div>
                             <div class="" style="width: 50%;">
                                 <div style="width: 99%;">
-                                    <table style="width: 100%;">
+                                    <table style="width: 100%">
                                         <thead>
                                             <tr>
-                                                <th style="font-size: 10px; width: 50%;">GRADES</th>
-                                                <th class="text-center  thdesign1"></th>
+                                                <th style="font-size: 10px; width: 50%;">SKILLS</th>
+                                                <th class="text-center  thdesign1">Marks(1-5)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td class="thdesign1">A</td>
-                                                <td class="thdesign1">Excellent</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">B</td>
-                                                <td class="thdesign1">V.Good</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">C</td>
-                                                <td class="thdesign1">Good</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">D</td>
-                                                <td class="thdesign1">Credit</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">E</td>
-                                                <td class="thdesign1">Credit</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="thdesign1">F</td>
-                                                <td class="thdesign1">Credit</td>
-                                            </tr>
+
+                                            @if ($motolistskills->count() > 0)
+
+                                                @foreach ($motolistskills as $item)
+                                                    <tr>
+                                                        <td class="thdesign1">{{ $item->name }}</td>
+                                                        <td id="punctuation" class="thdesign1">{{ $item->getmotoscore($item->id, $studentdetails->id, $schoolsession, $term) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -412,9 +397,9 @@
                 </div>
                 <br>
                 <div>
-                    <div data-toggle="collapse" data-target="#teachersremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
+                    {{-- <div data-toggle="collapse" data-target="#teachersremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
                         Form Teacher Remark: <i style="font-style: normal;" id="teacherscommentMain"></i>
-                    </div>
+                    </div> --}}
 
                     {{-- <div style="width: 95%; margin: 0 auto;" id="teachersremark" class="collapse">
                         <center><input type="text" onkeydown="teachercomment(this)" style="width: 95%; margin-top: 2px;" placeholder="From teacher comment"></center>
@@ -435,13 +420,62 @@
                     {{-- <div style="width: 95%; margin: 0 auto;" id="honourorpricesremark" class="collapse">
                         <center><input type="text" onkeydown="honourorprices(this)" style="width: 95%; margin-top: 2px;" placeholder="From teacher comment"></center>
                     </div> --}}
+                    <br>
+                    <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
+                        Form Master's Remarks <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                    </div>
+                    <br>
+                    <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
+                        Principal's Comments: 
+                        <i style="font-style: normal;" id="honourorpricesremarkmain">
+                        @if ($resultAverage != NULL)
+
+                            @if ($resultAverage->average/$subjects->count() >= 90 && $resultAverage->average/$subjects->count() <= 100)
+                                An Outstanding performance. Keep it up.
+                            @elseif($resultAverage->average/$subjects->count() >= 80 && $resultAverage->average/$subjects->count() <= 89.9)
+                                An excellent performance. Keep it up.
+
+                            @elseif($resultAverage->average/$subjects->count() >= 75 && $resultAverage->average/$subjects->count() <= 79.9)
+                                A very good performance. Keep it up.
+
+                            @elseif($resultAverage->average/$subjects->count() >= 70 && $resultAverage->average/$subjects->count() <= 74.9)
+                                A good performance but can still do better
+
+                            @elseif($resultAverage->average/$subjects->count() >= 65 && $resultAverage->average/$subjects->count() <= 69.9)
+                                A good performance but still do better
+
+                            @elseif($resultAverage->average/$subjects->count() >= 60 && $resultAverage->average/$subjects->count() <= 64.5)
+                                Fairly good performance but can still do better
+
+                            @elseif($resultAverage->average/$subjects->count() >= 55 && $resultAverage->average/$subjects->count() <= 59.9)
+                                A fair performance. Needs to pay more attention to studies.
+
+                            @elseif($resultAverage->average/$subjects->count() >= 50 && $resultAverage->average/$subjects->count() <= 54.9)
+                                An average performance. Needs to pay more attention to studies.
+
+                            @elseif($resultAverage->average/$subjects->count() >= 45 && $resultAverage->average/$subjects->count() <= 49.9)
+                                An average performance. Needs to pay more attention to studies.
+
+                            @elseif($resultAverage->average/$subjects->count() >= 40 && $resultAverage->average/$subjects->count() <= 44.9)
+                                A poor performance. Please sit up.
+
+                            @elseif($resultAverage->average/$subjects->count() >= 0 && $resultAverage->average/$subjects->count() <= 39.9)
+                                A very poor performance. Please sit up.
+                            @endif
+
+                            
+                        @endif
+                        
+                        </i>
+                    </div>
                     
                 </div>
                 <br>
                 <div style="width: 95%; display: flex; flex-direction: row; margin: 0 auto;">
-                    <div class="" style="width: 50%; height: 50px; display: flex; flex-direction: column;">
+                    <div class="" style="width: 50%; height: 50px; display: flex; flex-direction: row; align-items: center;">
                         {{-- <img src="{{asset('storage/schimages/'.$allDetails['addpost'][0]['schoolprincipalsignature'])}}" alt="" width="90px" height="90px"> --}}
                         <i style="font-size: 13px; font-style: normal;">Principal Signature's</i></i>
+                        <img src="{{asset('storage/schimages/'.$addschool->schoolprincipalsignature)}}" alt="" height="50px">
 
                     </div>
                     <div class="" style="width:50%; height: 50px;">
