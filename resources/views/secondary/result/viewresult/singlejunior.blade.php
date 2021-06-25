@@ -147,7 +147,7 @@
         <div id="printJS-form" class="" style="width: 793px; margin: 0 auto;">
             <div class="print-container" style="width: 793px; border: 2px solid black; border-style: dashed;">
                 <div style="display: flex;">
-                    <div style="width: 25%; height: 100px; display: flex; align-items: center; justify-content: center;">
+                    <div id="imagelogo" style="width: 25%; height: 100px; display: flex; align-items: center; justify-content: center;">
 
                             {{-- @if ($addschool->schoolLogo != Null) --}}
                                 <img src="https://drive.google.com/thumbnail?id=1BggdEUjriRhGioI0EBUe9X42qFFsJ1jg" alt="" width="90px" height="90px">
