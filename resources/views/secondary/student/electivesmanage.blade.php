@@ -33,7 +33,7 @@
         </div>
     <!-- /.row -->
     <div class="form-group">
-        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-default">Add Elective</button>
+        <button class="btn btn-sm btn-info" data-toggle="modal" disabled data-target="#modal-default">Add Elective</button>
     </div>
     <div class="row">
         <div class="col-12">

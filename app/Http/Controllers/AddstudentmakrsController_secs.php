@@ -15,6 +15,7 @@ use App\Addstudent_sec;
 use App\PromotionAverage_sec;
 use App\Addteachers_sec;
 use App\CLassSubjects;
+use App\ElectiveAdd;
 use App\SubjectScoreAllocation;
 use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
@@ -121,38 +122,82 @@ class AddstudentmakrsController_secs extends Controller
 
     public function getallstudentsandmarks(Request $request){
 
-        $validator = Validator::make($request->all(),[
-            'selected_class' => 'required',
-            'selected_subject' => 'required',
-            'selected_term' => 'required',
-            'currentsession' => 'required',
-            'selected_section' => 'required',
-        ]);
+        try {
+            $validator = Validator::make($request->all(),[
+                'selected_class' => 'required',
+                'selected_subject' => 'required',
+                'selected_term' => 'required',
+                'currentsession' => 'required',
+                'selected_section' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(['response'=>"feilds"]);
+            }
+    
+            $session = $request->input('currentsession');
+            $classId = $request->input('selected_class');
+            $subjectbyclassid = $request->input('selected_subject');
+            $schoolterm = $request->input('selected_term');
+            $studentsection = $request->input('selected_section');
+            
+            // fetch all regno for all marks
+    
+           $checksubjecttype = CLassSubjects::where(['subjectid'=>$subjectbyclassid, 'classid'=>$classId, 'sectionid'=>$studentsection])->first();
+    
+            if($checksubjecttype->subjecttype == 2){
+    
+                $a = $this->addmark_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $classId, 'subjectid' => $subjectbyclassid, 'term' => $schoolterm, 'section' => $studentsection, 'session' => $session])->take('regno');
+            
+                $studentlist = DB::table('addstudent_secs')
+                ->join('users', 'users.id', '=', 'addstudent_secs.usernamesystem')
+                ->leftJoin('addmark_secs', function($join) use($subjectbyclassid, $schoolterm){
+                    $join->on('addmark_secs.regno', '=', 'addstudent_secs.id');
+                    $join->where(['addmark_secs.subjectid' => $subjectbyclassid, 'addmark_secs.term'=> $schoolterm]);
+                })
+                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmark_secs.subjectid', 'addmark_secs.exams', 'addmark_secs.grades', 'addmark_secs.totalmarks', 'addmark_secs.ca1', 'addmark_secs.ca2', 'addmark_secs.ca3', 'addmark_secs.id as markid', 'addmark_secs.position')
+                ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
+    
+                return response()->json(['studentlist'=>$studentlist, 'a'=>$a], 200);
+    
+            }else{
 
-        if ($validator->fails()) {
-            return response()->json(['response'=>"feilds"]);
+                $a = $this->addmark_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $classId, 'subjectid' => $subjectbyclassid, 'term' => $schoolterm, 'section' => $studentsection, 'session' => $session])->take('regno');
+            
+                $studentlist = Addstudent_sec::
+                join('users', 'users.id', '=', 'addstudent_secs.usernamesystem')
+                ->leftJoin('addmark_secs', function($join) use($subjectbyclassid, $schoolterm){
+                    $join->on('addmark_secs.regno', '=', 'addstudent_secs.id');
+                    $join->where(['addmark_secs.subjectid' => $subjectbyclassid, 'addmark_secs.term'=> $schoolterm]);
+                })
+                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmark_secs.subjectid', 'addmark_secs.exams', 'addmark_secs.grades', 'addmark_secs.totalmarks', 'addmark_secs.ca1', 'addmark_secs.ca2', 'addmark_secs.ca3', 'addmark_secs.id as markid', 'addmark_secs.position')
+                ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
+
+                $mainList = array();
+
+                $checkElective = ElectiveAdd::where(['classid'=>$classId, 'sectionid'=>$studentsection, 'subjectid'=>$subjectbyclassid])->pluck('regno')->toArray();
+
+                for ($i=0; $i < count($studentlist); $i++) { 
+
+                    if (in_array($studentlist[$i]['id'], $checkElective)) {
+                        array_push($mainList, $studentlist[$i]);
+                    }
+                    
+                }
+    
+                return response()->json(['studentlist'=>collect($mainList), 'a'=>$a], 200);
+
+
+
+            }
+
+
+        } catch (\Throwable $th) {
+            // return response()->json(['error'=>$th]);
+            return $th;
         }
 
-        $session = $request->input('currentsession');
-        $classId = $request->input('selected_class');
-        $subjectbyclassid = $request->input('selected_subject');
-        $schoolterm = $request->input('selected_term');
-        $studentsection = $request->input('selected_section');
-        
-        // fetch all regno for all marks
 
-        $a = $this->addmark_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $classId, 'subjectid' => $subjectbyclassid, 'term' => $schoolterm, 'section' => $studentsection, 'session' => $session])->take('regno');
-        
-            $studentlist = DB::table('addstudent_secs')
-            ->join('users', 'users.id', '=', 'addstudent_secs.usernamesystem')
-            ->leftJoin('addmark_secs', function($join) use($subjectbyclassid, $schoolterm){
-                $join->on('addmark_secs.regno', '=', 'addstudent_secs.id');
-                $join->where(['addmark_secs.subjectid' => $subjectbyclassid, 'addmark_secs.term'=> $schoolterm]);
-            })
-            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmark_secs.subjectid', 'addmark_secs.exams', 'addmark_secs.grades', 'addmark_secs.totalmarks', 'addmark_secs.ca1', 'addmark_secs.ca2', 'addmark_secs.ca3', 'addmark_secs.id as markid', 'addmark_secs.position')
-            ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
-
-        return response()->json(['studentlist'=>$studentlist, 'a'=>$a], 200);
     }
 
     public function addmarksmiain(Request $request){
