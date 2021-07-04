@@ -103,7 +103,71 @@
                     
                 @endif
             </div>
+            <div class="row" style="margin: 10px;">
+              <div class="col-12 col-md-6">
+                <div class="card" data-toggle="modal" data-target="#getresultentireclass" style="border-radius: 0px; border-left: 10px solid green;">
+                  <i style="font-style: normal; padding: 10px;"><i class="fas fa-paste"></i> Click to print entire class report </i>
+                </div>
+              </div>
+            </div>
 
+            <div class="modal fade" id="getresultentireclass">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Print result</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{{ Route('print_entrire_class_result') }}" method="get" id="getentireclassresult">
+                      @csrf
+                      <div class="form-group">
+                        <label for="">Select Class</label>
+                        <select name="classid" id="" class="form-control form-control-sm">
+                          <option value="">Select Class</option>
+                          @foreach ($school->getClassList($school->id) as $item)
+
+                            <option value="{{ $item->id }}">{{ $item->classname }}</option>
+                              
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Select Section</label>
+                        <select name="section" id="" class="form-control form-control-sm">
+                            <option value="">select Section</option>
+                            @foreach ($school->getSectionList($school->id) as $sec)
+                                <option value="{{ $sec->id }}">{{ $sec->sectionname }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                      <div class="form-group">
+                        <label for="">Select Term</label>
+                        <select name="term" id="" class="form-control form-control-sm">
+                            <option value="">select term</option>
+                            <option value="1">first</option>
+                            <option value="2">Second</option>
+                            <option value="3">Third</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Enter session (e.g 2012/2013)</label>
+                        <input type="text" name="session" class="form-control form-control-sm">
+                    </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info btn-sm" form="getentireclassresult">Proceed</button>
+                  </div>
+                </div>
+                <!-- /.modal-content -->
+              </div>
+              <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
         </div>
 
         {{-- <div class="card">

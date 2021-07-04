@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\DB;
 use App\Repository\Result\ProcessClassAverage;
 use App\Repository\Result\ResultAverageProcess;
 use App\ResultReadyModel;
+use PDF;
+use App;
+use App\User;
 
 class ResultController_sec extends Controller
 {
@@ -229,17 +232,13 @@ class ResultController_sec extends Controller
 
               $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $request->term, 'session'=>$request->session, 'regno'=>$request->student_reg_no])->get();
 
-             
-
                 if (count($addmarksCheck) > 0) {
 
                     if ((int)$addmarksCheck[0]->totalmarks > 0) {
                         $getSingleSubject = Addsubject_sec::find($getSubjectList[$i]);
                         array_push($subject, $getSingleSubject);
                     }
-
                 }
-                
             }
 
             $subjects = collect($subject);
@@ -254,7 +253,35 @@ class ResultController_sec extends Controller
             $studentClass = Classlist_sec::find($classid);
     
             if ($checkclasstype->classtype == 1) {
-                return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
+
+                // $pdf = App::make('dompdf.wrapper');
+
+                $data = User::where('schoolid', "6")->get();
+
+                // $html = '';
+
+                // for ($i=0; $i < $data->count(); $i++) { 
+
+                //     $datamain = $data[$i];
+
+                //     $view = view('secondary.result.viewresult.resulttest', compact('datamain'));
+
+                //     $html .= $view->render();
+
+                    
+                // }
+
+                // $pdf->loadHTML($html);
+
+
+                
+                // return $pdf->stream();
+
+                $studentInClass = Addstudent_sec::where('classid', 11)->get();
+
+                return view('secondary.result.viewresult.resulttest', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool'));
+
+                return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass', 'data'));
             } else {
                 return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
             }
@@ -418,6 +445,58 @@ class ResultController_sec extends Controller
             //throw $th;
             return response()->json(['getReadyResults' => $th]);
         }
+    }
+
+    public function loadHtmlDoc(Request $request)
+    {
+
+        $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+
+        $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
+
+        $addschool = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
+
+
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
+        return $pdf->stream();
+
+        // $pdfOptions = new Options();
+        // $pdfOptions->set('defaultFont', 'Arial');
+  
+        // $dompdf = new Dompdf($pdfOptions);
+
+        // // Retrieve the HTML generated in our twig file
+        // $html = $this->loadHtml('secondary.adminside.result.generateresultreact', [
+        //     'title' => "Welcome to our PDF Test"
+        // ]);
+
+        // $dompdf->loadHtml($html);
+        
+        // // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        // $dompdf->setPaper('A4', 'portrait');
+
+        // // Render the HTML as PDF
+        // $dompdf->render();
+
+        // // Output the generated PDF to Browser (inline view)
+        // $dompdf->stream("mypdf.pdf", [
+        //     "Attachment" => false
+        // ]);
+
+        
+
+    }
+
+    public function printEntrireClassResult(Request $request)
+    {
+
+        //get studentlist for same class and section
+        $studentList = Addstudent_sec::where(['classid'=>$request->classid, 'studentsection'=>$request->section, 'schoolsession'=>$request->session])->pluck('id')->toArray();
+
+        return $studentList;
     }
 
 

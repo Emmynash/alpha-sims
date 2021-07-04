@@ -15,9 +15,11 @@ use App\Addmark_sec;
 use App\Addpost;
 use App\Addteachers_sec;
 use App\Addsubject_sec;
+use App\CLassSubjects;
 use App\TeacherSubjects;
 use App\FormTeachers;
 use App\ConfirmSubjectRecordEntered;
+use App\ElectiveAdd;
 use App\ResultReadyModel;
 use App\ResultReadySubject;
 use Illuminate\Support\Facades\Auth;
@@ -617,6 +619,90 @@ class TeachersController_sec extends Controller
             //throw $th;
             // return $th;
             return back()->with('error', "Unknown Error");
+        }
+    }
+
+    public function addStudentElectives()
+    {
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.teachers.addelectivesreact', compact('schooldetails'));
+        
+    }
+
+    public function fetchFormTeacherClassSection()
+    {
+        $classSubject = FormTeachers::join('classlist_secs', 'classlist_secs.id','=','form_teachers.class_id')
+                        ->join('addsection_secs', 'addsection_secs.id','=','form_teachers.form_id')
+                        ->where('teacher_id', Auth::user()->id)
+                        ->select('form_teachers.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')->get();
+
+        return response()->json(['classlist'=>$classSubject]);
+    }
+
+    public function getStudentInClass(Request $request)
+    {
+
+       try {
+            $explodeData = explode('-', $request->classSection);
+
+            $classid = $explodeData[0];
+            $sectionid = $explodeData[1];
+
+            $getStudentList = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                            ->where(['classid'=>$classid, 'studentsection'=>$sectionid])
+                            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'users.id as userid')->get();
+
+            $subjects = CLassSubjects::join('addsubject_secs', 'addsubject_secs.id','=','c_lass_subjects.subjectid')
+                        ->where(['c_lass_subjects.classid'=>$classid, 'c_lass_subjects.sectionid'=>$sectionid, 'c_lass_subjects.subjecttype'=>1])
+                        ->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
+
+            return response()->json(['getStudentList'=>$getStudentList, 'subjects'=>$subjects]);
+       } catch (\Throwable $th) {
+           //throw $th;
+           return response()->json(["error"=>$th]);
+       }
+    }
+
+    public function asignSubjectMain(Request $request)
+    {
+
+        try {
+            $explodeData = explode("-", $request->classid);
+
+            $classid = $explodeData[0];
+            $sectionid = $explodeData[1];
+            $studentlist = $request->options;
+    
+            //asign subject elective here
+    
+            for ($i=0; $i < count($studentlist); $i++) { 
+    
+                //check if it has been added already
+    
+                $checkElective = ElectiveAdd::where(['userid'=>$studentlist[$i]['usernamesystem'], 'regno'=>$studentlist[$i]['id'], 'subjectid'=>$request->subjectid, 'classid'=>$classid, 'sectionid'=>$sectionid])->get();
+    
+                if ($checkElective->count() < 1) {
+    
+                    $addElective = new ElectiveAdd();
+                    $addElective->userid = $studentlist[$i]['usernamesystem'];
+                    $addElective->regno = $studentlist[$i]['id'];
+                    $addElective->subjectid = $request->subjectid;
+                    $addElective->subjecttype = 1;
+                    $addElective->classid = $classid;
+                    $addElective->sectionid = $sectionid;
+                    $addElective->schoolid = Auth::user()->schoolid;
+                    $addElective->save();
+    
+                }
+            }
+    
+            return response()->json(['response'=>"success"]);
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            return response()->json(['response'=>"error"]);
         }
     }
 }

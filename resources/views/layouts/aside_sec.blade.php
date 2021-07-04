@@ -316,6 +316,17 @@
               </li>
             @endcan
 
+            @can('form teacher')
+            <li class="nav-item">
+              <a id="formmasteroptionelective" href="{{ route('add_student_electives') }}" class="nav-link">
+                  <i class="fas fa-users nav-icon"></i>
+                <p>
+                  Asign Electives
+                </p>
+              </a>
+            </li>
+          @endcan
+
             @endif
 
             @can('elearning')

@@ -15,6 +15,7 @@ use App\Addstudent;
 use App\AmountTable;
 use App\CLassSubjects;
 use App\ElectiveAdd;
+use App\Electives_sec;
 use App\FeesInvoice;
 use App\Repository\Registration\RegisterStudents;
 use Illuminate\Support\Facades\Auth;
@@ -364,6 +365,8 @@ class StudentController_sec extends Controller
         $myelectives = ElectiveAdd::join('addsubject_secs', 'addsubject_secs.id','=','elective_adds.subjectid')
                        ->select('elective_adds.*', 'addsubject_secs.subjectname')
                        ->where('elective_adds.userid', Auth::user()->id )->get();
+
+        // $numberOfElectiveClass = Electives_sec::where([])
 
         return view('secondary.student.electivesmanage', compact('schooldetails', 'subjects', 'myelectives'));
     }

@@ -58,6 +58,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
+                <button>View All</button>
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>

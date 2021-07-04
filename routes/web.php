@@ -342,12 +342,14 @@ Route::group(['prefix' => 'sec'], function () {
 
      Route::group(['prefix' => 'result', 'middleware' => ['auth', 'can:result module']], function () {
         Route::get('/result_by_class', 'ResultController_sec@result_by_class',)->name('result_by_class');
+        Route::post('/result_view_sec_pdf', 'ResultController_sec@loadHtmlDoc')->name('result_view_sec_pdf');
         Route::POST('/view_by_class', 'ResultController_sec@view_by_class')->name('view_by_class'); 
         Route::Post('/result_print_single_sec', 'ResultController_sec@viewSingleResult')->name('result_print_single_sec');
         Route::get('/result_by_class', 'ResultController_sec@result_by_class')->name('result_by_class');
         Route::get('/generate_result', 'ResultController_sec@generateResult')->name('generate_result');
         Route::get('/get_result_ready_section', 'ResultController_sec@get_result_ready_section');
         Route::post('/generate_result_main', 'ResultController_sec@generateResultMain')->name('generate_result_main');
+        Route::get('/print_entrire_class_result', 'ResultController_sec@printEntrireClassResult')->name('print_entrire_class_result');
      });
 
      Route::group(['prefix' => 'teacher', 'middleware' => ['auth', 'role:Teacher']], function () { 
@@ -446,6 +448,15 @@ Route::group(['middleware' => ['auth', 'can:assign form teacher']], function () 
     Route::post('/allocatesubjectteacher', 'TeachersController_sec@allocateSubjectTeacher');
     Route::post('/un_asign_a_subject', 'TeachersController_sec@unAsignASubject');
     Route::get('/fetch_teacher_subjects/{userid}', 'TeachersController_sec@fetchTeacherSubject');
+    
+});
+
+Route::group(['middleware' => ['auth', 'role:Teacher']], function () {
+
+    Route::get('/add_student_electives', 'TeachersController_sec@addStudentElectives')->name('add_student_electives');
+    Route::get('/fetch_form_teacher_class', 'TeachersController_sec@fetchFormTeacherClassSection');
+    Route::post('/fetch_student_list', 'TeachersController_sec@getStudentInClass'); 
+    Route::post('/asign_subject_main', 'TeachersController_sec@asignSubjectMain'); 
     
 });
 
@@ -550,6 +561,7 @@ Route::group(['middleware' => ['auth', 'role:Librarian']], function () {
 // secondary school result computation
 
     Route::get('/result_view_sec', ['uses' => 'ResultController_sec@index','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
+    
     Route::Post('/result_print_sec', ['uses' => 'ResultController_sec@viewResult','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
     Route::Post('/result_print_update_sec', ['uses' => 'ResultController_sec@fetchresultdetails','roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
 

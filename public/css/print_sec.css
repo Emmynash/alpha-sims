@@ -2,6 +2,10 @@
     /* border: 1px solid red; */
 }
 
+.page-break {
+    page-break-after: always;
+}
+
 table, th, td {
     border: 1px solid black;
 }
@@ -49,6 +53,10 @@ tr, td{
     #printresult{
         border: 5px solid blue;
         
+    }
+
+    .page-break {
+        page-break-after: always;
     }
 
     #imagelogo{
@@ -107,6 +115,7 @@ tr, td{
 
     .print-container{
         height: 1123px;
+        width: 900px;
     }
 
 }
