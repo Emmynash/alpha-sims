@@ -18,8 +18,8 @@
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 		
 		<!-- Bizwheel Plugins CSS -->
-		<link rel="stylesheet" href="{{ asset('landing') }}/css/animate.min.css">
-		<link rel="stylesheet" href="{{ asset('landing') }}/css/bootstrap.min.css">
+		<link rel="stylesheet" href="{{ asset('landing/css/animate.min.css')}}">
+		<link rel="stylesheet" href="{{ asset('landing/css/bootstrap.min.css')}}">
 		<link rel="stylesheet" href="{{ asset('landing') }}/css/cubeportfolio.min.css">
 		<link rel="stylesheet" href="{{ asset('landing') }}/css/font-awesome.css">
 		<link rel="stylesheet" href="{{ asset('landing') }}/css/jquery.fancybox.min.css">
