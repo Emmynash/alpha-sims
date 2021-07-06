@@ -17,9 +17,9 @@
 		<!-- Web Font -->
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 		
-		<!-- Bizwheel Plugins CSS -->
-		<link rel="stylesheet" href="{{ asset('landing/css/animate.min.css')}}">
-		<link rel="stylesheet" href="{{ asset('landing/css/bootstrap.min.css')}}">
+		{{-- <!-- Bizwheel Plugins CSS -->
+		<link rel="stylesheet" href="{{ asset('landing') }}/css/animate.min.css">
+		<link rel="stylesheet" href="{{ asset('landing') }}/css/bootstrap.min.css">
 		<link rel="stylesheet" href="{{ asset('landing') }}/css/cubeportfolio.min.css">
 		<link rel="stylesheet" href="{{ asset('landing') }}/css/font-awesome.css">
 		<link rel="stylesheet" href="{{ asset('landing') }}/css/jquery.fancybox.min.css">
@@ -30,12 +30,25 @@
 		<!-- Bizwheel Stylesheet -->  
 		<link rel="stylesheet" href="{{ asset('landing') }}/css/reset.css">
 		<link rel="stylesheet" href="{{ asset('landing') }}/style.css">
-		<link rel="stylesheet" href="{{ asset('landing') }}/css/responsive.css">
+		<link rel="stylesheet" href="{{ asset('landing') }}/css/responsive.css"> --}}
+
+
+		<!-- Bizwheel Plugins CSS -->
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/animate.min.css">
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/bootstrap.min.css">
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/cubeportfolio.min.css">
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/font-awesome.css">
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/jquery.fancybox.min.css">
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/magnific-popup.min.css">
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/owl-carousel.min.css">
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/slicknav.min.css">
+
+		<!-- Bizwheel Stylesheet -->  
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/reset.css">
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/style.css">
+		<link rel="stylesheet" href="{{ secure_asset('landing') }}/css/responsive.css">
 		
-		<!-- Bizwheel Colors -->
-		<!--<link rel="stylesheet" href="css/skins/skin-1.css">
-		<!--<link rel="stylesheet" href="css/skins/skin-2.css">-->
-		<!--<link rel="stylesheet" href="css/skins/skin-3.css">-->
+
 		<!--<link rel="stylesheet" href="css/skins/skin-4.css">-->
 		
 		<!--[if lt IE 9]>
@@ -909,10 +922,10 @@
 					</div>
 				</div>
 			</div>
-			<!--/ End Copyright -->
+			<!--/ End Copyright --> 
 		</footer>
 		
-		<!-- Jquery JS -->
+		{{-- <!-- Jquery JS -->
 		<script src="{{ asset('landing') }}/js/jquery.min.js"></script>
 		<script src="{{ asset('landing') }}/js/jquery-migrate-3.0.0.js"></script>
 		<!-- Popper JS -->
@@ -938,6 +951,34 @@
 		<!-- Magnipic Popup JS -->
 		<script src="{{ asset('landing') }}/js/magnific-popup.min.js"></script>
 		<!-- Active JS -->
-		<script src="{{ asset('landing') }}/js/active.js"></script>
+		<script src="{{ asset('landing') }}/js/active.js"></script> --}}
+
+		<!-- Jquery JS -->
+		<script src="{{ secure_asset('landing') }}/js/jquery.min.js"></script>
+		<script src="{{ secure_asset('landing') }}/js/jquery-migrate-3.0.0.js"></script>
+		<!-- Popper JS -->
+		<script src="{{ secure_asset('landing') }}/js/popper.min.js"></script>
+		<!-- Bootstrap JS -->
+		<script src="{{ secure_asset('landing') }}/js/bootstrap.min.js"></script>
+		<!-- Modernizr JS -->
+		<script src="{{ secure_asset('landing') }}/js/modernizr.min.js"></script>
+		<!-- ScrollUp JS -->
+		<script src="{{ secure_asset('landing') }}/js/scrollup.js"></script>
+		<!-- FacnyBox JS -->
+		<script src="{{ secure_asset('landing') }}/js/jquery-fancybox.min.js"></script>
+		<!-- Cube Portfolio JS -->
+		<script src="{{ secure_asset('landing') }}/js/cubeportfolio.min.js"></script>
+		<!-- Slick Nav JS -->
+		<script src="{{ secure_asset('landing') }}/js/slicknav.min.js"></script>
+		<!-- Slick Nav JS -->
+		<script src="{{ secure_asset('landing') }}/js/slicknav.min.js"></script>
+		<!-- Slick Slider JS -->
+		<script src="{{ secure_asset('landing') }}/js/owl-carousel.min.js"></script>
+		<!-- Easing JS -->
+		<script src="{{ secure_asset('landing') }}/js/easing.js"></script>
+		<!-- Magnipic Popup JS -->
+		<script src="{{ secure_asset('landing') }}/js/magnific-popup.min.js"></script>
+		<!-- Active JS -->
+		<script src="{{ secure_asset('landing') }}/js/active.js"></script>
 	</body>
 </html>
