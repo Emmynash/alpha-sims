@@ -677,7 +677,7 @@ class TeachersController_sec extends Controller
     
             //asign subject elective here
     
-            for ($i=0; $i < count($studentlist); $i++) { 
+            for ($i=0; $i < count($studentlist); $i++) {
     
                 //check if it has been added already
     
@@ -696,6 +696,7 @@ class TeachersController_sec extends Controller
                     $addElective->save();
     
                 }
+                
             }
     
             return response()->json(['response'=>"success"]);
@@ -705,4 +706,5 @@ class TeachersController_sec extends Controller
             return response()->json(['response'=>"error"]);
         }
     }
+
 }

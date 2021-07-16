@@ -69724,7 +69724,7 @@ function Promotion() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/uhweka/aplpasims-remake/alpha-sim-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
+module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha-sims-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
 
 
 /***/ })

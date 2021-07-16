@@ -66,6 +66,14 @@
                 </p>
               </a>
             </li>
+            <li class="nav-item">
+              <a id="feesetup" href="{{ route('student_dicount') }}" class="nav-link">
+                  <i class="fas fa-user-graduate nav-icon"></i>
+                <p>
+                  Student Discount
+                </p>
+              </a>
+            </li>
           @endcan
 
           @can('invoice management')

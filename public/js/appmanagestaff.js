@@ -69602,7 +69602,7 @@ function ManageStaff() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/uhweka/aplpasims-remake/alpha-sim-react/resources/js/appmanagestaff.js */"./resources/js/appmanagestaff.js");
+module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha-sims-react/resources/js/appmanagestaff.js */"./resources/js/appmanagestaff.js");
 
 
 /***/ })

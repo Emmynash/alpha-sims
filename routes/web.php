@@ -411,6 +411,7 @@ Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
     Route::POST('/add_number_of_ellectives', 'SubjectController_sec@addNumberOfEllectives');
     Route::POST('/asign_subject_to_class', 'SubjectController_sec@asignSubjectToClass');
     Route::get('/get_subject_to_class/{subjectid}', 'SubjectController_sec@getClassForSubject');
+    Route::get('/get_all_student_with_elective', 'SubjectController_sec@getStudentsWithElective');
 });
 
 
@@ -455,7 +456,7 @@ Route::group(['middleware' => ['auth', 'role:Teacher']], function () {
 
     Route::get('/add_student_electives', 'TeachersController_sec@addStudentElectives')->name('add_student_electives');
     Route::get('/fetch_form_teacher_class', 'TeachersController_sec@fetchFormTeacherClassSection');
-    Route::post('/fetch_student_list', 'TeachersController_sec@getStudentInClass'); 
+    Route::post('/fetch_student_list', 'TeachersController_sec@getStudentInClass'); //getStudentsWithElective
     Route::post('/asign_subject_main', 'TeachersController_sec@asignSubjectMain'); 
     
 });
@@ -613,6 +614,9 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::get('/invoices', 'AccountController@invoices')->name('invoices')->middleware(['auth', 'can:invoice management']); 
          Route::get('/unpaid_fees', 'AccountController@unpaid_fees')->name('unpaid_fees')->middleware(['auth', 'can:invoice management']); 
          Route::get('/order_request', 'AccountController@orderRequest')->name('order_request')->middleware(['auth', 'can:can send or receive request']);
+
+         Route::get('/student_dicount', 'AccountController@student_dicount')->name('student_dicount')->middleware(['auth', 'can:can send or receive request']);
+
          Route::post('/request_response', 'AccountController@request_response')->name('request_response')->middleware(['auth', 'can:can send or receive request']); 
          Route::get('/feecollection', 'AccountController@feecollection')->name('feecollection')->middleware(['auth', 'can:fee collection']);
          Route::post('/fetchstudentdataforfee', 'AccountController@fetchstudentdataforfee')->name('fetchstudentdataforfee'); 
@@ -625,6 +629,8 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::post('/order_invoice_checkout', 'AccountController@order_invoice_checkout')->name('order_invoice_checkout');
          Route::get('/get_student_list_fees/{classid}/{sectionid}', 'AccountController@getStudentListFees')->name('get_student_list_fees');
          Route::post('/fees_part_payment', 'AccountController@feesPartPayment')->name('fees_part_payment');
+         Route::post('/add_student_discount', 'AccountController@addStudentDiscount')->name('add_student_discount');
+         Route::get('/get_all_student_discount', 'AccountController@get_all_student_discount')->name('get_all_student_discount');
 
          Route::group(['middleware' => ['can:add event']], function () { // library module
             Route::post('/post_event', 'CalenderController@postAnEvent')->name('post_event');

@@ -69763,7 +69763,7 @@ function Moto() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/uhweka/aplpasims-remake/alpha-sim-react/resources/js/appmoto.js */"./resources/js/appmoto.js");
+module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha-sims-react/resources/js/appmoto.js */"./resources/js/appmoto.js");
 
 
 /***/ })

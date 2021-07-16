@@ -459,4 +459,14 @@ class StudentController_sec extends Controller
             return response()->json(['response'=>$th]);
         }
     }
+
+    public function getStudentsWithElective()
+    {
+        $getStudentsWithElectives = ElectiveAdd::join('users', 'users.id','=','electice_adds.userid')
+                                    ->join('addstudent_secs', 'addstudent_secs.id','=','electice_adds.subjectid')
+                                    ->where('schoolid', Auth::user()->schoolid)
+                                    ->select('electice_adds.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addstudent_secs.subjectname')->get();
+
+        return response()->json(['studentlist'=>$getStudentsWithElectives]);
+    }
 }

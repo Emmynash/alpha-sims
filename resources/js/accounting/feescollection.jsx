@@ -44,6 +44,8 @@ function FeesCollection() {
     const [totalamount, setTotalAmount] = useState(0)
     const [paymentRecordsum, setpaymentRecordsum] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
+    const [discountpercent, setDiscountpercent] = useState(0)
+    const [discountRecord, setdiscountRecord] = useState({})
     const alert = useAlert()
     
 
@@ -105,6 +107,10 @@ function FeesCollection() {
         setpartamount(e.target.value)
     }
 
+    function handleChangeDiscount(e) {
+        setDiscountpercent(e.target.value)
+    }
+
     function viewSingleStudent(studentregno) {
         console.log(studentregno)
         setidentity(studentregno)
@@ -122,7 +128,7 @@ function FeesCollection() {
                 "Content-type": "application/json"
             }
         }).then(response=>{
-            console.log(response)
+            
             setIsLoading(false)
             if (response.data.data == "record no") {
                 myalert('Does not match any record', 'error')
@@ -136,6 +142,7 @@ function FeesCollection() {
                 setTotalAmount(response.data.totalfees)
                 setPaymentRecord(response.data.paymentRecord)
                 setpaymentRecordsum(response.data.paymentRecordsum)
+                setdiscountRecord(response.data.discountRecord);
                 setSingleStudent(true)
             }
             
@@ -213,7 +220,7 @@ function FeesCollection() {
                 "Content-type": "application/json"
             }
         }).then(response=>{
-            console.log(response)
+            console.log(response.data.discountRecord)
             
             setStudentDetails(response.data.data)
             setpaymentamount(response.data.feesummary)
@@ -221,7 +228,7 @@ function FeesCollection() {
             setTotalAmount(response.data.totalfees)
             setPaymentRecord(response.data.paymentRecord)
             // setSingleStudent(true)
-
+ 
 
 
         }).catch(e=>{
@@ -247,6 +254,35 @@ function FeesCollection() {
                 myalert("Payment Successfull","success")
             }else if(response.data.data == "payment done"){
                 myalert("Payment already done","error")
+            }else{
+                myalert("Unknown Error","error")
+            }
+        }).catch(e=>{
+            console.log(e)
+            setIsLoading(false)
+
+            
+        })
+    }
+
+    function addStudentDiscount(regno, userid) {
+        setIsLoading(true)
+        const data = new FormData()
+        data.append("percent", discountpercent)
+        data.append("regno", regno)
+        data.append("userid", userid)
+        axios.post("/gen/add_student_discount", data, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response)
+            setIsLoading(false)
+            
+            if (response.data.response == "success") {
+                myalert("Discount updated successfully","success")
+            }else if(response.data.response == "above"){
+                myalert("Percent amount must not be above 100% and not below 1%","error")
             }else{
                 myalert("Unknown Error","error")
             }
@@ -374,6 +410,19 @@ function FeesCollection() {
                                     <p>{studentDetails.classname}{studentDetails.sectionname}</p>
                                     <p>Guadian No. {studentDetails.studentfathernumber}, {studentDetails.studentmothersnumber}</p>
                                     <p>Admission No. {studentDetails.admission_no}</p>
+                                    <div>
+                                        <div className="row">
+                                            <div className="col-12 col-md-4">
+                                                <div className="form-group">
+                                                    <label htmlFor="">Enter discount in percent</label>
+                                                    <input type="number" placeholder={discountRecord != null ? discountRecord.percent:"0" + " - (%)" } onChange={(e)=>handleChangeDiscount(e)}  className="form-control form-control-sm"/>
+                                                </div>
+                                                <div className="form-group">
+                                                    <button type="button" onClick={()=>addStudentDiscount(studentDetails.id, studentDetails.usernamesystem)} className="btn btn-sm btn-warning">Add Discount Amount</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                </div>
                             </div>
                         </div>
@@ -391,7 +440,7 @@ function FeesCollection() {
                                     )):""}
                                 </div>
                                 <div className="card">
-                                    <i style={{ padding:'5px', fontStyle:'normal' }}>Total Fees (N{totalfees})</i>  
+                                    <i style={{ padding:'5px', fontStyle:'normal' }}>Total Fees (N{totalfees - (discountRecord != null ? (totalfees * (discountRecord.percent/100)):0)})</i>  
                                 </div>
                             </div>
                             <div className="col-12 col-md-6">

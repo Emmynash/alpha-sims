@@ -26,5 +26,6 @@ mix.react('resources/js/app.js', 'public/js')
    .react('resources/js/appallusers.js', 'public/js')
    .react('resources/js/appreasign.js', 'public/js')
    .react('resources/js/appmarksteachers.js', 'public/js')
-   .react('resources/js/appelective.js', 'public/js') 
+   .react('resources/js/appelective.js', 'public/js')
+   .react('resources/js/app_discount.js', 'public/js') 
    .sass('resources/sass/app.scss', 'public/css');

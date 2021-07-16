@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 use App\AmountBalTableTotal;
 use App\FeesInvoiceItems;
 use App\PaymentRecord;
+use App\StudentDiscount;
 use App\Repository\Fees\FeePayment;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -264,9 +265,11 @@ class AccountController extends Controller
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
             $paymentRecordsum = PaymentRecord::where(['regno'=> $getStudentData->id, 'term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession, 'schoolid'=>Auth::user()->schoolid])->sum('amount_paid');
+
+            $discountRecord = StudentDiscount::where('regno', $getStudentData->id)->first();
     
     
-            return response()->json(['data'=>$getStudentData, 'feesummary'=>$feesummary, 'totalfees'=>$totalfees, 'paymentRecord'=>$paymentRecord, 'paymentRecordsum'=>$paymentRecordsum]);
+            return response()->json(['data'=>$getStudentData, 'feesummary'=>$feesummary, 'totalfees'=>$totalfees, 'paymentRecord'=>$paymentRecord, 'paymentRecordsum'=>$paymentRecordsum, 'discountRecord'=>$discountRecord]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['data'=>$th]);
@@ -695,6 +698,74 @@ class AccountController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['data'=>$th]);
+        }
+        
+    }
+
+    public function student_dicount()
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        return view('secondary.accounting.studentdiscount', compact('schooldetails'));
+    }
+
+    public function addStudentDiscount(Request $request)
+    {
+
+        try {
+            // StudentDiscount::updateOrCreate(
+            //     ['userid' => $request->userid, 'regno' => $request->regno],
+            //     ['percent' => $request->percent],
+            //     ['userid' => $request->userid],
+            //     ['regno'=> $request->regno],
+            //     ['schoolid' => Auth::user()->schoolid]
+            // );
+
+            
+
+            if ((int)$request->percent <= 100 && (int)$request->percent >= 1) {
+
+                $check = StudentDiscount::where(['userid'=>$request->userid, 'regno'=>$request->regno])->first();
+
+                if ($check == null) {
+    
+                    $addStudentDiscount = new StudentDiscount();
+                    $addStudentDiscount->userid = $request->userid;
+                    $addStudentDiscount->regno = $request->regno;
+                    $addStudentDiscount->percent = $request->percent;
+                    $addStudentDiscount->schoolid = Auth::user()->schoolid;
+                    $addStudentDiscount->save();
+            
+                    return response()->json(['response' => 'success']);
+                }else{
+                    $check->percent = $request->percent;
+                    $check->save();
+                    return response()->json(['response' => 'success']);
+                }
+
+            }else{
+                return response()->json(['response' => 'above']);
+            }
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response' => $th]);
+        }
+        
+    }
+
+    public function get_all_student_discount()
+    {
+
+        try {
+            $studentDiscountList = StudentDiscount::join('users', 'users.id','=','student_discounts.userid')
+                                ->join('addstudent_secs', 'addstudent_secs.id','=','student_discounts.regno')
+                                ->where('student_discounts.schoolid', Auth::user()->schoolid)
+                                ->select('student_discounts.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addstudent_secs.admission_no')->get();
+
+                                return response()->json(['response'=>$studentDiscountList]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th]);
         }
         
     }
