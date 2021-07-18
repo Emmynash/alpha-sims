@@ -10,8 +10,8 @@ use App\AddMoto_sec;
 use App\Addpost;
 use App\MotoList;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Validator;
-use DB;
 
 class MotoController_sec extends Controller
 {
@@ -58,25 +58,33 @@ class MotoController_sec extends Controller
             'selectedsectionmoto' => 'required',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
+        // return $request;
+
+        try {
+            if ($validator->fails()) {
+                return response()->json(['errors'=>$validator->errors()->keys()]);
+            }
+    
+            $schooldetails = Addpost::find(Auth::user()->schoolid);
+    
+            $addstudent = DB::table('addstudent_secs')
+                        ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                        ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                        ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+                        ->select('addstudent_secs.*', 'classlist_secs.classname', 'users.firstname', 'users.middlename', 'users.lastname', 'addsection_secs.sectionname', 'users.id as userid')
+                        ->where(['addstudent_secs.classid'=>$request->input('selectedclassmoto'), 'addstudent_secs.studentsection'=>$request->input('selectedsectionmoto'), 'addstudent_secs.schoolsession'=>$schooldetails->schoolsession,])
+                        ->get();
+    
+            $checkifmotohasbeenadded = AddMoto_sec::where(["term"=>$schooldetails->term, "schoolid"=>Auth::user()->schoolid, "session"=>$schooldetails->schoolsession])->pluck('student_id');
+    
+            $motolist = MotoList::where('schoolid', Auth::user()->schoolid)->get();
+    
+            return response()->json(['success'=>$addstudent, 'atlist'=>$checkifmotohasbeenadded, 'motolist'=>$motolist], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            return response()->json(['error'=>$th], 400);
         }
-
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
-
-        $addstudent = DB::table('addstudent_secs')
-                    ->join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-                    ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
-                    ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
-                    ->select('addstudent_secs.*', 'classlist_secs.classname', 'users.firstname', 'users.middlename', 'users.lastname', 'addsection_secs.sectionname', 'users.id as userid')
-                    ->where(['addstudent_secs.classid'=>$request->input('selectedclassmoto'), 'addstudent_secs.studentsection'=>$request->input('selectedsectionmoto'), 'addstudent_secs.schoolsession'=>$schooldetails->schoolsession,])
-                    ->get();
-
-        $checkifmotohasbeenadded = AddMoto_sec::where(["term"=>$schooldetails->term, "schoolid"=>Auth::user()->schoolid, "session"=>$schooldetails->schoolsession])->pluck('student_id');
-
-        $motolist = MotoList::where('schoolid', Auth::user()->schoolid)->get();
-
-        return response()->json(['success'=>$addstudent, 'atlist'=>$checkifmotohasbeenadded, 'motolist'=>$motolist]);
 
     }
 

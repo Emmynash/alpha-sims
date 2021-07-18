@@ -69447,9 +69447,14 @@ function Moto() {
     }).then(function (response) {
       setisLoading(false);
       console.log(response);
-      setstudentstudent(response.data.success);
-      setmotolist(response.data.motolist);
-      settakearray(response.data.atlist);
+
+      if (response.status == 200) {
+        setstudentstudent(response.data.success);
+        setmotolist(response.data.motolist);
+        settakearray(response.data.atlist);
+      } else {
+        console.log(response.data.error);
+      }
     })["catch"](function (e) {
       console.log(e);
       setisLoading(false);

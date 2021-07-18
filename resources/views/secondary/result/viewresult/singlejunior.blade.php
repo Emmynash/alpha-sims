@@ -34,7 +34,6 @@
     </div>
 
     <div id="printJS-form">
-        @foreach ($data as $item)
 
         <div class="" style="margin-top: 60px;" id="printnotready">
             <div class="" class="" style="width: 794px; margin: 0 auto;">
@@ -387,7 +386,7 @@
     
         </div> --}}
             
-        @endforeach
+        
     </div>
 
     

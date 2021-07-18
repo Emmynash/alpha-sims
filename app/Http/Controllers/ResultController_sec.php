@@ -256,7 +256,7 @@ class ResultController_sec extends Controller
 
                 // $pdf = App::make('dompdf.wrapper');
 
-                $data = User::where('schoolid', "6")->get();
+                // $data = User::where('schoolid', "6")->get();
 
                 // $html = '';
 
@@ -277,11 +277,11 @@ class ResultController_sec extends Controller
                 
                 // return $pdf->stream();
 
-                $studentInClass = Addstudent_sec::where('classid', 11)->get();
+                // $studentInClass = Addstudent_sec::where('classid', 11)->get();
 
-                return view('secondary.result.viewresult.resulttest', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool'));
+                // return view('secondary.result.viewresult.resulttest', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool'));
 
-                return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass', 'data'));
+                return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
             } else {
                 return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
             }

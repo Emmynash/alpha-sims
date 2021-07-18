@@ -67,8 +67,6 @@ class ResultAverageProcess{
 
             $allsubjectcount = count($studentmarks);
 
-            if ($allsubjectcount != 0) {
-
                 $averagevalue = $coursesum/$allsubjectcount;
 
     
@@ -84,8 +82,6 @@ class ResultAverageProcess{
                 $resultAverageAdd->position = "0";
                 $resultAverageAdd->section_id = $section;
                 $resultAverageAdd->save(); 
-                
-            }
 
  
         }

@@ -11,12 +11,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Class Lists</h1>
+            <h1 class="m-0 text-dark">Result Checker</h1>
 
                 <!--<i class="far fa-question-circle" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?" style="font-size: 25px;">-->
                 
-                <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Class lists"
-                data-content="View all classes in your school and the number of student in each class. You can change a class name incase of any mistake, however you have to be sure of what you are doing. Note: ensure classes are arranged in ascending order">Need help?</button>
+                <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Result Checker"
+                data-content="Check Students result">Need help?</button>
 
           </div><!-- /.col -->
           <div class="col-sm-6">
@@ -29,6 +29,11 @@
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
+    <div class="container">
+      <button class="btn btn-sm btn-warning">View All</button>
+    </div>
+
+    <hr>
 
     <!-- Main content -->
     <section class="content">
@@ -44,8 +49,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Class List</h3>
-
+                <h3 class="card-title">Class List </h3>
                 <div class="card-tools">
                   <div class="input-group input-group-sm" style="width: 150px;">
                     <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
@@ -58,7 +62,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <button>View All</button>
+                
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
