@@ -35,10 +35,10 @@ class ProcessClassAverage{
 
             $subjectidav = $subjectarray[$i];
 
-            $addmarkcounter = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->get();
+            $addmarkcounter = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession, 'section'=>$section])->get();
 
             $addmarkAverage = DB::table('addmark_secs') 
-                            ->where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->SUM('totalmarks');
+                            ->where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession, 'section'=>$section])->SUM('totalmarks');
 
             if (count($addmarkcounter) > 0) {
                 $averagemark = $addmarkAverage/count($addmarkcounter);
