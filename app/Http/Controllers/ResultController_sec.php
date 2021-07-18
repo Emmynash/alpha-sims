@@ -423,6 +423,8 @@ class ResultController_sec extends Controller
                 $process_class_average = $processClassAverage->processresult($request);
     
                 return $process_class_average;
+            }else{
+                return $resultAverage;
             }
         } catch (\Throwable $th) {
             //throw $th;
@@ -434,9 +436,12 @@ class ResultController_sec extends Controller
     public function get_result_ready_section()
     {
         try {
+
+            $term = Addpost::find(Auth::user()->schoolid);
+
             $getReadyResults = ResultReadyModel::join('classlist_secs', 'classlist_secs.id','=','result_ready_models.classid')
                             ->join('addsection_secs', 'addsection_secs.id','=','result_ready_models.sectionid')
-                            ->where('result_ready_models.schoolid', Auth::user()->schoolid)
+                            ->where(['result_ready_models.schoolid'=> Auth::user()->schoolid, 'result_ready_models.term'=>$term->term])
                             ->select('result_ready_models.*', 'classlist_secs.classname', 'classlist_secs.id as classid', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')->get();
 
             return response()->json(['getReadyResults' => $getReadyResults]);
