@@ -308,7 +308,7 @@
                 </div>
                 <br>
                 <div style="display: flex;">
-                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exams Total: <i id="sum2" style="margin: 10px 0px 0px 5px; font-style: normal;"></i></i>
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exams Total: {{ $resultAverage == NULL ? "NAN":round($resultAverage->sumofmarks, 2) }}</i>
                     <div style="flex: 1;"></div>
                     <i style="margin: 10px 0px 0px 50px; font-style: normal;">Average: {{ $resultAverage == NULL ? "NAN":round($resultAverage->average, 2) }}</i>
                     <i style="margin: 10px 50px 0px 50px; font-style: normal;">Point Avg: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal;"></i></i>
