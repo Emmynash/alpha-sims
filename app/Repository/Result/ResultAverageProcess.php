@@ -56,7 +56,7 @@ class ResultAverageProcess{
         
                 $singleregno = $studentregnumberarray[$i];
                 
-                $studentmarks = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'regno'=>$singleregno, 'session'=>$schoolsession])->pluck('totalmarks')->toArray();
+                $studentmarks = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'regno'=>$singleregno, 'session'=>$schoolsession, 'section'=>$section])->pluck('totalmarks')->toArray();
         
                 $scoresarraysingle = array();
         
