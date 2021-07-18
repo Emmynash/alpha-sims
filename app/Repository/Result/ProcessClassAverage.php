@@ -28,17 +28,17 @@ class ProcessClassAverage{
         $term = $schooldata->term;
         $schoolsession = $schooldata->schoolsession;
 
-        $subjectarray = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$section, 'schoolid'=>Auth::user()->schoolid])->pluck('subjectid');
+        $subjectarray = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$section, 'schoolid'=>Auth::user()->schoolid])->pluck('subjectid')->toArray();
                 
 
         for ($i=0; $i < count($subjectarray); $i++) {
 
             $subjectidav = $subjectarray[$i];
 
-            $addmarkcounter = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->where('totalmarks','!=','0')->get();
+            $addmarkcounter = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->get();
 
             $addmarkAverage = DB::table('addmark_secs') 
-                            ->where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->where('totalmarks','!=','0')->SUM('totalmarks');
+                            ->where(['classid'=>$classid, 'term'=>$term, 'subjectid'=>$subjectidav, 'session'=>$schoolsession])->SUM('totalmarks');
 
             if (count($addmarkcounter) > 0) {
                 $averagemark = $addmarkAverage/count($addmarkcounter);
