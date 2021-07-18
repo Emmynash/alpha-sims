@@ -2,9 +2,10 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Addmoto_sec extends Model
+class AddMoto_sec extends Model
 {
-    //
+    use HasFactory;
 }

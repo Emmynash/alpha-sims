@@ -25,7 +25,6 @@ class ResultAverageProcess{
     public function processResultAverage(Request $request)
     {
 
-
         $classid = $request->classid;
         $section = $request->section_id;
         $schooldata = Addpost::where('id', Auth::user()->schoolid)->first();
@@ -65,7 +64,8 @@ class ResultAverageProcess{
     
             $coursesum = array_sum($studentmarks);
 
-            $allsubjectcount = count($studentmarks);
+            if ($coursesum > 0) {
+                $allsubjectcount = count($studentmarks);
 
                 $averagevalue = $coursesum/$allsubjectcount;
 
@@ -82,6 +82,7 @@ class ResultAverageProcess{
                 $resultAverageAdd->position = "0";
                 $resultAverageAdd->section_id = $section;
                 $resultAverageAdd->save(); 
+            }
 
  
         }
