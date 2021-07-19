@@ -546,32 +546,32 @@
 
 
 
-        var sum1 = 0;
-        var sum2 = 0;
-        $("#category tr").not(':first').not(':last').each(function() {
-        sum1 +=  getnum($(this).find("td:eq(5)").text());
-        sum2 +=  getnum($(this).find("td:eq(4)").text());
-        function getnum(t){
-            if(isNumeric(t)){
-                return parseInt(t,10);
-            }
-            return 0;
-                function isNumeric(n) {
-                return !isNaN(parseFloat(n)) && isFinite(n);
-                }
-        }
-        });
+        // var sum1 = 0;
+        // var sum2 = 0;
+        // $("#category tr").not(':first').not(':last').each(function() {
+        // sum1 +=  getnum($(this).find("td:eq(5)").text());
+        // sum2 +=  getnum($(this).find("td:eq(4)").text());
+        // function getnum(t){
+        //     if(isNumeric(t)){
+        //         return parseInt(t,10);
+        //     }
+        //     return 0;
+        //         function isNumeric(n) {
+        //         return !isNaN(parseFloat(n)) && isFinite(n);
+        //         }
+        // }
+        // });
 
-        var points = sum1/{{ $subjects->count() }}
+        // var points = sum1/{{ $subjects->count() }}
 
-        $("#sum1").text(points.toFixed(2));
-        $("#sum2").text(sum2);
+        // $("#sum1").text(points.toFixed(2));
+        // $("#sum2").text(sum2);
 
-        $( document ).ready(function() {
+        // $( document ).ready(function() {
 
 
             
-        })
+        // })
         
 
 
