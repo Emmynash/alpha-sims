@@ -31,8 +31,6 @@ class ResultAverageProcess{
         $term = $schooldata->term;
         $schoolsession = $schooldata->schoolsession;
 
-        DB::beginTransaction();
-
         try {
             $checkaverage = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->get();
     
@@ -135,13 +133,11 @@ class ResultAverageProcess{
                 
                 }
             }
-
-            DB::commit();
         
             return "success";
         } catch (\Throwable $th) {
             //throw $th;
-            DB::rollback();
+
             return $th;
         }
 
