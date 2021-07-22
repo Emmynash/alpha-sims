@@ -202,7 +202,6 @@ class ResultController_sec extends Controller
     public function viewSingleResult(Request $request)
     {
 
-
         $validatedData = $request->validate([
             'classid' => 'required',
             'term' => 'required',
