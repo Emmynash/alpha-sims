@@ -76,32 +76,21 @@ class PaymentDetailsController extends Controller
 
         //check if fee invoice has been generated....
 
-
-
         //generate invoice for fee payment
 
         try {
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
-
-
             $paymentDetailsCheck = PaymentDetails::where('schoolid', Auth::user()->schoolid)->get();
-
 
             if ($paymentDetailsCheck->count() < 1) {
                 return back()->with('error', 'Please contact the school admin');
             }
 
 
-
-
             if ($schoolDetails->schooltype == "Primary") {
                 
-    
-    
                 $getId = $schoolDetails->shoolinitial.time().Auth::user()->id;
-    
                 $studentDetails = Addstudent::where('usernamesystem', Auth::user()->id)->first();
-        
                 $checkFeeInvoiceExist = FeesInvoice::where(['system_id'=>Auth::user()->id, 'session'=>$schoolDetails->schoolsession])->first();
         
                 $invoice_student = "";
@@ -205,8 +194,6 @@ class PaymentDetailsController extends Controller
         
                 //add items for invoice generated above...
         
-                
-        
                $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
                                     ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
                                     ->select('amount_tables.*', 'payment_categories.categoryname')->get();
@@ -242,6 +229,8 @@ class PaymentDetailsController extends Controller
                 return redirect($redirectUrl);
     
             }
+
+
         } catch (\Throwable $th) {
             //throw $th;
 

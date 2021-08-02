@@ -24,6 +24,7 @@ use App\FeesInvoiceItems;
 use App\PaymentRecord;
 use App\StudentDiscount;
 use App\Repository\Fees\FeePayment;
+use App\Services\PaymentService;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -276,13 +277,20 @@ class AccountController extends Controller
         }
     }
 
-    public function feesPartPayment(FeePayment $feePayment, Request $request)
+    public function feesPartPayment(FeePayment $feePayment, Request $request, PaymentService $paymentService)
     {
+
+        return $request;
 
         try {
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
             $studentDetails = Addstudent_sec::find($request->regno);
 
+            if ($request->amount < 1) {
+
+                return response()->json(['data'=>'over charge']);
+
+            }
 
             //check if school fees has been paid in full
 
@@ -295,6 +303,8 @@ class AccountController extends Controller
             //add payment record 
 
             $addPaymentRecord = $feePayment->addPaymentRecord($request);
+
+            $paymentServiceRes = $feePayment->generateInvoice($request, $request->regno);
 
             if ($addPaymentRecord == "payment done") {
                 return response()->json(['data'=>'payment done']);

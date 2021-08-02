@@ -104,13 +104,8 @@
         </div>
         <!-- /.row -->
 
-
         </div>
 
-
-
-
-  
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->

@@ -59,10 +59,11 @@ class Addsubject_sec extends Model
                 return $getPoints[$i]['point'];
             }
         }
+    }
 
-
-
-     
+    public function getSubjectList($regno)
+    {
+        return $getSubjects = Addsubject_sec::all();
     }
 
 }

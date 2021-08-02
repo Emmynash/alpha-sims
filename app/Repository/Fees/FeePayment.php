@@ -273,4 +273,72 @@ class FeePayment{
         $addPaymentRecord->save();
     }
 
+    public function generateInvoice(Request $request, $userid)
+    {
+
+        try {
+
+            $schoolDetails = Addpost::find(Auth::user()->schoolid);
+            $getId = $schoolDetails->shoolinitial.time().$userid;
+            $studentDetails = Addstudent_sec::where('usernamesystem', $userid)->first();
+            $checkFeeInvoiceExist = FeesInvoice::where(['system_id'=>$userid, 'session'=>$schoolDetails->schoolsession])->first();
+    
+            $invoice_student = "";
+            
+            if ($checkFeeInvoiceExist == null) {
+    
+                $generateInvoice = new FeesInvoice();
+                $generateInvoice->schoolid = Auth::user()->schoolid;
+                $generateInvoice->invoice_number = $getId;
+                $generateInvoice->amount = $request->amount;
+                $generateInvoice->system_id = $userid;
+                $generateInvoice->session = $schoolDetails->schoolsession;
+                $generateInvoice->term = $schoolDetails->term;
+                $generateInvoice->status = 0;
+                $generateInvoice->classid = $studentDetails->classid;
+                $generateInvoice->save();
+    
+                $invoice_student = $generateInvoice->id;
+    
+            }else{
+    
+                $invoice_student = $checkFeeInvoiceExist->id;
+    
+            }
+    
+            //add items for invoice generated above...
+            
+            $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+                            ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
+                            ->select('amount_tables.*', 'payment_categories.categoryname')->get();
+    
+            for ($i=0; $i < $schoolData->count(); $i++) { 
+    
+                $checkIfItemAdded = FeesInvoiceItems::where(['session'=>$schoolDetails->schoolsession, 'term' => $schoolDetails->term, 'category_name' => $schoolData[$i]['categoryname']])->get();
+    
+                if ($checkIfItemAdded->count()< 1) {
+                    $addInvoiceItems = new FeesInvoiceItems();
+                    $addInvoiceItems->school_id = Auth::user()->schoolid;
+                    $addInvoiceItems->session = $schoolDetails->schoolsession;
+                    $addInvoiceItems->system_id = $userid;
+                    $addInvoiceItems->category_name = $schoolData[$i]['categoryname'];
+                    $addInvoiceItems->term = $schoolDetails->term;
+                    $addInvoiceItems->amount = $schoolData[$i]['amount'];
+                    $addInvoiceItems->invoice_id = $invoice_student;
+                    $addInvoiceItems->save();
+                }
+    
+            }
+
+            return "success";
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            return "error";
+        }
+    
+    }
+
 }

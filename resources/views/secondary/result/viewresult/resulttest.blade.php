@@ -113,8 +113,8 @@
                         <div style="margin:0 auto;">
 
                             <div style="width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                                <i style="font-size: 30px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">School Name Name School Name</i>
-                                <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">School Name Name School Name</i>
+                                <i style="font-size: 30px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{ $addschool->schoolname }}</i>
+                                <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schooladdress}}, {{$addschool->mobilenumber}}</i>
                                 <i style="font-size: 15px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;"></i>
                                 <div>
                                     <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Junior Secondary School Termly Report</i>
@@ -128,45 +128,67 @@
             </div>
             
             <br>
-
+            
             <div class="container-fluid">
                 <div class="row">
 
                     <div class="col-md-6">
                         <div style="width: 95%; margin:0 auto;">
                             <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
-                                Name of Student: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                                Name of Student: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $item->getStudentName->firstname }} {{ $item->getStudentName->middlename }} {{ $item->getStudentName->lastname }}</i>
                             </div>
                             <div style="height: 7px;"></div>
                             <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
-                                Class: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                                Class: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $item->getClassName->classname }} {{ $item->getSectionName->sectionname }}</i>
                             </div>
                             <div style="height: 7px;"></div>
                             <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
-                                Next Term Resumes: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                                Next Term Resumes: <i style="font-style: normal;" id="honourorpricesremarkmain">
+                                                        @if ($term == 1)
+                                                        <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermstarts }}</i> 
+                                                        @elseif ($term == 2)
+                                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermstarts }}</i>
+                                                        @elseif ($term == 3)
+                                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
+                                                        @else
+                                                            <i style="font-style: normal; font-weight: bold;">NAN</i>
+                                                        @endif
+                                                   </i>
                             </div>
                             <div style="height: 7px;"></div>
                             <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
-                                Sex: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                                Sex: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $item->gender }}</i>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div style="width: 95%; margin:0 auto;">
                             <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
-                                Term: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                                Term: <i style="font-style: normal;" id="honourorpricesremarkmain">
+
+                                            @if ($term == 1)
+                                                <i style="font-style: normal;">First</i> 
+                                            @elseif ($term == 2)
+                                                <i style="font-style: normal;">Second</i>
+                                            @elseif ($term == 3)
+                                                <i style="font-style: normal;">Third</i>
+                                            @else
+                                                <i style="font-style: normal;">NAN</i>
+                                            @endif
+                                
+                                      </i>
                             </div>
                             <div style="height: 7px;"></div>
                             <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
-                                Admission No: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                                Admission No: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $item->admission_no }}</i>
                             </div>
                             <div style="height: 7px;"></div>
                             <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
-                                Position: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                                Position: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $addschool->getResultAverage($item->id, $classid, $term, $schoolsession) == NULL ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->position }} No. in Class {{ $item->getClassCount($item->classid, $item->schoolsession, $item->studentsection)->count() }}</i>
                             </div>
                             <div style="height: 7px;"></div>
                             <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
-                                Session: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                                Session: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $schoolsession }}</i>
                             </div>
                         </div>
                     </div>
@@ -190,7 +212,7 @@
                         <tr>
                             <th style="font-size: 12px; width: 100px;">SUBJECTS</th>
                            
-                                <th class="text-center  thdesign"><i class="rotated" class="text-center" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Class Assignment</p></th>
+                                {{-- <th class="text-center  thdesign"><i class="rotated" class="text-center" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Class Assignment</p></th> --}}
                             
                             <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">First CA</i></th>
                             <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Second CA</i></th>
@@ -215,361 +237,38 @@
                         </tr>
                     </thead>
                     <tbody id="resultprinttable">
-                
+
+                        @foreach ($addschool->getSubjectList($item->id, $schoolsession, $classid, $section, $term) as $subjects)
 
                         <tr style='font-size: 12px; width: 150px;'>
-                            <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                            <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
+                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $subjects->subjectname }}</center></td>
+                            @if ($addschool->caset == 1)
+                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $subjects->getSubjectMark($item->id, $subjects->id, $schoolsession)->ca3 }}</center></td>
+                            @endif
+                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->ca2 }}</center></td>
+                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->ca1 }}</center></td>
+                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->exams }}</center></td>
+                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->totalmarks }}</center></td>
                             {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                            <td class='text-center thdesign' style='font-size: 10px;'><center></td>
+                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getClassAverageMarkSubject($subjects->id, $term, $schoolsession) == NULL ? "0":round($addschool->getClassAverageMarkSubject($subjects->id, $term, $schoolsession)->average, 1) }}</center></td>
+                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->position }}</center></td>
+                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->grades }}</center></td>
+                            <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getTeacherName($subjects->id) }}</td>
                             <td class='text-center thdesign'>
                                 <table style="width: 100%; margin: 0 auto;">
-                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
+                                    <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id)->totalmarks }}</i></th>
+                                    <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id)->totalmarks }}</i></th>
+                                    <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 3, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 3, $item->id)->totalmarks }}</i></th>
+                                    <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getAverageScore($subjects->id, $schoolsession, $item->id) == NULL ? "0":round($addschool->getAverageScore($subjects->id, $schoolsession, $item->id)) }}</i></th>
+                                    <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;"></i></th>
                                 </table>
                             </td>
                         <tr>
-                            <tr style='font-size: 12px; width: 150px;'>
-                                <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                <td class='text-center thdesign'>
-                                    <table style="width: 100%; margin: 0 auto;">
-                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                    </table>
-                                </td>
-                            <tr>
-                                <tr style='font-size: 12px; width: 150px;'>
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                    {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                    <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                    <td class='text-center thdesign'>
-                                        <table style="width: 100%; margin: 0 auto;">
-                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                        </table>
-                                    </td>
-                                <tr>
-                                    <tr style='font-size: 12px; width: 150px;'>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                        {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                        <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                        <td class='text-center thdesign'>
-                                            <table style="width: 100%; margin: 0 auto;">
-                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                            </table>
-                                        </td>
-                                    <tr>
-                                        <tr style='font-size: 12px; width: 150px;'>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                            {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                            <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                            <td class='text-center thdesign'>
-                                                <table style="width: 100%; margin: 0 auto;">
-                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                </table>
-                                            </td>
-                                        <tr>
-                                            <tr style='font-size: 12px; width: 150px;'>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                <td class='text-center thdesign'>
-                                                    <table style="width: 100%; margin: 0 auto;">
-                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                    </table>
-                                                </td>
-                                            <tr>
-                                                <tr style='font-size: 12px; width: 150px;'>
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                    {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                    <td class='text-center thdesign'>
-                                                        <table style="width: 100%; margin: 0 auto;">
-                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                        </table>
-                                                    </td>
-                                                <tr>
-                                                    <tr style='font-size: 12px; width: 150px;'>
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                        {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                        <td class='text-center thdesign'>
-                                                            <table style="width: 100%; margin: 0 auto;">
-                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                            </table>
-                                                        </td>
-                                                    <tr>
-                                                        <tr style='font-size: 12px; width: 150px;'>
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                            {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                            <td class='text-center thdesign'>
-                                                                <table style="width: 100%; margin: 0 auto;">
-                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                </table>
-                                                            </td>
-                                                        <tr>
-                                                            <tr style='font-size: 12px; width: 150px;'>
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                                <td class='text-center thdesign'>
-                                                                    <table style="width: 100%; margin: 0 auto;">
-                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                    </table>
-                                                                </td>
-                                                            <tr>
-                                                                <tr style='font-size: 12px; width: 150px;'>
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                    {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                                    <td class='text-center thdesign'>
-                                                                        <table style="width: 100%; margin: 0 auto;">
-                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                        </table>
-                                                                    </td>
-                                                                <tr>
-                                                                    <tr style='font-size: 12px; width: 150px;'>
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                        {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                        <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                                        <td class='text-center thdesign'>
-                                                                            <table style="width: 100%; margin: 0 auto;">
-                                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                            </table>
-                                                                        </td>
-                                                                    <tr>
-                                                                        <tr style='font-size: 12px; width: 150px;'>
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                            {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                                            <td class='text-center thdesign'>
-                                                                                <table style="width: 100%; margin: 0 auto;">
-                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                </table>
-                                                                            </td>
-                                                                        <tr>
-                                                                            <tr style='font-size: 12px; width: 150px;'>
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                                                <td class='text-center thdesign'>
-                                                                                    <table style="width: 100%; margin: 0 auto;">
-                                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                        <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                    </table>
-                                                                                </td>
-                                                                            <tr>
-                                                                                <tr style='font-size: 12px; width: 150px;'>
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                    {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                    <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                                                    <td class='text-center thdesign'>
-                                                                                        <table style="width: 100%; margin: 0 auto;">
-                                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                            <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                <tr>
-                                                                                    <tr>
-                                                                                        <tr style='font-size: 12px; width: 150px;'>
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center>English Language</center></td>
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center>10</center></td>
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                            {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></center></td>
-                                                                                            <td class='text-center thdesign' style='font-size: 10px;'><center></td>
-                                                                                            <td class='text-center thdesign'>
-                                                                                                <table style="width: 100%; margin: 0 auto;">
-                                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                                    <th><i class="text-center" style="margin: 0px; font-style: normal; font-weight: normal;">12</i></th>
-                                                                                                </table>
-                                                                                            </td>
-                                                                                        <tr>
+                            
+                        @endforeach
+                
+
+
 
                         
                     </tbody>
@@ -578,18 +277,17 @@
             <br>
             
             <div style="container-fluid">
-                <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 13px;">Exam Total: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal; font-size: 13px;"></i></i>
-                <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 13px;">Student Average: </i>
-                <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 13px;">Final Grade: </i>
+                <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 13px;">Exam Total: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal; font-size: 13px;">{{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->sumofmarks, 2) }}</i></i>
+                <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 13px;">Student Average: {{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, 2) }}</i>
+                <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 13px;">Final Grade: {{ $addschool->getGrade(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, $classtype) }}</i>
             </div>
             
             <center><div class="text-center" style="width: 95%; margin: 10px auto;">
-                {{-- @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
-                    @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
-                        <i style="font-size: 10px; font-style: normal;">{{ $item->gpaname }} = ({{ $item->marksfrom }}-{{ $item->marksto }})</i>
+                @if ($addschool->getGradeDetails($addschool->id, $classtype)->count() > 0)
+                    @foreach ($addschool->getGradeDetails($addschool->id, $classtype) as $itemgrade)
+                        <i style="font-size: 10px; font-style: normal;">{{ $itemgrade->gpaname }} = ({{ $itemgrade->marksfrom }}-{{ $itemgrade->marksto }})</i>
                     @endforeach
-                @endif --}}
-                jhjhjhjjhj
+                @endif
             </div></center>
             
             <div class="container-fluid">
@@ -615,10 +313,10 @@
 
                                     @if ($motolistbeha->count() > 0)
 
-                                        @foreach ($motolistbeha as $item)
+                                        @foreach ($motolistbeha as $itemmoto)
                                             <tr>
-                                                <td class="thdesign1"><i style="padding-left: 10px; font-style: normal;">{{ $item->name }}</i></td>
-                                                <td id="punctuation" class="thdesign1"></td>
+                                                <td class="thdesign1"><i style="padding-left: 10px; font-style: normal;">{{ $itemmoto->name }}</i></td>
+                                                <td id="punctuation" class="thdesign1">{{ $itemmoto->getmotoscore($itemmoto->id, $item->id, $schoolsession, $term) }}</td>
                                             </tr>
                                         @endforeach
                                         
@@ -640,10 +338,10 @@
 
                                     @if ($motolistskills->count() > 0)
 
-                                        @foreach ($motolistskills as $item)
+                                        @foreach ($motolistskills as $itemskills)
                                             <tr>
-                                                <td class="thdesign1">{{ $item->name }}</td>
-                                                <td id="punctuation" class="thdesign1"></td>
+                                                <td class="thdesign1">{{ $itemskills->name }}</td>
+                                                <td id="punctuation" class="thdesign1">{{ $itemskills->getmotoscore($itemskills->id, $item->id, $schoolsession, $term) }}</td>
                                             </tr>
                                         @endforeach
                                         
@@ -677,43 +375,43 @@
                 <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
                     Principal's Comments: 
                     <i style="font-style: normal;" id="honourorpricesremarkmain">
-                    {{-- @if ($resultAverage != NULL)
+                    @if ($addschool->getResultAverage($item->id, $classid, $term, $schoolsession) != NULL)
     
-                        @if ($resultAverage->average >= 90 && $resultAverage->average <= 100)
+                        @if ($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 90 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 100)
                             An Outstanding performance. Keep it up.
-                        @elseif($resultAverage->average >= 80 && $resultAverage->average <= 89.9)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 80 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 89.9)
                             An excellent performance. Keep it up.
     
-                        @elseif($resultAverage->average >= 75 && $resultAverage->average <= 79.9)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 75 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 79.9)
                             A very good performance. Keep it up.
     
-                        @elseif($resultAverage->average >= 70 && $resultAverage->average <= 74.9)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 70 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 74.9)
                             A good performance but can still do better
     
-                        @elseif($resultAverage->average >= 65 && $resultAverage->average <= 69.9)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 65 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 69.9)
                             A good performance but can still do better
     
-                        @elseif($resultAverage->average >= 60 && $resultAverage->average <= 64.5)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 60 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 64.5)
                             Fairly good performance but can still do better
     
-                        @elseif($resultAverage->average >= 55 && $resultAverage->average <= 59.9)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 55 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 59.9)
                             A fair performance. Needs to pay more attention to studies.
     
-                        @elseif($resultAverage->average >= 50 && $resultAverage->average <= 54.9)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 50 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 54.9)
                             An average performance. Needs to pay more attention to studies.
     
-                        @elseif($resultAverage->average >= 45 && $resultAverage->average <= 49.9)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 45 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 49.9)
                             An average performance. Needs to pay more attention to studies.
     
-                        @elseif($resultAverage->average >= 40 && $resultAverage->average <= 44.9)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average >= 40 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average <= 44.9)
                             A poor performance. Please sit up.
     
-                        @elseif($resultAverage->average/$subjects->count() >= 0 && $resultAverage->average/$subjects->count() <= 39.9)
+                        @elseif($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average/$addschool->getSubjectList($item->id, $schoolsession, $classid, $section, $term)->count() >= 0 && $addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average/$addschool->getSubjectList($item->id, $schoolsession, $classid, $section, $term)->count() <= 39.9)
                             A very poor performance. Please sit up.
                         @endif
     
                         
-                    @endif --}}
+                    @endif
                     
                     </i>
                 </div>

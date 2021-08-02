@@ -228,8 +228,6 @@ function FeesCollection() {
             setTotalAmount(response.data.totalfees)
             setPaymentRecord(response.data.paymentRecord)
             // setSingleStudent(true)
- 
-
 
         }).catch(e=>{
             console.log(e)
@@ -421,6 +419,12 @@ function FeesCollection() {
                                                     <button type="button" onClick={()=>addStudentDiscount(studentDetails.id, studentDetails.usernamesystem)} className="btn btn-sm btn-warning">Add Discount Amount</button>
                                                 </div>
                                             </div>
+                                            <div className="col-12 col-md-8">
+                                                <label>Fee Bulk Payment</label>
+                                                <div className="orm-group">
+                                                    <button className="btn btn-sm btn-info" data-toggle="modal" data-target="#bulkpayment">Make Bulk Payment</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                </div>
@@ -478,8 +482,6 @@ function FeesCollection() {
                         <button className="btn btn-sm btn-warning" data-toggle="modal" data-target="#partpayment">Part Payment</button>
                     </div>
 
-
-
                     <div className="modal fade" id="partpayment" data-backdrop="false">
                         <div className="modal-dialog">
                             <div className="modal-content">
@@ -502,6 +504,54 @@ function FeesCollection() {
                             </div>
                         </div>
                     </div>
+
+                    {/* bulk payment */}
+
+                    <div className="modal fade" id="bulkpayment" data-backdrop="false">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                            <div className="modal-header">
+                                <h4 className="modal-title">Bulk Payment</h4>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <div className="row">
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <i style={{ fontSize:'16px', fontWeight:'bold', fontStyle:'normal' }}>Termly Amount: N(N{totalfees - (discountRecord != null ? (totalfees * (discountRecord.percent/100)):0)})</i>
+                                        </div>
+                                        <div className="form-check">
+                                            <label className="form-check-label">
+                                            <input className="form-check-input" type="checkbox"/> First Term
+                                            </label>
+                                        </div>
+                                        <div className="form-check">
+                                            <label className="form-check-label">
+                                            <input className="form-check-input" type="checkbox"/> Second Term
+                                            </label>
+                                        </div>
+                                        <div className="form-check">
+                                            <label className="form-check-label">
+                                            <input className="form-check-input" type="checkbox"/> Third Term
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-md-6">
+                                        <i style={{ fontSize:'16px', fontWeight:'bold', fontStyle:'normal' }}>Total Amount: N0</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="modal-footer justify-content-between">
+                                <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <button onClick={()=>partPayment(studentDetails.id)} type="button" className="btn btn-info btn-sm">Confirm</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
 
 

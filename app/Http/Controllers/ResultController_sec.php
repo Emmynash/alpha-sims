@@ -276,7 +276,7 @@ class ResultController_sec extends Controller
                 
                 // return $pdf->stream();
 
-                // $studentInClass = Addstudent_sec::where('classid', 11)->get();
+                // $studentInClass = Addstudent_sec::where('classid', 30)->get();
 
                 // return view('secondary.result.viewresult.resulttest', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool'));
 
@@ -497,10 +497,31 @@ class ResultController_sec extends Controller
     public function printEntrireClassResult(Request $request)
     {
 
+        // return $request;
+
+        $classid = $request->input('classid');
+        $term = $request->input('term');
+        $regNo = $request->input('student_reg_no');
+        $schoolsession = $request->input('session');
+        $section = $request->input('section');
+
+        $addschool = Addpost::find(Auth::user()->schoolid);
+
+        $classtype = Classlist_sec::find($classid)->classtype;
+
         //get studentlist for same class and section
         $studentList = Addstudent_sec::where(['classid'=>$request->classid, 'studentsection'=>$request->section, 'schoolsession'=>$request->session])->pluck('id')->toArray();
 
-        return $studentList;
+        // return $studentList;
+        $studentInClass = Addstudent_sec::where(['classid'=> $classid, 'studentsection'=>$section])->get();
+
+        $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+
+        $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
+
+        $resultAverage = ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();
+
+        return view('secondary.result.viewresult.resulttest', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool', 'term', 'schoolsession', 'classid', 'section', 'classtype'));
     }
 
 
