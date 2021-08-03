@@ -390,6 +390,7 @@
 
   <script>
       function scrollocation(){
+        document.getElementById('accountscroll').className = "nav-link active"
         document.getElementById('feesetup').className = "nav-link active"
       }
   </script>

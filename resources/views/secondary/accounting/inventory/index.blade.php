@@ -456,6 +456,7 @@
     });
 
     function scrollocation(){
+        document.getElementById('accountscroll').className = "nav-link active"
         document.getElementById('inventory').className = "nav-link active"
     }
 

@@ -226,6 +226,7 @@
 
   <script>
       function scrollocation(){
+        document.getElementById('accountscroll').className = "nav-link active"
         document.getElementById('summarylistscroll').className = "nav-link active"
       }
   </script>

@@ -47,5 +47,12 @@
     </div>
 
     <script src="{{ asset('js/app_discount.js') }}"></script>
+
+    <script>
+        function scrollocation(){
+          document.getElementById('accountscroll').className = "nav-link active"
+          document.getElementById('studentdiscountlistscroll').className = "nav-link active"
+        }
+    </script>
     
 @endsection

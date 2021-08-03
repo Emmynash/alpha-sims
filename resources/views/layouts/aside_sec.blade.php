@@ -46,18 +46,114 @@
 
           {{-- //account department --}}
 
-          @can('view account summary')
-            <li class="nav-item has-treeview">
-              <a id="summarylistscroll" href="{{ route('summary') }}" class="nav-link">
-                <i class="fas fa-coins nav-icon"></i>
-                <p>
-                  Summary
-                </p>
-              </a>
-            </li>
-          @endcan
+          
 
-          @can('fee management')
+
+
+
+
+          <li class="nav-item has-treeview">
+            <a id="accountscroll" href="#" class="nav-link">
+                <i class="fas fa-file-invoice-dollar nav-icon"></i>
+              <p>
+                Accounts
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              @can('view account summary')
+              <li class="nav-item">
+                <a id="summarylistscroll" href="{{ route('summary') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Summary
+                  </p>
+                </a>
+              </li>
+              @endcan
+
+              @can('fee management')
+              <li class="nav-item">
+                <a id="feesetup" href="{{ route('index_fees') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Fees Management
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a id="studentdiscountlistscroll" href="{{ route('student_dicount') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Student Discount
+                  </p>
+                </a>
+              </li>
+              @endcan
+              
+              @can('invoice management')
+              <li class="nav-item">
+                <a id="invoicelistscroll" href="{{ route('invoices') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Invoice Management
+                  </p>
+                </a>
+              </li>
+              @endcan
+
+              @can('can send or receive request')
+              <li class="nav-item">
+                <a id="requestlistscroll" href="{{ route('order_request') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Requests
+                  </p>
+                </a>
+              </li>
+              @endcan
+
+              @can('fee collection')
+              <li class="nav-item">
+                <a id="feecollection" href="{{ route('feecollection') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Fee Collection
+                  </p>
+                </a>
+              </li>
+              @endcan
+
+              @can('access inventory')
+              <li class="nav-item">
+                <a id="inventory" href="{{ route('inventory') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Inventory
+                  </p>
+                </a>
+              </li>
+              @endcan
+              
+              {{-- <li class="nav-item">
+                <a id="studentsmainview" href="/viewstudentbyclass" class="nav-link">
+                    <i class="fas fa-clipboard-list nav-icon"></i>
+                  <p>Student List</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a id="studentsmainview" href="{{ route('reasign_class') }}" class="nav-link">
+                    <i class="fas fa-clipboard-list nav-icon"></i>
+                  <p>Reasign Class</p>
+                </a>
+              </li> --}}
+            </ul>
+          </li>
+            
+
+
+
+          {{-- @can('fee management')
             <li class="nav-item">
               <a id="feesetup" href="{{ route('index_fees') }}" class="nav-link">
                   <i class="fas fa-money-check nav-icon"></i>
@@ -66,6 +162,7 @@
                 </p>
               </a>
             </li>
+
             <li class="nav-item">
               <a id="feesetup" href="{{ route('student_dicount') }}" class="nav-link">
                   <i class="fas fa-user-graduate nav-icon"></i>
@@ -74,9 +171,9 @@
                 </p>
               </a>
             </li>
-          @endcan
+          @endcan --}}
 
-          @can('invoice management')
+          {{-- @can('invoice management')
             <li class="nav-item has-treeview">
               <a id="invoicelistscroll" href="{{ route('invoices') }}" class="nav-link">
                 <i class="fas fa-file-invoice nav-icon"></i>
@@ -85,9 +182,9 @@
                 </p>
               </a>
             </li>
-          @endcan
+          @endcan --}}
 
-          @can('can send or receive request')
+          {{-- @can('can send or receive request')
             <li class="nav-item has-treeview">
               <a id="requestlistscroll" href="{{ route('order_request') }}" class="nav-link">
                 <i class="fas fa-th-list nav-icon"></i>
@@ -96,7 +193,7 @@
                 </p>
               </a>
             </li>
-          @endcan
+          @endcan --}}
 
           {{-- @can('view payment record')
             <li class="nav-item has-treeview">
@@ -109,7 +206,7 @@
             </li>
           @endcan --}}
 
-          @can('fee collection')
+          {{-- @can('fee collection')
             <li class="nav-item has-treeview">
               <a id="feecollection" href="{{ route('feecollection') }}" class="nav-link">
                 <i class="fas fa-hand-holding-usd nav-icon"></i>
@@ -118,9 +215,9 @@
                 </p>
               </a>
             </li>
-          @endcan
+          @endcan --}}
 
-          @can('access inventory')
+          {{-- @can('access inventory')
             <li class="nav-item has-treeview">
               <a id="inventory" href="{{ route('inventory') }}" class="nav-link">
                 <i class="fas fa-dolly-flatbed nav-icon"></i>
@@ -129,7 +226,7 @@
                 </p>
               </a>
             </li>
-          @endcan
+          @endcan --}}
 
           @can('view edit class')
             <li class="nav-item">
