@@ -29,7 +29,7 @@ function SchoolSetUp() {
     const [ca3check, setca3check] = useState(Boolean)
     const [isupdatingca3, setisupdatingca3] = useState(false)
     const [selectedclassid, setSelectedClassId] = useState('')
-    const [selectedclassname, setSelectedClassName] = useState('')
+    const [selectedclassListType, setSelectedClassListType] = useState(0)
     const alert = useAlert()
 
     const [sessiondata, setsessiondata] = useState({
@@ -210,6 +210,10 @@ function SchoolSetUp() {
         
     }
 
+    function handleClasslistSelect(evt) {
+        setSelectedClassListType(evt.target.value)
+    }
+
     function updateSchoolInitials() {
 
 
@@ -312,6 +316,33 @@ function SchoolSetUp() {
     
             })
     
+    }
+
+    function addSchoolClassListPri() {
+
+        if (selectedclassListType == 0) {
+            myalert('Select a ClassList Style', 'error');
+        }else{
+            const data = new FormData()
+            data.append("classListType", selectedclassListType),
+            axios.post("/sec/setting/addclasses_sec", data, {
+                headers:{
+                    "Content-type": "application/json"
+                }
+            }).then(response=>{
+                console.log(response)
+                fetchSchoolDetails()
+                setClassnamesch('')
+                myalert('Process Successful', 'success');
+                
+            }).catch(e=>{
+                console.log(e)
+
+            })
+        }
+
+        
+
     }
 
 
@@ -604,7 +635,7 @@ function SchoolSetUp() {
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-6">
                         <div className="alert alert-warning">
-                            <i style={{ fontSize:'13px' }}>Classes school be entered in ascending order(From the lowest to highest)</i>
+                            <i style={{ fontSize:'13px' }}>Select an option based on your class list style</i>
                         </div>
                         {/* <div className="form-group">
                             <select className="form-control-sm form-control" onChange={(e)=>handleChangeClassType(e)}>
@@ -616,7 +647,27 @@ function SchoolSetUp() {
                         {/* <div className="form-group">
                             <input onChange={(e)=>handleChangeClassName(e)} value={classnamesch} className="form-control form-control-sm" placeholder="Enter Class name in ascending Order"/>
                         </div> */}
-                        <button onClick={addSchoolClassList} className="btn btn-sm btn-info badge">Generate Classes</button>
+
+                        {
+                            schooldetails.schooltype == "Primary" ? 
+                            
+                            <div>
+                                <div className="form-group">
+                                    <select className="form-control form-control-sm" onChange={(e)=>handleClasslistSelect(e)}>
+                                        <option value="0" >Select a classlist Style</option>
+                                        <option value="1" >Conventional Style (e.g. Primary 1)</option>
+                                        <option value="2" >K Style (e.g. Grade 1)</option>
+                                    </select>
+                                </div>
+                                <button onClick={addSchoolClassListPri} className="btn btn-sm btn-info badge">Generate Classes</button>
+                            </div>
+
+                            :
+                            <button onClick={addSchoolClassList} className="btn btn-sm btn-info badge">Generate Classes</button>
+                        }
+
+
+                        
                         <br/>
 
                         {
@@ -756,7 +807,7 @@ function SchoolSetUp() {
                         </button>
                     </div>
                     <div className="modal-body">
-                        <p>You are about to disable {selectedclassname}, click proceed to continue </p>
+                        {/* <p>You are about to disable {selectedclassname}, click proceed to continue </p> */}
                     </div>
                     <div className="modal-footer justify-content-between">
                         <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>

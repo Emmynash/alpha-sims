@@ -160,10 +160,19 @@ class SchoolsetupSecController extends Controller
             return back()->with('success', 'process was successfull');
         }else{
 
-            
+            $classlistType = $request->classListType;
 
-            $classlist = array("Creche", "Playclass", "Primary 1", "Primary 2", "Primary 3", "Primary 4", "Primary 5", "Primary 5");
+            if ($classlistType == 1) {
+                $classlist = array("Creche", "Playclass", "Nursery 1", "Nursery 2", "Primary 1", "Primary 2", "Primary 3", "Primary 4", "Primary 5", "Primary 6");
+            }else{
+                $classlist = array("Reception", "Pre-elementary", "K1", "K2", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Pre-School");
+            }
 
+            $classlistCheck = Classlist_sec::where(['schoolid' => Auth::user()->schoolid])->get();
+
+            if ($classlistCheck->count() > 0) {
+                return back()->with('success', 'process was successfull');
+            }
     
             for ($i=0; $i < count($classlist); $i++) { 
     

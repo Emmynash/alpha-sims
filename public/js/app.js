@@ -69440,10 +69440,10 @@ function SchoolSetUp() {
       selectedclassid = _useState44[0],
       setSelectedClassId = _useState44[1];
 
-  var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+  var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState46 = _slicedToArray(_useState45, 2),
-      selectedclassname = _useState46[0],
-      setSelectedClassName = _useState46[1];
+      selectedclassListType = _useState46[0],
+      setSelectedClassListType = _useState46[1];
 
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
 
@@ -69614,6 +69614,10 @@ function SchoolSetUp() {
     }
   }
 
+  function handleClasslistSelect(evt) {
+    setSelectedClassListType(evt.target.value);
+  }
+
   function updateSchoolInitials() {
     if (schoolinitials != "") {
       if (schooldetails.shoolinitial != schoolinitials) {
@@ -69692,6 +69696,26 @@ function SchoolSetUp() {
     })["catch"](function (e) {
       console.log(e);
     });
+  }
+
+  function addSchoolClassListPri() {
+    if (selectedclassListType == 0) {
+      myalert('Select a ClassList Style', 'error');
+    } else {
+      var data = new FormData();
+      data.append("classListType", selectedclassListType), axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/addclasses_sec", data, {
+        headers: {
+          "Content-type": "application/json"
+        }
+      }).then(function (response) {
+        console.log(response);
+        fetchSchoolDetails();
+        setClassnamesch('');
+        myalert('Process Successful', 'success');
+      })["catch"](function (e) {
+        console.log(e);
+      });
+    }
   }
 
   function addSchoolHouses() {
@@ -70103,7 +70127,23 @@ function SchoolSetUp() {
       style: {
         fontSize: '13px'
       }
-    }, "Classes school be entered in ascending order(From the lowest to highest)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, "Select an option based on your class list style")), schooldetails.schooltype == "Primary" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      className: "form-control form-control-sm",
+      onChange: function onChange(e) {
+        return handleClasslistSelect(e);
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "0"
+    }, "Select a classlist Style"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "1"
+    }, "Conventional Style (e.g. Primary 1)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "2"
+    }, "K Style (e.g. Grade 1)"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: addSchoolClassListPri,
+      className: "btn btn-sm btn-info badge"
+    }, "Generate Classes")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: addSchoolClassList,
       className: "btn btn-sm btn-info badge"
     }, "Generate Classes"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), classlist.length > 0 ? classlist.map(function (d) {
@@ -70329,7 +70369,7 @@ function SchoolSetUp() {
       "aria-hidden": "true"
     }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-body"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "You are about to disable ", selectedclassname, ", click proceed to continue ")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-footer justify-content-between"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       type: "button",
