@@ -11,6 +11,7 @@ use App\AmountTable;
 use App\FeesInvoice;
 use App\FeesInvoiceItems;
 use App\PaymentRecord;
+use App\StudentDiscount;
 use App\TransactionRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,11 +23,11 @@ class FeePayment{
         try {
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
-            $checkTransaction = TransactionRecord::where(['term' => $schoolDetails->term, 'session' =>$schoolDetails->schoolsession, 'school_id'=>Auth::user()->schoolid, 'system_id'=>$request->usernamesystem, 'status'=>'success'])->get();
+            // $checkTransaction = TransactionRecord::where(['term' => $schoolDetails->term, 'session' =>$schoolDetails->schoolsession, 'school_id'=>Auth::user()->schoolid, 'system_id'=>$request->usernamesystem, 'status'=>'success'])->get();
     
-            if ($checkTransaction->count() > 0) {
-                return "paid";
-            }
+            // if ($checkTransaction->count() > 0) {
+            //     return "paid";
+            // }
     
             if ($schoolDetails->schooltype == "Primary") {
     
@@ -86,6 +87,7 @@ class FeePayment{
                 //add money to school wallet
     
                 $this->addAmountToSchoolWallet($request);
+
     
                 $updatePayment = FeesInvoice::where(['schoolid'=>Auth::user()->schoolid, 'session'=>$schoolDetails->schoolsession, 'system_id'=>$request->usernamesystem])->first();
         
@@ -98,6 +100,8 @@ class FeePayment{
                 $request->except(['usernamesystem']);
                 $request['regno'] = $studentDetails->id;
                 $request['total_amount'] = $request->amount;
+
+
                 
                 $this->addPaymentRecord($request);
     
@@ -175,9 +179,11 @@ class FeePayment{
 
 
                 //add payment record
-                $request->except(['usernamesystem']);
+                $request->except(['usernamesystem', 'amount']);
                 $request['regno'] = $studentDetails->id;
                 $request['total_amount'] = $request->amount;
+
+
 
                 $this->addPaymentRecord($request);
     
@@ -253,20 +259,34 @@ class FeePayment{
 
         $paymentRecordsum = PaymentRecord::where(['regno'=> $request->regno, 'term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession, 'schoolid'=>Auth::user()->schoolid])->sum('amount_paid');
 
-        if ($request->total_amount - $paymentRecordsum <= 0) {
+        //check if student has a discount
+        $checkDiscount = StudentDiscount::where('regno', $request->regno)->first();
+
+        $discount = 0;
+
+        if ($checkDiscount == null) {
+            $discount = 0;
+        }else{
+            $percentAllocatedDiscount = $checkDiscount->percent;
+            $percentDiscountCal = $percentAllocatedDiscount/100; //in decimal
+            $discount = $percentDiscountCal*$request->total_amount;
+        }
+
+        if ((($request->total_amount - $discount) - $paymentRecordsum) == 0) {
             return "payment done";
         }
 
-        if ($request->amount > $request->total_amount) {
+        if ($request->amount > ($request->total_amount - $discount)) {
             return "over charge";
         }
+
 
         $addPaymentRecord = new PaymentRecord();
         $addPaymentRecord->regno = $request->regno;
         $addPaymentRecord->admission_no = $studentDetails->admission_no;
         $addPaymentRecord->amount_paid = $request->amount;
-        $addPaymentRecord->amount_rem = $request->total_amount - ($paymentRecordsum + $request->amount);
-        $addPaymentRecord->total_amount = $request->total_amount;
+        $addPaymentRecord->amount_rem = ($request->total_amount - $discount) - ($paymentRecordsum + $request->amount);
+        $addPaymentRecord->total_amount = $request->total_amount - $discount;
         $addPaymentRecord->schoolid = Auth::user()->schoolid; 
         $addPaymentRecord->term = $schoolDetails->term;
         $addPaymentRecord->session = $schoolDetails->schoolsession;

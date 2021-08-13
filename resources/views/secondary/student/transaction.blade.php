@@ -106,87 +106,154 @@
         </div> --}}
 
 
-        <div class="card" style="height: 200px; border-top: 2px solid #0B887C;">
+        
 
-                  <!-- /.row -->
         <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Transactions</h3>
+          <div class="col-md-6 col-12">
+            <div class="card" style="height: 200px; border-top: 2px solid #0B887C;">
 
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+              <!-- /.row -->
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h3 class="card-title">Invoice</h3>
 
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                        <div class="card-tools">
+                          <div class="input-group input-group-sm" style="width: 150px;">
+                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                            <div class="input-group-append">
+                              <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- /.card-header -->
+                      <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Invoice Number</th>
+                              <th>Amount</th>
+                              <th>Term</th>
+                              <th>Session</th>
+                              <th>Class</th>
+                              <th>Status</th>
+                              <th>Date</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @if (count($feeInvoices) > 0)
+                            @php $count = method_exists($feeInvoices, 'links') ? 1 : 0; @endphp
+                              @foreach ($feeInvoices as $item)
+                              @php $count = method_exists($feeInvoices, 'links') ? ($feeInvoices ->currentpage()-1) * $feeInvoices ->perpage() + $loop->index + 1 : $count + 1; @endphp
+                                <tr>
+                                  <td>{{$count}}</td>
+                                  <td>{{ $item->invoice_number }}</td>
+                                  <td>{{ $item->amount }}</td>
+                                  <td>{{ $item->term }}</td>
+                                  <td>{{ $item->session }}</td>
+                                  <td>{{ $item->classname }}</td>
+                                  <td>
+                                      @if ($item->status == 0)
+                                          Pending
+                                      @else
+                                          Completed
+                                      @endif
+                                  </td>
+                                  <td>{{ $item->created_at }}</td>
+                                  <td>
+
+                                    @if ($item->status == 0)
+
+                                    <form action="{{ route('make_payment') }}" id="paymentform{{ $item->id }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="amount" value="{{ $item->amount }}" >
+                                    </form>
+
+                                        <button class="btn btn-sm btn-info" form="paymentform{{ $item->id }}" data-toggle="modal" data-target="#editclassname">Pay Now</button>
+                                    @else
+                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editclassname"><i class="fas fa-check"></i></button>
+                                    @endif
+                                </td>
+                                </tr>
+                              @endforeach
+                            @endif
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
                   </div>
                 </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Invoice Number</th>
-                      <th>Amount</th>
-                      <th>Term</th>
-                      <th>Session</th>
-                      <th>Class</th>
-                      <th>Status</th>
-                      <th>Date</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @if (count($feeInvoices) > 0)
-                    @php $count = method_exists($feeInvoices, 'links') ? 1 : 0; @endphp
-                      @foreach ($feeInvoices as $item)
-                      @php $count = method_exists($feeInvoices, 'links') ? ($feeInvoices ->currentpage()-1) * $feeInvoices ->perpage() + $loop->index + 1 : $count + 1; @endphp
-                        <tr>
-                          <td>{{$count}}</td>
-                          <td>{{ $item->invoice_number }}</td>
-                          <td>{{ $item->amount }}</td>
-                          <td>{{ $item->term }}</td>
-                          <td>{{ $item->session }}</td>
-                          <td>{{ $item->classname }}</td>
-                          <td>
-                              @if ($item->status == 0)
-                                  Pending
-                              @else
-                                  Completed
-                              @endif
-                          </td>
-                          <td>{{ $item->created_at }}</td>
-                          <td>
-
-                            @if ($item->status == 0)
-
-                            <form action="{{ route('make_payment') }}" id="paymentform{{ $item->id }}" method="post">
-                                @csrf
-                                <input type="hidden" name="amount" value="{{ $item->amount }}" >
-                            </form>
-
-                                <button class="btn btn-sm btn-info" form="paymentform{{ $item->id }}" data-toggle="modal" data-target="#editclassname">Pay Now</button>
-                            @else
-                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#editclassname"><i class="fas fa-check"></i></button>
-                            @endif
-                        </td>
-                        </tr>
-                      @endforeach
-                    @endif
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
+                <!-- /.row -->
             </div>
-            <!-- /.card -->
           </div>
-        </div>
-        <!-- /.row -->
+          <div class="col-md-6 col-12">
+            <div class="card" style="height: 200px; border-top: 2px solid #0B887C;">
+
+              <!-- /.row -->
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h3 class="card-title">Payment Record</h3>
+
+                        <div class="card-tools">
+                          <div class="input-group input-group-sm" style="width: 150px;">
+                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                            <div class="input-group-append">
+                              <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- /.card-header -->
+                      <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Trans ID</th>
+                              <th>Amount</th>
+                              <th>AMount Rem</th>
+                              <th>Term</th>
+                              <th>Session</th>
+                              <th>Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @if (count($paymentRecord) > 0)
+                            @php $count = method_exists($paymentRecord, 'links') ? 1 : 0; @endphp
+                              @foreach ($paymentRecord as $item)
+                              @php $count = method_exists($paymentRecord, 'links') ? ($paymentRecord ->currentpage()-1) * $paymentRecord ->perpage() + $loop->index + 1 : $count + 1; @endphp
+                                <tr>
+                                  <td>{{$count}}</td>
+                                  <td>{{ $item->id }}</td>
+                                  <td>₦{{ $item->amount_paid }}</td>
+                                  <td>₦{{ $item->amount_rem }}</td>
+                                  <td>{{ $item->term }}</td>
+                                  <td>{{ $item->session }}</td>
+                                  <td>{{ $item->created_at }}</td>
+                                </tr>
+                              @endforeach
+                            @endif
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                </div>
+                <!-- /.row -->
+            </div>
+          </div>
         </div>
 
 

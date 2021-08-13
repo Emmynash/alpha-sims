@@ -160,9 +160,11 @@ class SchoolsetupSecController extends Controller
             return back()->with('success', 'process was successfull');
         }else{
 
-            $classlist = array("", "JSSS2", "JSSS3", "SSS1", "SSS2", "SSS3");
+            
 
-            $classlisttype = array("1", "1", "1", "2", "2", "2");
+            $classlist = array("Creche", "Playclass", "Primary 1", "Primary 2", "Primary 3", "Primary 4", "Primary 5", "Primary 5");
+
+            $classlisttype = array("1", "1", "1", "1", "1", "1");
     
             for ($i=0; $i < count($classlist); $i++) { 
     
@@ -174,7 +176,7 @@ class SchoolsetupSecController extends Controller
                     $addclasses_sec->schoolid = Auth::user()->schoolid;
                     $addclasses_sec->classname = strtoupper($classlist[$i]);
                     $addclasses_sec->studentcount = 0;
-                    $addclasses_sec->classtype = (int)$classlisttype[$i];
+                    $addclasses_sec->classtype = 1;
                     $addclasses_sec->status = 1;
                     $addclasses_sec->save();
                 }

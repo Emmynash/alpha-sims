@@ -280,7 +280,7 @@ class AccountController extends Controller
     public function feesPartPayment(FeePayment $feePayment, Request $request, PaymentService $paymentService)
     {
 
-        return $request;
+        // return $request;
 
         try {
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
@@ -294,11 +294,11 @@ class AccountController extends Controller
 
             //check if school fees has been paid in full
 
-            $checkTransaction = TransactionRecord::where(['term' => $schoolDetails->term, 'session' =>$schoolDetails->schoolsession, 'school_id'=>Auth::user()->schoolid, 'system_id'=>$studentDetails->usernamesystem, 'status'=>'success'])->get();
+            // $checkTransaction = TransactionRecord::where(['term' => $schoolDetails->term, 'session' =>$schoolDetails->schoolsession, 'school_id'=>Auth::user()->schoolid, 'system_id'=>$studentDetails->usernamesystem, 'status'=>'success'])->get();
     
-            if ($checkTransaction->count() > 0) {
-                return response()->json(['data'=>'payment done']);
-            }
+            // if ($checkTransaction->count() > 0) {
+            //     return response()->json(['data'=>'payment done']);
+            // }
 
             //add payment record 
 

@@ -17,6 +17,7 @@ use App\CLassSubjects;
 use App\ElectiveAdd;
 use App\Electives_sec;
 use App\FeesInvoice;
+use App\PaymentRecord;
 use App\Repository\Registration\RegisterStudents;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -338,6 +339,8 @@ class StudentController_sec extends Controller
                     ->select('fees_invoices.*', 'classlists.classnamee as classname')
                     ->where(['system_id'=>Auth::user()->id])->get();
 
+            
+
             return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails'));
             
         }else{
@@ -347,7 +350,11 @@ class StudentController_sec extends Controller
                     ->select('fees_invoices.*', 'classlist_secs.classname')
                     ->where(['system_id'=>Auth::user()->id])->get();
 
-            return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails'));
+            $getUserRegNo = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+
+            $paymentRecord = PaymentRecord::where(['regno'=>$getUserRegNo->id])->get();
+
+            return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails', 'paymentRecord'));
         }
 
 
