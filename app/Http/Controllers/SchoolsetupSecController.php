@@ -164,7 +164,6 @@ class SchoolsetupSecController extends Controller
 
             $classlist = array("Creche", "Playclass", "Primary 1", "Primary 2", "Primary 3", "Primary 4", "Primary 5", "Primary 5");
 
-            $classlisttype = array("1", "1", "1", "1", "1", "1");
     
             for ($i=0; $i < count($classlist); $i++) { 
     
