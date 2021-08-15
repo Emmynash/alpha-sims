@@ -209,7 +209,7 @@ class StudentController_sec extends Controller
                 // 'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
                 // 'mothersname' => 'required',
                 // 'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                'dateofbirth' => 'required',
+                // 'dateofbirth' => 'required',
                 // 'studenthouse' => 'required',
                 // 'studentclub' => 'required',
                 // 'studentaddress_sec' => 'required',
@@ -219,7 +219,7 @@ class StudentController_sec extends Controller
                 'lastname' => 'required',
                 // 'phonenumber' => 'required',
                 'email' => 'required|email',
-                'states' => 'required',
+                // 'states' => 'required',
                 // 'lga' => 'required',
                 // 'hometown' => 'required',
                 'admissiondate'=>'required'
