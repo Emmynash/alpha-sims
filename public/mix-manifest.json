@@ -16,5 +16,6 @@
     "/js/apppromotion.js": "/js/apppromotion.js",
     "/js/appreasign.js": "/js/appreasign.js",
     "/js/appresult.js": "/js/appresult.js",
-    "/js/appteachers.js": "/js/appteachers.js"
+    "/js/appteachers.js": "/js/appteachers.js",
+    "/js/appviewstudentpri.js": "/js/appviewstudentpri.js"
 }

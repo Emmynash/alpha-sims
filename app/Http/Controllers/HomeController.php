@@ -292,7 +292,7 @@ class HomeController extends Controller
                 
                 if ($user->hasRole('HeadOfSchool')) {
                     
-                    $addstudent = Addstudent::where('schoolid', $id)->get();
+                    $addstudent = Addstudent_sec::where('schoolid', $id)->get();
             
                         $studentDetails = array(
                             'userschool' => $userschool,
