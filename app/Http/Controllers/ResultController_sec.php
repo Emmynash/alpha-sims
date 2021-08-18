@@ -224,13 +224,13 @@ class ResultController_sec extends Controller
             $addschool = Addpost::find(Auth::user()->schoolid);
 
             //get subject list
-            $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$studentdetails->studentsection])->pluck('subjectid')->toArray();
+            $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$studentdetails->studentsection, 'subjecttype'=>2])->pluck('subjectid')->toArray();
             $getStudentElective = ElectiveAdd::where(['regno'=>$regNo, 'classid'=>$classid, 'sectionid'=>$studentdetails->studentsection])->pluck('subjectid')->toArray(); // get all student's elective subjects
 
 
             $subject = array();
 
-            return array_merge($getSubjectList, $getStudentElective);
+
 
             for ($i=0; $i < count(array_merge($getSubjectList, $getStudentElective)); $i++) { 
 
