@@ -230,16 +230,17 @@ class ResultController_sec extends Controller
 
             $subject = array();
 
+            $subjectSum  = array_merge($getSubjectList, $getStudentElective);
 
 
-            for ($i=0; $i < count(array_merge($getSubjectList, $getStudentElective)); $i++) { 
+            for ($i=0; $i < count($subjectSum); $i++) { 
 
-              $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $request->term, 'session'=>$request->session, 'regno'=>$request->student_reg_no])->get();
+              $addmarksCheck = Addmark_sec::where(['subjectid' => $subjectSum[$i], 'term' => $request->term, 'session'=>$request->session, 'regno'=>$request->student_reg_no])->get();
 
                 if (count($addmarksCheck) > 0) {
 
                     if ((int)$addmarksCheck[0]->totalmarks > 0) {
-                        $getSingleSubject = Addsubject_sec::find($getSubjectList[$i]);
+                        $getSingleSubject = Addsubject_sec::find($subjectSum[$i]);
                         array_push($subject, $getSingleSubject);
                     }
                 }

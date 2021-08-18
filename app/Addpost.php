@@ -140,14 +140,16 @@ class Addpost extends Model
 
         $subject = array();
 
-        for ($i=0; $i < count(array_merge($getSubjectList, $getStudentElective)); $i++) { 
+        $subjectSum = array_merge($getSubjectList, $getStudentElective);
 
-          $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $term, 'session'=>$session, 'regno'=>$regno])->get();
+        for ($i=0; $i < count($subjectSum); $i++) { 
+
+          $addmarksCheck = Addmark_sec::where(['subjectid' => $subjectSum[$i], 'term' => $term, 'session'=>$session, 'regno'=>$regno])->get();
 
             // if (count($addmarksCheck) > 0) {
 
             //     if ((int)$addmarksCheck[0]->totalmarks > 0) {
-                    $getSingleSubject = Addsubject_sec::find($getSubjectList[$i]);
+                    $getSingleSubject = Addsubject_sec::find($subjectSum[$i]);
                     array_push($subject, $getSingleSubject);
             //     }
             // }
