@@ -136,10 +136,11 @@ class Addpost extends Model
     public function getSubjectList($regno, $session, $classid, $sectionid, $term)
     {
         $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$sectionid, 'subjecttype'=>2])->pluck('subjectid')->toArray();
+        $getStudentElective = ElectiveAdd::where(['regno'=>$regno, 'classid'=>$classid, 'sectionid'=>$sectionid])->pluck('subjectid')->toArray(); // get all student's elective subjects
 
         $subject = array();
 
-        for ($i=0; $i < count($getSubjectList); $i++) { 
+        for ($i=0; $i < count(array_merge($getSubjectList, $getStudentElective)); $i++) { 
 
           $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $term, 'session'=>$session, 'regno'=>$regno])->get();
 

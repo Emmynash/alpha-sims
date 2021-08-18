@@ -20,6 +20,7 @@ use App\Repository\Result\ResultAverageProcess;
 use App\ResultReadyModel;
 use PDF;
 use App;
+use App\ElectiveAdd;
 use App\User;
 
 class ResultController_sec extends Controller
@@ -224,10 +225,14 @@ class ResultController_sec extends Controller
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$studentdetails->studentsection])->pluck('subjectid')->toArray();
+            $getStudentElective = ElectiveAdd::where(['regno'=>$regNo, 'classid'=>$classid, 'sectionid'=>$studentdetails->studentsection])->pluck('subjectid')->toArray(); // get all student's elective subjects
+
 
             $subject = array();
 
-            for ($i=0; $i < count($getSubjectList); $i++) { 
+            return array_merge($getSubjectList, $getStudentElective);
+
+            for ($i=0; $i < count(array_merge($getSubjectList, $getStudentElective)); $i++) { 
 
               $addmarksCheck = Addmark_sec::where(['subjectid' => $getSubjectList[$i], 'term' => $request->term, 'session'=>$request->session, 'regno'=>$request->student_reg_no])->get();
 
