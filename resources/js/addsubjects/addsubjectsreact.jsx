@@ -22,6 +22,7 @@ const customStyles = {
 
 function AddSubject() {
 
+    const [schooltype, setschooltype] = useState('')
     const [classlist, setClasslist] = useState([])
     const [selectedclass, setselectedclass] = useState('')
     const [subjectName, setSubjectName] = useState('');
@@ -98,12 +99,6 @@ function AddSubject() {
     ];
 
 
-
-
-
-
-
-
     function handleSubjectAddChange(evt) {
         setSubjectData({
             ...addsubjectdata,
@@ -150,6 +145,7 @@ function AddSubject() {
             setca2status(response.data.schoolDetails.ca2)
             setca3status(response.data.schoolDetails.ca3)
             setgetElectivesSettingNumber(response.data.getElectivesSettingNumber)
+            setschooltype(response.data.schoolDetails.schooltype)
 
             if (response.data.subjectScores == null) {
                 setExamsMark(0)
@@ -675,8 +671,19 @@ function AddSubject() {
                                     <div className="form-group">
                                         <select onChange={handleSubjectAddChange} value={addsubjectdata.sectionclasstype} name="sectionclasstype" className="form-control form-control-sm">
                                             <option value="">Select a class</option>
+                                            <option value="0">Primary Section</option>
+                                            {schooltype == "Primary" ? 
+                                            ""
+                                            :
                                             <option value="1">Junior Secondary</option>
+                                            }
+                                            {schooltype == "Primary" ? 
+                                            ""
+                                            :
                                             <option value="2">Senior Secondary</option>
+                                            }
+                                            
+                                            
                                         </select>
                                     </div>
                                 </div>

@@ -1,8 +1,12 @@
-@extends('layouts.app_sec')
+@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@include('layouts.aside_sec')
+@if ($schooldetails->schooltype == "Primary")
+@include('layouts.asideside') 
+@else
+  @include('layouts.aside_sec')
+@endif
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -34,14 +38,23 @@
             @csrf
             <div class="row" style="margin: 10px;">
                 <div class="col-md-6">
-                  <div class="form-group">
-                    <i style="font-size: 10px;">Grade Type</i>
-                    <select name="type" class="form-control form-control-sm" id="">
-                      <option value="">Select a school type</option>
-                      <option value="1">Junior Secondary</option>
-                      <option value="2">Senior Secondary</option>
-                    </select>
-                  </div>
+
+                  {{-- @if ($schooldetails->schooltype == "Secondary") --}}
+                    <div class="form-group">
+                      <i style="font-size: 10px;">Grade Type</i>
+                      <select name="type" class="form-control form-control-sm" id="">
+                        <option value="">Select a school type</option>
+                        <option value="0">Primary School</option>
+                        @if ($schooldetails->schooltype == "Secondary")
+                        <option value="1">Junior Secondary</option>
+                        <option value="2">Senior Secondary</option>
+                        @endif
+
+                      </select>
+                    </div>
+                  {{-- @endif --}}
+
+
                     <div class="form-group">
                         <i style="font-size: 10px;">GPA For</i>
                         <input type="text" class="form-control form-control-sm" id="gpafor" name="gpafor" value="100 Marks">
@@ -60,10 +73,13 @@
                         <i style="font-size: 10px;">Mark To</i>
                         <input type="text" class="form-control form-control-sm" id="marksto" name="marksto" placeholder="40, 50, 60">
                     </div>
-                    <div class="form-group">
-                      <i style="font-size: 10px;">Points(for senior secondary)</i>
-                      <input type="number" class="form-control form-control-sm" id="" name="point" placeholder="e.g 4, 3, 2">
-                  </div>
+                    @if ($schooldetails->schooltype == "Secondary")
+                      <div class="form-group">
+                          <i style="font-size: 10px;">Points(for senior secondary)</i>
+                          <input type="number" class="form-control form-control-sm" id="" name="point" placeholder="e.g 4, 3, 2">
+                      </div>
+                    @endif
+                    
                 </div>
                 <button class="btn btn-info btn-sm">Add</button>
             </div>
@@ -111,7 +127,14 @@
                               <td>{{$grades->marksfrom}}</td>
                               <td>{{$grades->marksto}}</td>
                               <td>{{ $grades->point }}</td>
-                              <td>{{ $grades->type == 1 ? "Junior Sec":"Senior Sec" }}</td>
+                              @if ($grades->type == 1)
+                              <td>Junior Sec</td>
+                              @elseif ($grades->type == 2)
+                              <td>Senior Sec</td>
+                              @else
+                              <td>Primary</td>
+                              @endif
+                              
                               <td><button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>
                           </tr>
                             @endforeach

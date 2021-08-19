@@ -74,8 +74,10 @@ class SchoolsetupSecController extends Controller
         $addgrades = Addgrades_sec::where('schoolid', Auth::user()->schoolid)->get();
 
         // return $addgrades;
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        
 
-        return view('secondary.gradessec')->with('addgrades', $addgrades);
+        return view('secondary.gradessec', compact('schooldetails', 'addgrades'));
     }
 
     public function addSchoolInitials(Request $request){

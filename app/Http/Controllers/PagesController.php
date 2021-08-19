@@ -419,18 +419,17 @@ class PagesController extends Controller
             'type' => 'required'
         ]);
 
-        if ($request->type == "2") {
-            $validatedData = $request->validate([
-                'point' => 'required',
-            ]);
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-            $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>2, 'gpaname'=>$request->grademain])->get();
+        if ($schooldetails->schooltype == "Primary") {
 
+            $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>0, 'gpaname'=>$request->grademain])->get();
+    
             if ($addgrades_sec->count() > 0) {
                 return back()->with('error', 'duplicate entry');
             }
 
-            $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>2, 'marksfrom'=>$request->marksfrom, 'marksto'=>$request->marksto])->get();
+            $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>0, 'marksfrom'=>$request->marksfrom, 'marksto'=>$request->marksto])->get();
 
             if ($addgrades_sec->count() > 0) {
                 return back()->with('error', 'marks range already entered');
@@ -442,36 +441,68 @@ class PagesController extends Controller
             $addmarks->gpaname = $request->input('grademain');
             $addmarks->marksfrom = $request->input('marksfrom');
             $addmarks->marksto = $request->input('marksto');
-            $addmarks->type = $request->type;
+            $addmarks->type = 0;
             $addmarks->point = $request->point;
             $addmarks->save();
-
+            
         }else{
-
-            $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>1, 'gpaname'=>$request->grademain])->get();
-
-            if ($addgrades_sec->count() > 0) {
-                return back()->with('error', 'duplicate entry');
+            if ($request->type == "2") {
+                $validatedData = $request->validate([
+                    'point' => 'required',
+                ]);
+    
+                $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>2, 'gpaname'=>$request->grademain])->get();
+    
+                if ($addgrades_sec->count() > 0) {
+                    return back()->with('error', 'duplicate entry');
+                }
+    
+                $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>2, 'marksfrom'=>$request->marksfrom, 'marksto'=>$request->marksto])->get();
+    
+                if ($addgrades_sec->count() > 0) {
+                    return back()->with('error', 'marks range already entered');
+                }
+    
+                $addmarks = new Addgrades_sec();
+                $addmarks->gpafor = $request->input('gpafor');
+                $addmarks->schoolid = Auth::user()->schoolid;
+                $addmarks->gpaname = $request->input('grademain');
+                $addmarks->marksfrom = $request->input('marksfrom');
+                $addmarks->marksto = $request->input('marksto');
+                $addmarks->type = $request->type;
+                $addmarks->point = $request->point;
+                $addmarks->save();
+    
+            }else{
+    
+                $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>1, 'gpaname'=>$request->grademain])->get();
+    
+                if ($addgrades_sec->count() > 0) {
+                    return back()->with('error', 'duplicate entry');
+                }
+    
+    
+                $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>2, 'marksfrom'=>$request->marksfrom, 'marksto'=>$request->marksto])->get();
+    
+                if ($addgrades_sec->count() > 0) {
+                    return back()->with('error', 'marks range already entered');
+                }
+    
+                $addmarks = new Addgrades_sec();
+                $addmarks->gpafor = $request->input('gpafor');
+                $addmarks->schoolid = Auth::user()->schoolid;
+                $addmarks->gpaname = $request->input('grademain');
+                $addmarks->point = "NA";
+                $addmarks->marksfrom = $request->input('marksfrom');
+                $addmarks->marksto = $request->input('marksto');
+                $addmarks->type = $request->type;
+                $addmarks->save();
+    
             }
-
-
-            $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>2, 'marksfrom'=>$request->marksfrom, 'marksto'=>$request->marksto])->get();
-
-            if ($addgrades_sec->count() > 0) {
-                return back()->with('error', 'marks range already entered');
-            }
-
-            $addmarks = new Addgrades_sec();
-            $addmarks->gpafor = $request->input('gpafor');
-            $addmarks->schoolid = Auth::user()->schoolid;
-            $addmarks->gpaname = $request->input('grademain');
-            $addmarks->point = "NA";
-            $addmarks->marksfrom = $request->input('marksfrom');
-            $addmarks->marksto = $request->input('marksto');
-            $addmarks->type = $request->type;
-            $addmarks->save();
-
         }
+        
+
+
 
 
 

@@ -386,7 +386,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a id="gradesaside" href="{{ route('grades') }}" class="nav-link">
+                    <a id="gradesaside" href="{{ route('grades_sec') }}" class="nav-link">
                       <i class="fas fa-plus"></i> 
                       <p>Grade</p>
                     </a>

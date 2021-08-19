@@ -86369,145 +86369,150 @@ var customStyles = {
 };
 
 function AddSubject() {
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState2 = _slicedToArray(_useState, 2),
-      classlist = _useState2[0],
-      setClasslist = _useState2[1];
+      schooltype = _useState2[0],
+      setschooltype = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState4 = _slicedToArray(_useState3, 2),
-      selectedclass = _useState4[0],
-      setselectedclass = _useState4[1];
+      classlist = _useState4[0],
+      setClasslist = _useState4[1];
 
   var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState6 = _slicedToArray(_useState5, 2),
-      subjectName = _useState6[0],
-      setSubjectName = _useState6[1];
+      selectedclass = _useState6[0],
+      setselectedclass = _useState6[1];
 
   var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState8 = _slicedToArray(_useState7, 2),
-      subjectType = _useState8[0],
-      setSubjectType = _useState8[1];
+      subjectName = _useState8[0],
+      setSubjectName = _useState8[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState10 = _slicedToArray(_useState9, 2),
-      allsubjectcount = _useState10[0],
-      setsubjectcount = _useState10[1];
+      subjectType = _useState10[0],
+      setSubjectType = _useState10[1];
 
   var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState12 = _slicedToArray(_useState11, 2),
-      coresubjectcount = _useState12[0],
-      setCoreSubjects = _useState12[1];
+      allsubjectcount = _useState12[0],
+      setsubjectcount = _useState12[1];
 
   var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState14 = _slicedToArray(_useState13, 2),
-      electivesubjectscount = _useState14[0],
-      setelectivesubjectscount = _useState14[1];
+      coresubjectcount = _useState14[0],
+      setCoreSubjects = _useState14[1];
 
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState16 = _slicedToArray(_useState15, 2),
-      allsubjects = _useState16[0],
-      setallsubjects = _useState16[1];
+      electivesubjectscount = _useState16[0],
+      setelectivesubjectscount = _useState16[1];
 
   var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState18 = _slicedToArray(_useState17, 2),
-      schoolsection = _useState18[0],
-      setschoolsection = _useState18[1];
+      allsubjects = _useState18[0],
+      setallsubjects = _useState18[1];
 
-  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState20 = _slicedToArray(_useState19, 2),
-      subjectSectione = _useState20[0],
-      setSubjectSectione = _useState20[1];
+      schoolsection = _useState20[0],
+      setschoolsection = _useState20[1];
 
-  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
+  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState22 = _slicedToArray(_useState21, 2),
-      search = _useState22[0],
-      setSearch = _useState22[1];
+      subjectSectione = _useState22[0],
+      setSubjectSectione = _useState22[1];
 
-  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
       _useState24 = _slicedToArray(_useState23, 2),
-      filteredSubjects = _useState24[0],
-      setFilteredSubjects = _useState24[1];
+      search = _useState24[0],
+      setSearch = _useState24[1];
 
-  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState26 = _slicedToArray(_useState25, 2),
-      examsstatus = _useState26[0],
-      setexamsstatus = _useState26[1];
+      filteredSubjects = _useState26[0],
+      setFilteredSubjects = _useState26[1];
 
   var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState28 = _slicedToArray(_useState27, 2),
-      ca1status = _useState28[0],
-      setca1status = _useState28[1];
+      examsstatus = _useState28[0],
+      setexamsstatus = _useState28[1];
 
   var _useState29 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState30 = _slicedToArray(_useState29, 2),
-      ca2status = _useState30[0],
-      setca2status = _useState30[1];
+      ca1status = _useState30[0],
+      setca1status = _useState30[1];
 
   var _useState31 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState32 = _slicedToArray(_useState31, 2),
-      ca3status = _useState32[0],
-      setca3status = _useState32[1];
+      ca2status = _useState32[0],
+      setca2status = _useState32[1];
 
   var _useState33 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState34 = _slicedToArray(_useState33, 2),
-      examsmark = _useState34[0],
-      setExamsMark = _useState34[1];
+      ca3status = _useState34[0],
+      setca3status = _useState34[1];
 
   var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState36 = _slicedToArray(_useState35, 2),
-      ca1mark = _useState36[0],
-      setCa1Mark = _useState36[1];
+      examsmark = _useState36[0],
+      setExamsMark = _useState36[1];
 
   var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState38 = _slicedToArray(_useState37, 2),
-      ca2mark = _useState38[0],
-      setCa2Mark = _useState38[1];
+      ca1mark = _useState38[0],
+      setCa1Mark = _useState38[1];
 
   var _useState39 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState40 = _slicedToArray(_useState39, 2),
-      ca3mark = _useState40[0],
-      setCa3Mark = _useState40[1];
+      ca2mark = _useState40[0],
+      setCa2Mark = _useState40[1];
 
   var _useState41 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState42 = _slicedToArray(_useState41, 2),
-      classElectives = _useState42[0],
-      setClassElectives = _useState42[1];
+      ca3mark = _useState42[0],
+      setCa3Mark = _useState42[1];
 
   var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState44 = _slicedToArray(_useState43, 2),
-      sectionElectives = _useState44[0],
-      setSectionElectives = _useState44[1];
+      classElectives = _useState44[0],
+      setClassElectives = _useState44[1];
 
   var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState46 = _slicedToArray(_useState45, 2),
-      numberElectives = _useState46[0],
-      setNumberElectives = _useState46[1];
+      sectionElectives = _useState46[0],
+      setSectionElectives = _useState46[1];
 
-  var _useState47 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState47 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState48 = _slicedToArray(_useState47, 2),
-      getElectivesSettingNumber = _useState48[0],
-      setgetElectivesSettingNumber = _useState48[1];
+      numberElectives = _useState48[0],
+      setNumberElectives = _useState48[1];
 
-  var _useState49 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+  var _useState49 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState50 = _slicedToArray(_useState49, 2),
-      isLoading = _useState50[0],
-      setisLoading = _useState50[1];
+      getElectivesSettingNumber = _useState50[0],
+      setgetElectivesSettingNumber = _useState50[1];
+
+  var _useState51 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState52 = _slicedToArray(_useState51, 2),
+      isLoading = _useState52[0],
+      setisLoading = _useState52[1];
 
   var _React$useState = react__WEBPACK_IMPORTED_MODULE_0___default.a.useState(false),
       _React$useState2 = _slicedToArray(_React$useState, 2),
       modalIsOpen = _React$useState2[0],
       setIsOpen = _React$useState2[1];
 
-  var _useState51 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
-      _useState52 = _slicedToArray(_useState51, 2),
-      classSubjectFetched = _useState52[0],
-      setclassSubjectFetched = _useState52[1];
-
-  var _useState53 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+  var _useState53 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState54 = _slicedToArray(_useState53, 2),
-      show = _useState54[0],
-      setShow = _useState54[1];
+      classSubjectFetched = _useState54[0],
+      setclassSubjectFetched = _useState54[1];
+
+  var _useState55 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState56 = _slicedToArray(_useState55, 2),
+      show = _useState56[0],
+      setShow = _useState56[1];
 
   var handleClose = function handleClose() {
     return setShow(false);
@@ -86515,34 +86520,34 @@ function AddSubject() {
 
   var subtitle;
 
-  var _useState55 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+  var _useState57 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     subjectname: '',
     classid: '',
     subjecttype: '',
     sectionid: '',
     subjectid: ''
   }),
-      _useState56 = _slicedToArray(_useState55, 2),
-      updatesubject = _useState56[0],
-      setUpdatesubject = _useState56[1];
+      _useState58 = _slicedToArray(_useState57, 2),
+      updatesubject = _useState58[0],
+      setUpdatesubject = _useState58[1];
 
-  var _useState57 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+  var _useState59 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     subjectname: '',
     sectionclasstype: ''
   }),
-      _useState58 = _slicedToArray(_useState57, 2),
-      addsubjectdata = _useState58[0],
-      setSubjectData = _useState58[1];
+      _useState60 = _slicedToArray(_useState59, 2),
+      addsubjectdata = _useState60[0],
+      setSubjectData = _useState60[1];
 
-  var _useState59 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+  var _useState61 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     subjectid: '',
     classid: '',
     sectionid: '',
     subjecttype: ''
   }),
-      _useState60 = _slicedToArray(_useState59, 2),
-      asignSubjectClass = _useState60[0],
-      setasignSubjectClass = _useState60[1];
+      _useState62 = _slicedToArray(_useState61, 2),
+      asignSubjectClass = _useState62[0],
+      setasignSubjectClass = _useState62[1];
 
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   var columns = [{
@@ -86592,6 +86597,7 @@ function AddSubject() {
       setca2status(response.data.schoolDetails.ca2);
       setca3status(response.data.schoolDetails.ca3);
       setgetElectivesSettingNumber(response.data.getElectivesSettingNumber);
+      setschooltype(response.data.schoolDetails.schooltype);
 
       if (response.data.subjectScores == null) {
         setExamsMark(0);
@@ -87201,8 +87207,10 @@ function AddSubject() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: ""
     }, "Select a class"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "0"
+    }, "Primary Section"), schooltype == "Primary" ? "" : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: "1"
-    }, "Junior Secondary"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    }, "Junior Secondary"), schooltype == "Primary" ? "" : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: "2"
     }, "Senior Secondary")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
