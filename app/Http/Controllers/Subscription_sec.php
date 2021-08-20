@@ -7,7 +7,7 @@ use App\Addstudent_sec;
 use App\Addstudent;
 use App\Addpost;
 use App\TransferSub;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\SubHistory;
 
 class Subscription_sec extends Controller

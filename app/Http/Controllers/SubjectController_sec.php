@@ -143,10 +143,31 @@ class SubjectController_sec extends Controller
             
         }
 
-        $deletesubject = $this->addsubject_sec->find($subjectid);
-        $deletesubject->delete();
 
-        return response()->json(['response'=>"Subject deleted successfully"], 200);
+        
+
+        DB::beginTransaction();
+
+        try {
+
+            DB::table('addsubject_secs')->delete($subjectid);
+
+            DB::table('c_lass_subjects')->where('subjectid',$subjectid)->delete();
+
+            DB::commit();
+            // all good
+            return response()->json(['response'=>"Subject deleted successfully"], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+            return response()->json(['response'=>"unknown error"], 400);
+        }
+
+
+
+
+
+        
 
     }
 
