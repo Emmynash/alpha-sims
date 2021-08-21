@@ -134,8 +134,39 @@
                               @else
                               <td>Primary</td>
                               @endif
+
+                                <!-- The Modal delete grade -->
+                                <div class="modal fade" id="deletegrade{{ $grades->id }}">
+                                  <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                    
+                                      <!-- Modal Header -->
+                                      <div class="modal-header">
+                                        <h4 class="modal-title">Modal Heading</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      </div>
+                                      
+                                      <!-- Modal body -->
+                                      <div class="modal-body">
+                                        <div class="alert alert-warning">
+                                          <i style="font-style: normal; font-size: 12px;">You are about deleting a grade. Click proceed to continue.</i>
+                                        </div>
+                                        <form action="{{ route('delete_grades_sec') }}" method="post" id="deletegradeform{{ $grades->id }}">
+                                          @csrf
+                                          <input type="hidden" name="gradetodelete" value="{{ $grades->id }}">
+                                        </form>
+                                      </div>
+                                      
+                                      <!-- Modal footer -->
+                                      <div class="modal-footer">
+                                        <button type="submit" form="deletegradeform{{ $grades->id }}" class="btn btn-sm btn-danger">Proceed</button>
+                                      </div>
+                                      
+                                    </div>
+                                  </div>
+                                </div>
                               
-                              <td><button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>
+                              <td><button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deletegrade{{ $grades->id }}"><i class="fas fa-trash-alt"></i></button></td>
                           </tr>
                             @endforeach
                           @endif

@@ -304,6 +304,7 @@ Route::group(['prefix' => 'sec'], function () {
         Route::get('/fetchschooldata', 'SchoolsetupSecController@fetchSchoolDetailsSetUp')->name('setupschool_sec'); // Route::view('/stagetwo', 'voting.competition.step_two_main');
         Route::get('/setup_school_sec', 'SchoolsetupSecController@setup_school_sec')->name('setup_school_sec');
         Route::get('/grades_sec', 'SchoolsetupSecController@grades_sec')->name('grades_sec');
+        Route::POST('/delete_grades_sec', 'SchoolsetupSecController@delete_grades_sec')->name('delete_grades_sec');
         Route::POST('/submitgrades_sec', 'PagesController@submitMark_sec')->name('submitgrades_sec');
         Route::POST('/addschoolinitials', 'SchoolsetupSecController@addSchoolInitials')->name('addschoolinitials');
         Route::POST('/update_exams_status', 'SchoolsetupSecController@updateExamsStatus')->name('update_exams_status');

@@ -75,9 +75,17 @@ class SchoolsetupSecController extends Controller
 
         // return $addgrades;
         $schooldetails = Addpost::find(Auth::user()->schoolid);
-        
 
         return view('secondary.gradessec', compact('schooldetails', 'addgrades'));
+    }
+
+    public function delete_grades_sec(Request $request)
+    {
+
+        $deleteRequest = Addgrades_sec::find($request->gradetodelete);
+        $deleteRequest->delete();
+
+        return back()->with("success", "Process was successfull");
     }
 
     public function addSchoolInitials(Request $request){

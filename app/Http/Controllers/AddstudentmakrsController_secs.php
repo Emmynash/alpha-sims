@@ -470,7 +470,8 @@ class AddstudentmakrsController_secs extends Controller
                             for ($i=0; $i < count($studentgradeprocess); $i++) {
                                 if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
                                     $gradeFInal = $studentgradeprocess[$i]['gpaname'];
-                                    $point = $studentgradeprocess[$i]['point'] == "NA" ? 0:(int)$studentgradeprocess[$i]['point'];
+                                    return $gradeFInal;
+                                    $point = $studentgradeprocess[$i]['point'] == "NA" || $studentgradeprocess[$i]['point'] == null ? 0:(int)$studentgradeprocess[$i]['point'];
                                 }
                             }
 
