@@ -69342,6 +69342,13 @@ function AddFormMaster() {
     }
   }
 
+  function setUserDetails(systemnumset, classidset, sectionset) {
+    console.log(systemnumset);
+    setSystemNumber(systemnumset);
+    setclassid(classidset);
+    setSection(sectionset);
+  }
+
   function asignFormMaster() {
     if (systemNumber != "" && classid != 0 && sectionmain != 0) {
       var data = new FormData();
@@ -69378,6 +69385,35 @@ function AddFormMaster() {
     month: "long",
     day: "2-digit"
   });
+
+  function unAsignFormTeachers() {
+    var data = new FormData();
+    data.append("systemidformmaster", systemNumber);
+    data.append("formteacherclass", classid);
+    data.append("formsection", sectionmain);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/unallocateformmaster", data, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+
+      if (response.data.response == "done") {
+        myalert('Process was Successful', 'success');
+        fetchPageDetails();
+      } else if (response.data.response == "exist") {
+        myalert('Teacher already a form master', 'error');
+      } else if (response.data.response == "fields") {
+        myalert('Some fields are empyt', 'error');
+      } else {
+        myalert('Status unknown', 'error');
+      }
+    })["catch"](function (e) {
+      console.log(e);
+      myalert('Status unknown', 'error');
+    });
+  }
+
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       className: "btn btn-sm btn-info",
       "data-toggle": "modal",
@@ -69421,7 +69457,12 @@ function AddFormMaster() {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: d.id + "formteachertable"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.firstname, " ", d.middlename, " ", d.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.teacher_id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.classname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.sectionname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, formatter.format(Date.parse(d.created_at))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-          className: "btn btn-danger btn-sm badge"
+          className: "btn btn-danger btn-sm badge",
+          "data-toggle": "modal",
+          "data-target": "#unasignaddformmaster",
+          onClick: function onClick() {
+            return setUserDetails(d.teacher_id, d.classid, d.sectionid);
+          }
         }, "unasign")))
       );
     }))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -69560,7 +69601,47 @@ function AddFormMaster() {
       type: "button",
       onClick: asignFormMaster,
       className: "btn btn-info btn-sm"
-    }, "Save changes"))))))
+    }, "Save changes"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal fade",
+      id: "unasignaddformmaster",
+      "data-backdrop": "false"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-dialog"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-content"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-header"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
+      className: "modal-title"
+    }, "Remove form master"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: closeModal,
+      type: "button",
+      className: "close",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      "aria-hidden": "true"
+    }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-body"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "alert alert-warning"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontSize: '12px',
+        fontStyle: 'normal'
+      }
+    }, "You are about to unasign this form teacher. Click proceed to confirm"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "modal-footer justify-content-between"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: closeModal,
+      type: "button",
+      className: "btn btn-default btn-sm",
+      "data-dismiss": "modal"
+    }, "Close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      type: "button",
+      onClick: unAsignFormTeachers,
+      className: "btn btn-info btn-sm"
+    }, "Proceed"))))))
   );
 }
 

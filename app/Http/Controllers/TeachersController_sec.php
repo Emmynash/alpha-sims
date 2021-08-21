@@ -93,7 +93,7 @@ class TeachersController_sec extends Controller
                             ->join('addsection_secs', 'addsection_secs.id','=','form_teachers.form_id')
                             ->join('classlist_secs','classlist_secs.id','=','form_teachers.class_id')
                             ->where('form_teachers.school_id', Auth::user()->schoolid)
-                            ->select('form_teachers.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'users.firstname', 'users.middlename', 'users.lastname')->get();
+                            ->select('form_teachers.*', 'classlist_secs.classname', 'classlist_secs.id as classid', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid', 'users.firstname', 'users.middlename', 'users.lastname')->get();
 
             $houses = Addhouse_sec::where('schoolid', Auth::user()->schoolid)->get();
 
@@ -200,6 +200,23 @@ class TeachersController_sec extends Controller
         $updateRole->save();
 
         return response()->json(['response'=>'done']);
+    }
+
+    public function unallocateformmaster(Request $request)
+    {
+
+        try {
+
+            $getFormDetails = DB::table('form_teachers')->where(['teacher_id'=>$request->systemidformmaster, 'class_id'=>$request->formteacherclass, 'form_id'=>$request->formsection])->delete();
+
+            return response()->json(['response'=>'done']);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>'error']);
+        }
+        
+        
     }
 
 

@@ -446,6 +446,7 @@ Route::group(['middleware' => ['auth', 'can:assign form teacher']], function () 
     Route::post('/teacher_sec_confirm', 'TeachersController_sec@confirmTeacherRegNumber');
     Route::post('/teachers_sec_confirm', 'TeachersController_sec@confirmTeacherRegNumber2');
     Route::post('/allocateformmaster', 'TeachersController_sec@allocateFormMaster');
+    Route::post('/unallocateformmaster', 'TeachersController_sec@unallocateformmaster');
     Route::post('/allocatesubjectteacher', 'TeachersController_sec@allocateSubjectTeacher');
     Route::post('/un_asign_a_subject', 'TeachersController_sec@unAsignASubject');
     Route::get('/fetch_teacher_subjects/{userid}', 'TeachersController_sec@fetchTeacherSubject');

@@ -116,6 +116,16 @@ function AddFormMaster() {
         
     }
 
+    function setUserDetails(systemnumset, classidset, sectionset) {
+
+        console.log(systemnumset)
+
+        setSystemNumber(systemnumset)
+        setclassid(classidset)
+        setSection(sectionset)
+        
+    }
+
 
     function asignFormMaster() {
 
@@ -165,6 +175,42 @@ function AddFormMaster() {
 
 
 
+      function unAsignFormTeachers() {
+
+        const data = new FormData()
+            data.append("systemidformmaster", systemNumber)
+            data.append("formteacherclass", classid)
+            data.append("formsection", sectionmain)
+            axios.post("/unallocateformmaster", data, {
+                headers:{
+                    "Content-type": "application/json"
+                }
+            }).then(response=>{
+                console.log(response)
+
+                if (response.data.response == "done") {
+                    myalert('Process was Successful', 'success');
+                    fetchPageDetails()
+                }else if(response.data.response == "exist"){
+                    myalert('Teacher already a form master', 'error');
+                }else if(response.data.response == "fields"){
+                    myalert('Some fields are empyt', 'error');
+                }else{
+                    myalert('Status unknown', 'error');
+                }
+
+            }).catch(e=>{
+                console.log(e)
+                myalert('Status unknown', 'error');
+                
+            })
+
+          
+      }
+
+
+
+
     return(
         <div>
             <button className="btn btn-sm btn-info" data-toggle="modal" data-target="#addformmaster">Add Form Master</button>
@@ -209,7 +255,7 @@ function AddFormMaster() {
                                     <td>{d.classname}</td>
                                     <td>{d.sectionname}</td>
                                     <td>{formatter.format(Date.parse(d.created_at))}</td>
-                                    <td><button className="btn btn-danger btn-sm badge">unasign</button></td>
+                                    <td><button className="btn btn-danger btn-sm badge" data-toggle="modal" data-target="#unasignaddformmaster" onClick={()=>setUserDetails(d.teacher_id, d.classid, d.sectionid)}>unasign</button></td>
                                 </tr>
                             ))}
 
@@ -289,6 +335,31 @@ function AddFormMaster() {
                     <div className="modal-footer justify-content-between">
                         <button onClick={closeModal} type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
                         <button type="button" onClick={asignFormMaster} className="btn btn-info btn-sm">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* unasign form teachers */}
+
+            <div className="modal fade" id="unasignaddformmaster" data-backdrop='false'>
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h4 className="modal-title">Remove form master</h4>
+                        <button onClick={closeModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <div className="alert alert-warning">
+                            <i style={{ fontSize:'12px', fontStyle:'normal' }}>You are about to unasign this form teacher. Click proceed to confirm</i>
+                        </div>
+
+                    </div>
+                    <div className="modal-footer justify-content-between">
+                        <button onClick={closeModal} type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="button" onClick={unAsignFormTeachers} className="btn btn-info btn-sm">Proceed</button>
                     </div>
                     </div>
                 </div>
