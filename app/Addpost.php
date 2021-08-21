@@ -17,7 +17,7 @@ class Addpost extends Model
         $schooltype = Addpost::find($schoolid);
 
         if ($schooltype->schooltype == "Primary") {
-            $classlist_sec = Classlist::where('schoolid', $schoolid)->get();
+            $classlist_sec = Classlist_sec::where('schoolid', $schoolid)->get();
             return $classlist_sec;
         } else {
             $classlist_sec = Classlist_sec::where(['schoolid'=> $schoolid, 'status'=>1])->get();
@@ -58,7 +58,7 @@ class Addpost extends Model
 
         if ($schoolDetails->schooltype == "Primary") {
 
-            $classlist_sec = Classlist::where('id', $classid)->first();
+            $classlist_sec = Classlist_sec::where('id', $classid)->first();
             return $classlist_sec;
 
         } else {

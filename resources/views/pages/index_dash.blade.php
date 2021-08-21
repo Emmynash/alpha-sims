@@ -30,34 +30,6 @@
     <section class="content">
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
-
-            @if (count($studentDetails['classList']) < 1 || count($studentDetails['addHouses']) < 1 || count($studentDetails['addSection']) < 1 || count($studentDetails['addClub']) < 1)
-                <div class="alert alert-info alert-block">
-                  {{-- <button type="button" class="close" data-dismiss="alert">×</button>	 --}}
-                  <strong>To proceed with using Alpha-sim, we will work you through some compulsory steps.</strong>
-                  <div>
-                    <i data-toggle="collapse" data-target="#setupschool"><i class="fas fa-hand-point-right"></i> School setup module. More? </i><a href="/setupschool"><button class="btn btn-sm">Proceed</button></a>
-                    <div id="setupschool" class="collapse">
-                      In this module, you will be required to enter 
-                      details such as classlist, clubs and socielties,
-                      school houses, School session, etc...
-                    </div>
-                  </div>
-                </div>
-            @endif
-
-            @if (count($studentDetails['addgrades']) < 5)
-                <div class="alert alert-info alert-block">
-                  {{-- <button type="button" class="close" data-dismiss="alert">×</button>	 --}}
-                  <strong>To proceed with using Alpha-sim, we will work you through some compulsory steps.</strong>
-                  <div>
-                    <i data-toggle="collapse" data-target="#setupgrades"><i class="fas fa-hand-point-right"></i> Setup grading system now </i><a href="/grades"><button class="btn btn-sm">Proceed</button></a>
-                    <div id="setupgrades" class="collapse">
-                      In this module, you will be required to fill in your school grading system
-                    </div>
-                  </div>
-                </div>
-            @endif
             
             <div class="row">
               <div class="col-lg-3 col-6">
@@ -65,7 +37,6 @@
                 <div class="small-box bg-info">
                   <div class="inner">
                   <h3>{{count($studentDetails['addStudent'])}}</h3>
-
                     <p>Student</p>
                   </div>
                   <div class="icon">

@@ -251,11 +251,11 @@ class AddstudentmakrsController_secs extends Controller
             //---------------------------------------------------------------------------------
                     $checkduplicate = $this->addmark_sec->where(['regno'=>$studentId, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain])->get();
             
-                    if(count($checkduplicate) > 0 && $checkifidexists == "null"){
-                        $msg = "duplicate";
+                    // if(count($checkduplicate) > 0 && $checkifidexists == "null"){
+                    //     $msg = "duplicate";
                         
-                        return response()->json(['msg' => $msg], 200);
-                    }
+                    //     return response()->json(['msg' => $msg], 200);
+                    // }
         
                     
             
@@ -267,14 +267,21 @@ class AddstudentmakrsController_secs extends Controller
             
                     if ($checkifidexists == "null") {
         
-                        
             
                             $getClassDetails = Classlist_sec::find($selectedclassidMain);
+
+                            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+                            if ($schooldetails->schooltype == "Primary") {
+                                $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>0])->get();
+                            }else{
+                                $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
+                            }
             
-                            $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
+                            
         
                             
-            
+                            
                             if (count($studentgradeprocess) < 5) {
                                 $msg = "grades";
                         
@@ -292,7 +299,13 @@ class AddstudentmakrsController_secs extends Controller
             
                                 $totalmarks = $examsmarks + $ca1marks + $ca2marks + $ca3marks;
             
-                                $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
+                                $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+                                if ($schooldetails->schooltype == "Primary") {
+                                    $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>0])->get();
+                                }else{
+                                    $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
+                                }
                 
                                 $gradeFInal = "";
                 
@@ -443,7 +456,13 @@ class AddstudentmakrsController_secs extends Controller
 
                             // return $totalmarks;
             
-                            $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
+                            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+                            if ($schooldetails->schooltype == "Primary") {
+                                $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>0])->get();
+                            }else{
+                                $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
+                            }
             
                             $gradeFInal = "";
                             $point = 0;
@@ -505,7 +524,13 @@ class AddstudentmakrsController_secs extends Controller
             
                             $totalmarks = $examsmarks + $ca1marks + $ca2marks + $ca3marks;
             
-                            $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
+                            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+                            if ($schooldetails->schooltype == "Primary") {
+                                $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>0])->get();
+                            }else{
+                                $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
+                            }
             
                             $gradeFInal = "";
                             $point = "0";

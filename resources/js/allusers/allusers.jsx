@@ -121,6 +121,8 @@ function AllUsers() {
 
         axios.get('/sec/setting/fetch_all_student').then(response=>{
 
+          console.log(response.data)
+
             setDatamain(response.data.allusers)
 
             // setDatatable.rows(response.data.allusers)

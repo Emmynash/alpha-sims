@@ -59,7 +59,7 @@ class AllUsersController extends Controller
     {
         try {
 
-        $allusers = User::where(['schoolid' => Auth::user()->schoolid])->orderBy('firstname', 'asc')->get();
+       $allusers = User::where(['schoolid' => Auth::user()->schoolid])->orderBy('firstname', 'asc')->get();
 
         
 
@@ -69,14 +69,17 @@ class AllUsersController extends Controller
         for ($i=0; $i < $allusers->count(); $i++) { 
 
             $user = User::find($allusers[$i]['id']);
-           $role = $user->roles->pluck('name');
+            $role = $user->roles->pluck('name');
 
            $addmisNo = '';
 
            if ($role[0] == "Student") {
-
+                // echo $user->id.",";
                 $student = Addstudent_sec::where('usernamesystem', $user->id)->first();
-                $addmisNo = $student->admission_no;
+                if ($student != null) {
+                    $addmisNo = $student->admission_no;
+                }
+                
                
            }
 
@@ -100,7 +103,7 @@ class AllUsersController extends Controller
             return response()->json(['allusers' => $usersListMain]);
         } catch (\Throwable $th) {
             //throw $th;
-
+            return $th;
             return response()->json(['response' => $th]);
 
         }
