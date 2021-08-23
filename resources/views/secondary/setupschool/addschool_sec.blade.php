@@ -121,7 +121,7 @@
                     <form action="/updatelogosig" method="post" enctype="multipart/form-data"> 
                       @csrf                      
                       <div class="form-group">
-                        <label for="">School Logo</label>
+                        <label for="">Principal's Signature</label>
                         <input type="file" name="schoolprincipalsignature" class="form-control">
                       </div>
                       <button type="submit" class="btn btn-sm btn-info">Save</button>
