@@ -310,7 +310,7 @@ class AddstudentmakrsController_secs extends Controller
                                 $gradeFInal = "";
                 
                                 for ($i=0; $i < count($studentgradeprocess); $i++) {
-                                    if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
+                                    if (($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) || ($totalmarks >= $studentgradeprocess[$i]['marksto'] && $totalmarks<= $studentgradeprocess[$i]['marksfrom'])) {
                                         $gradeFInal = $studentgradeprocess[$i]['gpaname'];
                                     }
                                 }
@@ -374,7 +374,7 @@ class AddstudentmakrsController_secs extends Controller
                                     // return $request;
             
                                     for ($i=0; $i < count($studentgradeprocess); $i++) {
-                                        if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
+                                        if (($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) || ($totalmarks >= $studentgradeprocess[$i]['marksto'] && $totalmarks<= $studentgradeprocess[$i]['marksfrom'])) {
                                             $gradeFInal = $studentgradeprocess[$i]['gpaname'];
                                         }
                                     }
@@ -468,9 +468,9 @@ class AddstudentmakrsController_secs extends Controller
                             $point = 0;
             
                             for ($i=0; $i < count($studentgradeprocess); $i++) {
-                                if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
+                                
+                                if (($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) || ($totalmarks >= $studentgradeprocess[$i]['marksto'] && $totalmarks<= $studentgradeprocess[$i]['marksfrom'])) {
                                     $gradeFInal = $studentgradeprocess[$i]['gpaname'];
-                                    return $gradeFInal;
                                     $point = $studentgradeprocess[$i]['point'] == "NA" || $studentgradeprocess[$i]['point'] == null ? 0:(int)$studentgradeprocess[$i]['point'];
                                 }
                             }
@@ -537,7 +537,7 @@ class AddstudentmakrsController_secs extends Controller
                             $point = "0";
             
                             for ($i=0; $i < count($studentgradeprocess); $i++) {
-                                if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
+                                if (($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) || ($totalmarks >= $studentgradeprocess[$i]['marksto'] && $totalmarks<= $studentgradeprocess[$i]['marksfrom'])) {
                                     $gradeFInal = $studentgradeprocess[$i]['gpaname'];
                                     $point = $studentgradeprocess[$i]['point'] == "NA" ? "0":$studentgradeprocess[$i]['point'];
                                 }

@@ -15,8 +15,11 @@ use App\Addgrades_sec;
 use App\Addhouse_sec;
 use App\Addsection_sec;
 use App\Addstudent_sec;
+use App\Addsubject_sec;
 use App\AdmissionsTbl;
 use App\Classlist_sec;
+use App\FormTeachers;
+use App\TeacherSubjects;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -568,6 +571,25 @@ class PagesController extends Controller
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
         return view('secondary.managestaff.managestaff', compact('schooldetails'));
+    }
+
+    public function viewStaff($id)
+    {
+        $detUserDetails = User::find($id);
+
+        $formClasses = FormTeachers::join('classlist_secs', 'classlist_secs.id','=','form_teachers.class_id')
+            ->join('addsection_secs', 'addsection_secs.id','=','form_teachers.form_id')
+            ->where('teacher_id', $id)
+            ->select('form_teachers.*', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
+
+        $teachersSubject = TeacherSubjects::join('addsubject_secs', 'addsubject_secs.id','=','teacher_subjects.subject_id')
+                            ->join('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id') 
+                            ->join('classlist_secs', 'classlist_secs.id','=','teacher_subjects.classid')
+                            ->where('user_id', $id)
+                            ->select('teacher_subjects.*', 'addsubject_secs.subjectname', 'addsection_secs.sectionname', 'classlist_secs.classname')
+                            ->get(); 
+
+        return response()->json(['detUserDetails'=>$detUserDetails, 'formClasses'=>$formClasses,'teachersSubject'=>$teachersSubject ]); 
     }
 
     public function manageStaffRole(Request $request){

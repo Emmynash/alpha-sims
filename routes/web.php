@@ -95,6 +95,7 @@ Route::group(['prefix' => 'pri'], function () {
 
     Route::group(['middleware' => ['auth']], function () { //, 'can:manage staff'
         Route::get('/addstaff', 'PagesController@manageStaff')->name('addstaff');
+        Route::get('/viewstaff/{id}', 'PagesController@viewstaff')->name('viewstaff');
         Route::POST('/addstaffdata', 'TeachersController@addstaffdata')->name('addstaffdata');
         Route::POST('/addstaffrecord', 'TeachersController@addroles')->name('addstaffrecord');
     });
@@ -290,9 +291,6 @@ Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
     Route::POST('/editclassname', 'ClassesController@editClassName');
 
 });
-
-
-
 
 
 

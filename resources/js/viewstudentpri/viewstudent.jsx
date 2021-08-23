@@ -200,9 +200,8 @@ function ViewStudentPri() {
                                     <td>{d.classname}{d.sectionname}</td>
                                     
 
-                                    {takenarray.includes(d.id) ? 
-                                        <td><button className="btn btn-sm badge btn-success">Completed</button></td>:
-                                        <td><button className="btn btn-sm badge btn-info" data-toggle="modal" data-target="#addmotomain" onClick={()=>setUserId(d.id, d.firstname+" "+d.middlename+" "+d.lastname)}>View</button></td>}
+                                    
+                                        <td><button className="btn btn-sm badge btn-info" data-toggle="modal" data-target="#addmotomain" onClick={()=>setUserId(d.id, d.firstname+" "+d.middlename+" "+d.lastname)}>View</button></td>
                                         
                                         
                                 </tr>

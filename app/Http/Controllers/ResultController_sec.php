@@ -256,40 +256,48 @@ class ResultController_sec extends Controller
 
     
             $studentClass = Classlist_sec::find($classid);
+
+            if ($addschool->schooltype == "Primary") {
+                return view('secondary.result.viewresult.singleprimary', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
+            }else{
+
+                if ($checkclasstype->classtype == 1) {
+
+                    // $pdf = App::make('dompdf.wrapper');
     
-            if ($checkclasstype->classtype == 1) {
-
-                // $pdf = App::make('dompdf.wrapper');
-
-                // $data = User::where('schoolid', "6")->get();
-
-                // $html = '';
-
-                // for ($i=0; $i < $data->count(); $i++) { 
-
-                //     $datamain = $data[$i];
-
-                //     $view = view('secondary.result.viewresult.resulttest', compact('datamain'));
-
-                //     $html .= $view->render();
-
+                    // $data = User::where('schoolid', "6")->get();
+    
+                    // $html = '';
+    
+                    // for ($i=0; $i < $data->count(); $i++) { 
+    
+                    //     $datamain = $data[$i];
+    
+                    //     $view = view('secondary.result.viewresult.resulttest', compact('datamain'));
+    
+                    //     $html .= $view->render();
+    
+                        
+                    // }
+    
+                    // $pdf->loadHTML($html);
+    
+    
                     
-                // }
+                    // return $pdf->stream();
+    
+                    // $studentInClass = Addstudent_sec::where('classid', 30)->get();
+    
+                    // return view('secondary.result.viewresult.resulttest', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool'));
+    
+                    return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
+                } else {
+                    return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
+                }
 
-                // $pdf->loadHTML($html);
-
-
-                
-                // return $pdf->stream();
-
-                // $studentInClass = Addstudent_sec::where('classid', 30)->get();
-
-                // return view('secondary.result.viewresult.resulttest', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool'));
-
-                return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
-            } else {
-                return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
             }
+    
+
         } catch (\Throwable $th) {
             //throw $th;
 

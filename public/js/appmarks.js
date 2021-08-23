@@ -69394,6 +69394,8 @@ function AddMarks() {
   }
 
   function fetchSubjectForClass(e) {
+    setStudentList([]);
+    setSubjects([]);
     setSelectedClass(e.target.value);
     setselectedsection('');
   }
@@ -69403,6 +69405,8 @@ function AddMarks() {
   }
 
   function handleChangeSection(e) {
+    setStudentList([]);
+    setSubjects([]);
     setselectedsection(e.target.value);
     getSubjectForClass(e.target.value);
   }
