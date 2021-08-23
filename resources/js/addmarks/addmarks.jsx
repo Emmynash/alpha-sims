@@ -108,6 +108,7 @@ function AddMarks() {
 
     function handleChangeSubject(e) {
         setselectedsubject(e.target.value)
+        setStudentList([])
         // getSection(e.target.value)
     }
 
