@@ -511,7 +511,7 @@
 
           @can('manage staff')
             <li class="nav-item">
-              <a id="managestaffscroll" href="/manage_saff_sec" class="nav-link">
+              <a id="managestaffscroll" href="{{ route('addstaff') }}" class="nav-link">
                   <i class="fas fa-user-circle nav-icon"></i>
                 <p>
                   Manage Staff

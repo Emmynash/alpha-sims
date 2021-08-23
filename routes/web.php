@@ -93,12 +93,7 @@ Route::group(['prefix' => 'pri'], function () {
     });
 
 
-    Route::group(['middleware' => ['auth']], function () { //, 'can:manage staff'
-        Route::get('/addstaff', 'PagesController@manageStaff')->name('addstaff');
-        Route::get('/viewstaff/{id}', 'PagesController@viewstaff')->name('viewstaff');
-        Route::POST('/addstaffdata', 'TeachersController@addstaffdata')->name('addstaffdata');
-        Route::POST('/addstaffrecord', 'TeachersController@addroles')->name('addstaffrecord');
-    });
+
 
 
 
@@ -639,8 +634,20 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::get('/calender_index', 'CalenderController@index')->name('calender_index');
          Route::get('/get_all_posts', 'CalenderController@getAllEvents')->name('get_all_posts');
 
+
+        // manage staff
+         Route::group(['middleware' => ['auth']], function () { //, 'can:manage staff'
+            Route::get('/addstaff', 'PagesController@manageStaff')->name('addstaff');
+            Route::get('/viewstaff/{id}', 'PagesController@viewstaff')->name('viewstaff');
+            Route::POST('/addstaffdata', 'TeachersController@addstaffdata')->name('addstaffdata');
+            Route::POST('/addstaffrecord', 'TeachersController@addroles')->name('addstaffrecord');
+        });
+
 });
 
 Route::group(['prefix' => 'admin'], function () {
     Route::post('/login', 'AccountController@feesPartPayment')->name('fees_part_payment');
 });
+
+
+// -----------------------------------------------------------------------------------------
