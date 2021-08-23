@@ -304,7 +304,7 @@ class DashboardController extends Controller
         if($request->input('logo') == "logo"){
             
             $validatedData = $request->validate([
-                'schoolLogo' => 'image|max:200|mimes:jpeg,png,jpg|required',
+                'schoolLogo' => 'image|max:2048|mimes:jpeg,png,jpg|required',
             ]);
             
             if ($request->hasFile('schoolLogo')) {
