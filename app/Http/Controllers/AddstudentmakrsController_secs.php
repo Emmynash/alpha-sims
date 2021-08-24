@@ -251,11 +251,11 @@ class AddstudentmakrsController_secs extends Controller
             //---------------------------------------------------------------------------------
                     $checkduplicate = $this->addmark_sec->where(['regno'=>$studentId, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain])->get();
             
-                    // if(count($checkduplicate) > 0 && $checkifidexists == "null"){
-                    //     $msg = "duplicate";
+                    if(count($checkduplicate) > 0 && $checkifidexists == "null"){
+                        $msg = "duplicate";
                         
-                    //     return response()->json(['msg' => $msg], 200);
-                    // }
+                        return response()->json(['msg' => $msg], 200);
+                    }
         
                     
             
