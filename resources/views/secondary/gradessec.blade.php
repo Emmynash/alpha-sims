@@ -187,11 +187,11 @@
                                           </div>
                                           <div class="form-group">
                                             <label for="">Marks From</label>
-                                            <input type="number" class="form-control form-control-sm" name="marksfrom" value="{{ $grades->marksfrom }}" id="">
+                                            <input type="number" class="form-control form-control-sm" name="marksfrom" step="0.01" value="{{ $grades->marksfrom }}" id="">
                                           </div>
                                           <div class="form-group">
                                             <label for="">Marks To</label>
-                                            <input type="number" class="form-control form-control-sm" name="marksto" value="{{ $grades->marksto }}" id="">
+                                            <input type="number" class="form-control form-control-sm" name="marksto" step="0.01" value="{{ $grades->marksto }}" id="">
                                           </div>
                                           <input type="hidden" value="{{ $grades->id }}" name="gradeid">
                                           <input type="hidden" name="key" value="edit">
