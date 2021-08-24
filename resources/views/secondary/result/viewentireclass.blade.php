@@ -75,23 +75,27 @@
                   <tbody>
                     @if (count($entirestudent) > 0)
                       @foreach ($entirestudent as $entirestudentm)
-                        <tr>
-                          <td>{{$entirestudentm->admission_no}}</td>
-                          <td>{{$entirestudentm->getStudentName->firstname}} {{$entirestudentm->getStudentName->middlename}} {{$entirestudentm->getStudentName->lastname}}</td>
-                          <td>{{$entirestudentm->getClassName->classname}} {{ $entirestudentm->getSectionName->sectionname }}</td>
-            
-                          
-                          <td>
-                              <form action="{{ route('result_print_single_sec') }}" method="POST" id="formgetsingleresult{{ $entirestudentm->id }}">
-                                  @csrf
-                                  <input type="hidden" value="{{ $entirestudentm->id }}" name="student_reg_no">
-                                  <input type="hidden" value="{{ $session }}" name="session">
-                                  <input type="hidden" value="{{ $term }}" name="term">
-                                  <input type="hidden" value="{{ $entirestudentm->classid }}" name="classid">
-                              </form>
-                              <button type="submit" form="formgetsingleresult{{ $entirestudentm->id }}" class="btn btn-sm btn-warning"><i class="fas fa-eye"></i>
-                            </td>
-                        </tr>
+
+                      @if ($entirestudentm->getStudentName != null)
+                      <tr>
+                        <td>{{$entirestudentm->admission_no}}</td>
+                        <td>{{$entirestudentm->getStudentName->firstname}} {{$entirestudentm->getStudentName->middlename}} {{$entirestudentm->getStudentName->lastname}}</td>
+                        <td>{{$entirestudentm->getClassName->classname}} {{ $entirestudentm->getSectionName->sectionname }}</td>
+          
+                        
+                        <td>
+                            <form action="{{ route('result_print_single_sec') }}" method="POST" id="formgetsingleresult{{ $entirestudentm->id }}">
+                                @csrf
+                                <input type="hidden" value="{{ $entirestudentm->id }}" name="student_reg_no">
+                                <input type="hidden" value="{{ $session }}" name="session">
+                                <input type="hidden" value="{{ $term }}" name="term">
+                                <input type="hidden" value="{{ $entirestudentm->classid }}" name="classid">
+                            </form>
+                            <button type="submit" form="formgetsingleresult{{ $entirestudentm->id }}" class="btn btn-sm btn-warning"><i class="fas fa-eye"></i>
+                          </td>
+                      </tr>
+                      @endif
+
                       @endforeach
                     @endif
                   </tbody>
