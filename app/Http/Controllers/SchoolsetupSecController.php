@@ -82,10 +82,34 @@ class SchoolsetupSecController extends Controller
     public function delete_grades_sec(Request $request)
     {
 
-        $deleteRequest = Addgrades_sec::find($request->gradetodelete);
-        $deleteRequest->delete();
+        if ($request->key == "edit") {
 
-        return back()->with("success", "Process was successfull");
+            $check1 = Addgrades_sec::where(['gpaname'=>$request->gpaname, 'marksfrom'=>$request->marksfrom, 'marksto'=>$request->marksto])->get();
+
+            $check2 = Addgrades_sec::where(['gpaname'=>$request->gpaname, 'marksfrom'=>$request->marksto, 'marksto'=>$request->marksfrom])->get();
+
+            if ($check1->count() > 0 || $check2->count() > 0) {
+                return back()->with('error', 'record cannot be same');
+            }
+
+            $editRecord = Addgrades_sec::find($request->gradeid);
+            $editRecord->gpaname = $request->gpaname;
+            $editRecord->marksfrom = $request->marksfrom;
+            $editRecord->marksto = $editRecord->marksto;
+            $editRecord->save();
+
+            return back()->with('success', 'Update was successfull');
+            
+        }else{
+
+            $deleteRequest = Addgrades_sec::find($request->gradetodelete);
+            $deleteRequest->delete();
+    
+            return back()->with("success", "Process was successfull");
+
+        }
+
+
     }
 
     public function addSchoolInitials(Request $request){

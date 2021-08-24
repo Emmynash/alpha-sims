@@ -142,7 +142,7 @@
                                     
                                       <!-- Modal Header -->
                                       <div class="modal-header">
-                                        <h4 class="modal-title">Modal Heading</h4>
+                                        <h4 class="modal-title">Notice!!!</h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                       </div>
                                       
@@ -165,8 +165,49 @@
                                     </div>
                                   </div>
                                 </div>
+
+                                <!-- The Modal edit grade -->
+                                <div class="modal fade" id="editgrade{{ $grades->id }}">
+                                  <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                    
+                                      <!-- Modal Header -->
+                                      <div class="modal-header">
+                                        <h4 class="modal-title">Edit Grades</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      </div>
+                                      
+                                      <!-- Modal body -->
+                                      <div class="modal-body">
+                                        <form action="{{ route('delete_grades_sec') }}" method="post" id="editgradeform{{ $grades->id }}">
+                                          @csrf
+                                          <div class="form-group">
+                                            <label for="">Grade</label>
+                                            <input type="text" style="text-transform:uppercase" class="form-control form-control-sm" name="gpaname" value="{{ $grades->gpaname }}" id="">
+                                          </div>
+                                          <div class="form-group">
+                                            <label for="">Marks From</label>
+                                            <input type="number" class="form-control form-control-sm" name="marksfrom" value="{{ $grades->marksfrom }}" id="">
+                                          </div>
+                                          <div class="form-group">
+                                            <label for="">Marks To</label>
+                                            <input type="number" class="form-control form-control-sm" name="marksto" value="{{ $grades->marksto }}" id="">
+                                          </div>
+                                          <input type="hidden" value="{{ $grades->id }}" name="gradeid">
+                                          <input type="hidden" name="key" value="edit">
+                                        </form>
+                                      </div>
+                                      
+                                      <!-- Modal footer -->
+                                      <div class="modal-footer">
+                                        <button type="submit" form="editgradeform{{ $grades->id }}" class="btn btn-sm btn-success">Proceed</button>
+                                      </div>
+                                      
+                                    </div>
+                                  </div>
+                                </div>
                               
-                              <td><button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deletegrade{{ $grades->id }}"><i class="fas fa-trash-alt"></i></button></td>
+                              <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editgrade{{ $grades->id }}"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deletegrade{{ $grades->id }}"><i class="fas fa-trash-alt"></i></button></td>
                           </tr>
                             @endforeach
                           @endif
