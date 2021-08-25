@@ -213,7 +213,7 @@ class AddstudentmakrsController_secs extends Controller
             'subjectid' => 'required'
         ]);
 
-        // return $request;
+        
 
             try {
                 if ($validator->fails()) {
@@ -235,7 +235,7 @@ class AddstudentmakrsController_secs extends Controller
                     $studentsectionMain = $request->input('studentsection');
                     $sessionquery = $request->input('currentsessionform');
 
-                    // return $request;
+                    
             
             
                     if ($examsmarks < 0 && $ca1marks < 0 && $ca2marks < 0 && $ca3marks < 0) {
@@ -314,25 +314,27 @@ class AddstudentmakrsController_secs extends Controller
                                         $gradeFInal = $studentgradeprocess[$i]['gpaname'];
                                     }
                                 }
-                        
-                                $addmarks = new Addmark_sec();
-                                $addmarks->regno = $studentId;
-                                $addmarks->schoolid = Auth::user()->schoolid;
-                                $addmarks->classid = $selectedclassidMain;
-                                $addmarks->subjectid = $subjectbyclassidMain;
-                                $addmarks->exams = $examsmarks;
-                                $addmarks->ca1 = $ca1marks;
-                                $addmarks->ca2 = $ca2marks;
-                                $addmarks->ca3 = $ca3marks;
-                                $addmarks->totalmarks = $totalmarks;
-                                $addmarks->grades = $gradeFInal;
-                                $addmarks->term = $schooltermMain;
-                                $addmarks->session = $sessionquery;
-                                $addmarks->shift = $studentshiftMain;
-                                $addmarks->section = $studentsectionMain;
-                                $addmarks->save();
-            
-                                // get student position
+
+
+
+                                $addmarks = Addmark_sec::updateOrCreate(
+                                    ['regno'=>$studentId, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain],
+                                    ['regno' => $studentId,
+                                    'schoolid' => Auth::user()->schoolid,
+                                    'classid' => $selectedclassidMain,
+                                    'subjectid' => $subjectbyclassidMain,
+                                    'exams' => $examsmarks,
+                                    'ca1' => $ca1marks,
+                                    'ca2' => $ca2marks,
+                                    'ca3' => $ca3marks,
+                                    'totalmarks' => $totalmarks,
+                                    'grades' => $gradeFInal,
+                                    'term' => $schooltermMain,
+                                    'session' => $sessionquery,
+                                    'shift' => $studentshiftMain,
+                                    'section' => $studentsectionMain]
+                                );
+
             
                                 $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
             
@@ -379,22 +381,23 @@ class AddstudentmakrsController_secs extends Controller
                                         }
                                     }
             
-                                    $addmarks = new Addmark_sec();
-                                    $addmarks->regno = $studentId;
-                                    $addmarks->schoolid = Auth::user()->schoolid;
-                                    $addmarks->classid = $selectedclassidMain;
-                                    $addmarks->subjectid = $subjectbyclassidMain;
-                                    $addmarks->exams = $examsmarks;
-                                    $addmarks->ca1 = $ca1marks;
-                                    $addmarks->ca2 = $ca2marks;
-                                    $addmarks->ca3 = $ca3marks;
-                                    $addmarks->totalmarks = $totalmarks;
-                                    $addmarks->grades = $gradeFInal;
-                                    $addmarks->term = $schooltermMain;
-                                    $addmarks->session = $sessionquery;
-                                    $addmarks->shift = $studentshiftMain;
-                                    $addmarks->section = $studentsectionMain;
-                                    $addmarks->save();
+                                    $addmarks = Addmark_sec::updateOrCreate(
+                                        ['regno'=>$studentId, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain],
+                                        ['regno' => $studentId,
+                                        'schoolid' => Auth::user()->schoolid,
+                                        'classid' => $selectedclassidMain,
+                                        'subjectid' => $subjectbyclassidMain,
+                                        'exams' => $examsmarks,
+                                        'ca1' => $ca1marks,
+                                        'ca2' => $ca2marks,
+                                        'ca3' => $ca3marks,
+                                        'totalmarks' => $totalmarks,
+                                        'grades' => $gradeFInal,
+                                        'term' => $schooltermMain,
+                                        'session' => $sessionquery,
+                                        'shift' => $studentshiftMain,
+                                        'section' => $studentsectionMain]
+                                    );
             
             
             
