@@ -336,7 +336,7 @@ class AddstudentmakrsController_secs extends Controller
                                 );
 
             
-                                $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
+                                $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'section'=>$studentsectionMain])->orderBy('totalmarks', 'DESC')->get();
             
                                 $subjectscrorearray = array();
                                 
@@ -399,31 +399,46 @@ class AddstudentmakrsController_secs extends Controller
                                         'section' => $studentsectionMain]
                                     );
             
+                                    DB::beginTransaction();
+
+                                    try {
+                                        $getstudentposition = DB::table('addmark_secs')->where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm'), 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
             
-            
-                                    $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm'), 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
-            
-                                    $subjectscrorearray = array();
-                                    
-            
-                                    for ($i=0; $i < count($getstudentposition); $i++) { 
-                                        $score = $getstudentposition[$i]['totalmarks'];
-                                            array_push($subjectscrorearray, $score);
+                                        $subjectscrorearray = array();
                                         
+                
+                                        for ($i=0; $i < count($getstudentposition); $i++) { 
+                                            $score = $getstudentposition[$i]['totalmarks'];
+                                                array_push($subjectscrorearray, $score);
+                                            
+                                        }
+                
+                                        for ($i=0; $i < count($getstudentposition); $i++) { 
+                
+                                            $mainScore = $getstudentposition[$i]['totalmarks'];
+                                            $mainScoreId = $getstudentposition[$i]['id'];
+                
+                                            $positiongotten = array_search($mainScore, $subjectscrorearray);
+                
+                                            // $updateposition = Addmark_sec::find($mainScoreId);
+                                            // $updateposition->position = $positiongotten + 1;
+                                            // $updateposition->save();
+
+                                            $newPosition = $positiongotten + 1;
+
+                                            DB::update('update addmark_secs set position = '.$newPosition.' where id = ?', [$mainScoreId]);
+                                            
+                                        }
+
+                                        DB::commit();
+                                        // all good
+                                    } catch (\Exception $e) {
+                                        DB::rollback();
+                                        // something went wrong
                                     }
             
-                                    for ($i=0; $i < count($getstudentposition); $i++) { 
             
-                                        $mainScore = $getstudentposition[$i]['totalmarks'];
-                                        $mainScoreId = $getstudentposition[$i]['id'];
-            
-                                        $positiongotten = array_search($mainScore, $subjectscrorearray);
-            
-                                        $updateposition = Addmark_sec::find($mainScoreId);
-                                        $updateposition->position = $positiongotten + 1;
-                                        $updateposition->save();
-                                        
-                                    }
+
             
             
                             
@@ -492,29 +507,43 @@ class AddstudentmakrsController_secs extends Controller
 
                             
             
-                            $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm'), 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
-            
-                            $subjectscrorearray = array();
-                            
-            
-                            for ($i=0; $i < count($getstudentposition); $i++) { 
-                                $score = $getstudentposition[$i]['totalmarks'];
-                                    array_push($subjectscrorearray, $score);
+                            try {
+                                $getstudentposition = DB::table('addmark_secs')->where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm'), 'section'=>$studentsectionMain])->orderBy('totalmarks', 'desc')->get();
+    
+                                $subjectscrorearray = array();
                                 
+        
+                                for ($i=0; $i < count($getstudentposition); $i++) { 
+                                    $score = $getstudentposition[$i]['totalmarks'];
+                                        array_push($subjectscrorearray, $score);
+                                    
+                                }
+        
+                                for ($i=0; $i < count($getstudentposition); $i++) { 
+        
+                                    $mainScore = $getstudentposition[$i]['totalmarks'];
+                                    $mainScoreId = $getstudentposition[$i]['id'];
+        
+                                    $positiongotten = array_search($mainScore, $subjectscrorearray);
+        
+                                    // $updateposition = Addmark_sec::find($mainScoreId);
+                                    // $updateposition->position = $positiongotten + 1;
+                                    // $updateposition->save();
+
+                                    $newPosition = $positiongotten + 1;
+
+                                    DB::update('update addmark_secs set position = '.$newPosition.' where id = ?', [$mainScoreId]);
+                                    
+                                }
+
+                                DB::commit();
+                                // all good
+                            } catch (\Exception $e) {
+                                DB::rollback();
+                                // something went wrong
                             }
-            
-                            for ($i=0; $i < count($getstudentposition); $i++) { 
-            
-                                $mainScore = $getstudentposition[$i]['totalmarks'];
-                                $mainScoreId = $getstudentposition[$i]['id'];
-            
-                                $positiongotten = array_search($mainScore, $subjectscrorearray);
-            
-                                $updateposition = Addmark_sec::find($mainScoreId);
-                                $updateposition->position = $positiongotten + 1;
-                                $updateposition->save();
-                                
-                            }
+
+
             
                             $msg = "success";
                                 
