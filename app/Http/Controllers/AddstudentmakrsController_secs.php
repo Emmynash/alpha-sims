@@ -514,14 +514,14 @@ class AddstudentmakrsController_secs extends Controller
                                 
         
                                 for ($i=0; $i < count($getstudentposition); $i++) { 
-                                    $score = $getstudentposition[$i]['totalmarks'];
+                                    $score = (int)$getstudentposition[$i]['totalmarks'];
                                         array_push($subjectscrorearray, $score);
                                     
                                 }
         
                                 for ($i=0; $i < count($getstudentposition); $i++) { 
         
-                                    $mainScore = $getstudentposition[$i]['totalmarks'];
+                                    $mainScore = (int)$getstudentposition[$i]['totalmarks'];
                                     $mainScoreId = $getstudentposition[$i]['id'];
         
                                     $positiongotten = array_search($mainScore, $subjectscrorearray);
