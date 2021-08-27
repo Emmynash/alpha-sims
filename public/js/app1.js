@@ -86808,6 +86808,20 @@ function AddSubject() {
     });
   }
 
+  function deleteClassForSubject(subjectid) {
+    console.log(subjectid);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/delete_subject_to_class/' + subjectid).then(function (response) {
+      if (response.data.response) {
+        // setclassSubjectFetched(response.data.response)
+        getClassForSubject(updatesubject.subjectid);
+      }
+
+      console.log(response);
+    })["catch"](function (e) {
+      console.log(e);
+    });
+  }
+
   function handleChangeUpdateSubject(evt) {
     setUpdatesubject(_objectSpread({}, updatesubject, _defineProperty({}, evt.target.name, evt.target.value)));
   }
@@ -87142,7 +87156,10 @@ function AddSubject() {
             flex: '1'
           }
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-          className: "btn btn-sm btn-danger badge"
+          className: "btn btn-sm btn-danger badge",
+          onClick: function onClick() {
+            return deleteClassForSubject(d.id);
+          }
         }, "Remove"))
       );
     }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Not allocated")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

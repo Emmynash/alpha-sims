@@ -393,6 +393,29 @@ function AddSubject() {
         
     }
 
+    function deleteClassForSubject(subjectid) {
+
+        console.log(subjectid)
+
+        axios.get('/delete_subject_to_class/'+subjectid).then(response=>{
+
+            if (response.data.response) {
+
+                // setclassSubjectFetched(response.data.response)
+                getClassForSubject(updatesubject.subjectid)
+                
+            }
+
+            console.log(response)
+
+        }).catch(e=>{
+
+            console.log(e)
+
+        })
+        
+    }
+
     function handleChangeUpdateSubject(evt) {
         setUpdatesubject({
             ...updatesubject,
@@ -626,7 +649,7 @@ function AddSubject() {
                                     <div style={{ display:'flex', margin:'5px' }}>
                                         <i style={{ fontStyle:'normal', fontSize:'14px' }}>{d.classname}</i><i>{d.sectionname}</i><div style={{ flex:'0.5' }}></div> <i style={{ fontStyle:'normal', fontSize:'14px' }}>{d.subjecttype == 1 ? "Elective":"Core"}</i>
                                         <div style={{ flex:'1' }}></div>
-                                        <button className="btn btn-sm btn-danger badge">Remove</button>
+                                        <button className="btn btn-sm btn-danger badge" onClick={()=>deleteClassForSubject(d.id)}>Remove</button>
                                     </div>
                                 )):<div><p>Not allocated</p></div>}
                                 <br/>

@@ -342,4 +342,27 @@ class SubjectController_sec extends Controller
         return response()->json(['response'=>$getClass]);
         
     }
+
+    public function deleteClassForSubject($subjectidAlloc)
+    {
+
+        try {
+            $getClassSubject = CLassSubjects::find($subjectidAlloc);
+
+            $deleteAddedMarks = Addmark_sec::where(['classid'=>$getClassSubject->classid, 'section'=>$getClassSubject->sectionid, 'subjectid'=>$getClassSubject->subjectid])->delete();
+
+            // Addmark_sec::destroy($deleteAddedMarks);
+
+            $getClassSubject->delete();
+
+            return response()->json(['response'=>"success"]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th]);
+        }
+
+
+        
+    }
 }

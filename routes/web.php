@@ -405,6 +405,7 @@ Route::group(['middleware' => ['auth', 'can:assign subjects']], function () {
     Route::POST('/add_number_of_ellectives', 'SubjectController_sec@addNumberOfEllectives');
     Route::POST('/asign_subject_to_class', 'SubjectController_sec@asignSubjectToClass');
     Route::get('/get_subject_to_class/{subjectid}', 'SubjectController_sec@getClassForSubject');
+    Route::get('/delete_subject_to_class/{subjectid}', 'SubjectController_sec@deleteClassForSubject');
     Route::get('/get_all_student_with_elective', 'SubjectController_sec@getStudentsWithElective');
 });
 

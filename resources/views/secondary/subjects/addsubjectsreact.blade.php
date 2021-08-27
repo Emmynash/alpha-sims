@@ -53,7 +53,7 @@
     </div>
   </footer>
 
-  <script src="{{ asset('js/app1.js') }}"></script>
+  <script src="{{ asset('js/app1.js?v=1') }}"></script>
 
   <script>
     function scrollocation(){
