@@ -185,7 +185,7 @@
                                 </div>
                                 <div style="height: 7px;"></div>
                                 <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
-                                    Position: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $addschool->getResultAverage($item->id, $classid, $term, $schoolsession) == NULL ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->position }} No. in Class {{ $item->getClassCount($item->classid, $item->schoolsession, $item->studentsection)->count() }}</i>
+                                    Position: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $addschool->getResultAverage($item->id, $classid, $term, $schoolsession) == NULL ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->position }} Out Of {{ $item->getClassCount($item->classid, $item->schoolsession, $item->studentsection)->count() }}</i>
                                 </div>
                                 <div style="height: 7px;"></div>
                                 <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 13px;">
