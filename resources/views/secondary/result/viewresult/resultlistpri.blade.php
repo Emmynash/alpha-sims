@@ -291,18 +291,18 @@
                     @endif
                 </div></center>
                 
-                {{-- <div class="container-fluid">
+                <div class="container-fluid">
                     <div style="display: flex; align-items: center; justify-content: center;">
                         <i style="text-decoration: underline; font-style: normal; font-weight: bold;">RATINGS</i>
                     </div>
                 </div>
-                <br> --}}
+                <br>
     
-                {{-- <div class="container-fluid">
+                <div class="container-fluid">
                     <div style="display: flex; flex-direction: row; width: 100%; margin: 0 auto;">
-                        <div class="" style="width: 50%;"> --}}
+                        <div class="" style="width: 50%;">
                             {{-- <div style="width: 99%; border: 1px solid black;">Physomoto</div> --}}
-                            {{-- <div style="width: 99%;">
+                            <div style="width: 99%;">
                                 <table style="width: 100%">
                                     <thead>
                                         <tr>
@@ -354,7 +354,7 @@
                         </div>
     
                     </div>
-                </div> --}}
+                </div>
     
     
                 <br>

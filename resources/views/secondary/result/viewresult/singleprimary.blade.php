@@ -223,17 +223,17 @@
                             @endforeach
                         @endif
                     </div> --}}
-                    {{-- <div style="display: flex; align-items: center; justify-content: center;">
+                    <div style="display: flex; align-items: center; justify-content: center;">
                         <i style="text-decoration: underline; font-style: normal; font-weight: bold;">RATINGS</i>
                     </div>
-                    <br> --}}
+                    <br>
                     <div>
     
-                        {{-- <div> --}}
-                            {{-- <div style="display: flex; flex-direction: row; width: 95%; margin: 0 auto;">
-                                <div class="" style="width: 50%;"> --}}
+                        <div>
+                            <div style="display: flex; flex-direction: row; width: 95%; margin: 0 auto;">
+                                <div class="" style="width: 50%;">
                                     {{-- <div style="width: 99%; border: 1px solid black;">Physomoto</div> --}}
-                                    {{-- <div style="width: 99%;">
+                                    <div style="width: 99%;">
                                         <table style="width: 100%">
                                             <thead>
                                                 <tr>
@@ -285,7 +285,7 @@
                                 </div>
     
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                     <br>
                     <div>
