@@ -51,7 +51,7 @@
                             <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schooladdress}}, {{$addschool->mobilenumber}}</i>
                             <i style="font-size: 15px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;"></i>
                             <div>
-                                <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Primary School Termly Report</i>
+                                <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Termly Report</i>
                             </div>
                         </div>
                         
@@ -318,41 +318,21 @@
                         </div>
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                            Principal's Comments: 
+                            Head of School's Comments: 
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
                             @if ($resultAverage != NULL)
     
-                                @if ($resultAverage->average >= 90 && $resultAverage->average <= 100)
-                                    An Outstanding performance. Keep it up.
-                                @elseif($resultAverage->average >= 80 && $resultAverage->average <= 89.9)
-                                    An excellent performance. Keep it up.
+                                @if($resultAverage->average >= 90 && $resultAverage->average <= 100)
+                                    An excellent performance.
     
-                                @elseif($resultAverage->average >= 75 && $resultAverage->average <= 79.9)
-                                    A very good performance. Keep it up.
+                                @elseif($resultAverage->average >= 70 && $resultAverage->average <= 89.9)
+                                    A good performance, reinforce.
     
-                                @elseif($resultAverage->average >= 70 && $resultAverage->average <= 74.9)
-                                    A good performance but can still do better
+                                @elseif($resultAverage->average >= 50 && $resultAverage->average <= 69.9)
+                                    An average performance, reinforce.
     
-                                @elseif($resultAverage->average >= 65 && $resultAverage->average <= 69.9)
-                                    A good performance but can still do better
-    
-                                @elseif($resultAverage->average >= 60 && $resultAverage->average <= 64.5)
-                                    Fairly good performance but can still do better
-    
-                                @elseif($resultAverage->average >= 55 && $resultAverage->average <= 59.9)
-                                    A fair performance. Needs to pay more attention to studies.
-    
-                                @elseif($resultAverage->average >= 50 && $resultAverage->average <= 54.9)
-                                    An average performance. Needs to pay more attention to studies.
-    
-                                @elseif($resultAverage->average >= 45 && $resultAverage->average <= 49.9)
-                                    An average performance. Needs to pay more attention to studies.
-    
-                                @elseif($resultAverage->average >= 40 && $resultAverage->average <= 44.9)
-                                    A poor performance. Please sit up.
-    
-                                @elseif($resultAverage->average/$subjects->count() >= 0 && $resultAverage->average/$subjects->count() <= 39.9)
-                                    A very poor performance. Please sit up.
+                                @elseif($resultAverage->average/$subjects->count() >= 0 && $resultAverage->average/$subjects->count() <= 49.9)
+                                    A fairly good performance, advised to repeat.
                                 @endif
     
                                 
@@ -366,7 +346,7 @@
                     <div style="width: 95%; display: flex; flex-direction: row; margin: 0 auto;">
                         <div class="" style="width: 50%; height: 50px; display: flex; flex-direction: row; align-items: center;">
                             {{-- <img src="{{asset('storage/schimages/'.$allDetails['addpost'][0]['schoolprincipalsignature'])}}" alt="" width="90px" height="90px"> --}}
-                            <i style="font-size: 13px; font-style: normal;">Principal Signature's</i></i>
+                            <i style="font-size: 13px; font-style: normal;">Head of School's Signature</i></i>
                             <img src="{{asset('storage/schimages/'.$addschool->schoolprincipalsignature)}}" alt="" height="50px">
     
                         </div>

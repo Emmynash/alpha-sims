@@ -69401,7 +69401,7 @@ function Moto() {
 
   function fetchPageDetails() {
     setisLoading(true);
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_teacher_page_details').then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_teacher_page_details_teachers').then(function (response) {
       console.log(response); // console.log(setJ)
 
       setisLoading(false);

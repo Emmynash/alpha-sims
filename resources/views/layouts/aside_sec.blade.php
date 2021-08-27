@@ -422,15 +422,15 @@
             @endcan
 
             @can('form teacher')
-            <li class="nav-item">
-              <a id="formmasteroptionelective" href="{{ route('add_student_electives') }}" class="nav-link">
-                  <i class="fas fa-users nav-icon"></i>
-                <p>
-                  Asign Electives
-                </p>
-              </a>
-            </li>
-          @endcan
+              <li class="nav-item">
+                <a id="formmasteroptionelective" href="{{ route('add_student_electives') }}" class="nav-link">
+                    <i class="fas fa-users nav-icon"></i>
+                  <p>
+                    Asign Electives
+                  </p>
+                </a>
+              </li>
+            @endcan
 
             @endif
 
@@ -537,12 +537,15 @@
                     <p>Add</p>
                   </a>
                 </li>
+                @can('add moto settings')
                 <li class="nav-item">
                   <a id="psyhcomotosettings" href="{{ route('setting_moto') }}" class="nav-link">
                     <i class="far fa-plus-square nav-icon"></i>
                     <p>Settings</p>
                   </a>
                 </li>
+                @endcan
+
               </ul>
             </li>
           @endcan

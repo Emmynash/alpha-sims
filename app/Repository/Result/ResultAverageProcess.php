@@ -37,6 +37,12 @@ class ResultAverageProcess{
             $schoolsession = $schooldata->schoolsession;
             
             try {
+
+
+
+                // DB::table('result_averages')->where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->delete();
+
+
                 $checkaverage = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->get();
         
                 if (count($checkaverage) > 0) {

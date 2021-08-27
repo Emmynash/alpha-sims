@@ -308,6 +308,35 @@
                   </p>
                 </a>
               </li>
+              <li class="nav-item">
+                  <a id="markmanageoption" href="{{ route('teacher_sec_remark') }}" class="nav-link">
+                      <i class="fas fa-check-double nav-icon"></i>
+                    <p>
+                      Result Remark
+                    </p>
+                  </a>
+              </li>
+              @can('form teacher')
+              <li class="nav-item">
+                <a id="formmasteroption" href="{{ route('form_teacher_multiple') }}" class="nav-link">
+                    <i class="fas fa-users nav-icon"></i>
+                  <p>
+                    Form Master
+                  </p>
+                </a>
+              </li>
+            @endcan
+
+            @can('form teacher')
+              <li class="nav-item">
+                <a id="formmasteroptionelective" href="{{ route('add_student_electives') }}" class="nav-link">
+                    <i class="fas fa-users nav-icon"></i>
+                  <p>
+                    Asign Electives
+                  </p>
+                </a>
+              </li>
+            @endcan
             @endif
 
             @can('take teachers attendance')
@@ -412,12 +441,15 @@
                       <p>add</p>
                     </a>
                   </li>
+                  @can('add moto settings')
                   <li class="nav-item">
                     <a id="psyhcomotosettings" href="{{ route('setting_moto') }}" class="nav-link">
                       <i class=" nav-iconfas fa-plus"></i> 
                       <p>settings</p>
                     </a>
                   </li>
+                  @endcan
+                  
                 </ul>
               </li>
             @endcan
@@ -466,6 +498,8 @@
                 </a>
               </li>
             @endcan
+
+            
   
 
   

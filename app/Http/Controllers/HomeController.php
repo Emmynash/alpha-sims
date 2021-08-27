@@ -245,10 +245,11 @@ class HomeController extends Controller
                                         ->select('teacher_subjects.*', 'addsection_secs.sectionname')
                                         ->where('user_id', Auth::user()->id)->get();
                 
+                $schooldetails = Addpost::find(Auth::user()->schoolid);
 
                 
 
-                return view('secondary.teachers.teacher_dash',compact('getTeacherDetails', 'formTeacher', 'subjectTeacherOffer'));
+                return view('secondary.teachers.teacher_dash',compact('getTeacherDetails', 'formTeacher', 'subjectTeacherOffer', 'schooldetails'));
             }
 
 

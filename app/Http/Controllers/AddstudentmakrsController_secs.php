@@ -76,38 +76,13 @@ class AddstudentmakrsController_secs extends Controller
     }
 
     public function fetchstudentssubject(Request $request, $classid, $sectionid){
-        
-        //---------------------------------------------------------------------------------------------------//
-        //                                fetch subjects for each class                                      //
-        // --------------------------------------------------------------------------------------------------//
-
-        // if (Auth::user()->role == "Teacher") {
-
-        //     $teachersSubjects = TeacherSubjects::where('user_id', Auth::user()->id)->pluck('subject_id')->toArray();
-
-        //     $subjectlist = $this->addsubject_sec->where(['schoolid'=> Auth::user()->schoolid, 'classid'=>$request->input('classid')])->get();
-
-        //     $teachersSubjectMain = array();
-
-        //     for ($i=0; $i < count($subjectlist); $i++) { 
-        //         if (in_array((int)$subjectlist[$i]['id'], $teachersSubjects, TRUE)) { 
-        //             array_push($teachersSubjectMain, $subjectlist[$i]);
-        //         }
-        //     }
-
-        //     return response()->json(['subjectlist'=>$teachersSubjectMain]);
-            
-        // }
 
         $classAllocatedSubject = CLassSubjects::where(['classid'=>$classid, 'sectionid'=>$sectionid])->pluck('subjectid')->toArray();
-
         $subjectsmain = array();
-
         for ($i=0; $i < count($classAllocatedSubject); $i++) { 
             $subjectlistsingle = Addsubject_sec::find($classAllocatedSubject[$i]);
             array_push($subjectsmain, $subjectlistsingle);
         }
-        
         return response()->json(['subjectlist'=>$subjectsmain]);
     }
 
@@ -227,20 +202,6 @@ class AddstudentmakrsController_secs extends Controller
             
     }
 
-    public function processPosition(Request $request){
-
-        // process student position
-        $validator = Validator::make($request->all(),[
-            'classidmarks' => 'required',
-            'processterm' => 'required',
-            'sessionprocessmark' => 'required',
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
-        }
-            
-    }
 
     public function fetchStudentSections($id)
     {

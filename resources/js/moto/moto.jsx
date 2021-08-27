@@ -30,7 +30,7 @@ function Moto() {
 
     function fetchPageDetails() {
         setisLoading(true)
-        axios.get('/get_teacher_page_details').then(response=> {
+        axios.get('/get_teacher_page_details_teachers').then(response=> {
             console.log(response);
             // console.log(setJ)
             setisLoading(false)
