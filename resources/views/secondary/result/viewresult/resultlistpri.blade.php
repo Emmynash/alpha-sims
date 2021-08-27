@@ -211,7 +211,7 @@
                     <table style="width: 100%; margin: 0 auto;" id="category">
                         <thead style="text-align: center;">
                             <tr>
-                                <th style="font-size: 12px; width: 100px;">SUBJECTS</th>
+                                <th style="font-size: 12px;">SUBJECTS</th>
                                
                                     {{-- <th class="text-center  thdesign"><i class="rotated" class="text-center" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Class Assignment</p></th> --}}
                                 
@@ -241,7 +241,7 @@
     
                             @foreach ($addschool->getSubjectList($item->id, $schoolsession, $classid, $section, $term) as $subjects)
     
-                            <tr style='font-size: 12px; width: 150px;'>
+                            <tr style='font-size: 12px;'>
                                 <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $subjects->subjectname }}</center></td>
                                 @if ($addschool->caset == 1)
                                     <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $subjects->getSubjectMark($item->id, $subjects->id, $schoolsession)->ca3 }}</center></td>
