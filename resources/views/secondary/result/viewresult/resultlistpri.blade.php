@@ -299,7 +299,7 @@
                 <br>
     
                 <div class="container-fluid">
-                    <div style="display: flex; flex-direction: row; width: 100%; margin: 0 auto;">
+                    <div style=" width: 100%; margin: 0 auto;">
                         <div class="" style="">
                             {{-- <div style="width: 99%; border: 1px solid black;">Physomoto</div> --}}
                             <div style="width: 99%;">
@@ -329,6 +329,7 @@
 
     
                     </div>
+                    <br>
                     <div class="" style="">
                         <div style="width: 99%;">
                             <table style="width: 100%">
