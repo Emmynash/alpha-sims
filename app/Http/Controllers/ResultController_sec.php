@@ -213,7 +213,7 @@ class ResultController_sec extends Controller
             // }
         } catch (\Throwable $th) {
             //throw $th;
-            return "mnmnm";
+            return $th;
         }
 
     }
