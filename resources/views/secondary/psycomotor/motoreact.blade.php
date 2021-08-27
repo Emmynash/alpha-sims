@@ -54,7 +54,7 @@
     </div>
   </footer>
 
-  <script src="{{ asset('js/appmoto.js') }}"></script>
+  <script src="{{ asset('js/appmoto.js?v=1') }}"></script>
 
   <script>
     function scrollocation(){
