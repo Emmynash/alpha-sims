@@ -201,7 +201,7 @@
     
                 <div class="container-fluid">
                     <div style="display: flex; align-items: center; justify-content: center; height: 10px;">
-                        <i style="text-decoration: underline; font-style: normal; font-weight: bold;">ACCADEMIC RECORDS</i>
+                        <i style="text-decoration: underline; font-style: normal; font-weight: bold;">ACADEMIC RECORDS</i>
                     </div>
                 </div>
     
@@ -224,7 +224,7 @@
                                 <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">POSITION</i></th>
                                 <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Grade</i></th>
                                 {{-- <th class="text-center  thdesign"><i style="font-size: 12px;">Teacher</i></th> --}}
-                                <th class="text-center  thdesign">
+                                {{-- <th class="text-center  thdesign">
                                     <i style="font-size: 12px;">Year Summary</i>
                                     <table style="width: 100%; margin: 0 auto;">
                                         <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">1st term</i></th>
@@ -233,7 +233,7 @@
                                         <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Avg. Score</i></th>
                                         <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Position</i></th>
                                     </table>
-                                </th>
+                                </th> --}}
     
                             </tr>
                         </thead>
@@ -255,7 +255,7 @@
                                 <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->position }}</center></td>
                                 <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->grades }}</center></td>
                                 {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getTeacherName($subjects->id) }}</td> --}}
-                                <td class='text-center thdesign'>
+                                {{-- <td class='text-center thdesign'>
                                     <table style="width: 100%; margin: 0 auto;">
                                         <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id)->totalmarks }}</i></th>
                                         <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id)->totalmarks }}</i></th>
@@ -263,7 +263,7 @@
                                         <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getAverageScore($subjects->id, $schoolsession, $item->id) == NULL ? "0":round($addschool->getAverageScore($subjects->id, $schoolsession, $item->id)) }}</i></th>
                                         <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;"></i></th>
                                     </table>
-                                </td>
+                                </td> --}}
                             <tr>
                                 
                             @endforeach
