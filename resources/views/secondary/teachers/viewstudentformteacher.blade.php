@@ -146,6 +146,9 @@
                                       <div class="form-group">
                                           <input type="text" name="lastname" value="{{ $item->lastname }}" class="form-control form-control-sm" placeholder="lastname name">
                                       </div>
+                                      <div class="form-group">
+                                        <input type="text" name="admission_no" value="{{ $item->admission_no }}" class="form-control form-control-sm" placeholder="admission number">
+                                    </div>
                                       <input type="hidden" name="user_id" value="{{ $item->userid }}">
                                     </div>
                                   </form>

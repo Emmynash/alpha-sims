@@ -623,11 +623,16 @@ class TeachersController_sec extends Controller
 
             }else{
 
+
                 $updateUser = User::find($request->user_id);
                 $updateUser->firstname = $request->firstname;
                 $updateUser->middlename = $request->middlename;
                 $updateUser->lastname = $request->lastname;
                 $updateUser->save();
+
+                $updateAdmissionNo = Addstudent_sec::where('usernamesystem', $request->user_id)->first();
+                $updateAdmissionNo->admission_no = $request->admission_no;
+                $updateAdmissionNo->save();
         
                 return back()->with('success', 'Updated successfully');
             }
