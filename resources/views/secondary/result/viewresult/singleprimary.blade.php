@@ -223,17 +223,17 @@
                             @endforeach
                         @endif
                     </div> --}}
-                    <div style="display: flex; align-items: center; justify-content: center;">
+                    {{-- <div style="display: flex; align-items: center; justify-content: center;">
                         <i style="text-decoration: underline; font-style: normal; font-weight: bold;">RATINGS</i>
                     </div>
-                    <br>
+                    <br> --}}
                     <div>
     
-                        <div>
-                            <div style="display: flex; flex-direction: row; width: 95%; margin: 0 auto;">
-                                <div class="" style="width: 50%;">
+                        {{-- <div> --}}
+                            {{-- <div style="display: flex; flex-direction: row; width: 95%; margin: 0 auto;">
+                                <div class="" style="width: 50%;"> --}}
                                     {{-- <div style="width: 99%; border: 1px solid black;">Physomoto</div> --}}
-                                    <div style="width: 99%;">
+                                    {{-- <div style="width: 99%;">
                                         <table style="width: 100%">
                                             <thead>
                                                 <tr>
@@ -285,7 +285,7 @@
                                 </div>
     
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <br>
                     <div>
@@ -298,9 +298,9 @@
                         </div> --}}
     
                         <br>
-                        <div data-toggle="collapse" data-target="#housemastersremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
+                        {{-- <div data-toggle="collapse" data-target="#housemastersremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
                             House Master Remark: <i style="font-style: normal;" id="housemastercommentMain"></i>
-                        </div>
+                        </div> --}}
                         {{-- <div style="width: 95%; margin: 0 auto;" id="housemastersremark" class="collapse">
                             <center><input type="text" onkeydown="housemastercomment(this)" style="width: 95%; margin-top: 2px;" placeholder="From teacher comment"></center>
                         </div> --}}

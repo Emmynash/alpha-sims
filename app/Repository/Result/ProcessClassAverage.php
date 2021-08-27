@@ -16,7 +16,8 @@ class ProcessClassAverage{
     public function processresult(Request $request)
     {
 
-        //-----------------------------------------------------------------------------------//
+        try {
+                    //-----------------------------------------------------------------------------------//
         //                                                                                   //
         //                        compute averages for each subject                          //
         //                                                                                   //
@@ -78,6 +79,10 @@ class ProcessClassAverage{
 
         return "success";
 
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+        }
         
 
         
