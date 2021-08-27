@@ -215,14 +215,14 @@
                                
                                     {{-- <th class="text-center  thdesign"><i class="rotated" class="text-center" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Class Assignment</p></th> --}}
                                 
-                                <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">First CA</i></th>
-                                <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Second CA</i></th>
-                                <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">EXAM SCORE</i></th>
-                                <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">TOTAL MARK</i></th>
+                                <th class="text-center  thdesign"><i class="" style="margin: 0px; padding: 5px;">First CA</i></th>
+                                <th class="text-center  thdesign"><i class="" style="margin: 0px; padding: 5px;">Second CA</i></th>
+                                <th class="text-center  thdesign"><i class="" style="margin: 0px; padding: 5px;">EXAM SCORE</i></th>
+                                <th class="text-center  thdesign"><i class="" style="margin: 0px; padding: 5px;">TOTAL MARK</i></th>
                                 {{-- <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Points</i></th> --}}
-                                <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Average</i></th>
-                                <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">POSITION</i></th>
-                                <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Grade</i></th>
+                                <th class="text-center  thdesign"><i class="" style=" margin: 0px; padding: 5px;">Average</i></th>
+                                <th class="text-center  thdesign"><i class="" style=" margin: 0px; padding: 5px;">POSITION</i></th>
+                                <th class="text-center  thdesign"><i class="" style="margin: 0px; padding: 5px;">Grade</i></th>
                                 {{-- <th class="text-center  thdesign"><i style="font-size: 12px;">Teacher</i></th> --}}
                                 {{-- <th class="text-center  thdesign">
                                     <i style="font-size: 12px;">Year Summary</i>
