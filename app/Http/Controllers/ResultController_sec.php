@@ -201,19 +201,19 @@ class ResultController_sec extends Controller
         //--------------------------------------------------------------------------------
 
         try {
-            $resultAverage = $resultAverageProcess->processResultAverage($request);
+           $resultAverage = $resultAverageProcess->processResultAverage($request);
 
-            if ($resultAverage == "success") {
+            // if ($resultAverage == "success") {
                 
                 $process_class_average = $processClassAverage->processresult($request);
     
                 return $process_class_average;
-            }else{
-                return $resultAverage;
-            }
+            // }else{
+            //     return $resultAverage;
+            // }
         } catch (\Throwable $th) {
             //throw $th;
-            return $th;
+            return "mnmnm";
         }
 
     }
