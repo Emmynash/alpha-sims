@@ -300,7 +300,7 @@
     
                 <div class="container-fluid">
                     <div style="display: flex; flex-direction: row; width: 100%; margin: 0 auto;">
-                        <div class="" style="width: 50%;">
+                        <div class="" style="">
                             {{-- <div style="width: 99%; border: 1px solid black;">Physomoto</div> --}}
                             <div style="width: 99%;">
                                 <table style="width: 100%">
@@ -326,33 +326,34 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="" style="width: 50%;">
-                            <div style="width: 99%;">
-                                <table style="width: 100%">
-                                    <thead>
-                                        <tr>
-                                            <th style="font-size: 10px; width: 50%;">SKILLS</th>
-                                            <th class="text-center  thdesign1">Marks(1-5)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+
     
-                                        @if ($motolistskills->count() > 0)
-    
-                                            @foreach ($motolistskills as $itemskills)
-                                                <tr>
-                                                    <td class="thdesign1">{{ $itemskills->name }}</td>
-                                                    <td id="punctuation" class="thdesign1">{{ $itemskills->getmotoscore($itemskills->id, $item->id, $schoolsession, $term) }}</td>
-                                                </tr>
-                                            @endforeach
-                                            
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </div>
-                            
+                    </div>
+                    <div class="" style="">
+                        <div style="width: 99%;">
+                            <table style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th style="font-size: 10px; width: 50%;">SKILLS</th>
+                                        <th class="text-center  thdesign1">Marks(1-5)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @if ($motolistskills->count() > 0)
+
+                                        @foreach ($motolistskills as $itemskills)
+                                            <tr>
+                                                <td class="thdesign1">{{ $itemskills->name }}</td>
+                                                <td id="punctuation" class="thdesign1">{{ $itemskills->getmotoscore($itemskills->id, $item->id, $schoolsession, $term) }}</td>
+                                            </tr>
+                                        @endforeach
+                                        
+                                    @endif
+                                </tbody>
+                            </table>
                         </div>
-    
+                        
                     </div>
                 </div>
     
