@@ -278,7 +278,7 @@
                 <br>
                 
                 <div style="container-fluid">
-                    <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 17px;">Exam Total: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal; font-size: 13px;">{{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->sumofmarks, 2) }}</i></i>
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 17px;">Exam Total: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal; font-size: 17px;">{{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->sumofmarks, 2) }}</i></i>
                     {{-- <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 17px;">Pupil Average: {{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, 2) }}</i> --}}
                     {{-- <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 13px;">Final Grade: {{ $addschool->getGrade(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, $classtype) }}</i> --}}
                 </div>
