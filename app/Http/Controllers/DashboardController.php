@@ -337,7 +337,7 @@ class DashboardController extends Controller
         }else{
             
             $validatedData = $request->validate([
-                'schoolprincipalsignature' => 'image|max:200|mimes:jpeg,png,jpg|required',
+                'schoolprincipalsignature' => 'image|mimes:jpeg,png,jpg|required',
             ]);
             
             if ($request->hasFile('schoolprincipalsignature')) {
