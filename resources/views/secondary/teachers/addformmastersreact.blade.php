@@ -51,7 +51,7 @@
     </div>
   </footer>
 
-  <script src="{{ asset('js/appformmaster.js?v=1') }}"></script>
+  <script src="{{ asset('js/appformmaster.js?v=2') }}"></script>
 
   <script>
     function scrollocation(){
