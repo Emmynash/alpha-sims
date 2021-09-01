@@ -406,7 +406,8 @@
                         <div class="" style="width: 50%; height: 50px; display: flex; flex-direction: row; align-items: center;">
                             {{-- <img src="{{asset('storage/schimages/'.$allDetails['addpost'][0]['schoolprincipalsignature'])}}" alt="" width="90px" height="90px"> --}}
                             <i style="font-size: 17px; font-style: normal;">Head of School's Signature</i></i>
-                            <img src="{{asset('storage/schimages/'.$addschool->schoolprincipalsignature)}}" alt="" height="50px">
+                            {{-- <img src="{{asset('storage/schimages/'.$addschool->schoolprincipalsignature)}}" alt="" height="50px"> --}}
+                            <img src="https://drive.google.com/uc?id=1M5pwqpSuBxks7YBe9h-D_3vgJ98zVABG" alt="" height="50px">
             
                         </div>
                         <div class="" style="width:50%; height: 50px;">
