@@ -69645,7 +69645,13 @@ function ManageStaff() {
         display: 'flex',
         flexDirection: 'column'
       }
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      style: {
+        fontStyle: 'normal',
+        fontSize: '13px',
+        padding: '2px'
+      }
+    }, isLoadingStaff ? "" : viewStaffres.detUserDetails.firstname + " " + viewStaffres.detUserDetails.middlename))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-md-12"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "card"
