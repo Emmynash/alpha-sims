@@ -136,7 +136,7 @@
                         <div class="col-md-6">
                             <div style="width: 95%; margin:0 auto;">
                                 <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 17px;">
-                                    Name of Student: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $item->getStudentName->firstname }} {{ $item->getStudentName->middlename }} {{ $item->getStudentName->lastname }}</i>
+                                    Name of Pupil: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $item->getStudentName->firstname }} {{ $item->getStudentName->middlename }} {{ $item->getStudentName->lastname }}</i>
                                 </div>
                                 <div style="height: 7px;"></div>
                                 <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 17px;">
@@ -185,7 +185,7 @@
                                 </div>
                                 <div style="height: 7px;"></div>
                                 <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 17px;">
-                                    Student Average: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, 2) }}</i>
+                                    Pupil Average: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, 2) }}</i>
                                 </div>
                                 <div style="height: 7px;"></div>
                                 <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black; font-size: 17px;">
@@ -221,7 +221,7 @@
                                 <th class="text-center  thdesign"><i class="" style="margin: 0px; padding: 5px; font-size: 17px;">TOTAL MARK</i></th>
                                 {{-- <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Points</i></th> --}}
                                 <th class="text-center  thdesign"><i class="" style=" margin: 0px; padding: 5px; font-size: 17px;">Average</i></th>
-                                <th class="text-center  thdesign"><i class="" style=" margin: 0px; padding: 5px; font-size: 17px;">POSITION</i></th>
+                                {{-- <th class="text-center  thdesign"><i class="" style=" margin: 0px; padding: 5px; font-size: 17px;">POSITION</i></th> --}}
                                 <th class="text-center  thdesign"><i class="" style="margin: 0px; padding: 5px; font-size: 17px;">Grade</i></th>
                                 {{-- <th class="text-center  thdesign"><i style="font-size: 12px;">Teacher</i></th> --}}
                                 {{-- <th class="text-center  thdesign">
@@ -252,7 +252,7 @@
                                 <td class='text-center thdesign' style='font-size: 17px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->totalmarks }}</center></td>
                                 {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
                                 <td class='text-center thdesign' style='font-size: 17px;'><center>{{ $addschool->getClassAverageMarkSubject($subjects->id, $term, $schoolsession) == NULL ? "0":round($addschool->getClassAverageMarkSubject($subjects->id, $term, $schoolsession)->average, 1) }}</center></td>
-                                <td class='text-center thdesign' style='font-size: 17px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->position }}</center></td>
+                                {{-- <td class='text-center thdesign' style='font-size: 17px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->position }}</center></td> --}}
                                 <td class='text-center thdesign' style='font-size: 17px;'><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->grades }}</center></td>
                                 {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $addschool->getTeacherName($subjects->id) }}</td> --}}
                                 {{-- <td class='text-center thdesign'>
@@ -279,7 +279,7 @@
                 
                 <div style="container-fluid">
                     <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 17px;">Exam Total: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal; font-size: 13px;">{{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->sumofmarks, 2) }}</i></i>
-                    <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 17px;">Student Average: {{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, 2) }}</i>
+                    {{-- <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 17px;">Pupil Average: {{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, 2) }}</i> --}}
                     {{-- <i style="margin: 10px 0px 0px 50px; font-style: normal; font-size: 13px;">Final Grade: {{ $addschool->getGrade(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, $classtype) }}</i> --}}
                 </div>
                 
