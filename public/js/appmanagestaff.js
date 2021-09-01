@@ -69453,7 +69453,7 @@ function ManageStaff() {
   function viewStaff(staffSystemNumber) {
     setIsLoadingStaff(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/gen/viewstaff/' + staffSystemNumber).then(function (response) {
-      console.log(response.data);
+      console.log(response);
       setViewStaffres(response.data);
       setIsLoadingStaff(false);
     })["catch"](function (e) {

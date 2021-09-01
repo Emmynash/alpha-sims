@@ -123,7 +123,7 @@ function ManageStaff() {
         setIsLoadingStaff(true);
 
         axios.get('/gen/viewstaff/'+staffSystemNumber).then(response=> {
-            console.log(response.data);
+            console.log(response);
             
             setViewStaffres(response.data)
 
