@@ -269,7 +269,7 @@ function ManageStaff() {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="card text-center" style={{ display:'flex', flexDirection:'column' }}>
-                                    <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px' }}>{ isLoadingStaff ? "": viewStaffres.detUserDetails.firstname +" "+viewStaffres.detUserDetails.middlename}</i>
+                                    {/* <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px' }}>{ isLoadingStaff ? "": viewStaffres.detUserDetails.firstname +" "+viewStaffres.detUserDetails.middlename}</i> */}
                                     {/* <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px' }}>Form Class Section</i> */}
                                     {/* <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px' }}>firstname middlename lastname</i> */}
                                 </div>
