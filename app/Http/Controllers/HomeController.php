@@ -556,9 +556,9 @@ class HomeController extends Controller
                                         ->where('user_id', Auth::user()->id)->get();
                 
 
-                
+                $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-                return view('secondary.teachers.teacher_dash',compact('getTeacherDetails', 'formTeacher', 'subjectTeacherOffer'));
+                return view('secondary.teachers.teacher_dash',compact('getTeacherDetails', 'formTeacher', 'subjectTeacherOffer', 'schooldetails'));
             }
 
                 $user = User::find(Auth::user()->id);
