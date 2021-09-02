@@ -356,7 +356,8 @@ Route::group(['prefix' => 'sec'], function () {
         Route::post('/update_student_form', 'TeachersController_sec@updateStudentData')->name('update_student_form')->middleware('can:form teacher');
         Route::post('/form_teacher_result_confirm', 'TeachersController_sec@confirmSubjectRecordEntered')->name('form_teacher_result_confirm'); 
         Route::get('/get_teacher_subject', 'TeachersController_sec@fetchTeachersSubject')->name('get_teacher_subject');
-     });
+        Route::post('/add_student_comment', 'TeachersController_sec@addStudentComment')->name('add_student_comment')->middleware('can:form teacher');
+     }); 
 
 
 

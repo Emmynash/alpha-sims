@@ -120,7 +120,8 @@
                             <td>{{ $item->firstname }} {{ $item->middlename }} {{ $item->lastname }}</td>
                             <td>{{ $item->admission_no }}</td>
                             <td>
-                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_Student{{ $item->id }}">edit</button>
+                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_Student{{ $item->id }}"><i class="fas fa-user-edit"></i></button>
+                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#comment_Student{{ $item->id }}"><i class="fas fa-comments"></i></button>
                             </td>
                         </tr>
 
@@ -128,7 +129,7 @@
                             <div class="modal-dialog">
                               <div class="modal-content">
                                 <div class="modal-header">
-                                  <h4 class="modal-title">Default Modal</h4>
+                                  <h4 class="modal-title">Edit Student Data</h4>
                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                   </button>
@@ -167,7 +168,43 @@
                               <!-- /.modal-content -->
                             </div>
                             <!-- /.modal-dialog -->
-                          </div>
+                        </div>
+                          <!-- /.modal -->
+
+                          <div class="modal fade" id="comment_Student{{ $item->id }}">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h4 class="modal-title">Student Comment</h4>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <form action="{{ route('add_student_comment') }}" method="post" id="commentStudent{{ $item->id }}">
+                                      @csrf
+                                      <div class="">
+
+                                      <div class="form-group">
+                                          {{-- <input type="text" name="middlename" value="{{ $item->middlename }}" class="form-control form-control-sm" placeholder="middlename name"> --}}
+                                          <textarea name="comment" id="" cols="30" rows="5" class="form-control form-control-sm" placeholder="Add Student Comment"></textarea>
+                                      </div>
+                                      <div class="form-group">
+                                         <input type="text" name="reg_no" value="{{ $item->id }}">
+                                         <input type="text" name="section_id" value="{{ $item->sectionid }}">
+                                      </div>
+                                  </form>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                  <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                  {{-- <button type="submit" class="btn btn-danger btn-sm" form="deleteStudent{{ $item->id }}">Delete</button> --}}
+                                  <button type="submit" class="btn btn-info btn-sm" form="commentStudent{{ $item->id }}">Add Comment</button>
+                                </div>
+                              </div>
+                              <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
                           <!-- /.modal -->
                         
                     @endforeach

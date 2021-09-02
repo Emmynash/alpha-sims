@@ -16,6 +16,7 @@ use App\Addpost;
 use App\Addteachers_sec;
 use App\Addsubject_sec;
 use App\CLassSubjects;
+use App\CommentsModel;
 use App\TeacherSubjects;
 use App\FormTeachers;
 use App\ConfirmSubjectRecordEntered;
@@ -600,8 +601,9 @@ class TeachersController_sec extends Controller
         $formClass = FormTeachers::where(['teacher_id'=> Auth::user()->id, 'form_id'=>$sectionid, 'class_id'=>$classid])->first();
 
         $getStudentList = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                            ->join('addsection_secs', 'addstudent_secs.studentsection','=','addsection_secs.id')
                             ->where(['classid'=>$classid, 'studentsection'=>$sectionid])
-                            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'users.id as userid')->get();
+                            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'users.id as userid', 'addsection_secs.id as sectionid')->get();
 
         return view('secondary.teachers.viewstudentformteacher', compact('formClass', 'getStudentList'));
     }
@@ -727,6 +729,31 @@ class TeachersController_sec extends Controller
 
             return response()->json(['response'=>"error"]);
         }
+    }
+
+    public function addStudentComment(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'comment' => 'required'
+        ]);
+
+        try {
+            $schooldata = Addpost::find(Auth::user()->schoolid);
+
+            $addStudentComment = CommentsModel::updateOrCreate(
+                ['session' => $schooldata->schoolsession, 'reg_no' => $request->reg_no, 'section_id' => $request->section_id],
+                ['session' => $schooldata->schoolsession, 'reg_no' => $request->reg_no, 'section_id' => $request->section_id, 'term' => $schooldata->term, 'comments' => $request->comment]
+            );
+
+            return back()->with('success', 'Comment added successfully');
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+            return back()->with('error', 'An error occured');
+        }
+        
     }
 
 }
