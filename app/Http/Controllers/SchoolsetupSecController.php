@@ -350,13 +350,13 @@ class SchoolsetupSecController extends Controller
 
         $clubs = Addclub_sec::where("schoolid", Auth::user()->schoolid)->get();
 
-        $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->get();
+        // $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->get();
 
-        $subasscategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')
-                         ->where('sub_assesment_models.schoolid', Auth::user()->schoolid)
-                         ->select('sub_assesment_models.*', 'assesment_models.name')->get();
+        // $subasscategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')
+        //                  ->where('sub_assesment_models.schoolid', Auth::user()->schoolid)
+        //                  ->select('sub_assesment_models.*', 'assesment_models.name')->get();
 
-        return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'houselist'=>$houselist, 'classsection'=>$classsection, 'clubs'=>$clubs, 'assessment'=>$assessment, 'subasscategory'=>$subasscategory]);
+        return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'houselist'=>$houselist, 'classsection'=>$classsection, 'clubs'=>$clubs]);
     }
 
     public function setup_school_sec()
