@@ -11,7 +11,9 @@ use App\Addclub_sec;
 use App\Addgrades_sec;
 use App\Addstudent_sec;
 use App\Addstudent;
+use App\AssesmentModel;
 use App\Repository\Schoolsetup\SchoolSetup as SchoolsetupSchoolSetup;
+use App\SubAssesmentModel;
 use App\SubHistory;
 use Illuminate\Support\Facades\Auth;
 use SchoolSetup;
@@ -348,7 +350,13 @@ class SchoolsetupSecController extends Controller
 
         $clubs = Addclub_sec::where("schoolid", Auth::user()->schoolid)->get();
 
-        return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'houselist'=>$houselist, 'classsection'=>$classsection, 'clubs'=>$clubs]);
+        $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->get();
+
+        $subasscategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')
+                         ->where('sub_assesment_models.schoolid', Auth::user()->schoolid)
+                         ->select('sub_assesment_models.*', 'assesment_models.name')->get();
+
+        return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'houselist'=>$houselist, 'classsection'=>$classsection, 'clubs'=>$clubs, 'assessment'=>$assessment, 'subasscategory'=>$subasscategory]);
     }
 
     public function setup_school_sec()
@@ -357,5 +365,52 @@ class SchoolsetupSecController extends Controller
 
         return view('secondary.setupschool.schoolsetupreact', compact('schooldetails'));
         
+    }
+
+    public function setUpAssesment(Request $request)
+    {
+        try { 
+
+            $checkMarksEntered = AssesmentModel::where('schoolid', Auth::user()->schoolid)->sum('maxmark');
+
+            if (($checkMarksEntered + $request->maxmarks) <= 100) {
+                
+                $addAssessmentCat = AssesmentModel::updateOrCreate(
+                    ['name'=>$request->name],
+                    ['name'=>$request->name, 'maxmark'=>$request->maxmarks, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
+                );
+
+            }
+
+            return response()->json(['response'=>'success'], 200);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>'error'], 402);
+        }
+
+    }
+
+    public function subAssessmentSetUp(Request $request)
+    {
+        try {
+
+            $assessmentCatId = AssesmentModel::find($request->catid);
+            $getAllMarksInCategory = SubAssesmentModel::where('catid', $request->catid)->sum('maxmarks');
+            if (($getAllMarksInCategory + $request->submaxmarks) <= $assessmentCatId->maxmark) {
+                
+                $addAssessmentCat = SubAssesmentModel::updateOrCreate(
+                    ['subname'=>$request->subname],
+                    ['subname'=>$request->subname, 'catid'=>$request->catid, 'maxmarks'=>$request->submaxmarks, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
+                );
+
+            }
+
+            return response()->json(['response'=>'success'], 200);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th], 400);
+        }
     }
 }

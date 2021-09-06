@@ -69443,7 +69443,18 @@ function SchoolSetUp() {
   var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState46 = _slicedToArray(_useState45, 2),
       selectedclassListType = _useState46[0],
-      setSelectedClassListType = _useState46[1];
+      setSelectedClassListType = _useState46[1]; // const [assessment, setAssessment] = useState([])
+  // const [subasscategory, setSubasscategory] = useState([])
+  // const [assessmentSetUp, setassessmentSetUp] = useState({
+  //     name:'',
+  //     maxmarks:''
+  // })
+  // const [subassessmentSetUp, setSubassessmentSetUp] = useState({
+  //     catid:'',
+  //     subname:'',
+  //     submaxmarks:'',
+  // })
+
 
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
 
@@ -69476,7 +69487,9 @@ function SchoolSetUp() {
       setclasssection(response.data.classsection);
       setclubs(response.data.clubs);
       setSchoolInitials(response.data.schoolDetails.shoolinitial);
-      setschoolsessioninput(response.data.schoolDetails.schoolsession);
+      setschoolsessioninput(response.data.schoolDetails.schoolsession); // setAssessment(response.data.assessment)
+      // setSubasscategory(response.data.subasscategory)
+
       setsessiondata(_objectSpread({}, sessiondata, {
         session: response.data.schoolDetails.schoolsession,
         firsttermstarts: response.data.schoolDetails.firsttermstarts,
@@ -69554,6 +69567,16 @@ function SchoolSetUp() {
   function handleChange(evt) {
     var value = evt.target.value;
     setsessiondata(_objectSpread({}, sessiondata, _defineProperty({}, evt.target.name, value)));
+  }
+
+  function handleAssessmentSetup(evt) {
+    var value = evt.target.value;
+    setassessmentSetUp(_objectSpread({}, assessmentSetUp, _defineProperty({}, evt.target.name, value)));
+  }
+
+  function handleSubAssessmentSetup(evt) {
+    var value = evt.target.value;
+    setSubassessmentSetUp(_objectSpread({}, subassessmentSetUp, _defineProperty({}, evt.target.name, value)));
   }
 
   function handleExamChange(e) {
@@ -69841,6 +69864,36 @@ function SchoolSetUp() {
     });
   }
 
+  function setUpAssessment() {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/setupassesment", assessmentSetUp, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+      myalert('Process Successful', 'success');
+      fetchSchoolDetails();
+    })["catch"](function (e) {
+      console.log(e);
+      myalert('Process Successful', 'success');
+    });
+  }
+
+  function subSetUpAssessment() {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/subsetupassesment", subassessmentSetUp, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response);
+      myalert('Process Successful', 'success');
+      fetchSchoolDetails();
+    })["catch"](function (e) {
+      console.log(e);
+      myalert('Process Successful', 'success');
+    });
+  }
+
   function handleClickClass(classid) {
     setSelectedClassId(classid);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/sec/setting/classstatus/' + classid).then(function (response) {
@@ -70114,7 +70167,7 @@ function SchoolSetUp() {
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
       className: "custom-control-label",
       htmlFor: "customSwitch4"
-    }, "CA3"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "CA3"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row",
       style: {
         margin: '10px'

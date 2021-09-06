@@ -30,6 +30,17 @@ function SchoolSetUp() {
     const [isupdatingca3, setisupdatingca3] = useState(false)
     const [selectedclassid, setSelectedClassId] = useState('')
     const [selectedclassListType, setSelectedClassListType] = useState(0)
+    // const [assessment, setAssessment] = useState([])
+    // const [subasscategory, setSubasscategory] = useState([])
+    // const [assessmentSetUp, setassessmentSetUp] = useState({
+    //     name:'',
+    //     maxmarks:''
+    // })
+    // const [subassessmentSetUp, setSubassessmentSetUp] = useState({
+    //     catid:'',
+    //     subname:'',
+    //     submaxmarks:'',
+    // })
     const alert = useAlert()
 
     const [sessiondata, setsessiondata] = useState({
@@ -65,6 +76,8 @@ function SchoolSetUp() {
             setclubs(response.data.clubs)
             setSchoolInitials(response.data.schoolDetails.shoolinitial)
             setschoolsessioninput(response.data.schoolDetails.schoolsession)
+            // setAssessment(response.data.assessment)
+            // setSubasscategory(response.data.subasscategory)
 
             setsessiondata({
                 ...sessiondata, session:response.data.schoolDetails.schoolsession,
@@ -145,7 +158,23 @@ function SchoolSetUp() {
             ...sessiondata,
           [evt.target.name]: value
         });
-      }
+    }
+
+    function handleAssessmentSetup(evt) {
+        const value = evt.target.value;
+        setassessmentSetUp({
+            ...assessmentSetUp,
+          [evt.target.name]: value
+        });
+    }
+
+    function handleSubAssessmentSetup(evt) {
+        const value = evt.target.value;
+        setSubassessmentSetUp({
+            ...subassessmentSetUp,
+          [evt.target.name]: value
+        });
+    }
     
     function handleExamChange(e) {
         console.log(e.target.value)
@@ -492,6 +521,44 @@ function SchoolSetUp() {
         })
     }
 
+    function setUpAssessment() {
+
+
+        axios.post("/sec/setting/setupassesment", assessmentSetUp, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response)
+            
+            
+            myalert('Process Successful', 'success');
+            fetchSchoolDetails()
+        }).catch(e=>{
+            console.log(e)
+            myalert('Process Successful', 'success');
+        })
+    }
+
+    function subSetUpAssessment() {
+
+
+        axios.post("/sec/setting/subsetupassesment", subassessmentSetUp, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response)
+            
+            
+            myalert('Process Successful', 'success');
+            fetchSchoolDetails()
+        }).catch(e=>{
+            console.log(e)
+            myalert('Process Successful', 'success');
+        })
+    }
+
 
     function handleClickClass(classid) {
 
@@ -631,6 +698,109 @@ function SchoolSetUp() {
 
 
                 </div>
+                <hr/>
+                    {/* <div>
+                        <p style={{ paddingLeft:'10px' }}>SetUp Continous Assessment(e.g Exams, CA1, CA2 etc)</p>
+                        <div className="row" style={{ margin:'10px' }}>
+                            <div className="col-12 col-md-6">
+                                <div className="row">
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <label>Name</label>
+                                            <input type="text" name="name" value={assessmentSetUp.name} onChange={handleAssessmentSetup} className="form-control form-control-sm"/>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <label>Max Marks</label>
+                                            <input type="number" name="maxmarks" value={assessmentSetUp.maxmarks} onChange={handleAssessmentSetup} className="form-control form-control-sm"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <button type="submit" className="btn btn-sm btn-info badge" onClick={setUpAssessment}>Save</button>
+                                </div>
+                                {
+                                    assessment.map(d=>(
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <div style={{ display:'flex', alignItems:'center' }} >
+                                                    <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.name} ({d.maxmark})</i> <div style={{ flex:'1' }}></div>
+
+                                                    <div className="form-group">
+                                                        <div className="custom-control custom-switch">
+                                                            <input type="checkbox" defaultChecked={true} className="custom-control-input" id="" />
+                                                            <label className="custom-control-label" htmlFor="jkj"></label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                                
+                            </div>
+                            <div className="col-12 col-md-6">
+                                <div style={{ border:'1px solid black' }}>
+                                    <p style={{ padding:'5px' }}>Continous Assessment Sub-category</p>
+                                    <div className="row" style={{ margin:'5px' }}>
+                                        <div className="col-12 col-md-6">
+                                            <div className="form-group">
+                                                <label>Select a Category</label>
+                                                <select className="form-control form-control-sm" name="catid" value={subassessmentSetUp.catid} onChange={handleSubAssessmentSetup}>
+                                                    <option value="">Select a category</option>
+                                                    {
+                                                        assessment.map(d=>(
+                                                            <option key={d.id+"cacat"} value={d.id}>{d.name}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-md-6">
+                                            <div className="form-group">
+                                                <label>Sub Name</label>
+                                                <input type="text" name="subname" value={subassessmentSetUp.subname} onChange={handleSubAssessmentSetup} className="form-control form-control-sm"/>
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Max Marks</label>
+                                                <input type="number" name="submaxmarks" value={subassessmentSetUp.submaxmarks} onChange={handleSubAssessmentSetup} className="form-control form-control-sm"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="form-group" style={{ marginLeft:'10px' }}>
+                                        <button type="submit" className="btn btn-sm btn-info badge" onClick={subSetUpAssessment}>Save</button>
+                                    </div>
+
+                                    {
+                                        subasscategory.map(d=>(
+                                            <div className="card" style={{ margin:'0px 5px 0px 5px' }}>
+                                                <div className="card-body">
+                                                    <div style={{ display:'flex', alignItems:'center' }} >
+                                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}> sub category</i> <div style={{ flex:'1' }}></div>
+
+                                                        <div className="form-group">
+                                                            <div className="custom-control custom-switch">
+                                                                <input type="checkbox" defaultChecked={true} className="custom-control-input" id="" />
+                                                                <label className="custom-control-label" htmlFor="jkj"></label>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+
+                                    
+
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                    </div> */}
                 <hr/>
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-6">
