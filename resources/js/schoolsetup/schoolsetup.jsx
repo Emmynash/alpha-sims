@@ -880,7 +880,7 @@ function SchoolSetUp() {
                         {
                             houselist.length > 0 ? 
                             houselist.map(d => (
-                                <div className="card radius-15">
+                                <div key={d.id+"housesid"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
                                             <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.housename} </i> <div style={{ flex:'1' }}></div> <button className="btn btn-sm btn-danger badge">Remove</button>
@@ -914,7 +914,7 @@ function SchoolSetUp() {
                         {
                             classsection.length > 0 ? 
                             classsection.map(d => (
-                                <div className="card radius-15">
+                                <div kay={d.id+"classsecid"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
                                             <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.sectionname} </i> <div style={{ flex:'1' }}></div> <button className="btn btn-sm btn-danger badge">Remove</button>
@@ -942,7 +942,7 @@ function SchoolSetUp() {
                         {
                             clubs.length > 0 ? 
                             clubs.map(d => (
-                                <div className="card radius-15">
+                                <div key={d.id+"clubid"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
                                             <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.clubname} </i> <div style={{ flex:'1' }}></div> <button className="btn btn-sm btn-danger badge">Remove</button>

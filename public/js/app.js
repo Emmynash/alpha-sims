@@ -70263,6 +70263,7 @@ function SchoolSetUp() {
       className: "btn btn-sm btn-info badge"
     }, "Save"), houselist.length > 0 ? houselist.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: d.id + "housesid",
           className: "card radius-15"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "card-body"
@@ -70318,6 +70319,7 @@ function SchoolSetUp() {
       className: "btn btn-sm btn-info badge"
     }, "Save"), classsection.length > 0 ? classsection.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          kay: d.id + "classsecid",
           className: "card radius-15"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "card-body"
@@ -70366,6 +70368,7 @@ function SchoolSetUp() {
       className: "btn btn-sm btn-info badge"
     }, "Save"), clubs.length > 0 ? clubs.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: d.id + "clubid",
           className: "card radius-15"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "card-body"
