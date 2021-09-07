@@ -69973,7 +69973,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha-sims-react/resources/js/appmarks.js */"./resources/js/appmarks.js");
+module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha/alpha-sims-react/resources/js/appmarks.js */"./resources/js/appmarks.js");
 
 
 /***/ })

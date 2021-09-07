@@ -33,17 +33,24 @@ class RegisterStudents{
                 return "admission";
             }
 
-            $createAccount = new User();
-            $createAccount->firstname = $request->firstname;
-            $createAccount->middlename = $request->middlename;
-            $createAccount->lastname = $request->lastname;
-            $createAccount->schoolid = Auth::user()->schoolid;
-            $createAccount->email = $request->email;
-            $createAccount->role = "Student";
-            $createAccount->phonenumber = $request->phonenumber;
-            $createAccount->password = Hash::make($generatePassword);
-            $createAccount->save();
+            if ($request->isRegistered == "2") {
 
+                $createAccount = User::find($request->studentsystemnumber);
+
+            }else {
+                
+
+                $createAccount = new User();
+                $createAccount->firstname = $request->firstname;
+                $createAccount->middlename = $request->middlename;
+                $createAccount->lastname = $request->lastname;
+                $createAccount->schoolid = Auth::user()->schoolid;
+                $createAccount->email = $request->email;
+                $createAccount->role = "Student";
+                $createAccount->phonenumber = $request->phonenumber;
+                $createAccount->password = Hash::make($generatePassword);
+                $createAccount->save();
+            }
 
 
             $checkduplicate = Addstudent_sec::where('usernamesystem', $createAccount->id)->get();
@@ -104,6 +111,9 @@ class RegisterStudents{
             //asign student role
     
             $user = User::find($createAccount->id);
+            $user->role = "Student";
+            $user->schoolid = Auth::user()->schoolid;
+            $user->save();
     
             $user->assignRole('Student');
             return "success";
