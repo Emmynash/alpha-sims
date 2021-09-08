@@ -25,19 +25,30 @@ class SchoolSetup{
                 $classlisttype = array("1", "1", "1", "2", "2", "2");
         
                 for ($i=0; $i < count($classlist); $i++) { 
+
+                    $addclasses = Classlist_sec::updateOrCreate(
+                        ['classname' => strtoupper($classlist[$i]), 'schoolid' => Auth::user()->schoolid],
+                        [
+                            'schoolid' => Auth::user()->schoolid,
+                            'classname' => strtoupper($classlist[$i]),
+                            'studentcount' => 0,
+                            'classtype' => (int)$classlisttype[$i],
+                            'status' => 1
+                        ]
+                    );
         
-                    $classlistCheck = Classlist_sec::where(['classname' => strtoupper($classlist[$i]), 'schoolid' => Auth::user()->schoolid])->get();
+                    // $classlistCheck = Classlist_sec::where(['classname' => strtoupper($classlist[$i]), 'schoolid' => Auth::user()->schoolid])->get();
         
-                    if (count($classlistCheck) < 1) {
+                    // if (count($classlistCheck) < 1) {
         
-                        $addclasses_sec = new Classlist_sec();
-                        $addclasses_sec->schoolid = Auth::user()->schoolid;
-                        $addclasses_sec->classname = strtoupper($classlist[$i]);
-                        $addclasses_sec->studentcount = 0;
-                        $addclasses_sec->classtype = (int)$classlisttype[$i];
-                        $addclasses_sec->status = 1;
-                        $addclasses_sec->save();
-                    }
+                    //     $addclasses_sec = new Classlist_sec();
+                    //     $addclasses_sec->schoolid = Auth::user()->schoolid;
+                    //     $addclasses_sec->classname = strtoupper($classlist[$i]);
+                    //     $addclasses_sec->studentcount = 0;
+                    //     $addclasses_sec->classtype = (int)$classlisttype[$i];
+                    //     $addclasses_sec->status = 1;
+                    //     $addclasses_sec->save();
+                    // }
         
                 }
         
