@@ -17,6 +17,7 @@ use App\Addteachers_sec;
 use App\Addsubject_sec;
 use App\CLassSubjects;
 use App\CommentsModel;
+use App\CommentTable;
 use App\TeacherSubjects;
 use App\FormTeachers;
 use App\ConfirmSubjectRecordEntered;
@@ -605,7 +606,13 @@ class TeachersController_sec extends Controller
                             ->where(['classid'=>$classid, 'studentsection'=>$sectionid])
                             ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'users.id as userid', 'addsection_secs.id as sectionid')->get();
 
-        return view('secondary.teachers.viewstudentformteacher', compact('formClass', 'getStudentList'));
+        $schooldata = Addpost::find(Auth::user()->schoolid);
+
+        $comments = CommentTable::where('schoolid', Auth::user()->schoolid)->get();
+
+        $commentRecordedArray = CommentsModel::where(['session' => $schooldata->schoolsession, 'classid' => $classid, 'section_id' => $sectionid, 'term' => $schooldata->term])->pluck('reg_no')->toArray();
+
+        return view('secondary.teachers.viewstudentformteacher', compact('formClass', 'getStudentList', 'comments', 'commentRecordedArray'));
     }
 
     public function updateStudentData(Request $request)
@@ -742,8 +749,8 @@ class TeachersController_sec extends Controller
             $schooldata = Addpost::find(Auth::user()->schoolid);
 
             $addStudentComment = CommentsModel::updateOrCreate(
-                ['session' => $schooldata->schoolsession, 'reg_no' => $request->reg_no, 'section_id' => $request->section_id],
-                ['session' => $schooldata->schoolsession, 'reg_no' => $request->reg_no, 'section_id' => $request->section_id, 'term' => $schooldata->term, 'comments' => $request->comment]
+                ['session' => $schooldata->schoolsession, 'reg_no' => $request->reg_no, 'section_id' => $request->section_id, 'classid' => $request->classid],
+                ['session' => $schooldata->schoolsession, 'reg_no' => $request->reg_no, 'section_id' => $request->section_id, 'term' => $schooldata->term, 'comments' => $request->comment, 'classid' => $request->classid]
             );
 
             return back()->with('success', 'Comment added successfully');

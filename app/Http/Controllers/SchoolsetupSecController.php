@@ -12,9 +12,13 @@ use App\Addgrades_sec;
 use App\Addstudent_sec;
 use App\Addstudent;
 use App\AssesmentModel;
+use App\CommentsModel;
+use App\CommentTable;
 use App\Repository\Schoolsetup\SchoolSetup as SchoolsetupSchoolSetup;
 use App\SubAssesmentModel;
 use App\SubHistory;
+use Egulias\EmailValidator\Warning\Comment;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\Auth;
 use SchoolSetup;
 
@@ -412,5 +416,44 @@ class SchoolsetupSecController extends Controller
             //throw $th;
             return response()->json(['response'=>$th], 400);
         }
+    }
+
+
+    public function setupComment()
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $comments = CommentTable::where('schoolid', Auth::user()->schoolid)->get();
+
+        return view('secondary.comment.commentsetup', compact('schooldetails', 'comments'));
+    }
+
+    public function setupNewComment(Request $request)
+    {
+
+        try {
+
+            $addComment = CommentTable::create(
+                [
+                    'comment' => $request->comment,
+                    'schoolid' => Auth::user()->schoolid
+                ]
+            );
+
+            return back()->with('success', 'Comment added successfully');
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', 'Error adding comment');
+        }
+        
+    }
+
+    public function deletecomment(Request $request)
+    {
+        $deleteComment = CommentTable::find($request->deleteid);
+        $deleteComment->delete();
+
+        return back()->with('success', 'Comment deleted successfully');
+
     }
 }

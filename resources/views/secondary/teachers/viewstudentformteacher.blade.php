@@ -22,7 +22,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">My Subjects</li>
+              <li class="breadcrumb-item active">Settings</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -120,8 +120,13 @@
                             <td>{{ $item->firstname }} {{ $item->middlename }} {{ $item->lastname }}</td>
                             <td>{{ $item->admission_no }}</td>
                             <td>
-                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_Student{{ $item->id }}"><i class="fas fa-user-edit"></i></button>
-                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#comment_Student{{ $item->id }}"><i class="fas fa-comments"></i></button>
+                                  <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_Student{{ $item->id }}"><i class="fas fa-user-edit"></i></button>
+                                @if (in_array($item->id, $commentRecordedArray))
+                                  <button class="btn btn-success btn-sm"><i class="fas fa-check"></i></button>
+                                @else
+                                  <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#comment_Student{{ $item->id }}"><i class="fas fa-comments"></i></button>
+                                @endif
+                                
                             </td>
                         </tr>
 
@@ -184,19 +189,29 @@
                                   <form action="{{ route('add_student_comment') }}" method="post" id="commentStudent{{ $item->id }}">
                                       @csrf
                                       <div class="">
+                                        <div>
+                                            <p>{{ $item->firstname }} {{ $item->middlename }} {{ $item->lastname }}</p>
+                                        </div>
 
                                       <div class="form-group">
                                           {{-- <input type="text" name="middlename" value="{{ $item->middlename }}" class="form-control form-control-sm" placeholder="middlename name"> --}}
-                                          <textarea name="comment" id="" cols="30" rows="5" class="form-control form-control-sm" placeholder="Add Student Comment"></textarea>
+                                          {{-- <textarea name="comment" id="" cols="30" rows="5" class="form-control form-control-sm" placeholder="Add Student Comment"></textarea> --}}
+                                          <select name="comment" id="" class="form-control form-control-sm">
+                                            <option value="">Select a Comment</option>
+                                            @foreach ($comments as $item1)
+                                                <option value="{{ $item1->comment }}">{{ $item1->comment }}</option>
+                                            @endforeach
+                                          </select>
                                       </div>
                                       <div class="form-group">
-                                         <input type="text" name="reg_no" value="{{ $item->id }}">
-                                         <input type="text" name="section_id" value="{{ $item->sectionid }}">
+                                         <input type="hidden" name="reg_no" value="{{ $item->id }}">
+                                         <input type="hidden" name="section_id" value="{{ $item->sectionid }}">
+                                         <input type="hidden" name="classid" value="{{ $item->classid }}">
                                       </div>
                                   </form>
                                 </div>
-                                <div class="modal-footer justify-content-between">
-                                  <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                                   {{-- <button type="submit" class="btn btn-danger btn-sm" form="deleteStudent{{ $item->id }}">Delete</button> --}}
                                   <button type="submit" class="btn btn-info btn-sm" form="commentStudent{{ $item->id }}">Add Comment</button>
                                 </div>

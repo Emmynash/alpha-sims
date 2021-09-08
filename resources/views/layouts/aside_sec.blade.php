@@ -623,6 +623,12 @@
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a id="commentsetup" href="{{ route('setupcomment') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>SetUp Comments</p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="{{ route('addschool_sec') }}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Institution</p>

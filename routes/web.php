@@ -314,8 +314,11 @@ Route::group(['prefix' => 'sec'], function () {
         Route::get('/addschool_sec', 'DashboardController@addschool')->middleware('auth')->middleware('verified')->name('addschool_sec');
         Route::POST('/update_term', 'SchoolsetupSecController@update_term')->name('update_term');
         Route::POST('/update_caset', 'SchoolsetupSecController@updatecaSet')->name('update_caset');
-        Route::POST('/setupassesment', 'SchoolsetupSecController@setUpAssesment')->name('setupassesment');
+        Route::POST('/setupassesment', 'SchoolsetupSecController@setUpAssesment')->name('setupassesment');//
         Route::POST('/subsetupassesment', 'SchoolsetupSecController@subAssessmentSetUp')->name('subsetupassesment');
+        Route::GET('/setupcomment', 'SchoolsetupSecController@setupComment')->name('setupcomment');
+        Route::POST('/setupnewcomment', 'SchoolsetupSecController@setupNewComment')->name('setupnewcomment');
+        Route::POST('/deletecomment', 'SchoolsetupSecController@deletecomment')->name('deletecomment');
 
         Route::get('/allusers_sec', 'AllUsersController@index_sec')->name('allusers_sec');
         Route::get('/fetch_all_student', 'AllUsersController@fetch_all_student')->name('fetch_all_student');
