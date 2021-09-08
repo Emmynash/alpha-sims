@@ -350,7 +350,8 @@ function AddMarksTeachers() {
 
                         {
                             filteredUsers.map(d=>(
-                                <tr key={d.id+"subjectsstudents"}>
+                                d != null ? 
+                                    <tr key={d.id+"subjectsstudents"}>
                                     <td>{capitalize(d.firstname+" "+d.middlename+" "+d.lastname)}</td>
                                     <td>{d.admission_no}</td>
                                     <td>{d.ca3 == 0 ? "---":d.ca3}</td>
@@ -362,6 +363,7 @@ function AddMarksTeachers() {
                                     <td>{d.grades}</td>
                                     <td><button onClick={()=>addStudentMarksModal(d.exams, d.ca1, d.ca2, d.ca3, d.id, d.markid)} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button></td>
                                 </tr>
+                                :""
                             ))
                         }
 
