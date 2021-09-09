@@ -160,7 +160,9 @@ class Addpost extends Model
 
     public function getSubjectMark($regno, $subjectid, $session){
 
-        $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session])->first();
+        $schooldata = Addpost::find(Auth::user()->schoolid);
+
+        $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session, 'term'=>$schooldata->term])->first();
 
         return $subject;
 
