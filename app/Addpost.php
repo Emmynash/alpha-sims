@@ -181,7 +181,10 @@ class Addpost extends Model
             return "NAN";
         } else {
             $username = User::find($getTeacherId->user_id);
-            return ucfirst($username->firstname);
+            $firstname = ucfirst($username->firstname);
+            $lastname = ucfirst(str_split($username->lastname)[0]);
+
+            return $lastname.". ".$firstname;
         }
     }
 
@@ -215,6 +218,11 @@ class Addpost extends Model
     {
 
        return ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();
+    }
+
+    public function getStudentComment($regNo, $classid, $term, $schoolsession)
+    {
+        return CommentsModel::where(['reg_no'=>$regNo, 'classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession])->first();
     }
 
 
