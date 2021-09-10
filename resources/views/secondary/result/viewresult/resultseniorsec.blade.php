@@ -392,7 +392,7 @@
             <div style="height: 7px;"></div>
             <div class="container-fluid textfontstyle">
                 <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black;">
-                    Principal's Comments: 
+                    Principal's Comments: {{ $addschool->getResultAverage($item->id, $classid, $term, $schoolsession) }}
                     <i style="font-style: normal;" id="honourorpricesremarkmain">
                     @if ($addschool->getResultAverage($item->id, $classid, $term, $schoolsession) != NULL)
     
