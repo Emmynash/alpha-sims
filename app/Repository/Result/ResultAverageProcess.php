@@ -132,20 +132,18 @@ class ResultAverageProcess{
                 $resultReady->status = 1;
                 $resultReady->save();
                 
-                if ($request->input('processterm') == "3") {
+                if ($term == "3") {
                     
                     for ($i=0; $i < count($studentregnumberarray); $i++) { 
             
-                        $fetchAllStudentAverageMarkAndProcess = ResultAverage::where(['regno'=> $studentregnumberarray[$i], 'session'=>$schoolsession, 'section_id'=>$section])->sum('average');
+                        $fetchAllStudentAverageMarkAndProcess = ResultAverage::where(['regno'=> $studentregnumberarray[$i], 'session'=>$schoolsession, 'section_id'=>$section, 'classid'=>$classid])->sum('average');
             
                         $promomarks = $fetchAllStudentAverageMarkAndProcess / 3;
-            
-                        $addtopromoaverageTable = new PromotionAverage_sec();
-                        $addtopromoaverageTable->schoolid = Auth::user()->schoolid;
-                        $addtopromoaverageTable->regno = $studentregnumberarray[$i];
-                        $addtopromoaverageTable->session = $schoolsession;
-                        $addtopromoaverageTable->promomarks = $promomarks;
-                        $addtopromoaverageTable->save();
+
+                        $addtopromoaverageTable = PromotionAverage_sec::updateOrCreate(
+                            ['schoolid'=>Auth::user()->schoolid, 'regno'=>$studentregnumberarray[$i], 'session'=>$schoolsession],
+                            ['schoolid'=>Auth::user()->schoolid, 'regno'=>$studentregnumberarray[$i], 'session'=>$schoolsession, 'promomarks'=>$promomarks]
+                        );
                     
                     }
                 }

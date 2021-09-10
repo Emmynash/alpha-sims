@@ -290,13 +290,20 @@
                 <i style="margin: 10px 0px 0px 50px; font-style: normal;">Final Grade: {{ $addschool->getGrade(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, $classtype) }}</i>
             </div>
             
-            <center><div class="text-center textfontstyle" style="width: 95%; margin: 10px auto;">
+            <div class="text-center textfontstyle" style="width: 95%; margin: 3px auto;">
                 @if ($addschool->getGradeDetails($addschool->id, $classtype)->count() > 0)
-                    @foreach ($addschool->getGradeDetails($addschool->id, $classtype) as $itemgrade)
-                        <i style="font-style: normal;">{{ $itemgrade->gpaname }} = ({{ $itemgrade->marksfrom }}-{{ $itemgrade->marksto }})</i>
+                    @foreach ($addschool->getGradeDetails($addschool->id, $classtype) as $item)
+                        <i style="font-style: normal;">({{ $item->marksfrom }}-{{ $item->marksto }}) = {{ $item->point }}</i>
                     @endforeach
                 @endif
-            </div></center>
+            </div>
+            <div class="text-center textfontstyle" style="width: 95%; margin: 3px auto;">
+                @if ($addschool->getGradeDetails($addschool->id, $classtype)->count() > 0)
+                    @foreach ($addschool->getGradeDetails($addschool->id, $classtype) as $item)
+                    <i style="font-style: normal;">{{ $item->gpaname }} = ({{ $item->marksfrom }}-{{ $item->marksto }})</i>
+                    @endforeach
+                @endif
+            </div>
             
             <div class="container-fluid textfontstyle">
                 <div style="display: flex; align-items: center; justify-content: center;">
@@ -420,6 +427,8 @@
     
                         
                     @endif
+
+                    
                     
                     </i>
                 </div>
