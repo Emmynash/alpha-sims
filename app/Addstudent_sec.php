@@ -22,4 +22,13 @@ class Addstudent_sec extends Model
     {
         return Addstudent_sec::where(['classid'=>$classid, 'schoolsession'=>$session, 'studentsection'=>$sectionid])->get();
     }
+
+    public function getStudentElective($regno, $classid, $sectionid)
+    {
+        $electives = ElectiveAdd::join('addsubject_secs', 'addsubject_secs.id','=','elective_adds.subjectid')
+        ->where(['elective_adds.regno'=>$regno, 'elective_adds.classid'=>$classid, 'elective_adds.sectionid'=>$sectionid])
+        ->select('elective_adds.*', 'addsubject_secs.subjectname')->get();
+
+        return $electives;
+    }
 }

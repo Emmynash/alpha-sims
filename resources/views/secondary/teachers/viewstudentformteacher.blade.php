@@ -126,6 +126,8 @@
                                 @else
                                   <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#comment_Student{{ $item->id }}"><i class="fas fa-comments"></i></button>
                                 @endif
+
+                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#elective_Student{{ $item->id }}"><i class="fas fa-list"></i></button>
                                 
                             </td>
                         </tr>
@@ -176,39 +178,30 @@
                         </div>
                           <!-- /.modal -->
 
-                          <div class="modal fade" id="comment_Student{{ $item->id }}">
+
+                          <div class="modal fade" id="elective_Student{{ $item->id }}">
                             <div class="modal-dialog">
                               <div class="modal-content">
                                 <div class="modal-header">
-                                  <h4 class="modal-title">Student Comment</h4>
+                                  <h4 class="modal-title">Students Elective(s)</h4>
                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                   </button>
                                 </div>
                                 <div class="modal-body">
-                                  <form action="{{ route('add_student_comment') }}" method="post" id="commentStudent{{ $item->id }}">
-                                      @csrf
-                                      <div class="">
-                                        <div>
-                                            <p>{{ $item->firstname }} {{ $item->middlename }} {{ $item->lastname }}</p>
-                                        </div>
+                                  @foreach ($item->getStudentElective($item->id, $item->classid, $item->studentsection) as $itemElect)
+                                      <div class="card" style="display: flex; flex-direction: row;">
+                                        <i style="font-style: normal; font-size: 12px; padding: 5px;">{{ $itemElect->subjectname }}</i>
+                                        <div style="flex: 1;"></div>
+                                        <div><button class="btn btn-sm btn-danger badge">Remove</button></div>
+                                      </div>
 
-                                      <div class="form-group">
-                                          {{-- <input type="text" name="middlename" value="{{ $item->middlename }}" class="form-control form-control-sm" placeholder="middlename name"> --}}
-                                          {{-- <textarea name="comment" id="" cols="30" rows="5" class="form-control form-control-sm" placeholder="Add Student Comment"></textarea> --}}
-                                          <select name="comment" id="" class="form-control form-control-sm">
-                                            <option value="">Select a Comment</option>
-                                            @foreach ($comments as $item1)
-                                                <option value="{{ $item1->comment }}">{{ $item1->comment }}</option>
-                                            @endforeach
-                                          </select>
-                                      </div>
-                                      <div class="form-group">
-                                         <input type="hidden" name="reg_no" value="{{ $item->id }}">
-                                         <input type="hidden" name="section_id" value="{{ $item->sectionid }}">
-                                         <input type="hidden" name="classid" value="{{ $item->classid }}">
-                                      </div>
-                                  </form>
+                                      <form action="" method="post">
+                                        @csrf
+                                        
+                                      </form>
+
+                                  @endforeach
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
@@ -220,6 +213,53 @@
                             </div>
                             <!-- /.modal-dialog -->
                         </div>
+                        <!-- /.modal -->
+
+
+                          <div class="modal fade" id="comment_Student{{ $item->id }}">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">Student Comment</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form action="{{ route('add_student_comment') }}" method="post" id="commentStudent{{ $item->id }}">
+                                        @csrf
+                                        <div class="">
+                                          <div>
+                                              <p>{{ $item->firstname }} {{ $item->middlename }} {{ $item->lastname }}</p>
+                                          </div>
+
+                                        <div class="form-group">
+                                            {{-- <input type="text" name="middlename" value="{{ $item->middlename }}" class="form-control form-control-sm" placeholder="middlename name"> --}}
+                                            {{-- <textarea name="comment" id="" cols="30" rows="5" class="form-control form-control-sm" placeholder="Add Student Comment"></textarea> --}}
+                                            <select name="comment" id="" class="form-control form-control-sm">
+                                              <option value="">Select a Comment</option>
+                                              @foreach ($comments as $item1)
+                                                  <option value="{{ $item1->comment }}">{{ $item1->comment }}</option>
+                                              @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                          <input type="hidden" name="reg_no" value="{{ $item->id }}">
+                                          <input type="hidden" name="section_id" value="{{ $item->sectionid }}">
+                                          <input type="hidden" name="classid" value="{{ $item->classid }}">
+                                        </div>
+                                    </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                    {{-- <button type="submit" class="btn btn-danger btn-sm" form="deleteStudent{{ $item->id }}">Delete</button> --}}
+                                    <button type="submit" class="btn btn-info btn-sm" form="commentStudent{{ $item->id }}">Add Comment</button>
+                                  </div>
+                                </div>
+                                <!-- /.modal-content -->
+                              </div>
+                              <!-- /.modal-dialog -->
+                          </div>
                           <!-- /.modal -->
                         
                     @endforeach
