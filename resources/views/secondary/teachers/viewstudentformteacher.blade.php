@@ -193,12 +193,14 @@
                                       <div class="card" style="display: flex; flex-direction: row;">
                                         <i style="font-style: normal; font-size: 12px; padding: 5px;">{{ $itemElect->subjectname }}</i>
                                         <div style="flex: 1;"></div>
-                                        <div><button class="btn btn-sm btn-danger badge">Remove</button></div>
+                                        <div><button type="submit" class="btn btn-sm btn-danger badge" form="remove_elective_form{{ $item->id }}">Remove</button></div>
                                       </div>
 
-                                      <form action="" method="post">
+                                      <form action="{{ route('remove_elective') }}" method="post" id="remove_elective_form{{ $item->id }}">
                                         @csrf
-                                        
+                                        <input type="text" name="electiveid" value="{{ $itemElect->id }}">
+                                        <input type="text" name="subjectid" value="{{ $itemElect->subjectid }}">
+                                        <input type="text" name="regno" value="{{ $item->id }}">
                                       </form>
 
                                   @endforeach
@@ -206,7 +208,7 @@
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                                   {{-- <button type="submit" class="btn btn-danger btn-sm" form="deleteStudent{{ $item->id }}">Delete</button> --}}
-                                  <button type="submit" class="btn btn-info btn-sm" form="commentStudent{{ $item->id }}">Add Comment</button>
+                                  {{-- <button type="submit" class="btn btn-info btn-sm" form="commentStudent{{ $item->id }}">Add Comment</button> --}}
                                 </div>
                               </div>
                               <!-- /.modal-content -->

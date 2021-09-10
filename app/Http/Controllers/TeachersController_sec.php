@@ -763,4 +763,9 @@ class TeachersController_sec extends Controller
         
     }
 
+    public function remove_elective(Request $request)
+    {
+        return $request;
+    }
+
 }

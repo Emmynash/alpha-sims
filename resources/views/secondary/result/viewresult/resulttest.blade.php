@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
+        <link rel="stylesheet" href="{{ asset('css/print_sec.css') }} ">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        
 		
 		<!-- CSS property to place div
 			side by side -->
@@ -88,7 +90,15 @@
             }
 
             .textfontstyle{
-                font-size: 13px;
+                font-size: 17px;
+            }
+
+            table td.shrink {
+                white-space:nowrap
+            }
+
+            #tablewidth{
+                width: 35px;
             }
 		</style>
 	</head>
@@ -204,7 +214,7 @@
 
             <div class="container-fluid">
                 <div style="display: flex; align-items: center; justify-content: center; height: 10px;">
-                    <i class="textfontstyle" style="text-decoration: underline; font-style: normal; font-weight: bold;">ACCADEMIC RECORDS</i>
+                    <i class="textfontstyle" style="text-decoration: underline; font-style: normal; font-weight: bold;">ACADEMIC RECORDS</i>
                 </div>
             </div>
 
@@ -218,16 +228,16 @@
                            
                                 {{-- <th class="text-center  thdesign"><i class="rotated" class="text-center" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Class Assignment</p></th> --}}
                             
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">First CA</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Second CA</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">EXAM SCORE</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">TOTAL MARK</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Points</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Average</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">POSITION</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Grade</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i style="">Teacher</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">1st term</i>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">First CA</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Second CA</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">EXAM SCORE</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">TOTAL MARK</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Points</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Average</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">POSITION</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Grade</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i style="">Teacher</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">1st term</i>
                                 {{-- <i style="font-size: 12px;">Year Summary</i>
                                 <table style="width: 100%; margin: 0 auto;">
                                     <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">1st term</i></th>
@@ -237,8 +247,8 @@
                                     {{-- <th class="text-center  thdesign"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Position</i></th> --}}
                                 {{-- </table> --}}
                             </th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">2nd term</i></th>
-                            <th class="text-center  thdesign textfontstyle"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">3rd term</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">2nd term</i></th>
+                            <th class="text-center  thdesign textfontstyle" id="tablewidth"><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">3rd term</i></th>
 
                         </tr>
                     </thead>
@@ -251,16 +261,16 @@
                             @if ($addschool->caset == 1)
                                 <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $subjects->getSubjectMark($item->id, $subjects->id, $schoolsession)->ca3 }}</center></td>
                             @endif
-                            <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->ca2 }}</center></td>
-                            <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->ca1 }}</center></td>
-                            <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->exams }}</center></td>
-                            <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->totalmarks }}</center></td>
-                            <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getPoints($addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->totalmarks) == NULL ? "0": $addschool->getPoints($addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->totalmarks) }}</center></td>
-                            <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getClassAverageMarkSubject($subjects->id, $term, $schoolsession) == NULL ? "0":round($addschool->getClassAverageMarkSubject($subjects->id, $term, $schoolsession)->average, 1) }}</center></td>
-                            <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->position }}</center></td>
-                            <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->grades }}</center></td>
-                            <td class='text-center thdesign textfontstyle' style=''><center>{{ $addschool->getTeacherName($subjects->id) }}</td>
-                            <td class='text-center thdesign textfontstyle'><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id)->totalmarks }}</i>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth" style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->ca2 }}</center></td>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth" style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->ca1 }}</center></td>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth" style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->exams }}</center></td>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth" style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->totalmarks }}</center></td>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth" style=''><center>{{ $addschool->getPoints($addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->totalmarks) == NULL ? "0": $addschool->getPoints($addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->totalmarks) }}</center></td>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth" style=''><center>{{ $addschool->getClassAverageMarkSubject($subjects->id, $term, $schoolsession) == NULL ? "0":round($addschool->getClassAverageMarkSubject($subjects->id, $term, $schoolsession)->average, 1) }}</center></td>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth" style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->position }}</center></td>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth" style=''><center>{{ $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession) == NULL ? "0": $addschool->getSubjectMark($item->id, $subjects->id, $schoolsession)->grades }}</center></td>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth" style=''><center>{{ $addschool->getTeacherName($subjects->id) }}</td>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth"><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id)->totalmarks }}</i>
                                 {{-- <table style="width: 100%; margin: 0 auto;">
                                     <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 1, $item->id)->totalmarks }}</i></th>
                                     <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id)->totalmarks }}</i></th>
@@ -269,8 +279,8 @@
                                     {{-- <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;"></i></th> --}}
                                 {{-- </table> --}}
                             </td>
-                            <td class='text-center thdesign textfontstyle'><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id)->totalmarks }}</i>
-                            <td class='text-center thdesign textfontstyle'><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 3, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 3, $item->id)->totalmarks }}</i>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth"><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 2, $item->id)->totalmarks }}</i>
+                            <td class='text-center thdesign textfontstyle shrink' id="tablewidth"><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $addschool->getResultSummary($subjects->id, $schoolsession, 3, $item->id) == NULL ? "0":$addschool->getResultSummary($subjects->id, $schoolsession, 3, $item->id)->totalmarks }}</i>
                         <tr>
                             
                         @endforeach
