@@ -229,7 +229,7 @@ class Addpost extends Model
 
     public function getPromoAverage($regNo, $classid, $term, $schoolsession)
     {
-        $promoAverage = PromotionAverage_sec::where(['regno'=>$regNo, 'session'=>$schoolsession, 'term'=>$term])->first();
+        $promoAverage = PromotionAverage_sec::where(['regno'=>$regNo, 'session'=>$schoolsession])->first();
 
         return $promoAverage;
     }
