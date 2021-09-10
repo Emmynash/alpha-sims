@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class Addsubject_sec extends Model
 {
-    public function getSubjectMark($regno, $subjectid, $session){
+    public function getSubjectMark($regno, $subjectid, $session, $item){
 
-        $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session])->first();
+        $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session, 'term'=>$term])->first();
 
         return $subject;
 

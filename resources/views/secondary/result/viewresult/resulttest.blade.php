@@ -165,7 +165,7 @@
                                                         @elseif ($term == 3)
                                                             <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
                                                         @else
-                                                            <i style="font-style: normal; font-weight: bold;">NAN</i>
+                                                            <i style="font-style: normal; font-weight: bold;"></i>
                                                         @endif
                                                    </i>
                             </div>
@@ -301,6 +301,7 @@
                 @endif
                 <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, 2) }}</i>
                 <i style="margin: 10px 0px 0px 50px; font-style: normal;">Final Grade: {{ $addschool->getGrade(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, $classtype) }}</i>
+
             </div>
             
             <center><div class="text-center textfontstyle" style="width: 95%; margin: 10px auto;">
@@ -433,6 +434,10 @@
     
                         
                     @endif
+
+                   
+                        
+                    
                     
                     </i>
                 </div>
@@ -441,7 +446,21 @@
             <div class="container-fluid textfontstyle">
                 <div style="height: 7px;"></div>
                 <div data-toggle="collapse" data-target="#housemastersremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black;">
-                    <i style="font-style: normal;" id="housemastercommentMain"></i>
+                    <i style="font-style: normal;">
+                        
+                            @if ($addschool->getPromoAverage($item->id, $classid, $term, $schoolsession) != NULL)
+    
+                                @if ($addschool->getPromoAverage($item->id, $classid, $term, $schoolsession)->promomarks >= 50)
+                                    PROMOTED
+                                @elseif ($addschool->getPromoAverage($item->id, $classid, $term, $schoolsession)->promomarks >=45 && $addschool->getPromoAverage($item->id, $classid, $term, $schoolsession)->promomarks <=49.9)
+                                    PROMOTED ON TRIAL
+                                @else
+                                    REPEAT
+                                @endif
+                                
+                            @endif
+                        
+                    </i>
                 </div>
                 <div style="height: 7px;"></div>
             </div>
