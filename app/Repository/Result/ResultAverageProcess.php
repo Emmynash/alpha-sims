@@ -138,7 +138,7 @@ class ResultAverageProcess{
             
                         $fetchAllStudentAverageMarkAndProcess = ResultAverage::where(['regno'=> $studentregnumberarray[$i], 'session'=>$schoolsession, 'section_id'=>$section, 'classid'=>$classid])->sum('average');
             
-                        $promomarks = $fetchAllStudentAverageMarkAndProcess / 3;
+                        $promomarks = $fetchAllStudentAverageMarkAndProcess / 2;
 
                         $addtopromoaverageTable = PromotionAverage_sec::updateOrCreate(
                             ['schoolid'=>Auth::user()->schoolid, 'regno'=>$studentregnumberarray[$i], 'session'=>$schoolsession],
