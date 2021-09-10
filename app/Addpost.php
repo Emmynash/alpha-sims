@@ -227,5 +227,12 @@ class Addpost extends Model
         return CommentsModel::where(['reg_no'=>$regNo, 'classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession])->first();
     }
 
+    public function getPromoAverage($regNo, $classid, $term, $schoolsession)
+    {
+        $promoAverage = PromotionAverage_sec::where(['regno'=>$regNo, 'classid'=>$classid, 'session'=>$schoolsession, 'term'=>$term])->first();
+
+        return $promoAverage;
+    }
+
 
 }

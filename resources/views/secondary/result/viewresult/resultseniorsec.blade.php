@@ -285,7 +285,11 @@
             <br>
             
             <div class="textfontstyle" style="container-fluid">
-                <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal;">{{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->sumofmarks, 2) }}</i></i>
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: <i id="sum1" style="margin: 10px 0px 0px 5px; font-style: normal;">{{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->sumofmarks, 2) }}</i></i>
+                @if ($addschool->term == "3")
+                    <i style="margin: 10px 0px 0px 50px; font-style: normal;">Sessional Avg: {{ $addschool->getPromoAverage($item->id, $classid, $term, $schoolsession) ? "NAN":$addschool->getPromoAverage($item->id, $classid, $term, $schoolsession)->promomarks }}</i>
+                @endif
+                
                 <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ round(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, 2) }}</i>
                 <i style="margin: 10px 0px 0px 50px; font-style: normal;">Final Grade: {{ $addschool->getGrade(empty($addschool->getResultAverage($item->id, $classid, $term, $schoolsession)) ? "NAN":$addschool->getResultAverage($item->id, $classid, $term, $schoolsession)->average, $classtype) }}</i>
             </div>
