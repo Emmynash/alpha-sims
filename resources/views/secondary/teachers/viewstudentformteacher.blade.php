@@ -198,9 +198,9 @@
 
                                       <form action="{{ route('remove_elective') }}" method="post" id="remove_elective_form{{ $item->id }}">
                                         @csrf
-                                        <input type="text" name="electiveid" value="{{ $itemElect->id }}">
-                                        <input type="text" name="subjectid" value="{{ $itemElect->subjectid }}">
-                                        <input type="text" name="regno" value="{{ $item->id }}">
+                                        <input type="hidden" name="electiveid" value="{{ $itemElect->id }}">
+                                        <input type="hidden" name="subjectid" value="{{ $itemElect->subjectid }}">
+                                        <input type="hidden" name="regno" value="{{ $item->id }}">
                                       </form>
 
                                   @endforeach

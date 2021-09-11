@@ -765,7 +765,27 @@ class TeachersController_sec extends Controller
 
     public function remove_elective(Request $request)
     {
-        return $request;
+
+        $schooldata = Addpost::find(Auth::user()->schoolid);
+
+        DB::beginTransaction();
+
+        try {
+            
+            DB::table('elective_adds')->where('id', $request->electiveid)->delete();
+            DB::table('addmark_secs')->where(['regno'=>$request->regno, 'subjectid'=>$request->subjectid, 'term'=>$schooldata->term])->delete();
+        
+            DB::commit();
+            // all good
+
+            return back()->with('success', 'Elective unasigned successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return back()->with('error', 'Process was unsuccessfull');
+        }
+
+        
     }
 
 }
