@@ -441,7 +441,21 @@
             <div class="container-fluid textfontstyle">
                 <div style="height: 7px;"></div>
                 <div data-toggle="collapse" data-target="#housemastersremark" style="width: 100%; margin: 0 auto; border-bottom: 1px solid black;">
-                    <i style="font-style: normal;" id="housemastercommentMain"></i>
+                    <i style="font-style: normal;">
+                        
+                        @if ($addschool->getPromoAverage($item->id, $classid, $term, $schoolsession) != NULL)
+
+                            @if ($addschool->getPromoAverage($item->id, $classid, $term, $schoolsession)->promomarks >= 50)
+                                PROMOTED
+                            @elseif ($addschool->getPromoAverage($item->id, $classid, $term, $schoolsession)->promomarks >=45 && $addschool->getPromoAverage($item->id, $classid, $term, $schoolsession)->promomarks <=49.9)
+                                PROMOTED ON TRIAL
+                            @else
+                                REPEAT
+                            @endif
+                            
+                        @endif
+                    
+                </i>
                 </div>
                 <div style="height: 7px;"></div>
             </div>
