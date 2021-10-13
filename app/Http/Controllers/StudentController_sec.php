@@ -92,6 +92,8 @@ class StudentController_sec extends Controller
 
     public function store(RegisterStudents $registerStudents, Request $request){
 
+        // return $request;
+
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
@@ -100,22 +102,7 @@ class StudentController_sec extends Controller
             $validator = Validator::make($request->all(),[
                 'studentclassallocated' => 'required',
                 'studentsectionallocated' => 'required',
-                'studenttype' => 'required',
-                'studentsystemnumber' => 'required',
-                'studentgender' => 'required',
-                'studentreligion' => 'required',
-                'fathersname' => 'required',
-                'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                'mothersname' => 'required',
-                'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                'dateofbirth' => 'required',
-                'studenthouse' => 'required',
-                'studentclub' => 'required',
-                'studentaddress_sec' => 'required',
                 'admissionname' => 'required',
-                'states' => 'required',
-                'lga' => 'required',
-                'hometown' => 'required',
                 'admissiondate'=>'required'
             ]);
 
@@ -154,28 +141,12 @@ class StudentController_sec extends Controller
             $Addstudent->schoolid = Auth::user()->schoolid;
             $Addstudent->usernamesystem = $request->input('studentsystemnumber');
             $Addstudent->renumberschoolnew = $newrolnumber;
-            $Addstudent->nationality = $request->input('nationality');
             $Addstudent->studentsection = $request->input('studentsectionallocated');
             $Addstudent->schoolsession = $schooldetails->schoolsession;
-            $Addstudent->gender = $request->input('studentgender');
-            $Addstudent->studenthouse = $request->input('studenthouse');
-            $Addstudent->studentreligion = $request->input('studentreligion');
-            $Addstudent->bloodgroup = $request->input('bloodgroup');
-            $Addstudent->studentclub = $request->input('studentclub');
             $Addstudent->studentshift = $request->input('studenttype');
-            $Addstudent->studentfathername = $request->input('fathersname');
-            $Addstudent->studentfathernumber = $request->input('fathersphonenumber');
-            $Addstudent->studentmothersname = $request->input('mothersname');
-            $Addstudent->studentmothersnumber = $request->input('mothersphonenumber');
-            $Addstudent->studentpresenthomeaddress = $request->input('studentaddress_sec');
-            $Addstudent->studentpermanenthomeaddress = $request->input('studentaddress_sec');
-            $Addstudent->dateOfBirth = $request->input('dateofbirth');
             $Addstudent->sessionstatus = 0;
             $Addstudent->admission_no = $request->admissionname;
-            $Addstudent->states = $request->states;
-            $Addstudent->lga = $request->lga;
             $Addstudent->admissiondate = $request->admissiondate;
-            $Addstudent->hometown = $request->hometown;
             $Addstudent->save();
     
             //asign student role
@@ -202,26 +173,10 @@ class StudentController_sec extends Controller
             $validator = Validator::make($request->all(),[
                 'studentclassallocated' => 'required',
                 'studentsectionallocated' => 'required',
-                // 'studenttype' => 'required',
-                // 'studentgender' => 'required',
-                // 'studentreligion' => 'required',
-                // 'fathersname' => 'required',
-                // 'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                // 'mothersname' => 'required',
-                // 'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                // 'dateofbirth' => 'required',
-                // 'studenthouse' => 'required',
-                // 'studentclub' => 'required',
-                // 'studentaddress_sec' => 'required',
                 'admissionname' => 'required',
                 'firstname' => 'required',
-                // 'middlename' => 'required',
                 'lastname' => 'required',
-                // 'phonenumber' => 'required',
                 'email' => 'required|email',
-                // 'states' => 'required',
-                // 'lga' => 'required',
-                // 'hometown' => 'required',
                 'admissiondate'=>'required'
             ]);
 

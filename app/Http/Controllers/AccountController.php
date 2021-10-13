@@ -157,6 +157,7 @@ class AccountController extends Controller
 
     public function summary()
     {
+        
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
         $transactionHistory = TransactionRecord::where('school_id', Auth::user()->schoolid)->orderBy('created_at', 'desc')->paginate(10);

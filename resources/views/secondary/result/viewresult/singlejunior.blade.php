@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 
+    <style>
+        .rotated {
+                writing-mode: tb-rl;
+                transform: rotate(-180deg);
+            }
+    </style>
+
 </head>
 <body>
     
@@ -37,7 +44,7 @@
 
         <div class="" style="margin-top: 60px;" id="printnotready">
             <div class="" class="" style="width: 794px; margin: 0 auto;">
-                <div class="print-container" style="width: 794px; border: 2px solid black; border-style: dashed;">
+                <div class="print-container" style="width: 794px;">
                     <div style="display: flex;">
                         <div id="imagelogo" style="width: 25%; height: 100px; display: flex; align-items: center; justify-content: center;">
     
@@ -130,71 +137,67 @@
                         <i style="text-decoration: underline; font-style: normal; font-weight: bold;">ACADEMIC RECORDS</i>
                     </div>
                     <br>
-                    <div>
-                        <table style="width: 95%; margin: 0 auto;" id="category">
-                            <thead style="text-align: center;">
-                                <tr>
-                                    <th style="font-size: 12px;">SUBJECTS</th>
-                                    @if ($addschool->caset == 1)
-                                        <th class="text-center  thdesign"><i class="text-center" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Class Assignment</p></th>
-                                    @endif
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">First CA</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Second CA</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">EXAM SCORE</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">TOTAL MARK</i></th>
-                                    {{-- <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Points</i></th> --}}
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Average</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">POSITION</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Grade</i></th>
-                                    <th class="text-center  thdesign"><i style="font-size: 12px;">Teacher</i></th>
-                                    <th class="text-center  thdesign">
-                                        <i style="font-size: 12px;">Year Summary</i>
-                                        <table style="width: 100%; margin: 0 auto;">
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">1st term</i></th>
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">2nd term</i></th>
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">3rd term</i></th>
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Avg. Score</i></th>
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Position</i></th>
-                                        </table>
-                                    </th>
-    
-                                </tr>
-                            </thead>
-                            <tbody id="resultprinttable">
-                                @if ($subjects->count() > 0)
-    
-                                    @foreach ($subjects as $item)
-    
-                                            <tr style='font-size: 12px; width: 150px;'>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->subjectname }}</center></td>
-                                                @if ($addschool->caset == 1)
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca3 }}</center></td>
-                                                @endif
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca2 }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca1 }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->exams }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->totalmarks }}</center></td>
-                                                {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getClassAverageMarkSubject($item->id, $term, $schoolsession) == NULL ? "0":round($item->getClassAverageMarkSubject($item->id, $term, $schoolsession)->average, 1) }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->position }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->grades }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getTeacherName($item->id) }}</td>
-                                                <td class='text-center thdesign'>
-                                                    <table style="width: 100%; margin: 0 auto;">
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 1, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 1, $studentdetails->id)->totalmarks }}</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 2, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 2, $studentdetails->id)->totalmarks }}</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 3, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 3, $studentdetails->id)->totalmarks }}</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getAverageScore($item->id, $schoolsession, $studentdetails->id) == NULL ? "0":round($item->getAverageScore($item->id, $schoolsession, $studentdetails->id)) }}</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;"></i></th>
-                                                    </table>
-                                                </td>
-                                            <tr>
-    
-                                    @endforeach
+                    <div style="display: flex;">
+                        <div style="width: 30%; height: 500px; border: 1px solid black;">
+                            <div style="border-bottom: 1px solid black">
+                                <i style="font-style: normal;">Subjects</i>
+                            </div>
+                            <div style="margin-top: 70px; border-top: 1px solid black;">
+                                @foreach ($subjects as $item)
+                                    <div style="height: 30px; border-bottom: 1px solid black;">
+                                        <i style="font-style: normal; font-size: 15px; padding-left: 10px;">{{ $item->subjectname }}</i>
+                                    </div>
                                     
-                                @endif
-                            </tbody>
-                        </table>
+                                @endforeach
+                            </div>
+
+                        </div>
+                        @foreach ($assessments as $item)
+                            <div style="height: 500px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black;">
+                                <div style="border-bottom: 1px solid black">
+                                    <center><i style="font-style: normal;">{{ $item->name }}</i></center>
+                                </div>
+                                <div style="height: 100%; display: flex;">
+                                    @foreach ($item->getSubassessments as $itemSub)
+                                        
+                                        <div style="height: 100%; width:100%; border-right: 1px solid black;">
+                                            <div style="border-bottom: 1px solid black; height: 70px;">
+                                                <center><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px; font-size: 10px;">{{ $itemSub->subname }}</i></center>
+                                            </div>
+                                            @foreach ($subjects as $itemsubmarks)
+                                            <div style="height: 30px; width: 100%; border-bottom: 1px solid black;">
+                                                <center><i style="font-style: normal; padding: 0px 5px 0px 5px;">{{ $itemsubmarks->getSubjectMark($studentdetails->id, $itemsubmarks->id, $schoolsession, $item->id, $itemSub->id) == null ? 0: $itemsubmarks->getSubjectMark($studentdetails->id, $itemsubmarks->id, $schoolsession, $item->id, $itemSub->id)->scrores }}</i></center>
+                                            </div>
+                                            @endforeach
+                                            
+
+                                        </div>
+                                    @endforeach
+
+                                    
+                                </div>
+                            </div>
+                        @endforeach
+                        <div style="width: 10%; height: 500px; border-right: 1px solid black; border-top: 1px solid black; border-bottom: 1px solid black;">
+                            <div style="border-bottom: 1px solid black">
+                                <i style="font-style: normal;">Total</i>
+                            </div>
+                            <div style="margin-top: 70px; border-top: 1px solid black;">
+                                @foreach ($subjects as $itemsubmarks)
+                                    <div style="height: 30px; width: 100%; border-bottom: 1px solid black;">
+                                        <center><i style="font-style: normal; padding: 0px 5px 0px 5px;">0</i></center>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                        </div>
+                        <div style="width: 10%; height: 500px; border: 1px solid black;">
+                            <div style="border-bottom: 1px solid black">
+                                <i style="font-style: normal;">Grades</i>
+                            </div>
+
+                        </div>
+                        
                     </div>
                     <br>
                     <div style="">

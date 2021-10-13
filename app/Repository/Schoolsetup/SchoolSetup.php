@@ -19,29 +19,48 @@ class SchoolSetup{
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
             if ($schoolDetails->schooltype == "Secondary") {
-    
-                $classlist = array("JSS1", "JSS2", "JSS3", "SSS1", "SSS2", "SSS3");
-    
-                $classlisttype = array("1", "1", "1", "2", "2", "2");
         
-                for ($i=0; $i < count($classlist); $i++) { 
         
-                    $classlistCheck = Classlist_sec::where(['classname' => strtoupper($classlist[$i]), 'schoolid' => Auth::user()->schoolid])->get();
+                        try {
+
+                            $result = str_split(strtoupper($request->classname));
+
+                            if($result[0] == "S"){
+                                if($request->classtype != 2){
+                                    return 'classtypeerror';
+                                }
+                            }else if($result[0] == "J"){
+                                if($request->classtype != 1){
+                                    return 'classtypeerror';
+                                }
+                            }else{
+                                return 'invalidclass';
+                            }
+
+                            $addclasses_sec = Classlist_sec::updateOrCreate(
+                                [
+                                    'schoolid' => Auth::user()->schoolid, 
+                                    'classname' => strtoupper($request->classname)],
+                                [
+                                    'schoolid' => Auth::user()->schoolid, 
+                                    'classname' => strtoupper($request->classname), 
+                                    'classtype'=>$request->classtype,
+                                    'studentcount' => 0, 
+                                    'status' => 1,
+                                    'index' => $request->classindex
+                                ]
+                            );
+
+                            return "success";
+
+                        } catch (\Throwable $th) {
+                            
+                            return $th;
+
+                        }
+
         
-                    if (count($classlistCheck) < 1) {
-        
-                        $addclasses_sec = new Classlist_sec();
-                        $addclasses_sec->schoolid = Auth::user()->schoolid;
-                        $addclasses_sec->classname = strtoupper($classlist[$i]);
-                        $addclasses_sec->studentcount = 0;
-                        $addclasses_sec->classtype = (int)$classlisttype[$i];
-                        $addclasses_sec->status = 1;
-                        $addclasses_sec->save();
-                    }
-        
-                }
-        
-                return "success";
+                
             }else{
     
                 $classlistType = $request->classListType;

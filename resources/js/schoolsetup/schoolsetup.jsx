@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import { useAlert } from 'react-alert'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 
 function SchoolSetUp() {
 
     const [schooldetails, setSchooldetails] = useState({})
+    const [schooltype, setSchoolType] = useState('')
     const [classlist, setClasslist] = useState([])
     const [houselist, sethouselist] = useState([])
     const [classsection, setclasssection] = useState([])
@@ -30,17 +32,17 @@ function SchoolSetUp() {
     const [isupdatingca3, setisupdatingca3] = useState(false)
     const [selectedclassid, setSelectedClassId] = useState('')
     const [selectedclassListType, setSelectedClassListType] = useState(0)
-    // const [assessment, setAssessment] = useState([])
-    // const [subasscategory, setSubasscategory] = useState([])
-    // const [assessmentSetUp, setassessmentSetUp] = useState({
-    //     name:'',
-    //     maxmarks:''
-    // })
-    // const [subassessmentSetUp, setSubassessmentSetUp] = useState({
-    //     catid:'',
-    //     subname:'',
-    //     submaxmarks:'',
-    // })
+    const [assessment, setAssessment] = useState([])
+    const [subasscategory, setSubasscategory] = useState([])
+    const [assessmentSetUp, setassessmentSetUp] = useState({
+        name:'',
+        maxmarks:''
+    })
+    const [subassessmentSetUp, setSubassessmentSetUp] = useState({
+        catid:'',
+        subname:'',
+        submaxmarks:'',
+    })
     const alert = useAlert()
 
     const [sessiondata, setsessiondata] = useState({
@@ -51,6 +53,12 @@ function SchoolSetUp() {
         secondtermends:'',
         thirdtermstarts:'',
         thirdtermends:''
+    })
+
+    const [classSetup, setClassSetup] = useState({
+        classname:'',
+        classtype:'',
+        classindex:''
     })
 
     useEffect(() => {
@@ -76,8 +84,9 @@ function SchoolSetUp() {
             setclubs(response.data.clubs)
             setSchoolInitials(response.data.schoolDetails.shoolinitial)
             setschoolsessioninput(response.data.schoolDetails.schoolsession)
-            // setAssessment(response.data.assessment)
-            // setSubasscategory(response.data.subasscategory)
+            setSchoolType(response.data.schoolDetails.schooltype)
+            setAssessment(response.data.assessment)
+            setSubasscategory(response.data.subasscategory)
 
             setsessiondata({
                 ...sessiondata, session:response.data.schoolDetails.schoolsession,
@@ -132,8 +141,12 @@ function SchoolSetUp() {
         setterm(e.target.value);
     }
 
-    function handleChangeClassName(e) {
-        setClassnamesch(e.target.value);
+    function handleChangeClassName(evt) {
+        const value = evt.target.value;
+        setClassSetup({
+            ...classSetup,
+          [evt.target.name]: value
+        });
     }
 
     function handleChangeHouses(e) {
@@ -329,21 +342,38 @@ function SchoolSetUp() {
     function addSchoolClassList() {
 
 
-            const data = new FormData()
-            axios.post("/sec/setting/addclasses_sec", data, {
-                headers:{
-                    "Content-type": "application/json"
-                }
-            }).then(response=>{
-                console.log(response)
-                fetchSchoolDetails()
-                setClassnamesch('')
-                myalert('Process Successful', 'success');
-                
-            }).catch(e=>{
-                console.log(e)
-    
-            })
+            if(classSetup.classindex != "" && classSetup.classname !="" && classSetup.classtype != ""){
+
+                axios.post("/sec/setting/addclasses_sec", classSetup, {
+                    headers:{
+                        "Content-type": "application/json"
+                    }
+                }).then(response=>{
+                    
+                    // console.log(response.status)
+                    // setClassnamesch('')
+                    if(response.data.code == 200){
+                        myalert(response.data.msg, 'success');
+                    }
+                    if(response.data.code == 409){
+                        myalert(response.data.msg, 'error');
+                    }
+
+                    if(response.data.code == 401){
+                        myalert(response.data.msg, 'error');
+                    }
+                    fetchSchoolDetails()
+                    
+                }).catch(e=>{
+                    console.log(e)
+                    myalert('Process failed', 'error');
+        
+                })
+
+            }else{
+                myalert('Process failed', 'error');
+            }
+
     
     }
 
@@ -560,17 +590,17 @@ function SchoolSetUp() {
     }
 
 
-    function handleClickClass(classid) {
+    function deleteClass(classid) {
 
         setSelectedClassId(classid)
 
         axios.get('/sec/setting/classstatus/'+classid).then(response=>{
 
-            if (response.data.response == "success") {
+            if (response.data.code == 200) {
                 fetchSchoolDetails()
-                myalert('Process Successful', 'success');
+                myalert(response.data.msg, 'success');
             }else{
-                myalert('Unknown error', 'error');
+                myalert(response.data.msg, 'error');
             }
 
         }).catch(e=>{
@@ -661,7 +691,7 @@ function SchoolSetUp() {
                 </div>
                 {/* <p>{schooldetails.exams}</p> */}
                 <hr/>
-                <div className="row" style={{ margin:'10px' }}>
+                {/* <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-3">
                         {isupdatingexams ? <div className="spinner-border"></div>: <div className="form-group">
                             <div className="custom-control custom-switch">
@@ -697,9 +727,10 @@ function SchoolSetUp() {
                     </div>
 
 
-                </div>
+                </div> */}
+
                 <hr/>
-                    {/* <div>
+                    <div>
                         <p style={{ paddingLeft:'10px' }}>SetUp Continous Assessment(e.g Exams, CA1, CA2 etc)</p>
                         <div className="row" style={{ margin:'10px' }}>
                             <div className="col-12 col-md-6">
@@ -722,10 +753,10 @@ function SchoolSetUp() {
                                 </div>
                                 {
                                     assessment.map(d=>(
-                                        <div className="card">
-                                            <div className="card-body">
+                                        <div key={d.id+"asessments"} className="card">
+                                            <div className="">
                                                 <div style={{ display:'flex', alignItems:'center' }} >
-                                                    <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.name} ({d.maxmark})</i> <div style={{ flex:'1' }}></div>
+                                                    <i style={{ fontStyle:'normal', fontSize:'10px', padding:'5px' }}> {d.name} ({d.maxmark})</i> <div style={{ flex:'1' }}></div>
 
                                                     <div className="form-group">
                                                         <div className="custom-control custom-switch">
@@ -775,10 +806,10 @@ function SchoolSetUp() {
 
                                     {
                                         subasscategory.map(d=>(
-                                            <div className="card" style={{ margin:'0px 5px 0px 5px' }}>
-                                                <div className="card-body">
+                                            <div key={d.id+"subcat"} className="card" style={{ margin:'5px 5px 5px 5px' }}>
+                                                <div className="">
                                                     <div style={{ display:'flex', alignItems:'center' }} >
-                                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}> sub category</i> <div style={{ flex:'1' }}></div>
+                                                        <i style={{ fontStyle:'normal', fontSize:'10px', padding:'5px' }}>{d.subname+" "+(d.name)+":"+(d.maxmarks)}</i> <div style={{ flex:'1' }}></div>
 
                                                         <div className="form-group">
                                                             <div className="custom-control custom-switch">
@@ -800,77 +831,71 @@ function SchoolSetUp() {
                            
                         </div>
 
-                    </div> */}
+                    </div>
                 <hr/>
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-6">
                         <div className="alert alert-warning">
-                            <i style={{ fontSize:'13px' }}>Select an option based on your class list style</i>
+                            <i style={{ fontSize:'13px' }}>Use the form below to add classes to your school. You are expected to fill in the CLASS INDEX. Indexs are asigned from the bottom(i.e the lowest class should have the lowest index and they are numeric).</i>
                         </div>
-                        {/* <div className="form-group">
-                            <select className="form-control-sm form-control" onChange={(e)=>handleChangeClassType(e)}>
-                                <option value="">Select Level</option>
-                                <option value="1" selected={typesch == 1 ? "selected":""} >Junior Secondary</option>
-                                <option value="2" selected={typesch == 2 ? "selected":""}>Senior Secondary</option>
-                            </select>
-                        </div> */}
-                        {/* <div className="form-group">
-                            <input onChange={(e)=>handleChangeClassName(e)} value={classnamesch} className="form-control form-control-sm" placeholder="Enter Class name in ascending Order"/>
-                        </div> */}
 
-                        {
-                            schooldetails.schooltype == "Primary" ? 
-                            
+
                             <div>
-                                <div className="form-group">
-                                    <select className="form-control form-control-sm" onChange={(e)=>handleClasslistSelect(e)}>
-                                        <option value="0" >Select a classlist Style</option>
-                                        <option value="1" >Conventional Style (e.g. Primary 1)</option>
-                                        <option value="2" >K Style (e.g. Grade 1)</option>
-                                    </select>
+                                <div className="row">
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <input className="form-control form-control-sm" name="classname" onChange={handleChangeClassName} placeholder="Classname"/>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <select className="form-control form-control-sm" name="classtype" onChange={handleChangeClassName}>
+                                                <option value="">select classtype</option>
+                                                <option value="1" disabled={schooltype == "Secondary" ? true:false}>Primary Section</option>
+                                                <option value="1">Junior Secondary {schooltype}</option>
+                                                <option value="2">Senior Secondary</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <input type="number" className="form-control form-control-sm" name="classindex" onChange={handleChangeClassName} placeholder="class index"/>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button onClick={addSchoolClassListPri} className="btn btn-sm btn-info badge">Generate Classes</button>
+                                
+                                <button onClick={addSchoolClassList} className="btn btn-sm btn-info badge">Add</button>
                             </div>
 
-                            :
-                            <button onClick={addSchoolClassList} className="btn btn-sm btn-info badge">Generate Classes</button>
-                        }
+
 
 
                         
                         <br/>
-
-                        {
-                            classlist.length > 0 ? 
-                            classlist.map(d => (
-                                <div key={d.id+"classlist"} className="card radius-15">
-                                    <div className="card-body">
-                                        <div style={{ display:'flex', alignItems:'center' }} >
-                                            <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.classname} </i> <div style={{ flex:'1' }}></div>
-
-                                            <div className="form-group">
-                                                <div className="custom-control custom-switch">
-                                                    <input type="checkbox" defaultChecked={d.status == 1 ? true:false} className="custom-control-input" onClick={()=>handleClickClass(d.id)} id={"customSwitchclasses"+d.id} />
-                                                    <label className="custom-control-label" htmlFor={"customSwitchclasses"+d.id}></label>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
+                        {/* <div className="classlist" {...provided.droppableProps} ref={provided.innerRef}> */}
+                        {classlist.map(d => (
+                        
                             
-                            :
+                            <div key={d.id+"classlist"} className="card radius-15">
+                                <div className="">
+                                    <div style={{ display:'flex', alignItems:'center' }} >
+                                        <i style={{ fontStyle:'normal', fontSize:'10px', padding:'5px' }}> {d.classname} </i> <div style={{ flex:'1' }}></div>
 
-                            <div className="card radius-15">
-                                <div className="card-body">
-                                    <div style={{ display:'flex', alignItems:'center', justifyContent:'center' }} >
-                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}> Setup classlist </i>
+                                        <div className="form-group">
+                                            {/* <div className="custom-control custom-switch">
+                                                <input type="checkbox" defaultChecked={d.status == 1 ? true:false} className="custom-control-input" onClick={()=>handleClickClass(d.id)} id={"customSwitchclasses"+d.id} />
+                                                <label className="custom-control-label" htmlFor={"customSwitchclasses"+d.id}></label>
+                                            </div> */}
+                                            <button className="btn btn-sm badge badge-danger" onClick={()=>deleteClass(d.id)}>Remove</button>
+                                            <i style={{ fontStyle:'normal', fontSize:'10px', padding:'5px' }}> {d.index} </i>
+                                        </div>
+
                                     </div>
                                 </div>
+                                
                             </div>
-
-                        }
+                                
+                        ))}
 
 
                     </div>

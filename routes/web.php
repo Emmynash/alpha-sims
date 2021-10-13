@@ -510,10 +510,13 @@ Route::group(['middleware' => ['auth', 'can:manage marks']], function () {
     Route::get('get_school_basic_details', 'AddstudentmakrsController_secs@getSchoolBasicDetails');
     Route::get('/fetch_students_marks/{id}/{sectionid}', 'AddstudentmakrsController_secs@fetchstudentssubject');
     Route::get('fetch_student_sections/{id}', 'AddstudentmakrsController_secs@fetchStudentSections');
+    Route::get('fetchsubassessment/{id}/{studentid}', 'AddstudentmakrsController_secs@fetchsubassessment');
     Route::POST('/fetch_subject_details', 'AddstudentmakrsController_secs@fetchsubjectdetails');
     Route::POST('/fetch_subject_student_details', 'AddstudentmakrsController_secs@getallstudentsandmarks');
     Route::POST('/add_marks_main', 'AddstudentmakrsController_secs@addmarksmiain')->name('add_marks_main');
     Route::POST('/marks_process_main', 'AddstudentmakrsController_secs@processPosition');
+    Route::POST('/add_student_scores', 'AddstudentmakrsController_secs@addStudentRecord');
+    Route::POST('/get_student_scores', 'AddstudentmakrsController_secs@getScoreRecord');
 });
 
 
