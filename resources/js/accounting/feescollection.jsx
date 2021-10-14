@@ -194,14 +194,11 @@ function FeesCollection() {
         }).then(response=>{
             console.log(response)
             setIsLoading(false)
-            if (response.data.data == "over charge") {
-                myalert("Over charge","error")
-            }else if(response.data.data == "payment done"){
-                myalert("Student fees paid in full","error")
-            }
-            
-            else if(response.data.data == "success"){
-                myalert("Payment Successfull","success")
+
+            if(response.data.code == 401){
+                myalert(response.data.response, "error")
+            }else if(response.data.code == 200){
+                myalert(response.data.response, "success")
                 refresh(regno)
             }
             

@@ -19,9 +19,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', "PagesController@index");
 
-
 Route::group(['prefix' => 'pri'], function () {
-
+    
     Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
         Route::get('/viewclasslist', 'ClassesController@index')->name('viewclasslist');
     });
@@ -635,6 +634,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::post('/fees_part_payment', 'AccountController@feesPartPayment')->name('fees_part_payment');
          Route::post('/add_student_discount', 'AccountController@addStudentDiscount')->name('add_student_discount');
          Route::get('/get_all_student_discount', 'AccountController@get_all_student_discount')->name('get_all_student_discount');
+         Route::get('/discontinue_discount/{id}', 'AccountController@discontinue_discount')->name('discontinue_discount');
 
          Route::group(['middleware' => ['can:add event']], function () { // library module
             Route::post('/post_event', 'CalenderController@postAnEvent')->name('post_event');
@@ -657,6 +657,3 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
 Route::group(['prefix' => 'admin'], function () {
     Route::post('/login', 'AccountController@feesPartPayment')->name('fees_part_payment');
 });
-
-
-// -----------------------------------------------------------------------------------------

@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3.0",
+        "php": "^7.4.24",
         "barryvdh/laravel-dompdf": "^0.9.0",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^7.3.0",
@@ -35,7 +35,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "laravel/dusk"
+            ]
         }
     },
     "autoload": {
@@ -64,4 +66,6 @@
             "@php artisan key:generate --ansi"
         ]
     }
+    
 }
+
