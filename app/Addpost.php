@@ -5,9 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Spatie\Multitenancy\Models\Concerns\UsesLandlordConnection;
 
 class Addpost extends Model
 {
+
+
     protected $fillable = [
         'schoolId', 'schoolname', 'schoolemail', 'mobilenumber', 'schoolLogo', 'schoolwebsite', 'dateestablished', 'schooladdress', 'schoolprincipalsignature', 'status', 'periodfrom', 'periodto'
     ];

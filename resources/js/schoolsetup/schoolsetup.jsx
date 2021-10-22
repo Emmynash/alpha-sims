@@ -153,10 +153,6 @@ function SchoolSetUp() {
         setHouses(e.target.value);
     }
 
-    function handleChangeClassType(e) {
-        setTypesch(e.target.value);
-    }
-
     function handleChangeClassArms(e) {
         setClassArms(e.target.value);
     }
@@ -188,73 +184,7 @@ function SchoolSetUp() {
           [evt.target.name]: value
         });
     }
-    
-    function handleExamChange(e) {
-        console.log(e.target.value)
 
-        if (e.target.checked) {
-            console.log(e.target.checked)
-            setisupdatingexams(true)
-            setexamscheck(true)
-            updateExams(1)
-        }else{
-            console.log(e.target.checked)
-            setisupdatingexams(true)
-            setexamscheck(false)
-            updateExams(0)
-        }
-    }
-
-    function handleCa1Change(e) {
-
-        if (e.target.checked) {
-            console.log(e.target.checked)
-            setisupdatingca1(true)
-            setca1check(true)
-            updateCa1(1)
-        }else{
-            console.log(e.target.checked)
-            setisupdatingca1(true)
-            setca1check(false)
-            updateCa1(0)
-        }
-        
-    }
-
-    function handleCa2Change(e) {
-
-        if (e.target.checked) {
-            console.log(e.target.checked)
-            setisupdatingca2(true)
-            setca2check(true)
-            updateCa2(1)
-        }else{
-            console.log(e.target.checked)
-            setisupdatingca2(true)
-            setca2check(false)
-            updateCa2(0)
-        }
-    }
-
-    function handleCa3Change(e) {
-
-        if (e.target.checked) {
-            console.log(e.target.checked)
-            setisupdatingca3(true)
-            setca3check(true)
-            updateCa3(1)
-        }else{
-            console.log(e.target.checked)
-            setisupdatingca3(true)
-            setca3check(false)
-            updateCa3(0)
-        }
-        
-    }
-
-    function handleClasslistSelect(evt) {
-        setSelectedClassListType(evt.target.value)
-    }
 
     function updateSchoolInitials() {
 
@@ -399,9 +329,6 @@ function SchoolSetUp() {
 
             })
         }
-
-        
-
     }
 
 
@@ -470,87 +397,6 @@ function SchoolSetUp() {
         }
     }
 
-
-    function updateExams(status) {
-
-        const data = new FormData()
-        data.append("examsstatus", status)
-        axios.post("/sec/setting/update_exams_status", data, {
-            headers:{
-                "Content-type": "application/json"
-            }
-        }).then(response=>{
-            console.log(response)
-            setisupdatingexams(false)
-            
-            myalert('Process Successful', 'success');
-            fetchSchoolDetails()
-        }).catch(e=>{
-            console.log(e)
-
-        })
-    }
-
-    function updateCa1(status) {
-
-        const data = new FormData()
-        data.append("ca1status", status)
-        axios.post("/sec/setting/update_ca1_status", data, {
-            headers:{
-                "Content-type": "application/json"
-            }
-        }).then(response=>{
-            console.log(response)
-            setisupdatingca1(false)
-            
-            myalert('Process Successful', 'success');
-            fetchSchoolDetails()
-        }).catch(e=>{
-            console.log(e)
-
-        })
-    }
-
-    function updateCa2(status) {
-
-        const data = new FormData()
-        data.append("ca2status", status)
-        axios.post("/sec/setting/update_ca2_status", data, {
-            headers:{
-                "Content-type": "application/json"
-            }
-        }).then(response=>{
-            console.log(response)
-            setisupdatingca2(false)
-            
-            myalert('Process Successful', 'success');
-            fetchSchoolDetails()
-        }).catch(e=>{
-            console.log(e)
-
-        })
-    }
-
-    function updateCa3(status) {
-
-        const data = new FormData()
-        data.append("ca3status", status)
-        axios.post("/sec/setting/update_ca3_status", data, {
-            headers:{
-                "Content-type": "application/json"
-            }
-        }).then(response=>{
-            console.log(response)
-            setisupdatingca3(false)
-            
-            myalert('Process Successful', 'success');
-            fetchSchoolDetails()
-        }).catch(e=>{
-            console.log(e)
-
-        })
-    }
-
     function setUpAssessment() {
 
 
@@ -561,12 +407,17 @@ function SchoolSetUp() {
         }).then(response=>{
             console.log(response)
             
+            if(response.data.code == 200){
+                myalert(response.data.response, 'success');
+                fetchSchoolDetails()
+            }else{
+                myalert(response.data.response, 'error');
+            }
             
-            myalert('Process Successful', 'success');
-            fetchSchoolDetails()
+            
         }).catch(e=>{
             console.log(e)
-            myalert('Process Successful', 'success');
+            myalert('Unknown error', 'error');
         })
     }
 
@@ -579,13 +430,15 @@ function SchoolSetUp() {
             }
         }).then(response=>{
             console.log(response)
-            
-            
-            myalert('Process Successful', 'success');
-            fetchSchoolDetails()
+            if(response.data.code == 200){
+                myalert(response.data.response, 'success');
+                fetchSchoolDetails()
+            }else{
+                myalert(response.data.response, 'error');
+            }
         }).catch(e=>{
             console.log(e)
-            myalert('Process Successful', 'success');
+            myalert('Unknown error', 'error');
         })
     }
 
@@ -689,45 +542,6 @@ function SchoolSetUp() {
                     </div>
 
                 </div>
-                {/* <p>{schooldetails.exams}</p> */}
-                <hr/>
-                {/* <div className="row" style={{ margin:'10px' }}>
-                    <div className="col-12 col-md-3">
-                        {isupdatingexams ? <div className="spinner-border"></div>: <div className="form-group">
-                            <div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleExamChange(e)} checked={schooldetails.exams == 1 ? true:false} className="custom-control-input" id="customSwitch1" />
-                                <label className="custom-control-label" htmlFor="customSwitch1">Exams</label>
-                            </div>
-                        </div>}
-
-                    </div>
-                    <div className="col-12 col-md-3">
-                    <div className="form-group">
-                            {isupdatingca1 ? <div className="spinner-border"></div>:<div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleCa1Change(e)} checked={schooldetails.ca1 == 1 ? true:false} className="custom-control-input" id="customSwitch2" />
-                                <label className="custom-control-label" htmlFor="customSwitch2">CA1</label>
-                            </div>}
-                        </div>
-                    </div>
-                    <div className="col-12 col-md-3">
-                    <div className="form-group">
-                            {isupdatingca2 ? <div className="spinner-border"></div>:<div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleCa2Change(e)} checked={schooldetails.ca2 == 1 ? true:false} className="custom-control-input" id="customSwitch3" />
-                                <label className="custom-control-label" htmlFor="customSwitch3">CA2</label>
-                            </div>}
-                        </div>
-                    </div>
-                    <div className="col-12 col-md-3">
-                    <div className="form-group">
-                            {isupdatingca3 ? <div className="spinner-border"></div>:<div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleCa3Change(e)} checked={schooldetails.ca3 == 1 ? true:false} className="custom-control-input" id="customSwitch4" />
-                                <label className="custom-control-label" htmlFor="customSwitch4">CA3</label>
-                            </div>}
-                        </div>
-                    </div>
-
-
-                </div> */}
 
                 <hr/>
                     <div>
@@ -757,14 +571,6 @@ function SchoolSetUp() {
                                             <div className="">
                                                 <div style={{ display:'flex', alignItems:'center' }} >
                                                     <i style={{ fontStyle:'normal', fontSize:'10px', padding:'5px' }}> {d.name} ({d.maxmark})</i> <div style={{ flex:'1' }}></div>
-
-                                                    <div className="form-group">
-                                                        <div className="custom-control custom-switch">
-                                                            <input type="checkbox" defaultChecked={true} className="custom-control-input" id="" />
-                                                            <label className="custom-control-label" htmlFor="jkj"></label>
-                                                        </div>
-                                                    </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -811,12 +617,12 @@ function SchoolSetUp() {
                                                     <div style={{ display:'flex', alignItems:'center' }} >
                                                         <i style={{ fontStyle:'normal', fontSize:'10px', padding:'5px' }}>{d.subname+" "+(d.name)+":"+(d.maxmarks)}</i> <div style={{ flex:'1' }}></div>
 
-                                                        <div className="form-group">
+                                                        {/* <div className="form-group">
                                                             <div className="custom-control custom-switch">
                                                                 <input type="checkbox" defaultChecked={true} className="custom-control-input" id="" />
                                                                 <label className="custom-control-label" htmlFor="jkj"></label>
                                                             </div>
-                                                        </div>
+                                                        </div> */}
 
                                                     </div>
                                                 </div>
@@ -942,7 +748,8 @@ function SchoolSetUp() {
                                 <div kay={d.id+"classsecid"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
-                                            <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.sectionname} </i> <div style={{ flex:'1' }}></div> <button className="btn btn-sm btn-danger badge">Remove</button>
+                                            <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.sectionname} </i> <div style={{ flex:'1' }}></div> 
+                                            {/* <button className="btn btn-sm btn-danger badge">Remove</button> */}
                                         </div>
                                     </div>
                                 </div>

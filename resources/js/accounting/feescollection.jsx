@@ -417,10 +417,10 @@ function FeesCollection() {
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-8">
-                                                <label>Fee Bulk Payment</label>
+                                                {/* <label>Fee Bulk Payment</label>
                                                 <div className="orm-group">
                                                     <button className="btn btn-sm btn-info" data-toggle="modal" data-target="#bulkpayment">Make Bulk Payment</button>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>
@@ -475,15 +475,15 @@ function FeesCollection() {
                     </div>
 
                     <div style={{ margin:'10px' }}>
-                        <button onClick={()=>payfeesInFull(studentDetails.usernamesystem)} className="btn btn-sm btn-info">Confirm Full Payment</button> 
-                        <button className="btn btn-sm btn-warning" data-toggle="modal" data-target="#partpayment">Part Payment</button>
+                        {/* <button onClick={()=>payfeesInFull(studentDetails.usernamesystem)} className="btn btn-sm btn-info">Confirm Full Payment</button>  */}
+                        <button className="btn btn-sm btn-warning" data-toggle="modal" data-target="#partpayment">Make Payment</button>
                     </div>
 
                     <div className="modal fade" id="partpayment" data-backdrop="false">
                         <div className="modal-dialog">
                             <div className="modal-content">
                             <div className="modal-header">
-                                <h4 className="modal-title">Patial Payment</h4>
+                                <h4 className="modal-title">Make Payment</h4>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                                 </button>

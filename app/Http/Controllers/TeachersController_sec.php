@@ -104,7 +104,7 @@ class TeachersController_sec extends Controller
             return response()->json(['classesAll'=>$classesAll, 'addsection_sec'=>$addsection_sec, 'addsubject_sec'=>$addsubject_sec, 'getAllTeachersWithSubject'=>$getAllTeachersWithSubject, 'getFormMasters'=>$getFormMasters, 'houses'=>$houses, 'clubs'=>$clubs, 'getAllTeachers'=>$getAllTeachers]);
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['response'=>'error']);
+            return response()->json(['response'=>$th]);
         }
     }
 

@@ -54,7 +54,7 @@
                                     </div>
 
                                     <div style="height: 200px; overflow-y: scroll;">
-                                        @foreach ($item->getRolePermissions($item->id) as $items)
+                                        @foreach ($item->permissions as $items)
                                             <div class="card" style="border-radius: 0px; border-left: 4px solid yellow;">
                                                 <i style="font-style: normal; padding: 5px;">{{ $items->name }}</i>
                                             </div>

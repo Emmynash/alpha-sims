@@ -4,7 +4,7 @@ use App\Http\Controllers\PromotionController_sec;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
+use Spatie\Multitenancy\Models\Tenant;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +18,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', "PagesController@index");
+
+Route::get('/selectdomain', [
+    'as' => 'redirect-route',
+    'uses' => 'PagesController@domainSelect',
+]);
+
+
+
+
+
+Route::middleware(['tenant'])->group(function () {
+
+
+
 
 Route::group(['prefix' => 'pri'], function () {
     
@@ -289,7 +303,7 @@ Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
 
 
 
-Route::group(['prefix' => 'sec'], function () {
+Route::group(['prefix' => 'sec', 'middleware'=>'tenant'], function () {
 
     Route::group(['prefix' => 'setting', 'middleware' => ['auth', 'can:settings']], function () { //School setup route grades_sec
 
@@ -656,4 +670,6 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Route::post('/login', 'AccountController@feesPartPayment')->name('fees_part_payment');
+});
+
 });

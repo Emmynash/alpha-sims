@@ -81157,10 +81157,6 @@ function SchoolSetUp() {
     setHouses(e.target.value);
   }
 
-  function handleChangeClassType(e) {
-    setTypesch(e.target.value);
-  }
-
   function handleChangeClassArms(e) {
     setClassArms(e.target.value);
   }
@@ -81182,68 +81178,6 @@ function SchoolSetUp() {
   function handleSubAssessmentSetup(evt) {
     var value = evt.target.value;
     setSubassessmentSetUp(_objectSpread({}, subassessmentSetUp, _defineProperty({}, evt.target.name, value)));
-  }
-
-  function handleExamChange(e) {
-    console.log(e.target.value);
-
-    if (e.target.checked) {
-      console.log(e.target.checked);
-      setisupdatingexams(true);
-      setexamscheck(true);
-      updateExams(1);
-    } else {
-      console.log(e.target.checked);
-      setisupdatingexams(true);
-      setexamscheck(false);
-      updateExams(0);
-    }
-  }
-
-  function handleCa1Change(e) {
-    if (e.target.checked) {
-      console.log(e.target.checked);
-      setisupdatingca1(true);
-      setca1check(true);
-      updateCa1(1);
-    } else {
-      console.log(e.target.checked);
-      setisupdatingca1(true);
-      setca1check(false);
-      updateCa1(0);
-    }
-  }
-
-  function handleCa2Change(e) {
-    if (e.target.checked) {
-      console.log(e.target.checked);
-      setisupdatingca2(true);
-      setca2check(true);
-      updateCa2(1);
-    } else {
-      console.log(e.target.checked);
-      setisupdatingca2(true);
-      setca2check(false);
-      updateCa2(0);
-    }
-  }
-
-  function handleCa3Change(e) {
-    if (e.target.checked) {
-      console.log(e.target.checked);
-      setisupdatingca3(true);
-      setca3check(true);
-      updateCa3(1);
-    } else {
-      console.log(e.target.checked);
-      setisupdatingca3(true);
-      setca3check(false);
-      updateCa3(0);
-    }
-  }
-
-  function handleClasslistSelect(evt) {
-    setSelectedClassListType(evt.target.value);
   }
 
   function updateSchoolInitials() {
@@ -81416,74 +81350,6 @@ function SchoolSetUp() {
     }
   }
 
-  function updateExams(status) {
-    var data = new FormData();
-    data.append("examsstatus", status);
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/update_exams_status", data, {
-      headers: {
-        "Content-type": "application/json"
-      }
-    }).then(function (response) {
-      console.log(response);
-      setisupdatingexams(false);
-      myalert('Process Successful', 'success');
-      fetchSchoolDetails();
-    })["catch"](function (e) {
-      console.log(e);
-    });
-  }
-
-  function updateCa1(status) {
-    var data = new FormData();
-    data.append("ca1status", status);
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/update_ca1_status", data, {
-      headers: {
-        "Content-type": "application/json"
-      }
-    }).then(function (response) {
-      console.log(response);
-      setisupdatingca1(false);
-      myalert('Process Successful', 'success');
-      fetchSchoolDetails();
-    })["catch"](function (e) {
-      console.log(e);
-    });
-  }
-
-  function updateCa2(status) {
-    var data = new FormData();
-    data.append("ca2status", status);
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/update_ca2_status", data, {
-      headers: {
-        "Content-type": "application/json"
-      }
-    }).then(function (response) {
-      console.log(response);
-      setisupdatingca2(false);
-      myalert('Process Successful', 'success');
-      fetchSchoolDetails();
-    })["catch"](function (e) {
-      console.log(e);
-    });
-  }
-
-  function updateCa3(status) {
-    var data = new FormData();
-    data.append("ca3status", status);
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/update_ca3_status", data, {
-      headers: {
-        "Content-type": "application/json"
-      }
-    }).then(function (response) {
-      console.log(response);
-      setisupdatingca3(false);
-      myalert('Process Successful', 'success');
-      fetchSchoolDetails();
-    })["catch"](function (e) {
-      console.log(e);
-    });
-  }
-
   function setUpAssessment() {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/setupassesment", assessmentSetUp, {
       headers: {
@@ -81491,11 +81357,16 @@ function SchoolSetUp() {
       }
     }).then(function (response) {
       console.log(response);
-      myalert('Process Successful', 'success');
-      fetchSchoolDetails();
+
+      if (response.data.code == 200) {
+        myalert(response.data.response, 'success');
+        fetchSchoolDetails();
+      } else {
+        myalert(response.data.response, 'error');
+      }
     })["catch"](function (e) {
       console.log(e);
-      myalert('Process Successful', 'success');
+      myalert('Unknown error', 'error');
     });
   }
 
@@ -81506,11 +81377,16 @@ function SchoolSetUp() {
       }
     }).then(function (response) {
       console.log(response);
-      myalert('Process Successful', 'success');
-      fetchSchoolDetails();
+
+      if (response.data.code == 200) {
+        myalert(response.data.response, 'success');
+        fetchSchoolDetails();
+      } else {
+        myalert(response.data.response, 'error');
+      }
     })["catch"](function (e) {
       console.log(e);
-      myalert('Process Successful', 'success');
+      myalert('Unknown error', 'error');
     });
   }
 
@@ -81706,7 +81582,7 @@ function SchoolSetUp() {
     }, "3(Third)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: updateSchoolTerm,
       className: "btn btn-sm btn-info badge"
-    }, "Save")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    }, "Save")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
       style: {
         paddingLeft: '10px'
       }
@@ -81766,19 +81642,7 @@ function SchoolSetUp() {
           style: {
             flex: '1'
           }
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "form-group"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "custom-control custom-switch"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-          type: "checkbox",
-          defaultChecked: true,
-          className: "custom-control-input",
-          id: ""
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-          className: "custom-control-label",
-          htmlFor: "jkj"
-        }))))))
+        }))))
       );
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
@@ -81863,19 +81727,7 @@ function SchoolSetUp() {
           style: {
             flex: '1'
           }
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "form-group"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "custom-control custom-switch"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-          type: "checkbox",
-          defaultChecked: true,
-          className: "custom-control-input",
-          id: ""
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-          className: "custom-control-label",
-          htmlFor: "jkj"
-        }))))))
+        }))))
       );
     }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row",
@@ -82053,9 +81905,7 @@ function SchoolSetUp() {
           style: {
             flex: '1'
           }
-        }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-          className: "btn btn-sm btn-danger badge"
-        }, "Remove"))))
+        }))))
       );
     }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "card radius-15"
@@ -82176,8 +82026,8 @@ function SchoolSetUp() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/macbookpro/Documents/alpha-sims-react/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha-sims-react/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

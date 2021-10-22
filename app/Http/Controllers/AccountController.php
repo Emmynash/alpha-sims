@@ -282,7 +282,7 @@ class AccountController extends Controller
         }
     }
 
-    public function feesPartPayment(FeePayment $feePayment, Request $request, PaymentService $paymentService)
+    public function feesPartPayment(FeePayment $feePayment, Request $request)
     {
 
 
@@ -295,8 +295,6 @@ class AccountController extends Controller
             }
 
             //add payment record 
-
-            
 
             $paymentServiceRes = $feePayment->generateInvoice($request, $request->regno);
 
@@ -311,7 +309,7 @@ class AccountController extends Controller
         
                     //add amount to school wallet
         
-                    return $feePayment->addAmountToSchoolWallet($request);
+                    $feePayment->addAmountToSchoolWallet($request);
         
                     $addTransactionRecord = $feePayment->addTransactionHistory($request, "Fees Part Payment");
 

@@ -39,7 +39,7 @@
                     <i style="font-style: normal;">Firstname: {{Auth::user()->firstname}}</i><br>
                     <i style="font-style: normal;">Middlename: {{Auth::user()->middlename}}</i><br>
                     <i style="font-style: normal;">Lastname: {{Auth::user()->lastname}}</i><br>
-                    <i style="font-style: normal;">PhoneNumber: {{Auth::user()->id}}</i>
+                    <i style="font-style: normal;">PhoneNumber: {{Auth::user()->phonenumber}}</i>
                 </div><br>
             </div>
             <div style="height: 100px; width: 100px; background-color: gray;">

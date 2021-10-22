@@ -441,8 +441,6 @@ class FeePayment{
 
 
         } catch (\Throwable $th) {
-            //throw $th;
-
             return "error";
         }
     

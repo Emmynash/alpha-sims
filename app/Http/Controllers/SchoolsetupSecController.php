@@ -156,9 +156,9 @@ class SchoolsetupSecController extends Controller
         $updateSchoolSession->schoolsession = $request->session;
         $updateSchoolSession->firsttermstarts = $request->firsttermstarts;
         $updateSchoolSession->firsttermends = $request->firsttermends;
-        $updateSchoolSession->secondtermstarts = $request->secondtermstarts;
+        $updateSchoolSession->secondtermbegins = $request->secondtermstarts;
         $updateSchoolSession->secondtermends = $request->secondtermends;
-        $updateSchoolSession->thirdtermstarts = $request->thirdtermstarts;
+        $updateSchoolSession->thirdtermbegins = $request->thirdtermstarts;
         $updateSchoolSession->thirdtermends = $request->thirdtermends;
         $updateSchoolSession->save();
 
@@ -306,42 +306,6 @@ class SchoolsetupSecController extends Controller
         
     }
 
-    public function updateExamsStatus(Request $request)
-    {
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
-        $schoolDetails->exams = $request->examsstatus;
-        $schoolDetails->save();
-
-        return response()->json(['success'=>'success']);
-    }
-
-    public function updateCa1Status(Request $request)
-    {
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
-        $schoolDetails->ca1 = $request->ca1status;
-        $schoolDetails->save();
-
-        return response()->json(['success'=>'success']);
-    }
-
-    public function updateCa2Status(Request $request)
-    {
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
-        $schoolDetails->ca2 = $request->ca2status;
-        $schoolDetails->save();
-
-        return response()->json(['success'=>'success']);
-    }
-
-    public function updateCa3Status(Request $request)
-    {
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
-        $schoolDetails->ca3 = $request->ca3status;
-        $schoolDetails->save();
-
-        return response()->json(['success'=>'success']);
-    }
-
     public function fetchSchoolDetailsSetUp()
     {
         $schoolDetails = Addpost::where('id', Auth::user()->schoolid)->first();
@@ -384,9 +348,10 @@ class SchoolsetupSecController extends Controller
                     ['name'=>$request->name, 'maxmark'=>$request->maxmarks, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
                 );
 
+                return response()->json(['response'=>'success', 'code'=>200], 200);
+            }else{
+                return response()->json(['response'=>'Sum of marks must not be above 100', 'code'=>400], 200);
             }
-
-            return response()->json(['response'=>'success'], 200);
 
         } catch (\Throwable $th) {
             //throw $th;
@@ -407,10 +372,12 @@ class SchoolsetupSecController extends Controller
                     ['subname'=>$request->subname],
                     ['subname'=>$request->subname, 'catid'=>$request->catid, 'maxmarks'=>$request->submaxmarks, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
                 );
-
+                return response()->json(['response'=>'success', 'code'=>200], 200);
+            }else{
+                return response()->json(['response'=>'Out of range', 'code'=>400], 200);
             }
 
-            return response()->json(['response'=>'success'], 200);
+            
 
         } catch (\Throwable $th) {
             //throw $th;
