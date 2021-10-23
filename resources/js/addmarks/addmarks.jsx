@@ -17,13 +17,27 @@ function AddMarks() {
     const [selectedsubject, setselectedsubject] = useState('')
     const [selectedsection, setselectedsection] = useState('')
     const [studentlist, setStudentList] = useState([])
+    const [isLoading, seIsLoading] = useState(false)
     const alert = useAlert()
+    
     const [examsscore, setexamsscore] = useState(0)
     const [ca1score, setca1score] = useState(0)
     const [ca2score, setca2score] = useState(0)
     const [ca3score, setca3score] = useState(0)
+
     const [studentId, setStudentId] = useState('')
     const [markid, setmarkid] = useState('')
+
+    const [examsstatus, setexamsstatus] = useState(0)
+    const [ca1status, setca1status] = useState(0)
+    const [ca2status, setca2status] = useState(0)
+    const [ca3status, setca3status] = useState(0)
+
+    const [examsmark, setExamsMark] = useState(0)
+    const [ca1mark, setCa1Mark] = useState(0)
+    const [ca2mark, setCa2Mark] = useState(0)
+    const [ca3mark, setCa3Mark] = useState(0)
+    const [notallocated, setNotAllocated] = useState(true)
 
 
     useEffect(() => {
@@ -49,35 +63,60 @@ function AddMarks() {
     }
 
     function fetchSchoolDetails() {
-
+        seIsLoading(true)
         axios.get('/get_school_basic_details').then(response=> {
             console.log(response);
             // console.log(setJ)
+            seIsLoading(false)
             setClasslist(response.data.classlist)
             // setSubjects(response.data.subjects)
-            // setschoolsection(response.data.schoolsection)
+            setschoolsection(response.data.schoolsection)
             setschoolsession(response.data.schooldetails.schoolsession)
             setschoolterm(response.data.schooldetails.term)
+
+            setexamsstatus(response.data.schooldetails.exams)
+            setca1status(response.data.schooldetails.ca1)
+            setca2status(response.data.schooldetails.ca2)
+            setca3status(response.data.schooldetails.ca3)
+
+            if (response.data.subjectScore == null) {
+                setExamsMark(0)
+                setCa1Mark(0)
+                setCa2Mark(0)
+                setCa3Mark(0)
+            }else{
+                setExamsMark(response.data.subjectScore.examsfull)
+                setCa1Mark(response.data.subjectScore.ca1full)
+                setCa2Mark(response.data.subjectScore.ca2full)
+                setCa3Mark(response.data.subjectScore.ca3full)
+            }
 
 
         }).catch(e=>{
             console.log(e);
+            seIsLoading(false)
         });
 
     } 
 
     function fetchSubjectForClass(e){
+        setStudentList([])
+        setSubjects([])
         setSelectedClass(e.target.value)
-        getSubjectForClass(e.target.value)
+        setselectedsection('')
     }
 
     function handleChangeSubject(e) {
         setselectedsubject(e.target.value)
-        getSection(e.target.value)
+        setStudentList([])
+        // getSection(e.target.value)
     }
 
     function handleChangeSection(e) {
+        setStudentList([])
+        setSubjects([])
         setselectedsection(e.target.value)
+        getSubjectForClass(e.target.value)
     }
 
     function handleChangeTerm(e) {
@@ -88,29 +127,37 @@ function AddMarks() {
         setschoolsession(e.target.value)
     }
 
-    function getSubjectForClass(classid){
+    function getSubjectForClass(sectionid){
         setSubjects([])
-        axios.get('/fetch_students_marks/'+classid).then(response=> {
+        seIsLoading(true)
+        axios.get('/fetch_students_marks/'+selectedClass+"/"+sectionid).then(response=> {
             console.log(response);
             // console.log(setJ)
             // setClasslist(response.data.classlist)
+            seIsLoading(false)
             setSubjects(response.data.subjectlist)
 
         }).catch(e=>{
             console.log(e);
+            seIsLoading(false)
         });
 
     }
 
     function getSection(subjectid){
         setschoolsection([])
+        seIsLoading(true)
+        setNotAllocated(true)
         axios.get('/fetch_student_sections/'+subjectid).then(response=> {
             console.log(response);
             // console.log(setJ)
             // setClasslist(response.data.classlist)
+            seIsLoading(false)
             if (response.data.schoolsection == "notallocatedtoyou") {
+                setNotAllocated(true)
                 myalert('Subject not allocated to you', 'error')
             }else{
+                setNotAllocated(false)
                 setschoolsection(response.data.schoolsection)
             }
             
@@ -118,11 +165,13 @@ function AddMarks() {
 
         }).catch(e=>{
             console.log(e);
+            seIsLoading(false)
         });
 
     }
 
     function fetchAllStudentInClass(){
+        seIsLoading(true)
         const data = new FormData()
         data.append("selected_class", selectedClass)
         data.append("selected_subject", selectedsubject)
@@ -135,21 +184,47 @@ function AddMarks() {
             }
         }).then(response=>{
             console.log(response)
-            setStudentList(response.data.studentlist)
+            seIsLoading(false)
+            if (response.data.response == "feilds") {
+                myalert('All fields required', 'error')
+            }else{
+                myalert('success', 'success')
+                setStudentList(response.data.studentlist)
+            }
 
 
         }).catch(e=>{
             console.log(e)
-
+            seIsLoading(false)
         })
     }
 
     function addStudentMarksModal(exams, ca1, ca2, ca3, studentId, markid) {
 
-        setexamsscore(exams)
-        setca1score(ca1)
-        setca2score(ca2)
-        setca3score(ca3)
+        if(exams == null){
+            setexamsscore(0)
+        }else{
+            setexamsscore(exams)
+        }
+
+        if(ca1 == null){
+            setca1score(0)
+        }else{
+            setca1score(ca1)
+        }
+
+        if(ca2 == null){
+            setca2score(0)
+        }else{
+            setca2score(ca2)
+        }
+
+        if(ca3 == null){
+            setca3score(0)
+        }else{
+            setca3score(ca3)
+        }
+        
         setStudentId(studentId)
         setmarkid(markid)
         
@@ -165,29 +240,44 @@ function AddMarks() {
 
     function handleChangeExams(e) {
 
-        setexamsscore(e.target.value)
-        
+        if (e.target.value > examsmark) {
+            setexamsscore(0)
+        }else{
+            setexamsscore(e.target.value)
+        }
     }
 
     function handleChangeCa1(e) {
 
-        setca1score(e.target.value)
-        
+        if (e.target.value > ca1mark) {
+            setca1score(0)
+        }else{
+            setca1score(e.target.value)
+        }
     }
 
     function handleChangeCa2(e) {
 
-        setca2score(e.target.value)
+        if (e.target.value > ca2mark) {
+            setca2score(0)
+        }else{
+            setca2score(e.target.value)
+        }
 
     }
 
     function handleChangeCa3(e) {
 
-        setca3score(e.target.value)
+        if (e.target.value > ca3mark) {
+            setca3score(0)
+        }else{
+            setca3score(e.target.value)
+        }
     }
 
 
     function addStudentMarks(){
+        seIsLoading(true)
         const data = new FormData()
         data.append("classidmain", selectedClass)
         data.append("currentsessionform", schoolschool)
@@ -207,18 +297,27 @@ function AddMarks() {
         }).then(response=>{
             console.log(response)
             // setStudentList(response.data.studentlist)
+            seIsLoading(false)
             fetchAllStudentInClass()
 
 
         }).catch(e=>{
             console.log(e)
-
+            seIsLoading(false)
         })
     }
 
 
     return(
         <div>
+            {isLoading ? <div style={{ zIndex:'1000', position:'absolute', top:'0', bottom:'0', left:'0', right:'0', background:'white', opacity:'0.4' }}>
+
+            </div>:""}
+            {isLoading ? <div>
+                <div class="text-center">
+                    <div class="spinner-border"></div>
+                </div>
+            </div>:""}
             <div className="card">
                 <div className="row" style={{ margin:'10px' }}> 
                     <div className="col-12 col-md-4">
@@ -228,6 +327,17 @@ function AddMarks() {
                                 {classlist.map(classlistsingle=>(
                                     <option key={classlistsingle.id} value={classlistsingle.id}>{classlistsingle.classname}</option>
                                 ))}
+                            </select>
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4">
+                        <div className="form-group">
+                            <select onChange={(e)=>handleChangeSection(e)} name="" value={selectedsection} className="form-control form-control-sm" id="">
+                                <option value="">Select a Section</option>
+                                { selectedClass != "" ? schoolsection.length > 0 ?  schoolsection.map(sectionsingle=>(
+                                    <option key={sectionsingle.id} value={sectionsingle.id}>{sectionsingle.sectionname}</option>
+                                )):"":""}
+                                <option value="General">General</option>
                             </select>
                         </div>
                     </div>
@@ -251,16 +361,7 @@ function AddMarks() {
                             </select>
                         </div>
                     </div>
-                    <div className="col-12 col-md-4">
-                        <div className="form-group">
-                            <select onChange={(e)=>handleChangeSection(e)} name="" className="form-control form-control-sm" id="">
-                                <option value="">Select a Section</option>
-                                { schoolsection.length > 0 ?  schoolsection.map(sectionsingle=>(
-                                    <option key={sectionsingle.id} value={sectionsingle.id}>{sectionsingle.sectionname}</option>
-                                )):""}
-                            </select>
-                        </div>
-                    </div>
+
                     <div className="col-12 col-md-4">
                         <div className="form-group">
                             <input type="text" onChange={(e)=>handleChangeSession(e)} value={schoolschool} className="form-control form-control-sm" placeholder="Session"/>
@@ -278,7 +379,7 @@ function AddMarks() {
                         <div className="col-12">
                             <div className="card">
                             <div className="card-header">
-                                <h3 className="card-title">Students</h3>
+                                <h3 className="card-title">Students ({studentlist.length})</h3>
                                 <div className="card-tools">
                                 <div className="input-group input-group-sm" style={{width: '150px'}}>
                                     <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
@@ -297,7 +398,7 @@ function AddMarks() {
                                     <tr>
                                     <th>Name</th>
                                     <th>Admission No</th>
-                                    <th>Roll No</th>
+                                    {/* <th>Roll No</th> */}
                                     <th>Exams</th>
                                     <th>CA1</th>
                                     <th>CA2</th>
@@ -310,10 +411,10 @@ function AddMarks() {
                                 </thead>
                                 <tbody>
                                     {studentlist.map(student=>(
-                                        <tr>
+                                        <tr key={student.id+"addmarks"}>
                                             <td>{student.firstname} {student.middlename} {student.lastname}</td>
                                             <td>{student.admission_no}</td>
-                                            <td>{student.renumberschoolnew}</td>
+                                            {/* <td>{student.renumberschoolnew}</td> */}
                                             <td>{student.exams == 0 ? "---":student.exams}</td>
                                             <td>{student.ca1 == 0 ? "---":student.ca1}</td>
                                             <td>{student.ca2 == 0 ? "---":student.ca2}</td>
@@ -348,21 +449,25 @@ function AddMarks() {
                                 </div>
                                 <div className="modal-body">
                                     <div className="row">
-                                            <div className="col-12 col-md-6">
+                                            {examsstatus == 1 ? <div className="col-12 col-md-6">
+                                                <label htmlFor="">Exams Fullmark({examsmark})</label>
                                                 <input type="number" onChange={(e)=>handleChangeExams(e)} className="form-control form-control-sm" value={examsscore} placeholder="exams scrore" />
-                                            </div>
-                                            <div className="col-12 col-md-6">
+                                            </div>:""}
+                                            {ca1status == 1 ? <div className="col-12 col-md-6">
+                                                <label htmlFor="">Ca1 Fullmark({ca1mark})</label>
                                                 <input type="number" onChange={(e)=>handleChangeCa1(e)} className="form-control form-control-sm" value={ca1score} placeholder="ca1" />
-                                            </div>
+                                            </div>:""}
                                     </div>
                                     <br/>
                                     <div className="row">
-                                        <div className="col-12 col-md-6">
+                                        {ca2status == 1 ? <div className="col-12 col-md-6">
+                                            <label htmlFor="">Ca2 Fullmark({ca2mark})</label>
                                             <input type="number" onChange={(e)=>handleChangeCa2(e)} className="form-control form-control-sm" value={ca2score} placeholder="ca2" />
-                                        </div>
-                                        <div className="col-12 col-md-6">
+                                        </div>:""}
+                                        {ca3status == 1 ? <div className="col-12 col-md-6">
+                                            <label htmlFor="">Ca3 Fullmark({ca3mark})</label>
                                             <input type="number" onChange={(e)=>handleChangeCa3(e)} className="form-control form-control-sm" value={ca3score} placeholder="ca3" />
-                                        </div>
+                                        </div>:""}
                                     </div>
                                 </div>
                                 <div className="modal-footer justify-content-between">
@@ -373,7 +478,6 @@ function AddMarks() {
                         </div>
                     </div>
                         
-
           
             </div>:<div className="card">
                         <div className="text-center">

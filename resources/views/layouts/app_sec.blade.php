@@ -39,6 +39,8 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
 
+
+
   <style>
     #myInput {
   background-image: url('/css/searchicon.png');
@@ -1350,9 +1352,6 @@
 
                         }
 
-                        
-                       
-                        
                       }
                       
                     }
@@ -2133,7 +2132,7 @@
     
   </div>
 
- {{-- <!-- jQuery --> --}}
+ {{-- <!-- jQuery -->
  <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
  {{-- <!-- jQuery UI 1.11.4 --> --}}
  <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -2167,13 +2166,16 @@
  <script src="{{ asset('../../plugins/toastr/toastr.min.js') }}"></script>
  {{-- // <!-- AdminLTE App --> --}}
  <script src="{{ asset('dist/js/adminlte.js') }}"></script>
- {{-- // <!-- AdminLTE dashboard demo (This is only for demo purposes) --> --}}
+ {{-- // <!-- AdminLTE dashboard demo (This is only for demo purposes) --> 
  <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
  {{-- // <!-- AdminLTE for demo purposes --> --}}
  <script src="{{ asset('dist/js/demo.js') }}"></script>
  
  <script src="{{ asset('../../plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
  <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+
+
+ {{-- secure secure_asset --}}
 
  <script type="text/javascript">
  $(document).ready(function () {

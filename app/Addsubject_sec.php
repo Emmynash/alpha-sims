@@ -3,13 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Addsubject_sec extends Model
 {
-    public function getSubjectMark($regno, $subjectid, $session){
+    public function getSubjectMark($regno, $subjectid, $session, $item){
 
-        $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session])->first();
+        $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session, 'term'=>$term])->first();
 
         return $subject;
 
@@ -30,7 +31,7 @@ class Addsubject_sec extends Model
             return "NAN";
         } else {
             $username = User::find($getTeacherId->user_id);
-            return $username->firstname." ".$username->firstname." ".$username->firstname;
+            return ucfirst($username->firstname);
         }
     }
 
@@ -46,6 +47,23 @@ class Addsubject_sec extends Model
         $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session])->sum(DB::raw('totalmarks'));
 
         return $subject/3;
+    }
+
+    public function getPoints($scores)
+    {
+
+        $getPoints = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>2])->get();
+
+        for ($i=0; $i < $getPoints->count(); $i++) { 
+            if ($scores >= $getPoints[$i]['marksfrom'] && $scores <= $getPoints[$i]['marksto']) {
+                return $getPoints[$i]['point'];
+            }
+        }
+    }
+
+    public function getSubjectList($regno)
+    {
+        return $getSubjects = Addsubject_sec::all();
     }
 
 }

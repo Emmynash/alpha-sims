@@ -13,10 +13,15 @@ use App\Addclub_sec;
 use App\Addpost;
 use App\Addstudent;
 use App\AmountTable;
+use App\CLassSubjects;
+use App\ElectiveAdd;
+use App\Electives_sec;
 use App\FeesInvoice;
+use App\PaymentRecord;
+use App\Repository\Registration\RegisterStudents;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
 
 class StudentController_sec extends Controller
 {
@@ -38,15 +43,15 @@ class StudentController_sec extends Controller
         $this->addsection_sec = $addsection_sec;
         $this->addclub_sec = $addclub_sec;
         $this->addpost = $addpost;
-
-        
     }
 
     public function index(){
 
         $addschool = Addpost::where('id', Auth::user()->schoolid)->first();
 
-        return view('secondary.studentprocess.addstudent_sec', compact('addschool'));
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.studentprocess.addstudentreact', compact('schooldetails'));
     }
 
     public function viewStudentbyClass(){
@@ -59,15 +64,11 @@ class StudentController_sec extends Controller
     public function confirmStudentRegNumber(Request $request){
 
         $validator = Validator::make($request->all(),[
-            'allocatedclass' => 'required|string',
-            'allocatedsection' => 'required|string',
-            'allocatedshift' => 'required|string',
-            'currentsession' => 'required|string',
-            'systemnumber' => 'required|string',
+            'systemnumber' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
+            return response()->json(['response'=>$validator->errors()->keys()]);
         }
 
         $userdetailfetch = $this->user->where('id', $request->input('systemnumber'))->get();
@@ -77,108 +78,121 @@ class StudentController_sec extends Controller
         if (count($userdetailfetch) > 0) {
 
             if (count($addstudent_sec) > 0) {
-                return response()->json(['exist'=>'noaccount']);
+                return response()->json(['response'=>'noaccount']);
             }else{
-                return response()->json(['create'=>$userdetailfetch]);
+                return response()->json(['response'=>'success', 'userdetailfetch'=>$userdetailfetch]);
             }
             
         }else{
-            return response()->json(['noaccount'=>'noaccount']);
+            return response()->json(['response'=>'noaccount']);
         }
 
-        return response()->json($userdetailfetch, 200);
+        return response()->json(['response'=>'success', 'userdetailfetch'=>$userdetailfetch]);
     }
 
-    public function store(Request $request){
+    public function store(RegisterStudents $registerStudents, Request $request){
 
-        $validatedData = $request->validate([
-            'studentclassallocated' => 'required',
-            'schoolsession' => 'required',
-            'studentsectionallocated' => 'required',
-            'studenttype' => 'required',
-            'studentsystemnumber' => 'required',
-            'studentgender' => 'required',
-            'studentreligion' => 'required',
-            'fathersname' => 'required',
-            'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-            'mothersname' => 'required',
-            'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-            'dateofbirth' => 'required',
-            'bloodgroup' => 'required',
-            'studenthouse' => 'required',
-            'nationality' => 'required',
-            'studentclub' => 'required',
-            'studentaddress_sec' => 'required',
-            'admissionname' => 'required'
-        ]);
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
         
-        $checkduplicate = $this->addstudent_sec->where('usernamesystem', $request->input('studentsystemnumber'))->get();
 
-        if (count($checkduplicate) > 0) {
-            return back()->with('error', 'Student already added');
-        }
+        if ($request->isRegistered == "2") {
 
+            $validator = Validator::make($request->all(),[
+                'studentclassallocated' => 'required',
+                'studentsectionallocated' => 'required',
+                // 'studenttype' => 'required',
+                // 'studentgender' => 'required',
+                // 'studentreligion' => 'required',
+                // 'fathersname' => 'required',
+                // 'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
+                // 'mothersname' => 'required',
+                // 'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
+                // 'dateofbirth' => 'required',
+                // 'studenthouse' => 'required',
+                // 'studentclub' => 'required',
+                // 'studentaddress_sec' => 'required',
+                'admissionname' => 'required',
+                // 'firstname' => 'required',
+                // 'middlename' => 'required',
+                // 'lastname' => 'required',
+                // 'phonenumber' => 'required',
+                // 'email' => 'required|email',
+                // 'states' => 'required',
+                // 'lga' => 'required',
+                // 'hometown' => 'required',
+                'admissiondate'=>'required'
+            ]);
 
-        $rollNumberProcess = $this->addstudent_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $request->input('studentclassallocated')])->get();
-
-
-            $a = array();
-
-            for ($i=0; $i < count($rollNumberProcess); $i++) {
-                
-                $rollnumber = $rollNumberProcess[$i]['renumberschoolnew'];
-                array_push($a, $rollnumber);
+            if ($validator->fails()) {
+                // return response()->json(['response'=>$validator->errors()->keys()]);
+                return response()->json(['response'=>'erroremail']);
             }
 
-            if (count($a) > 0) {
-                $maxrollnum = max($a);
-                $newrolnumber = $maxrollnum + 1;
+
+            $freshRegistration = $registerStudents->freshStudentRegistrationBySchool($request);
+
+            if ($freshRegistration == "success") {
+                return response()->json(['response'=>'success']);
+            }elseif($freshRegistration == "exist"){
+                return response()->json(['response'=>'exist']);
+            }    elseif($freshRegistration == "admission"){
+                return response()->json(['response'=>'admission']);
             }else{
-                $newrolnumber = '1';
+                return response()->json(['errors'=>$freshRegistration]);
+            }
+    
+
+
+        }else{
+
+            // return $request;
+
+            $validator = Validator::make($request->all(),[
+                'studentclassallocated' => 'required',
+                'studentsectionallocated' => 'required',
+                // 'studenttype' => 'required',
+                // 'studentgender' => 'required',
+                // 'studentreligion' => 'required',
+                // 'fathersname' => 'required',
+                // 'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
+                // 'mothersname' => 'required',
+                // 'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
+                // 'dateofbirth' => 'required',
+                // 'studenthouse' => 'required',
+                // 'studentclub' => 'required',
+                // 'studentaddress_sec' => 'required',
+                'admissionname' => 'required',
+                'firstname' => 'required',
+                // 'middlename' => 'required',
+                'lastname' => 'required',
+                // 'phonenumber' => 'required',
+                'email' => 'required|email',
+                // 'states' => 'required',
+                // 'lga' => 'required',
+                // 'hometown' => 'required',
+                'admissiondate'=>'required'
+            ]);
+
+            if ($validator->fails()) {
+                // return response()->json(['response'=>$validator->errors()->keys()]);
+                return response()->json(['response'=>'erroremail']);
             }
 
+            $freshRegistration = $registerStudents->freshStudentRegistrationBySchool($request);
 
-        $Addstudent = new Addstudent_sec();
-        $Addstudent->classid = $request->input('studentclassallocated');
-        $Addstudent->schoolid = Auth::user()->schoolid;
-        $Addstudent->usernamesystem = $request->input('studentsystemnumber');
-        $Addstudent->renumberschoolnew = $newrolnumber;
-        $Addstudent->nationality = $request->input('nationality');
-        $Addstudent->studentsection = $request->input('studentsectionallocated');
-        $Addstudent->schoolsession = $request->input('schoolsession');
-        $Addstudent->gender = $request->input('studentgender');
-        $Addstudent->studenthouse = $request->input('studenthouse');
-        $Addstudent->studentreligion = $request->input('studentreligion');
-        $Addstudent->bloodgroup = $request->input('bloodgroup');
-        $Addstudent->studentclub = $request->input('studentclub');
-        $Addstudent->studentshift = $request->input('studenttype');
-        $Addstudent->studentfathername = $request->input('fathersname');
-        $Addstudent->studentfathernumber = $request->input('fathersphonenumber');
-        $Addstudent->studentmothersname = $request->input('mothersname');
-        $Addstudent->studentmothersnumber = $request->input('mothersphonenumber');
-        $Addstudent->studentpresenthomeaddress = $request->input('studentaddress_sec');
-        $Addstudent->studentpermanenthomeaddress = $request->input('studentaddress_sec');
-        $Addstudent->dateOfBirth = $request->input('dateofbirth');
-        $Addstudent->sessionstatus = 0;
-        $Addstudent->admission_no = $request->admissionname;
-        $Addstudent->save();
+            if ($freshRegistration == "success") {
+                return response()->json(['response'=>'success']);
+            }elseif($freshRegistration == "exist"){
+                return response()->json(['response'=>'exist']);
+            }    elseif($freshRegistration == "admission"){
+                return response()->json(['response'=>'admission']);
+            }else{
+                return response()->json(['errors'=>$freshRegistration]);
+            }
 
-        //asign student role
-
-        $userId = $this->user->where('id', $request->input('studentsystemnumber'))->first();
-        $userIdFinal = $userId->id;
-
-        //update schoolId field
-        $schoolIdUpdate = $this->user->find($userIdFinal);
-        $schoolIdUpdate->schoolid = Auth::user()->schoolid;;
-        $schoolIdUpdate->role = "Student";
-        $schoolIdUpdate->save();
-
-        $user = User::find($request->input('studentsystemnumber'));
-
-        $user->assignRole('Student');
-
-        return back()->with('success', 'Student added successfully');
+        }
     }
 
     public function viewStudentSingleClass(Request $request){
@@ -275,6 +289,8 @@ class StudentController_sec extends Controller
                     ->select('fees_invoices.*', 'classlists.classnamee as classname')
                     ->where(['system_id'=>Auth::user()->id])->get();
 
+            
+
             return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails'));
             
         }else{
@@ -284,9 +300,130 @@ class StudentController_sec extends Controller
                     ->select('fees_invoices.*', 'classlist_secs.classname')
                     ->where(['system_id'=>Auth::user()->id])->get();
 
-            return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails'));
+            $getUserRegNo = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+
+            $paymentRecord = PaymentRecord::where(['regno'=>$getUserRegNo->id])->get();
+
+            return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails', 'paymentRecord'));
         }
 
 
+    }
+
+    public function manage_subject_student()
+    {
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $subjects = CLassSubjects::join('addsubject_secs', 'addsubject_secs.id','=','c_lass_subjects.subjectid')
+                    ->where(['c_lass_subjects.schoolid'=>Auth::user()->schoolid, 'c_lass_subjects.subjecttype'=>1])
+                    ->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
+
+        $myelectives = ElectiveAdd::join('addsubject_secs', 'addsubject_secs.id','=','elective_adds.subjectid')
+                       ->select('elective_adds.*', 'addsubject_secs.subjectname')
+                       ->where('elective_adds.userid', Auth::user()->id )->get();
+
+        // $numberOfElectiveClass = Electives_sec::where([])
+
+        return view('secondary.student.electivesmanage', compact('schooldetails', 'subjects', 'myelectives'));
+    }
+
+    public function electiveadd(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'subjectid' => 'required'
+        ]); 
+        
+
+        $getStudentId = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+
+        $checkelectiveAdded = ElectiveAdd::where(['userid'=>Auth::user()->id, 'classid'=>$getStudentId->classid])->get();
+
+        if ($checkelectiveAdded->count() > 0) {
+            return back();
+        }
+
+        $addElective = new ElectiveAdd();
+        $addElective->userid = Auth::user()->id;
+        $addElective->regno = $getStudentId->id;
+        $addElective->subjectid = $request->subjectid;
+        $addElective->schoolid = Auth::user()->schoolid;
+        $addElective->subjecttype = 1;
+        $addElective->classid = $getStudentId->classid;
+        $addElective->sectionid = $getStudentId->studentsection;
+        $addElective->save();
+
+        return back();
+
+    }
+
+    public function reasign_class()
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        return view('secondary.student.reasignreact', compact('schooldetails'));
+    }
+
+    public function confirmAdmissionNumber(Request $request)
+    {
+
+        try {
+
+            if ($request->admissionno == "") {
+                return response()->json(['response'=>'noaddmissionno']);
+            }
+    
+            $getStudentDetails = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                                ->leftjoin('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                                ->leftjoin('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection')
+                                ->where(['addstudent_secs.admission_no'=>$request->admissionno, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
+                                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
+    
+            if (count($getStudentDetails)>1) {
+                return response()->json(['response'=>'duplicate']);
+            }
+    
+            if (count($getStudentDetails)<1) {
+                return response()->json(['response'=>'doesnotexist']);
+            }
+    
+            return response()->json(['response'=>'success', 'student'=>$getStudentDetails[0]]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th]);
+        }
+        
+    }
+
+    public function reasignConfirm(Request $request)
+    {
+        try {
+            $admissionNo = $request->admissionno;
+
+            $studentDetails = Addpost::find(Auth::user()->schoolid);
+
+            $getStudentDetails = Addstudent_sec::where(['schoolid'=>Auth::user()->schoolid, 'admission_no'=>$admissionNo])->first();
+            $getStudentDetails->classid = $request->classid;
+            $getStudentDetails->studentsection = $request->sectionid;
+            $getStudentDetails->schoolsession = $studentDetails->schoolsession;
+            $getStudentDetails->save();
+
+            return response()->json(['response'=>'success']);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th]);
+        }
+    }
+
+    public function getStudentsWithElective()
+    {
+        $getStudentsWithElectives = ElectiveAdd::join('users', 'users.id','=','electice_adds.userid')
+                                    ->join('addstudent_secs', 'addstudent_secs.id','=','electice_adds.subjectid')
+                                    ->where('schoolid', Auth::user()->schoolid)
+                                    ->select('electice_adds.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addstudent_secs.subjectname')->get();
+
+        return response()->json(['studentlist'=>$getStudentsWithElectives]);
     }
 }

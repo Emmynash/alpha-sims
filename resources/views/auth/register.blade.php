@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="form-group">
-                    <input name="middlename" style="border: none; background-color:#EEF0F0;" class="form-control @error('middlename') is-invalid @enderror" value="{{ old('middlename') }}" required autocomplete="middlename" autofocus type="text" placeholder="Middlename">
+                    <input name="middlename" style="border: none; background-color:#EEF0F0;" class="form-control @error('middlename') is-invalid @enderror" value="{{ old('middlename') }}" autocomplete="middlename" autofocus type="text" placeholder="Middlename">
                     @error('name')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

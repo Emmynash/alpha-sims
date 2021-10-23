@@ -373,7 +373,7 @@
         <form action="{{ route('order_invoice_checkout') }}" method="post" id="checkoutinventory">
           @csrf
           <input type="hidden" name="invoiceid" value="{{ $itemforInventory == null ? "": $itemforInventory->id }}">
-          <input type="text" name="itemsamount" id="totalamountinvent">
+          <input type="hidden" name="itemsamount" id="totalamountinvent">
         </form>
         <button type="submit" form="checkoutinventory" class="btn btn-primary">Checkout</button>
       </div>
@@ -456,6 +456,7 @@
     });
 
     function scrollocation(){
+        document.getElementById('accountscroll').className = "nav-link active"
         document.getElementById('inventory').className = "nav-link active"
     }
 

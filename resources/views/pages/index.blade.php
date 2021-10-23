@@ -31,11 +31,9 @@
 		<link rel="stylesheet" href="{{ asset('landing') }}/css/reset.css">
 		<link rel="stylesheet" href="{{ asset('landing') }}/style.css">
 		<link rel="stylesheet" href="{{ asset('landing') }}/css/responsive.css">
+
 		
-		<!-- Bizwheel Colors -->
-		<!--<link rel="stylesheet" href="css/skins/skin-1.css">
-		<!--<link rel="stylesheet" href="css/skins/skin-2.css">-->
-		<!--<link rel="stylesheet" href="css/skins/skin-3.css">-->
+
 		<!--<link rel="stylesheet" href="css/skins/skin-4.css">-->
 		
 		<!--[if lt IE 9]>
@@ -909,7 +907,7 @@
 					</div>
 				</div>
 			</div>
-			<!--/ End Copyright -->
+			<!--/ End Copyright --> 
 		</footer>
 		
 		<!-- Jquery JS -->
@@ -939,5 +937,7 @@
 		<script src="{{ asset('landing') }}/js/magnific-popup.min.js"></script>
 		<!-- Active JS -->
 		<script src="{{ asset('landing') }}/js/active.js"></script>
+
+
 	</body>
 </html>

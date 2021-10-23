@@ -12,6 +12,8 @@ function ManageStaff() {
     const [isverifying, setisverifying] = useState(false)
     const [role, setrole] = useState([])
     const [selectedrole, setselectedrole] = useState('')
+    const [viewStaffres, setViewStaffres] = useState({})
+    const [isLoadingStaff, setIsLoadingStaff] = useState(true)
     const alert = useAlert()
 
 
@@ -116,6 +118,27 @@ function ManageStaff() {
         })
     }
 
+    function viewStaff(staffSystemNumber) {
+
+        setIsLoadingStaff(true);
+
+        axios.get('/gen/viewstaff/'+staffSystemNumber).then(response=> {
+            console.log(response);
+            
+            setViewStaffres(response.data)
+
+            setIsLoadingStaff(false)
+
+            
+
+
+        }).catch(e=>{
+            console.log(e);
+            setIsLoadingStaff(false)
+        });
+        
+    }
+
     return(
         <div>
             <div>
@@ -156,8 +179,11 @@ function ManageStaff() {
                                     <td>{staff.systemno}</td>
                                     <td>{staff.role}</td>
                                     <td>
-                                    <button className="btn btn-sm btn-success badge">View</button>
-                                        <button className="btn btn-sm btn-danger badge">Remove</button>
+                                    <button className="btn btn-sm btn-success badge" data-toggle="modal" data-target="#viewstaff" onClick={()=>viewStaff(staff.systemno)}>View</button>
+                                    {/* {
+                                        staff.role == "HeadOfSchool" ? "":<button className="btn btn-sm btn-danger badge">Remove</button>
+                                    } */}
+                                        
                                     </td>
                                 </tr>
                             ))}
@@ -216,6 +242,87 @@ function ManageStaff() {
                     <div className="modal-footer justify-content-between">
                         <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
                         <button onClick={addUserToASchool} type="button" className="btn btn-info btn-sm">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="modal fade" id="viewstaff" data-backdrop="false">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h4 className="modal-title">View Staff</h4>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+
+                        <div className="row">
+                            {/* <div className="col-md-12">
+                                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '5px'}}>
+                                    <img id="passportconfirm_sec2" style={{}} src="storage/schimages/profile.png" className="img-circle elevation-2" alt="" width="100px" height="100px" />
+                                </div>
+                            </div> */}
+                        </div>
+                        <br/>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="card text-center" style={{ display:'flex', flexDirection:'column' }}>
+                                    <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px' }}>{ isLoadingStaff ? "": viewStaffres.detUserDetails.firstname +" "+viewStaffres.detUserDetails.middlename}</i>
+                                    {/* <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px' }}>Form Class Section</i> */}
+                                    {/* <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px' }}>firstname middlename lastname</i> */}
+                                </div>
+                            </div>
+                            <div className="col-md-12">
+
+                                <div className="card">
+                                    <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px', fontWeight:'bold' }}>Form Classes</i>
+                               </div>
+                               <div style={{ maxHeight:'200px', overflowY:'scroll' }}>
+
+                                    {
+                                        isLoadingStaff ? 
+                                        ""
+                                        :
+
+                                        viewStaffres.formClasses.length > 0 ? viewStaffres.formClasses.map(d=>(
+                                            <div>{d.classname+" "+d.sectionname}</div>
+                                        )): <div>Not a Form Teacher</div>
+                                    }
+
+                               </div>
+
+                            </div>
+                            <div className="col-md-12">
+
+                               <div className="card">
+                                    <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px', fontWeight:'bold' }}>Teachers Subjects</i>
+                               </div>
+                               <div style={{ maxHeight:'200px', overflowY:'scroll' }}>
+                                    {
+                                        isLoadingStaff ? 
+                                        ""
+                                        :
+                                        viewStaffres.teachersSubject.length > 0 ? viewStaffres.teachersSubject.map(d=>(
+                                            <div>{d.subjectname}({d.classname+""+d.sectionname})</div>
+                                        )):<div>You are not a teacher</div>
+                                    }
+
+                               </div>
+
+                            </div>
+                        </div>
+                        <br/>
+                        <div className="alert alert-warning">
+                            <i style={{ fontStyle:'normal', fontSize:'12px' }}>Deleting a user from here means the user is no longer a staff in the school. Delete with caution!</i>
+                        </div>
+                       
+                    </div>
+                    <div className="modal-footer">
+                        
+                        <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-danger btn-sm">Delete Staff</button>
                     </div>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Addpost extends Model
 {
@@ -16,10 +17,10 @@ class Addpost extends Model
         $schooltype = Addpost::find($schoolid);
 
         if ($schooltype->schooltype == "Primary") {
-            $classlist_sec = Classlist::where('schoolid', $schoolid)->get();
+            $classlist_sec = Classlist_sec::where('schoolid', $schoolid)->get();
             return $classlist_sec;
         } else {
-            $classlist_sec = Classlist_sec::where('schoolid', $schoolid)->get();
+            $classlist_sec = Classlist_sec::where(['schoolid'=> $schoolid, 'status'=>1])->get();
             return $classlist_sec;
         }
         
@@ -57,7 +58,7 @@ class Addpost extends Model
 
         if ($schoolDetails->schooltype == "Primary") {
 
-            $classlist_sec = Classlist::where('id', $classid)->first();
+            $classlist_sec = Classlist_sec::where('id', $classid)->first();
             return $classlist_sec;
 
         } else {
@@ -130,6 +131,107 @@ class Addpost extends Model
 
         return $gradeFInal;
         
+    }
+
+    public function getSubjectList($regno, $session, $classid, $sectionid, $term)
+    {
+        $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$sectionid, 'subjecttype'=>2])->pluck('subjectid')->toArray();
+        $getStudentElective = ElectiveAdd::where(['regno'=>$regno, 'classid'=>$classid, 'sectionid'=>$sectionid])->pluck('subjectid')->toArray(); // get all student's elective subjects
+
+        $subject = array();
+
+        $subjectSum = array_merge($getSubjectList, $getStudentElective);
+
+        for ($i=0; $i < count($subjectSum); $i++) { 
+
+          $addmarksCheck = Addmark_sec::where(['subjectid' => $subjectSum[$i], 'term' => $term, 'session'=>$session, 'regno'=>$regno])->get();
+
+            // if (count($addmarksCheck) > 0) {
+
+            //     if ((int)$addmarksCheck[0]->totalmarks > 0) {
+                    $getSingleSubject = Addsubject_sec::find($subjectSum[$i]);
+                    array_push($subject, $getSingleSubject);
+            //     }
+            // }
+        }
+
+        return $subjects = collect($subject);
+    }
+
+    public function getSubjectMark($regno, $subjectid, $session){
+
+        $schooldata = Addpost::find(Auth::user()->schoolid);
+
+        $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session, 'term'=>$schooldata->term])->first();
+
+        return $subject;
+
+        
+    }
+
+    public function getClassAverageMarkSubject($subjectid, $term, $session)
+    {
+        $averagemark = ClassAverageMark::where(['subjectid'=> $subjectid, 'term'=>$term, 'session'=>$session])->first();
+
+        return $averagemark;
+    }
+
+    public function getTeacherName($subjectid)
+    {
+        $getTeacherId = TeacherSubjects::where('subject_id', $subjectid)->first();
+        if ($getTeacherId == NULL) {
+            return "NAN";
+        } else {
+            $username = User::find($getTeacherId->user_id);
+            $firstname = ucfirst($username->firstname);
+            $lastname = ucfirst(str_split($username->lastname)[0]);
+
+            return $lastname.". ".$firstname;
+        }
+    }
+
+    public function getResultSummary($subjectid, $session, $term, $regno)
+    {
+        $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, "term"=>$term, 'session'=>$session])->first();
+
+        return $subject;
+    }
+
+    public function getAverageScore($subjectid, $session, $regno)
+    {
+        $subject = Addmark_sec::where(['regno'=>$regno, 'subjectid'=>$subjectid, 'session'=>$session])->sum(DB::raw('totalmarks'));
+
+        return $subject/3;
+    }
+
+    public function getPoints($scores)
+    {
+
+        $getPoints = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>2])->get();
+
+        for ($i=0; $i < $getPoints->count(); $i++) { 
+            if ($scores >= $getPoints[$i]['marksfrom'] && $scores <= $getPoints[$i]['marksto']) {
+                return $getPoints[$i]['point'];
+            }
+        }
+    }
+
+    public function getResultAverage($regNo, $classid, $term, $schoolsession)
+    {
+
+       return ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();
+    }
+
+    public function getStudentComment($regNo, $classid, $term, $schoolsession)
+    {
+        return CommentsModel::where(['reg_no'=>$regNo, 'classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession])->first();
+    }
+
+    public function getPromoAverage($regNo, $classid, $term, $schoolsession)
+    {
+        $promoAverage = PromotionAverage_sec::where(['regno'=>$regNo, 'session'=>$schoolsession])->first();
+
+        return $promoAverage;
     }
 
 

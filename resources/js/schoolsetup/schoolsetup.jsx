@@ -14,7 +14,7 @@ function SchoolSetUp() {
     const [clubs, setclubs] = useState([])
     const [schoolinitials, setSchoolInitials] = useState('')
     const [schoolsessioninput, setschoolsessioninput] = useState('')
-    const [term, setterm] = useState(0)
+    const [term, setterm] = useState('')
     const [classnamesch, setClassnamesch] = useState('')
     const [typesch, setTypesch] = useState(0)
     const [houses, setHouses] = useState('')
@@ -28,7 +28,30 @@ function SchoolSetUp() {
     const [isupdatingca2, setisupdatingca2] = useState(false)
     const [ca3check, setca3check] = useState(Boolean)
     const [isupdatingca3, setisupdatingca3] = useState(false)
+    const [selectedclassid, setSelectedClassId] = useState('')
+    const [selectedclassListType, setSelectedClassListType] = useState(0)
+    // const [assessment, setAssessment] = useState([])
+    // const [subasscategory, setSubasscategory] = useState([])
+    // const [assessmentSetUp, setassessmentSetUp] = useState({
+    //     name:'',
+    //     maxmarks:''
+    // })
+    // const [subassessmentSetUp, setSubassessmentSetUp] = useState({
+    //     catid:'',
+    //     subname:'',
+    //     submaxmarks:'',
+    // })
     const alert = useAlert()
+
+    const [sessiondata, setsessiondata] = useState({
+        session:'',
+        firsttermstarts:'',
+        firsttermends:'',
+        secondtermstarts:'',
+        secondtermends:'',
+        thirdtermstarts:'',
+        thirdtermends:''
+    })
 
     useEffect(() => {
 
@@ -38,6 +61,8 @@ function SchoolSetUp() {
             // cleanup
         };
     }, []);
+
+
 
     function fetchSchoolDetails() {
 
@@ -51,6 +76,18 @@ function SchoolSetUp() {
             setclubs(response.data.clubs)
             setSchoolInitials(response.data.schoolDetails.shoolinitial)
             setschoolsessioninput(response.data.schoolDetails.schoolsession)
+            // setAssessment(response.data.assessment)
+            // setSubasscategory(response.data.subasscategory)
+
+            setsessiondata({
+                ...sessiondata, session:response.data.schoolDetails.schoolsession,
+                firsttermstarts:response.data.schoolDetails.firsttermstarts,
+                firsttermends:response.data.schoolDetails.firsttermends,
+                secondtermstarts:response.data.schoolDetails.secondtermstarts,
+                secondtermends:response.data.schoolDetails.secondtermends,
+                thirdtermstarts:response.data.schoolDetails.thirdtermstarts,
+                thirdtermends:response.data.schoolDetails.thirdtermends
+            })
 
             if (response.data.schoolDetails.exams ==1) {
                 setexamscheck(true)
@@ -113,6 +150,30 @@ function SchoolSetUp() {
 
     function handleChangeSchoolClubs(e) {
         setschoolclubs(e.target.value);
+    }
+
+    function handleChange(evt) {
+        const value = evt.target.value;
+        setsessiondata({
+            ...sessiondata,
+          [evt.target.name]: value
+        });
+    }
+
+    function handleAssessmentSetup(evt) {
+        const value = evt.target.value;
+        setassessmentSetUp({
+            ...assessmentSetUp,
+          [evt.target.name]: value
+        });
+    }
+
+    function handleSubAssessmentSetup(evt) {
+        const value = evt.target.value;
+        setSubassessmentSetUp({
+            ...subassessmentSetUp,
+          [evt.target.name]: value
+        });
     }
     
     function handleExamChange(e) {
@@ -178,6 +239,10 @@ function SchoolSetUp() {
         
     }
 
+    function handleClasslistSelect(evt) {
+        setSelectedClassListType(evt.target.value)
+    }
+
     function updateSchoolInitials() {
 
 
@@ -211,25 +276,24 @@ function SchoolSetUp() {
 
         if (schoolsessioninput !="") {
             
-            if ( schooldetails.schoolsession != schoolsessioninput) {
-                const data = new FormData()
-                data.append("schoolsessioninput", schoolsessioninput)
-                axios.post("/sec/setting/addschoolsession", data, {
+            // if ( schooldetails.schoolsession != schoolsessioninput) {
+
+                axios.post("/sec/setting/addschoolsession", sessiondata, {
                     headers:{
                         "Content-type": "application/json"
                     }
                 }).then(response=>{
                     console.log(response)
-                    fetchSchoolDetails()
+                    // fetchSchoolDetails()
                     myalert('Process Successful', 'success');
                 
                 }).catch(e=>{
                     console.log(e)
 
                 })
-            }else{
-                myalert('Noting was changed', 'warning');
-            }
+            // }else{
+            //     myalert('Noting was changed', 'warning');
+            // }
         }
     } 
 
@@ -264,10 +328,8 @@ function SchoolSetUp() {
 
     function addSchoolClassList() {
 
-        if (classnamesch !="" && typesch !=0) {
+
             const data = new FormData()
-            data.append("classname", classnamesch),
-            data.append("type", typesch)
             axios.post("/sec/setting/addclasses_sec", data, {
                 headers:{
                     "Content-type": "application/json"
@@ -282,7 +344,34 @@ function SchoolSetUp() {
                 console.log(e)
     
             })
+    
+    }
+
+    function addSchoolClassListPri() {
+
+        if (selectedclassListType == 0) {
+            myalert('Select a ClassList Style', 'error');
+        }else{
+            const data = new FormData()
+            data.append("classListType", selectedclassListType),
+            axios.post("/sec/setting/addclasses_sec", data, {
+                headers:{
+                    "Content-type": "application/json"
+                }
+            }).then(response=>{
+                console.log(response)
+                fetchSchoolDetails()
+                setClassnamesch('')
+                myalert('Process Successful', 'success');
+                
+            }).catch(e=>{
+                console.log(e)
+
+            })
         }
+
+        
+
     }
 
 
@@ -432,6 +521,66 @@ function SchoolSetUp() {
         })
     }
 
+    function setUpAssessment() {
+
+
+        axios.post("/sec/setting/setupassesment", assessmentSetUp, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response)
+            
+            
+            myalert('Process Successful', 'success');
+            fetchSchoolDetails()
+        }).catch(e=>{
+            console.log(e)
+            myalert('Process Successful', 'success');
+        })
+    }
+
+    function subSetUpAssessment() {
+
+
+        axios.post("/sec/setting/subsetupassesment", subassessmentSetUp, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response)
+            
+            
+            myalert('Process Successful', 'success');
+            fetchSchoolDetails()
+        }).catch(e=>{
+            console.log(e)
+            myalert('Process Successful', 'success');
+        })
+    }
+
+
+    function handleClickClass(classid) {
+
+        setSelectedClassId(classid)
+
+        axios.get('/sec/setting/classstatus/'+classid).then(response=>{
+
+            if (response.data.response == "success") {
+                fetchSchoolDetails()
+                myalert('Process Successful', 'success');
+            }else{
+                myalert('Unknown error', 'error');
+            }
+
+        }).catch(e=>{
+            myalert('Unknown error', 'error');
+        })
+
+        console.log(classid)
+        
+    }
+
 
 
 
@@ -447,30 +596,76 @@ function SchoolSetUp() {
                     </div>
                     <div className="col-12 col-md-4">
                         <div className="form-group">
-                            <input className="form-control form-control-sm" value={schoolsessioninput} onChange={(e)=>handleChangeSchoolSchoolsession(e)} placeholder="School Session"/>
+                            <input className="form-control form-control-sm" name="session" value={sessiondata.session} onChange={handleChange} placeholder="School Session"/>
+                            {/* first term */}
+                            <div className="row"> 
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>1st term begins</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.firsttermstarts} name="firsttermstarts" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>1st term ends</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.firsttermends} name="firsttermends" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                            </div>
+                            {/* second term */}
+                            <div className="row"> 
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>2nd term begins</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.secondtermstarts} name="secondtermstarts" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>2nd term ends</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.secondtermends} name="secondtermends" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                            </div>
+                            {/* third term */}
+                            <div className="row"> 
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>3rd term begins</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.thirdtermstarts} name="thirdtermstarts" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                                <div className="col-12 col-md-6">
+                                    <div className="form-group" style={{ margin:'5px' }}>
+                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}>3rd term ends</i>
+                                        <input type="date" onChange={handleChange} value={sessiondata.thirdtermends} name="thirdtermends" id="" className="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                            </div>
                             <button className="btn btn-sm btn-info badge" onClick={updateSchoolSession}>Save</button>
                         </div>
                     </div>
                     <div className="col-12 col-md-4">
                         <div className="form-group">
                             {/* <input className="form-control form-control-sm" value={schooldetails.term} placeholder="School term"/> */}
-                            <select className="form-control form-control-sm" onChange={(e)=>handleChangeSchoolTerm(e)}>
+                            <select className="form-control form-control-sm" value={term} onChange={(e)=>handleChangeSchoolTerm(e)}>
                                 <option value="">Select a term</option>
-                                <option value="1" selected={term == 1 ? "selected":""}>1(first)</option>
-                                <option value="2" selected={term == 2 ? "selected":""}>2(Second)</option>
-                                <option value="3" selected={term == 3 ? "selected":""}>3(Third)</option>
+                                <option value="1">1(first)</option>
+                                <option value="2">2(Second)</option>
+                                <option value="3">3(Third)</option>
                             </select>
                             <button onClick={updateSchoolTerm} className="btn btn-sm btn-info badge">Save</button>
                         </div>
                     </div>
 
                 </div>
+                {/* <p>{schooldetails.exams}</p> */}
                 <hr/>
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-3">
                         {isupdatingexams ? <div className="spinner-border"></div>: <div className="form-group">
                             <div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleExamChange(e)} checked={examscheck ? "checked":""} className="custom-control-input" id="customSwitch1" />
+                                <input type="checkbox" onChange={(e)=>handleExamChange(e)} checked={schooldetails.exams == 1 ? true:false} className="custom-control-input" id="customSwitch1" />
                                 <label className="custom-control-label" htmlFor="customSwitch1">Exams</label>
                             </div>
                         </div>}
@@ -479,7 +674,7 @@ function SchoolSetUp() {
                     <div className="col-12 col-md-3">
                     <div className="form-group">
                             {isupdatingca1 ? <div className="spinner-border"></div>:<div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleCa1Change(e)} checked={ca1check ? "checked":""} className="custom-control-input" id="customSwitch2" />
+                                <input type="checkbox" onChange={(e)=>handleCa1Change(e)} checked={schooldetails.ca1 == 1 ? true:false} className="custom-control-input" id="customSwitch2" />
                                 <label className="custom-control-label" htmlFor="customSwitch2">CA1</label>
                             </div>}
                         </div>
@@ -487,7 +682,7 @@ function SchoolSetUp() {
                     <div className="col-12 col-md-3">
                     <div className="form-group">
                             {isupdatingca2 ? <div className="spinner-border"></div>:<div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleCa2Change(e)} checked={ca2check == true ? "checked":""} className="custom-control-input" id="customSwitch3" />
+                                <input type="checkbox" onChange={(e)=>handleCa2Change(e)} checked={schooldetails.ca2 == 1 ? true:false} className="custom-control-input" id="customSwitch3" />
                                 <label className="custom-control-label" htmlFor="customSwitch3">CA2</label>
                             </div>}
                         </div>
@@ -495,7 +690,7 @@ function SchoolSetUp() {
                     <div className="col-12 col-md-3">
                     <div className="form-group">
                             {isupdatingca3 ? <div className="spinner-border"></div>:<div className="custom-control custom-switch">
-                                <input type="checkbox" onChange={(e)=>handleCa3Change(e)} checked={ca3check == true ? "checked":""} className="custom-control-input" id="customSwitch4" />
+                                <input type="checkbox" onChange={(e)=>handleCa3Change(e)} checked={schooldetails.ca3 == 1 ? true:false} className="custom-control-input" id="customSwitch4" />
                                 <label className="custom-control-label" htmlFor="customSwitch4">CA3</label>
                             </div>}
                         </div>
@@ -504,31 +699,162 @@ function SchoolSetUp() {
 
                 </div>
                 <hr/>
+                    {/* <div>
+                        <p style={{ paddingLeft:'10px' }}>SetUp Continous Assessment(e.g Exams, CA1, CA2 etc)</p>
+                        <div className="row" style={{ margin:'10px' }}>
+                            <div className="col-12 col-md-6">
+                                <div className="row">
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <label>Name</label>
+                                            <input type="text" name="name" value={assessmentSetUp.name} onChange={handleAssessmentSetup} className="form-control form-control-sm"/>
+                                        </div>
+                                    </div>
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <label>Max Marks</label>
+                                            <input type="number" name="maxmarks" value={assessmentSetUp.maxmarks} onChange={handleAssessmentSetup} className="form-control form-control-sm"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <button type="submit" className="btn btn-sm btn-info badge" onClick={setUpAssessment}>Save</button>
+                                </div>
+                                {
+                                    assessment.map(d=>(
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <div style={{ display:'flex', alignItems:'center' }} >
+                                                    <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.name} ({d.maxmark})</i> <div style={{ flex:'1' }}></div>
+
+                                                    <div className="form-group">
+                                                        <div className="custom-control custom-switch">
+                                                            <input type="checkbox" defaultChecked={true} className="custom-control-input" id="" />
+                                                            <label className="custom-control-label" htmlFor="jkj"></label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                                
+                            </div>
+                            <div className="col-12 col-md-6">
+                                <div style={{ border:'1px solid black' }}>
+                                    <p style={{ padding:'5px' }}>Continous Assessment Sub-category</p>
+                                    <div className="row" style={{ margin:'5px' }}>
+                                        <div className="col-12 col-md-6">
+                                            <div className="form-group">
+                                                <label>Select a Category</label>
+                                                <select className="form-control form-control-sm" name="catid" value={subassessmentSetUp.catid} onChange={handleSubAssessmentSetup}>
+                                                    <option value="">Select a category</option>
+                                                    {
+                                                        assessment.map(d=>(
+                                                            <option key={d.id+"cacat"} value={d.id}>{d.name}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-md-6">
+                                            <div className="form-group">
+                                                <label>Sub Name</label>
+                                                <input type="text" name="subname" value={subassessmentSetUp.subname} onChange={handleSubAssessmentSetup} className="form-control form-control-sm"/>
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Max Marks</label>
+                                                <input type="number" name="submaxmarks" value={subassessmentSetUp.submaxmarks} onChange={handleSubAssessmentSetup} className="form-control form-control-sm"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="form-group" style={{ marginLeft:'10px' }}>
+                                        <button type="submit" className="btn btn-sm btn-info badge" onClick={subSetUpAssessment}>Save</button>
+                                    </div>
+
+                                    {
+                                        subasscategory.map(d=>(
+                                            <div className="card" style={{ margin:'0px 5px 0px 5px' }}>
+                                                <div className="card-body">
+                                                    <div style={{ display:'flex', alignItems:'center' }} >
+                                                        <i style={{ fontStyle:'normal', fontSize:'10px' }}> sub category</i> <div style={{ flex:'1' }}></div>
+
+                                                        <div className="form-group">
+                                                            <div className="custom-control custom-switch">
+                                                                <input type="checkbox" defaultChecked={true} className="custom-control-input" id="" />
+                                                                <label className="custom-control-label" htmlFor="jkj"></label>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+
+                                    
+
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                    </div> */}
+                <hr/>
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-6">
                         <div className="alert alert-warning">
-                            <i style={{ fontSize:'13px' }}>Classes school be entered in ascending order(From the lowest to highest)</i>
+                            <i style={{ fontSize:'13px' }}>Select an option based on your class list style</i>
                         </div>
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <select className="form-control-sm form-control" onChange={(e)=>handleChangeClassType(e)}>
                                 <option value="">Select Level</option>
                                 <option value="1" selected={typesch == 1 ? "selected":""} >Junior Secondary</option>
                                 <option value="2" selected={typesch == 2 ? "selected":""}>Senior Secondary</option>
                             </select>
-                        </div>
-                        <div className="form-group">
+                        </div> */}
+                        {/* <div className="form-group">
                             <input onChange={(e)=>handleChangeClassName(e)} value={classnamesch} className="form-control form-control-sm" placeholder="Enter Class name in ascending Order"/>
-                        </div>
-                        <button onClick={addSchoolClassList} className="btn btn-sm btn-info badge">Save</button>
+                        </div> */}
+
+                        {
+                            schooldetails.schooltype == "Primary" ? 
+                            
+                            <div>
+                                <div className="form-group">
+                                    <select className="form-control form-control-sm" onChange={(e)=>handleClasslistSelect(e)}>
+                                        <option value="0" >Select a classlist Style</option>
+                                        <option value="1" >Conventional Style (e.g. Primary 1)</option>
+                                        <option value="2" >K Style (e.g. Grade 1)</option>
+                                    </select>
+                                </div>
+                                <button onClick={addSchoolClassListPri} className="btn btn-sm btn-info badge">Generate Classes</button>
+                            </div>
+
+                            :
+                            <button onClick={addSchoolClassList} className="btn btn-sm btn-info badge">Generate Classes</button>
+                        }
+
+
+                        
                         <br/>
 
                         {
                             classlist.length > 0 ? 
                             classlist.map(d => (
-                                <div className="card radius-15">
+                                <div key={d.id+"classlist"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
-                                            <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.classname} </i> <div style={{ flex:'1' }}></div> <button className="btn btn-sm btn-danger badge">Remove</button>
+                                            <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.classname} </i> <div style={{ flex:'1' }}></div>
+
+                                            <div className="form-group">
+                                                <div className="custom-control custom-switch">
+                                                    <input type="checkbox" defaultChecked={d.status == 1 ? true:false} className="custom-control-input" onClick={()=>handleClickClass(d.id)} id={"customSwitchclasses"+d.id} />
+                                                    <label className="custom-control-label" htmlFor={"customSwitchclasses"+d.id}></label>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -554,7 +880,7 @@ function SchoolSetUp() {
                         {
                             houselist.length > 0 ? 
                             houselist.map(d => (
-                                <div className="card radius-15">
+                                <div key={d.id+"housesid"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
                                             <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.housename} </i> <div style={{ flex:'1' }}></div> <button className="btn btn-sm btn-danger badge">Remove</button>
@@ -588,7 +914,7 @@ function SchoolSetUp() {
                         {
                             classsection.length > 0 ? 
                             classsection.map(d => (
-                                <div className="card radius-15">
+                                <div kay={d.id+"classsecid"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
                                             <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.sectionname} </i> <div style={{ flex:'1' }}></div> <button className="btn btn-sm btn-danger badge">Remove</button>
@@ -616,7 +942,7 @@ function SchoolSetUp() {
                         {
                             clubs.length > 0 ? 
                             clubs.map(d => (
-                                <div className="card radius-15">
+                                <div key={d.id+"clubid"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
                                             <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.clubname} </i> <div style={{ flex:'1' }}></div> <button className="btn btn-sm btn-danger badge">Remove</button>
@@ -639,6 +965,29 @@ function SchoolSetUp() {
                     </div>
                 </div>
             </div>
+
+
+            <div className="modal fade" id="updateclassstatus">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h4 className="modal-title">Toggle Class Status</h4>
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        {/* <p>You are about to disable {selectedclassname}, click proceed to continue </p> */}
+                    </div>
+                    <div className="modal-footer justify-content-between">
+                        <button type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-info btn-sm">Proceed</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     );
 

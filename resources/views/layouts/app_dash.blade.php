@@ -1230,12 +1230,82 @@
         });
  
     });
+//--------------------------------------------------------------------------------------------------------------------
+//                                          psycomoto
+//--------------------------------------------------------------------------------------------------------------------
 
-    function fetchclasses(){
+$(function() {
+            $('#motoaddid').click(function(e) {
+                e.preventDefault();
+                $("#motoaddform").submit();
+
+                document.getElementById('spinnermotoprocess').style.display = "flex";
+
+                $.ajax({
+                url: '{{ route('get_students_for_pyco') }}',
+                type: 'post',
+                dataType: 'json',
+                data: $('form#motoaddform').serialize(),
+                success: function(data) {
+                  document.getElementById('spinnermotoprocess').style.display = "none";
+
+                    // console.log(data);
+
+                    if(data.errors){
+                      for (let index = 0; index < data.errors.length; index++) {
+                            const element = data.errors[index];
+                            document.getElementsByName(element)[0].style.setProperty("background-color", "#FB9DA2", "important");
+                      }
+                    }
+
+                    if (data.success) {
+
+                      var atlistarray = data.atlist;
+
+                      var html =""
+
+                      for (let index = 0; index < data.success.length; index++) {
+                        const element = data.success[index];
+
+                        var layer_id = $(this).data('id');
+                        var url = '{{ route("view_student", ":id") }}';
+                        url = url.replace(':id', element.userid );
+
+                        var n = atlistarray.includes(element.id);
+
+                        if (n) {
+
+                          html += "<tr><td>"+element.id+"</td><td>"+element.firstname+" "+element.middlename+" "+element.lastname+"</td><td>"+element.classname+element.sectionname+"</td><td><button class='btn btn-sm btn-success'><i class='fas fa-check'></i></button></td></tr>";
+                          
+                        }else{
+
+                          html += "<tr><td>"+element.id+"</td><td>"+element.firstname+" "+element.middlename+" "+element.lastname+"</td><td>"+element.classname+element.sectionname+"</td><td><a href="+url+"><button class='btn btn-sm btn-success'><i class='far fa-plus-square'></i></button></a></td></tr>";
+
+                        }
+
+                        
+                       
+                        
+                      }
+                      
+                    }
+
+                    $("#tablemoto").html(html);
 
 
+                    },
+                    error:function(errors){
+                      console.log(errors)
+                    },
+                    timeout: 60000
+                });
+            });
+        });
 
-    }
+        $('#motoaddform').on('keypress change', function(e) {
+            // console.log(e);
+            document.getElementsByName(e.target.name)[0].style.setProperty("background-color", "#EEF0F0", "important");
+        });
 
 
 

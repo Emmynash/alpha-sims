@@ -127,6 +127,8 @@
                   </div>
                 </div>
               </div>
+
+              
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
@@ -224,6 +226,7 @@
 
   <script>
       function scrollocation(){
+        document.getElementById('accountscroll').className = "nav-link active"
         document.getElementById('summarylistscroll').className = "nav-link active"
       }
   </script>

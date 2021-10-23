@@ -57,7 +57,7 @@
                 <div class="col-12 col-md-4"> 
                   <div class="card" style="margin: 5px;">
                     <div style="display: flex; flex-direction: column; align-items: left;">
-                      <i style="padding: 10px 0px 0px 10px; font-style: normal; font-size: 12px;">Classname</i>
+                      <i style="padding: 10px 0px 0px 10px; font-style: normal; font-size: 12px;">Section</i>
                       <i style="padding: 5px 0px 5px 10px; font-style: normal;">{{ $formClass->getSectionName->sectionname }}</i>
                     </div>
                   </div>
@@ -82,6 +82,8 @@
                 <strong>Info!</strong> Click on the notify button below to send a notification the admin that all results in your class has been processed...
               </div>
               <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#notifymodal">Notify</button>
+              <a href="{{ route('view_student_form', ['classid'=>$formClass->class_id, 'sectionid'=>$formClass->form_id]) }}"><button class="btn btn-success btn-sm">View Student </button></a>
+              <hr>
             </div>
 
 
@@ -158,6 +160,7 @@
                   <form action="{{ route('form_teacher_result_confirm') }}" method="post" id="formTeachSubjectEnteredConfirm">
                     @csrf
                     <input type="hidden" name="classid" value="{{ $formClass->getClassName->id }}">
+                    <input type="hidden" name="sectionid" value="{{ $formClass->getSectionName->id }}" id="">
                   </form>
                 </div>
                 

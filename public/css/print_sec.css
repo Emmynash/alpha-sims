@@ -2,6 +2,10 @@
     /* border: 1px solid red; */
 }
 
+.page-break {
+    page-break-after: always;
+}
+
 table, th, td {
     border: 1px solid black;
 }
@@ -49,6 +53,14 @@ tr, td{
     #printresult{
         border: 5px solid blue;
         
+    }
+
+    .page-break {
+        page-break-after: always;
+    }
+
+    #imagelogo{
+        background-image: url("https://drive.google.com/thumbnail?id=1BggdEUjriRhGioI0EBUe9X42qFFsJ1jg");
     }
 
     #textText{
@@ -103,6 +115,7 @@ tr, td{
 
     .print-container{
         height: 1123px;
+        width: 900px;
     }
 
 }

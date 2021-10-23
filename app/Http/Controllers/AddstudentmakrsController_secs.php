@@ -14,6 +14,10 @@ use App\ResultAverage;
 use App\Addstudent_sec;
 use App\PromotionAverage_sec;
 use App\Addteachers_sec;
+use App\CLassSubjects;
+use App\ElectiveAdd;
+use App\Repository\Result\GetSubjectPosition;
+use App\SubjectScoreAllocation;
 use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +41,7 @@ class AddstudentmakrsController_secs extends Controller
 
        $addpost = $this->addpost->where('id', Auth::user()->schoolid)->first();
 
-       if (Auth::user()->role == "Teacher") {
+       if (Auth::user()->hasRole('Teacher')) {
            $teachersSubjects = TeacherSubjects::where('user_id', Auth::user()->id)->pluck('subject_id');
 
            $arrayOfSubjects = array();
@@ -55,8 +59,9 @@ class AddstudentmakrsController_secs extends Controller
            $arrayOfClassesMain = array_unique($arrayOfSubjects);
 
         //    return view('secondary.teachers.addmarks.studentmarks', compact('addpost', 'arrayOfClassesMain'));
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.teachers.addmarks.studentmarksreact');
+        return view('secondary.teachers.addmarks.studentmarksreact', compact('schooldetails'));
 
 
        }
@@ -64,36 +69,21 @@ class AddstudentmakrsController_secs extends Controller
 
         // return view('secondary.adminside.markmanage_secs', compact('addpost'));
 
-        return view('secondary.adminside.managemarkreact');
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.adminside.managemarkreact', compact('schooldetails'));
     
     }
 
-    public function fetchstudentssubject(Request $request, $classid){
-        
-        //---------------------------------------------------------------------------------------------------//
-        //                                fetch subjects for each class                                      //
-        // --------------------------------------------------------------------------------------------------//
+    public function fetchstudentssubject(Request $request, $classid, $sectionid){
 
-        // if (Auth::user()->role == "Teacher") {
-
-        //     $teachersSubjects = TeacherSubjects::where('user_id', Auth::user()->id)->pluck('subject_id')->toArray();
-
-        //     $subjectlist = $this->addsubject_sec->where(['schoolid'=> Auth::user()->schoolid, 'classid'=>$request->input('classid')])->get();
-
-        //     $teachersSubjectMain = array();
-
-        //     for ($i=0; $i < count($subjectlist); $i++) { 
-        //         if (in_array((int)$subjectlist[$i]['id'], $teachersSubjects, TRUE)) { 
-        //             array_push($teachersSubjectMain, $subjectlist[$i]);
-        //         }
-        //     }
-
-        //     return response()->json(['subjectlist'=>$teachersSubjectMain]);
-            
-        // }
-
-        $subjectlist = $this->addsubject_sec->where(['schoolid'=> Auth::user()->schoolid, 'classid'=>$classid])->get();
-        return response()->json(['subjectlist'=>$subjectlist]);
+        $classAllocatedSubject = CLassSubjects::where(['classid'=>$classid, 'sectionid'=>$sectionid])->pluck('subjectid')->toArray();
+        $subjectsmain = array();
+        for ($i=0; $i < count($classAllocatedSubject); $i++) { 
+            $subjectlistsingle = Addsubject_sec::find($classAllocatedSubject[$i]);
+            array_push($subjectsmain, $subjectlistsingle);
+        }
+        return response()->json(['subjectlist'=>$subjectsmain]);
     }
 
     public function fetchsubjectdetails(Request $request){
@@ -108,44 +98,85 @@ class AddstudentmakrsController_secs extends Controller
 
     public function getallstudentsandmarks(Request $request){
 
-        $validator = Validator::make($request->all(),[
-            'selected_class' => 'required',
-            'selected_subject' => 'required',
-            'selected_term' => 'required',
-            'currentsession' => 'required',
-            'selected_section' => 'required',
-        ]);
+        try {
+            $validator = Validator::make($request->all(),[
+                'selected_class' => 'required',
+                'selected_subject' => 'required',
+                'selected_term' => 'required',
+                'currentsession' => 'required',
+                'selected_section' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(['response'=>"feilds"]);
+            }
+    
+            $session = $request->input('currentsession');
+            $classId = $request->input('selected_class');
+            $subjectbyclassid = $request->input('selected_subject');
+            $schoolterm = $request->input('selected_term');
+            $studentsection = $request->input('selected_section');
+            
+            // fetch all regno for all marks
+    
+           $checksubjecttype = CLassSubjects::where(['subjectid'=>$subjectbyclassid, 'classid'=>$classId, 'sectionid'=>$studentsection])->first();
+    
+            if($checksubjecttype->subjecttype == 2){
+    
+                $a = $this->addmark_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $classId, 'subjectid' => $subjectbyclassid, 'term' => $schoolterm, 'section' => $studentsection, 'session' => $session])->take('regno');
+            
+                $studentlist = DB::table('addstudent_secs')
+                ->join('users', 'users.id', '=', 'addstudent_secs.usernamesystem')
+                ->leftJoin('addmark_secs', function($join) use($subjectbyclassid, $schoolterm){
+                    $join->on('addmark_secs.regno', '=', 'addstudent_secs.id');
+                    $join->where(['addmark_secs.subjectid' => $subjectbyclassid, 'addmark_secs.term'=> $schoolterm]);
+                })
+                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmark_secs.subjectid', 'addmark_secs.exams', 'addmark_secs.grades', 'addmark_secs.totalmarks', 'addmark_secs.ca1', 'addmark_secs.ca2', 'addmark_secs.ca3', 'addmark_secs.id as markid', 'addmark_secs.position')
+                ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
+    
+                return response()->json(['studentlist'=>$studentlist, 'a'=>$a], 200);
+    
+            }else{
 
-        if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
+                $a = $this->addmark_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $classId, 'subjectid' => $subjectbyclassid, 'term' => $schoolterm, 'section' => $studentsection, 'session' => $session])->take('regno');
+            
+                $studentlist = Addstudent_sec::
+                join('users', 'users.id', '=', 'addstudent_secs.usernamesystem')
+                ->leftJoin('addmark_secs', function($join) use($subjectbyclassid, $schoolterm){
+                    $join->on('addmark_secs.regno', '=', 'addstudent_secs.id');
+                    $join->where(['addmark_secs.subjectid' => $subjectbyclassid, 'addmark_secs.term'=> $schoolterm]);
+                })
+                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmark_secs.subjectid', 'addmark_secs.exams', 'addmark_secs.grades', 'addmark_secs.totalmarks', 'addmark_secs.ca1', 'addmark_secs.ca2', 'addmark_secs.ca3', 'addmark_secs.id as markid', 'addmark_secs.position')
+                ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
+
+                $mainList = array();
+
+                $checkElective = ElectiveAdd::where(['classid'=>$classId, 'sectionid'=>$studentsection, 'subjectid'=>$subjectbyclassid])->pluck('regno')->toArray();
+
+                for ($i=0; $i < count($studentlist); $i++) { 
+
+                    if (in_array($studentlist[$i]['id'], $checkElective)) {
+                        array_push($mainList, $studentlist[$i]);
+                    }
+                    
+                }
+    
+                return response()->json(['studentlist'=>collect($mainList), 'a'=>$a], 200);
+
+
+
+            }
+
+
+        } catch (\Throwable $th) {
+            // return response()->json(['error'=>$th]);
+            return $th;
         }
 
-        $session = $request->input('currentsession');
-        $classId = $request->input('selected_class');
-        $subjectbyclassid = $request->input('selected_subject');
-        $schoolterm = $request->input('selected_term');
-        $studentsection = $request->input('selected_section');
-        
-        // fetch all regno for all marks
 
-        $a = $this->addmark_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $classId, 'subjectid' => $subjectbyclassid, 'term' => $schoolterm, 'section' => $studentsection, 'session' => $session])->take('regno');
-        
-            $studentlist = DB::table('addstudent_secs')
-            ->join('users', 'users.id', '=', 'addstudent_secs.usernamesystem')
-            ->leftJoin('addmark_secs', function($join) use($subjectbyclassid, $schoolterm){
-                $join->on('addmark_secs.regno', '=', 'addstudent_secs.id');
-                $join->where(['addmark_secs.subjectid' => $subjectbyclassid, 'addmark_secs.term'=> $schoolterm]);
-            })
-            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmark_secs.subjectid', 'addmark_secs.exams', 'addmark_secs.grades', 'addmark_secs.totalmarks', 'addmark_secs.ca1', 'addmark_secs.ca2', 'addmark_secs.ca3', 'addmark_secs.id as markid', 'addmark_secs.position')
-            ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
-
-        return response()->json(['studentlist'=>$studentlist, 'a'=>$a], 200);
     }
 
-    public function addmarksmiain(Request $request){
-
-        // return $request;
-
+    public function addmarksmiain(GetSubjectPosition $getSubjectPosition, Request $request){
 
         $validator = Validator::make($request->all(),[
             'classidmain' => 'required',
@@ -155,355 +186,14 @@ class AddstudentmakrsController_secs extends Controller
             'subjectid' => 'required'
         ]);
 
-        // return $request;
-
             try {
                 if ($validator->fails()) {
                     return response()->json(['errors'=>$validator->errors()->keys()]);
                 }
-        
+                $getSubjectPosition->addResultMain($request);
                 
-                    $checkifidexists = $request->input('markidstudent');
-                    $studentId = $request->input('studentregno');
-                    $examsmarks = $request->input('examsmarksentered');
-                    $ca1marks = $request->input('ca1marksentered');
-                    $ca2marks = $request->input('ca2marksentered');
-                    $ca3marks = $request->input('ca3marksentered');
-                    $attendancemarks = "NA";
-                    $selectedclassidMain = $request->input('classidmain');
-                    $subjectbyclassidMain = $request->input('subjectid');
-                    $schooltermMain = $request->input('currentterm');
-                    $studentshiftMain = "NA";
-                    $studentsectionMain = $request->input('studentsection');
-                    $sessionquery = $request->input('currentsessionform');
+                return response()->json(['success' => "success"], 200);
 
-                    // return $request;
-            
-            
-                    if ($examsmarks == 0 && $ca1marks == 0 && $ca2marks == 0 && $ca3marks == 0) {
-                        $msg = "Failed";
-                        
-                        return response()->json(['empty' => $msg], 200);
-                    }
-        
-                    
-            
-            //---------------------------------------------------------------------------------
-            //                  check if result has already been entered
-            //---------------------------------------------------------------------------------
-                    $checkduplicate = $this->addmark_sec->where(['regno'=>$studentId, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain])->get();
-            
-                    if(count($checkduplicate) > 0 && $checkifidexists == "null"){
-                        $msg = "duplicate";
-                        
-                        return response()->json(['msg' => $msg], 200);
-                    }
-        
-                    
-            
-            //--------------------------------------------------------------------------------
-            //              enter grades either complete or partly the first time
-            //--------------------------------------------------------------------------------
-        
-            
-            
-                    if ($checkifidexists == "null") {
-        
-                        
-            
-                            $getClassDetails = Classlist_sec::find($selectedclassidMain);
-            
-                            $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
-        
-                            
-            
-                            if (count($studentgradeprocess) < 5) {
-                                $msg = "grades";
-                        
-                                return response()->json(['msg' => $msg], 200);
-        
-                                
-                            }else{
-        
-        
-                                
-            //---------------------------------------------------------------------------------
-            //                                partial result entry
-            //---------------------------------------------------------------------------------
-                                if ($examsmarks == 0 || $ca1marks == 0 || $ca2marks == 0 || $ca3marks == 0) {
-            
-                                $totalmarks = $examsmarks + $ca1marks + $ca2marks + $ca3marks;
-            
-                                $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
-                
-                                $gradeFInal = "";
-                
-                                for ($i=0; $i < count($studentgradeprocess); $i++) {
-                                    if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
-                                        $gradeFInal = $studentgradeprocess[$i]['gpaname'];
-                                    }
-                                }
-                        
-                                $addmarks = new Addmark_sec();
-                                $addmarks->regno = $studentId;
-                                $addmarks->schoolid = Auth::user()->schoolid;
-                                $addmarks->classid = $selectedclassidMain;
-                                $addmarks->subjectid = $subjectbyclassidMain;
-                                $addmarks->exams = $examsmarks;
-                                $addmarks->ca1 = $ca1marks;
-                                $addmarks->ca2 = $ca2marks;
-                                $addmarks->ca3 = $ca3marks;
-                                $addmarks->totalmarks = $totalmarks;
-                                $addmarks->grades = $gradeFInal;
-                                $addmarks->term = $schooltermMain;
-                                $addmarks->session = $sessionquery;
-                                $addmarks->shift = $studentshiftMain;
-                                $addmarks->section = $studentsectionMain;
-                                $addmarks->save();
-            
-                                // get student position
-            
-                                $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'term'=>$request->input('currentterm'), 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain])->orderBy('totalmarks', 'desc')->get();
-            
-                                $subjectscrorearray = array();
-                                
-            
-                                for ($i=0; $i < count($getstudentposition); $i++) { 
-                                    $score = $getstudentposition[$i]['totalmarks'];
-                                        array_push($subjectscrorearray, $score);
-                                    
-                                }
-            
-                                for ($i=0; $i < count($getstudentposition); $i++) { 
-            
-                                    $mainScore = $getstudentposition[$i]['totalmarks'];
-                                    $mainScoreId = $getstudentposition[$i]['id'];
-            
-                                    $positiongotten = array_search($mainScore, $subjectscrorearray);
-            
-                                    $updateposition = Addmark_sec::find($mainScoreId);
-                                    $updateposition->position = $positiongotten + 1;
-                                    $updateposition->save();
-                                    
-                                }
-                        
-                                $msg = "success";
-                        
-                                return response()->json(['success' => $msg], 200);
-                                }else{
-            
-            //---------------------------------------------------------------------------------
-            //                              enter complete result
-            //---------------------------------------------------------------------------------
-            
-                                    $totalmarks = $examsmarks + $ca1marks + $ca2marks + $ca3marks;
-            
-                                    $gradeFInal = "";
-
-                                    // return $request;
-            
-                                    for ($i=0; $i < count($studentgradeprocess); $i++) {
-                                        if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
-                                            $gradeFInal = $studentgradeprocess[$i]['gpaname'];
-                                        }
-                                    }
-            
-                                    $addmarks = new Addmark_sec();
-                                    $addmarks->regno = $studentId;
-                                    $addmarks->schoolid = Auth::user()->schoolid;
-                                    $addmarks->classid = $selectedclassidMain;
-                                    $addmarks->subjectid = $subjectbyclassidMain;
-                                    $addmarks->exams = $examsmarks;
-                                    $addmarks->ca1 = $ca1marks;
-                                    $addmarks->ca2 = $ca2marks;
-                                    $addmarks->ca3 = $ca3marks;
-                                    $addmarks->totalmarks = $totalmarks;
-                                    $addmarks->grades = $gradeFInal;
-                                    $addmarks->term = $schooltermMain;
-                                    $addmarks->session = $sessionquery;
-                                    $addmarks->shift = $studentshiftMain;
-                                    $addmarks->section = $studentsectionMain;
-                                    $addmarks->save();
-            
-            
-            
-                                    $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm')])->orderBy('totalmarks', 'desc')->get();
-            
-                                    $subjectscrorearray = array();
-                                    
-            
-                                    for ($i=0; $i < count($getstudentposition); $i++) { 
-                                        $score = $getstudentposition[$i]['totalmarks'];
-                                            array_push($subjectscrorearray, $score);
-                                        
-                                    }
-            
-                                    for ($i=0; $i < count($getstudentposition); $i++) { 
-            
-                                        $mainScore = $getstudentposition[$i]['totalmarks'];
-                                        $mainScoreId = $getstudentposition[$i]['id'];
-            
-                                        $positiongotten = array_search($mainScore, $subjectscrorearray);
-            
-                                        $updateposition = Addmark_sec::find($mainScoreId);
-                                        $updateposition->position = $positiongotten + 1;
-                                        $updateposition->save();
-                                        
-                                    }
-            
-            
-                            
-                                    $msg = "success";
-                            
-                                    return response()->json(['success' => $msg], 200);
-                                }
-                                
-                            }
-                            
-                    }else{
-                        
-            //----------------------------------------------------------------------------------
-            //                                 updating of result
-            //----------------------------------------------------------------------------------
-                        
-            
-                        $grademarkid = $request->input('markidstudent');
-            
-            //---------------------------------------------------------
-            //               processing patial entry
-            //---------------------------------------------------------
-            
-                            $getClassDetails = Classlist_sec::find($selectedclassidMain);
-        
-                            
-                            
-                        if ($examsmarks == 0 || $ca1marks == 0 || $ca2marks == 0 || $ca3marks == 0) {
-        
-                            // return $request;
-            
-                            $totalmarks = $examsmarks + $ca1marks + $ca2marks + $ca3marks;
-
-                            // return $totalmarks;
-            
-                            $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
-            
-                            $gradeFInal = "";
-                            $point = 0;
-            
-                            for ($i=0; $i < count($studentgradeprocess); $i++) {
-                                if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
-                                    $gradeFInal = $studentgradeprocess[$i]['gpaname'];
-                                    $point = $studentgradeprocess[$i]['point'] == "NA" ? 0:(int)$studentgradeprocess[$i]['point'];
-                                }
-                            }
-
-                            // return $gradeFInal;
-            
-                            $updatestudentresult = Addmark_sec::find($grademarkid);
-                            $updatestudentresult->exams = $examsmarks;
-                            $updatestudentresult->ca1 = $ca1marks;
-                            $updatestudentresult->ca2 = $ca2marks;
-                            $updatestudentresult->ca3 = $ca3marks;
-                            $updatestudentresult->totalmarks = $totalmarks;
-                            $updatestudentresult->grades = $gradeFInal;
-                            $updatestudentresult->points = $point;
-                            $updatestudentresult->save();
-
-                            
-            
-                            $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm')])->orderBy('totalmarks', 'desc')->get();
-            
-                            $subjectscrorearray = array();
-                            
-            
-                            for ($i=0; $i < count($getstudentposition); $i++) { 
-                                $score = $getstudentposition[$i]['totalmarks'];
-                                    array_push($subjectscrorearray, $score);
-                                
-                            }
-            
-                            for ($i=0; $i < count($getstudentposition); $i++) { 
-            
-                                $mainScore = $getstudentposition[$i]['totalmarks'];
-                                $mainScoreId = $getstudentposition[$i]['id'];
-            
-                                $positiongotten = array_search($mainScore, $subjectscrorearray);
-            
-                                $updateposition = Addmark_sec::find($mainScoreId);
-                                $updateposition->position = $positiongotten + 1;
-                                $updateposition->save();
-                                
-                            }
-            
-                            $msg = "success";
-                                
-                            return response()->json(['success' => $msg], 200);
-            
-            
-                        } else {
-            //-----------------------------------------------------------------
-            //                     process result with grade
-            //-----------------------------------------------------------------
-            
-                            $totalmarks = $examsmarks + $ca1marks + $ca2marks + $ca3marks;
-            
-                            $studentgradeprocess = Addgrades_sec::where(['schoolid'=> Auth::user()->schoolid, 'type'=>$getClassDetails->classtype])->get();
-            
-                            $gradeFInal = "";
-                            $point = "0";
-            
-                            for ($i=0; $i < count($studentgradeprocess); $i++) {
-                                if ($totalmarks >= $studentgradeprocess[$i]['marksfrom'] && $totalmarks<= $studentgradeprocess[$i]['marksto']) {
-                                    $gradeFInal = $studentgradeprocess[$i]['gpaname'];
-                                    $point = $studentgradeprocess[$i]['point'] == "NA" ? "0":$studentgradeprocess[$i]['point'];
-                                }
-                            }
-            
-                            $updatestudentresult = Addmark_sec::find($grademarkid);
-                            $updatestudentresult->exams = $examsmarks;
-                            $updatestudentresult->ca1 = $ca1marks;
-                            $updatestudentresult->ca2 = $ca2marks;
-                            $updatestudentresult->ca3 = $ca3marks;
-                            $updatestudentresult->totalmarks = $totalmarks;
-                            $updatestudentresult->grades = $gradeFInal;
-                            $updatestudentresult->points = (int)$point;
-                            $updatestudentresult->save();
-            
-            
-                            // get student subject position
-            
-                            $getstudentposition = Addmark_sec::where(['schoolid'=>Auth::user()->schoolid, 'classid'=>$selectedclassidMain, 'session'=>$sessionquery, 'subjectid' => $subjectbyclassidMain, 'term'=>$request->input('currentterm')])->orderBy('totalmarks', 'desc')->get();
-            
-                            $subjectscrorearray = array();
-                            
-            
-                            for ($i=0; $i < count($getstudentposition); $i++) { 
-                                $score = $getstudentposition[$i]['totalmarks'];
-                                array_push($subjectscrorearray, $score);
-                            }
-            
-            
-            
-                            for ($i=0; $i < count($getstudentposition); $i++) { 
-            
-                                $mainScore = $getstudentposition[$i]['totalmarks'];
-                                $mainScoreId = $getstudentposition[$i]['id'];
-            
-                                $positiongotten = array_search($mainScore, $subjectscrorearray);
-            
-                                $updateposition = Addmark_sec::find($mainScoreId);
-                                $updateposition->position = $positiongotten + 1;
-                                $updateposition->save();
-            
-                            }
-            
-                            $msg = "success";
-                                
-                            return response()->json(['error' => $msg], 200);
-                            
-                        }
-                        
-                    }
             } catch (\Throwable $th) {
                 //throw $th;
                 return $th;
@@ -512,20 +202,6 @@ class AddstudentmakrsController_secs extends Controller
             
     }
 
-    public function processPosition(Request $request){
-
-        // process student position
-        $validator = Validator::make($request->all(),[
-            'classidmarks' => 'required',
-            'processterm' => 'required',
-            'sessionprocessmark' => 'required',
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()->keys()]);
-        }
-            
-    }
 
     public function fetchStudentSections($id)
     {
@@ -572,14 +248,16 @@ class AddstudentmakrsController_secs extends Controller
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        $classlist = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
+        $classlist = Classlist_sec::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
 
         $subjects = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->get();
 
         $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
 
+        $subjectScore = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
 
-        return response()->json(['classlist'=>$classlist, 'subjects'=>$subjects, 'schoolsection'=>$schoolsection, 'schooldetails'=>$schooldetails]);
+
+        return response()->json(['classlist'=>$classlist, 'subjects'=>$subjects, 'schoolsection'=>$schoolsection, 'schooldetails'=>$schooldetails, 'subjectScore'=>$subjectScore]);
         
     }
 

@@ -49,7 +49,7 @@
 
 
 
-
+                  <hr/>
                   <!-- Minimal red style -->
                   <div class="row">
                     <div class="col-sm-6">
@@ -137,6 +137,33 @@
                     </div>
 
                   </div>
+                  <hr>
+                  <div class="alert alert-info">
+                    <i>Asign School Management</i>
+                  </div>
+                  <form action="">
+                    @csrf
+                    <div class="row">
+                      <div class="col col-md-6">
+                        <div class="form-group">
+                          <label for="">Role Name</label>
+                          <select name="rolename" class="form-control" id="">
+                            <option value="">Select a Role</option>
+                            @foreach ($role as $item)
+                              <option value="{{ $item->id }}" {{ $item->name == "management" ? "selected":"disabled" }}>{{ $item->name }}</option>
+                            @endforeach
+                          </select>
+                          {{-- <input type="text" class="form-control" name="rolename" placeholder="enter role name"> --}}
+                        </div>
+                        <div class="form-group">
+                          <input type="text" name="" id="" class="form-control">
+                        </div>
+                        <div class="form-group">
+                          <button class="btn btn-primary">Add</button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
 
                 </div>
 

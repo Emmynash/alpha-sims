@@ -209,7 +209,7 @@
                                   <tr>
                                       <td>{{ $count }}</td>
                                       <td>{{ $schooldetails->getCategoryName($item->payment_category_id)->categoryname }}</td>
-                                      <td>{{ $schooldetails->schooltype == "Primary" ? $schooldetails->getClassName($item->class_id)->classnamee:$schooldetails->getClassName($item->class_id)->classname }}</td>
+                                      <td>{{ $schooldetails->getClassName($item->class_id)->classname }}</td>
                                       <td>{{ $item->amount }}</td>
                                       <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editamountrecord{{ $item->id }}"><i class="fas fa-edit"></i></button> 
                                         {{-- <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editclassname"><i class="fas fa-trash"></i></button> --}}
@@ -243,7 +243,7 @@
                                                           <select name="classSelected" id="" class="form-control form-control-sm">
                                                               <option value="">Select a class</option>
                                                               @foreach ($schooldetails->getClassList($schooldetails->id) as $itemselect)
-                                                                  <option value="{{ $itemselect->id }}" {{ $itemselect->id == $item->class_id ? "selected":"" }}>{{ $schooldetails->schooltype == "Primary" ? $itemselect->classnamee:$itemselect->classname }}</option>
+                                                                  <option value="{{ $itemselect->id }}" {{ $itemselect->id == $item->class_id ? "selected":"" }}>{{ $itemselect->classname }}</option>
                                                               @endforeach
                                                           </select>
                                                       </div>
@@ -344,7 +344,7 @@
                             <select name="classSelected" id="" class="form-control form-control-sm">
                                 <option value="">Select a class</option>
                                 @foreach ($schooldetails->getClassList($schooldetails->id) as $item)
-                                    <option value="{{ $item->id }}">{{ $schooldetails->schooltype == "Primary" ? $item->classnamee:$item->classname }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->classname }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -390,6 +390,7 @@
 
   <script>
       function scrollocation(){
+        document.getElementById('accountscroll').className = "nav-link active"
         document.getElementById('feesetup').className = "nav-link active"
       }
   </script>

@@ -11,9 +11,16 @@ use App\Addclub_sec;
 use App\Addgrades_sec;
 use App\Addstudent_sec;
 use App\Addstudent;
+use App\AssesmentModel;
+use App\CommentsModel;
+use App\CommentTable;
+use App\Repository\Schoolsetup\SchoolSetup as SchoolsetupSchoolSetup;
+use App\SubAssesmentModel;
 use App\SubHistory;
+use Egulias\EmailValidator\Warning\Comment;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\Auth;
-
+use SchoolSetup;
 
 class SchoolsetupSecController extends Controller
 {
@@ -74,8 +81,42 @@ class SchoolsetupSecController extends Controller
         $addgrades = Addgrades_sec::where('schoolid', Auth::user()->schoolid)->get();
 
         // return $addgrades;
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.gradessec')->with('addgrades', $addgrades);
+        return view('secondary.gradessec', compact('schooldetails', 'addgrades'));
+    }
+
+    public function delete_grades_sec(Request $request)
+    {
+
+        if ($request->key == "edit") {
+
+            $check1 = Addgrades_sec::where(['gpaname'=>$request->gpaname, 'marksfrom'=>$request->marksfrom, 'marksto'=>$request->marksto])->get();
+
+            $check2 = Addgrades_sec::where(['gpaname'=>$request->gpaname, 'marksfrom'=>$request->marksto, 'marksto'=>$request->marksfrom])->get();
+
+            if ($check1->count() > 0 || $check2->count() > 0) {
+                return back()->with('error', 'record cannot be same');
+            }
+
+            $editRecord = Addgrades_sec::find($request->gradeid);
+            $editRecord->gpaname = $request->gpaname;
+            $editRecord->marksfrom = $request->marksfrom;
+            $editRecord->marksto = $editRecord->marksto;
+            $editRecord->save();
+
+            return back()->with('success', 'Update was successfull');
+            
+        }else{
+
+            $deleteRequest = Addgrades_sec::find($request->gradetodelete);
+            $deleteRequest->delete();
+    
+            return back()->with("success", "Process was successfull");
+
+        }
+
+
     }
 
     public function addSchoolInitials(Request $request){
@@ -99,7 +140,7 @@ class SchoolsetupSecController extends Controller
 
     public function addSchoolSession(Request $request){
 
-        $schoolsessioninput = $request->input('schoolsessioninput');
+        $schoolsessioninput = $request->session;
 
         if (empty($schoolsessioninput)) {
             $msg = 0;
@@ -116,7 +157,13 @@ class SchoolsetupSecController extends Controller
         $schoolId = Auth::user()->schoolid;
 
         $updateSchoolSession = Addpost::find($schoolId);
-        $updateSchoolSession->schoolsession = $schoolsessioninput;
+        $updateSchoolSession->schoolsession = $request->session;
+        $updateSchoolSession->firsttermstarts = $request->firsttermstarts;
+        $updateSchoolSession->firsttermends = $request->firsttermends;
+        $updateSchoolSession->secondtermstarts = $request->secondtermstarts;
+        $updateSchoolSession->secondtermends = $request->secondtermends;
+        $updateSchoolSession->thirdtermstarts = $request->thirdtermstarts;
+        $updateSchoolSession->thirdtermends = $request->thirdtermends;
         $updateSchoolSession->save();
 
         $msg = 1;
@@ -124,27 +171,39 @@ class SchoolsetupSecController extends Controller
 
     }
 
-    public function addClasses(Request $request){
+    public function addClasses(SchoolsetupSchoolSetup $schoolSetup, Request $request){
         
-        $validatedData = $request->validate([
-            'classname' => 'required',
-            'type' => 'required'
-        ]);
-
-        $classlistCheck = Classlist_sec::where(['classname' =>strtoupper($request->classname), 'schoolid' => Auth::user()->schoolid])->get();
-
-        if (count($classlistCheck) > 0) {
-            return back()->with('error', 'class already exist');
+        try {
+           return $query = $schoolSetup->setupClasses($request);
+            if($query == "success"){
+                return back()->with('success', 'process was successfull');
+            }
+        } catch (\Throwable $th) {
+            return back()->with('error', 'error');
         }
 
-        $addclasses_sec = new Classlist_sec();
-        $addclasses_sec->schoolid = Auth::user()->schoolid;
-        $addclasses_sec->classname = strtoupper($request->classname);
-        $addclasses_sec->studentcount = 0;
-        $addclasses_sec->classtype = (int)$request->type;
-        $addclasses_sec->save();
+    }
 
-        return back()->with('success', 'process was successfull');
+    public function disableClass($id)
+    {
+        
+        try {
+            $classlist = Classlist_sec::find($id);
+
+            if ($classlist->status == 0) {
+                $classlist->status = 1;
+                $classlist->save();
+                return response()->json(['response'=>"success"]);
+            }else{
+                $classlist->status = 0;
+                $classlist->save();
+                return response()->json(['response'=>"success"]);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+            return response()->json(['response'=>"error"]);
+        }
 
     }
 
@@ -295,6 +354,106 @@ class SchoolsetupSecController extends Controller
 
         $clubs = Addclub_sec::where("schoolid", Auth::user()->schoolid)->get();
 
+        // $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->get();
+
+        // $subasscategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')
+        //                  ->where('sub_assesment_models.schoolid', Auth::user()->schoolid)
+        //                  ->select('sub_assesment_models.*', 'assesment_models.name')->get();
+
         return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'houselist'=>$houselist, 'classsection'=>$classsection, 'clubs'=>$clubs]);
+    }
+
+    public function setup_school_sec()
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        return view('secondary.setupschool.schoolsetupreact', compact('schooldetails'));
+        
+    }
+
+    public function setUpAssesment(Request $request)
+    {
+        try { 
+
+            $checkMarksEntered = AssesmentModel::where('schoolid', Auth::user()->schoolid)->sum('maxmark');
+
+            if (($checkMarksEntered + $request->maxmarks) <= 100) {
+                
+                $addAssessmentCat = AssesmentModel::updateOrCreate(
+                    ['name'=>$request->name],
+                    ['name'=>$request->name, 'maxmark'=>$request->maxmarks, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
+                );
+
+            }
+
+            return response()->json(['response'=>'success'], 200);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>'error'], 402);
+        }
+
+    }
+
+    public function subAssessmentSetUp(Request $request)
+    {
+        try {
+
+            $assessmentCatId = AssesmentModel::find($request->catid);
+            $getAllMarksInCategory = SubAssesmentModel::where('catid', $request->catid)->sum('maxmarks');
+            if (($getAllMarksInCategory + $request->submaxmarks) <= $assessmentCatId->maxmark) {
+                
+                $addAssessmentCat = SubAssesmentModel::updateOrCreate(
+                    ['subname'=>$request->subname],
+                    ['subname'=>$request->subname, 'catid'=>$request->catid, 'maxmarks'=>$request->submaxmarks, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
+                );
+
+            }
+
+            return response()->json(['response'=>'success'], 200);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th], 400);
+        }
+    }
+
+
+    public function setupComment()
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $comments = CommentTable::where('schoolid', Auth::user()->schoolid)->get();
+
+        return view('secondary.comment.commentsetup', compact('schooldetails', 'comments'));
+    }
+
+    public function setupNewComment(Request $request)
+    {
+
+        try {
+
+            $addComment = CommentTable::create(
+                [
+                    'comment' => $request->comment,
+                    'schoolid' => Auth::user()->schoolid
+                ]
+            );
+
+            return back()->with('success', 'Comment added successfully');
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', 'Error adding comment');
+        }
+        
+    }
+
+    public function deletecomment(Request $request)
+    {
+        $deleteComment = CommentTable::find($request->deleteid);
+        $deleteComment->delete();
+
+        return back()->with('success', 'Comment deleted successfully');
+
     }
 }

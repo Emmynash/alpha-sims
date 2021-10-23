@@ -52,6 +52,9 @@
                     <b>Class</b> <a class="float-right">{{$mainStudentDetails['studentsDetailsMain']['classname']}}{{$mainStudentDetails['studentsDetailsMain']['sectionname']}}</a>
                     </li>
                     <li class="list-group-item">
+                      <b>Admission. No:</b> <a class="float-right">{{$mainStudentDetails['studentsDetailsMain']['admission_no']}}</a>
+                    </li>
+                    <li class="list-group-item">
                       <b>Reg. No.</b> <a class="float-right">{{$mainStudentDetails['studentsDetailsMain']['id']}}</a>
                     </li>
                     <li class="list-group-item">
@@ -129,8 +132,8 @@
                                         </div>
                                         <div style="flex: 0.2;"></div>
                                         <div style="display: flex; flex-direction: column;">
-                                            <i style="font-size: 10px; font-style: normal; font-weight: bold;">Subject Code</i>
-                                            <i style="font-style: normal; font-size: 12px;">{{$subject->subjectcode}}</i>
+                                            <i style="font-size: 10px; font-style: normal; font-weight: bold;">Subject Type</i>
+                                            <i style="font-style: normal; font-size: 12px;">{{$subject->subjecttype == 1 ? "Elective":"Core"}}</i>
                                         </div>
                                         
                                     </li>

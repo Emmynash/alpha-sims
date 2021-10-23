@@ -14,6 +14,9 @@ use App\ResultAverage;
 use App\Addstudent_sec;
 use App\PromotionAverage_sec;
 use App\Addteachers_sec;
+use App\CLassSubjects;
+use App\ElectiveAdd;
+use App\ResultReadyModel;
 use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,96 +28,137 @@ class ResultAverageProcess{
     {
 
 
+
+        DB::transaction(function() use ($request) {
+            $classid = $request->classid;
+            $section = $request->section_id;
+            $schooldata = Addpost::where('id', Auth::user()->schoolid)->first();
+            $term = $schooldata->term;
+            $schoolsession = $schooldata->schoolsession;
+            
+            try {
+
+
+
+                // DB::table('result_averages')->where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->delete();
+
+
+                $checkaverage = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->get();
         
-        $classid = $request->classid;
-        $schooldata = Addpost::where('id', Auth::user()->schoolid)->first();
-        $term = $schooldata->term;
-        $schoolsession = $schooldata->schoolsession;
-
-
-
-        $checkaverage = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession])->get();
-    
-        if (count($checkaverage) > 0) {
-            return 'already';
-        }
-    
-        $studentregnumberarray = Addstudent_sec::where(['classid'=>$classid, 'schoolsession'=>$schoolsession])->pluck('id'); // get id/regno of students in class
-    
-        // return response()->json(['studentregnumberarray'=>$studentregnumberarray]);
-    
-        for ($i=0; $i < count($studentregnumberarray); $i++) { 
-    
-            $singleregno = $studentregnumberarray[$i];
-            
-            $studentmarks = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'regno'=>$singleregno, 'session'=>$schoolsession])->get();
-    
-            $scoresarraysingle = array();
-    
-            for ($d=0; $d < count($studentmarks); $d++) { 
-                $scoremainvalue = $studentmarks[$d]['totalmarks'];
-                array_push($scoresarraysingle, $scoremainvalue);
-    
-                $coursesum = array_sum($scoresarraysingle);
-    
-                $allsubjectcount = count($scoresarraysingle);
-    
-                $averagevalue = $coursesum/$allsubjectcount;
-            }
-    
-            $resultAverageAdd = new ResultAverage();
-            $resultAverageAdd->regno = $singleregno;
-            $resultAverageAdd->systemnumber = "0";
-            $resultAverageAdd->schoolid = Auth::user()->schoolid;
-            $resultAverageAdd->classid = $classid;
-            $resultAverageAdd->term = $term;
-            $resultAverageAdd->session = $schoolsession;
-            $resultAverageAdd->sumofmarks = $coursesum;
-            $resultAverageAdd->average = $averagevalue;
-            $resultAverageAdd->position = "0";
-            $resultAverageAdd->save();  
-        }
-    
-            $processposition = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession])->orderBy('average', 'desc')->get();
-            
-            $positiondeterminantarray = array();
-    
-        for ($i=0; $i < count($processposition); $i++) { 
-            $id = $processposition[$i]['average'];
-            array_push($positiondeterminantarray, $id);
-        }
-    
-        for ($i=0; $i < count($processposition); $i++) { 
-    
-            $mainScore = $processposition[$i]['average'];
-            $mainScoreId = $processposition[$i]['id'];
-    
-            $positiongotten = array_search($mainScore, $positiondeterminantarray);
-    
-            $updateposition = ResultAverage::find($mainScoreId);
-            $updateposition->position = $positiongotten + 1;
-            $updateposition->save();
-        }
+                if (count($checkaverage) > 0) {
         
-        if ($request->input('processterm') == "3") {
+                    for ($i=0; $i < count($checkaverage); $i++) { 
+                        $deleteAverage = ResultAverage::find($checkaverage[$i]['id']);
+                        $deleteAverage->delete();
+                    }
+        
+                    $resultReady = ResultReadyModel::find($request->notif_id);
+                    $resultReady->status = 0;
+                    $resultReady->save();
+        
+                    return 'already';
+                }
             
-            for ($i=0; $i < count($studentregnumberarray); $i++) { 
-    
-                $fetchAllStudentAverageMarkAndProcess = ResultAverage::where(['regno'=> $studentregnumberarray[$i], 'session'=>$schoolsession])->sum('average');
-    
-                $promomarks = $fetchAllStudentAverageMarkAndProcess / 3;
-    
-                $addtopromoaverageTable = new PromotionAverage_sec();
-                $addtopromoaverageTable->schoolid = Auth::user()->schoolid;
-                $addtopromoaverageTable->regno = $studentregnumberarray[$i];
-                $addtopromoaverageTable->session = $schoolsession;
-                $addtopromoaverageTable->promomarks = $promomarks;
-                $addtopromoaverageTable->save();
+                $studentregnumberarray = Addstudent_sec::where(['classid'=>$classid, 'schoolsession'=>$schoolsession, 'studentsection'=>$section])->pluck('id')->toArray(); // get id/regno of students in class
             
+                // return response()->json(['studentregnumberarray'=>$studentregnumberarray]);
+            
+                for ($i=0; $i < count($studentregnumberarray); $i++) { 
+            
+                    $singleregno = $studentregnumberarray[$i];
+
+                    //get student subjects id
+
+                    $studentsSubjects = CLassSubjects::where(['classid'=>$classid, 'sectionid'=>$section, 'schoolid'=>Auth::user()->schoolid, 'subjecttype'=>2])->pluck('subjectid')->toArray(); //get all student core subjects
+                    $getStudentElective = ElectiveAdd::where(['regno'=>$singleregno, 'classid'=>$classid, 'sectionid'=>$section])->pluck('subjectid')->toArray(); // get all student's elective subjects
+                    
+                    $studentmarks = Addmark_sec::where(['classid'=>$classid, 'term'=>$term, 'regno'=>$singleregno, 'session'=>$schoolsession, 'section'=>$section])->pluck('totalmarks')->toArray();
+            
+                    $scoresarraysingle = array();
+            
+            
+                    $coursesum = array_sum($studentmarks);
+    
+                    $allsubjectcount = count($studentsSubjects) + count($getStudentElective);
+        
+                    if ($coursesum > 0 && $allsubjectcount > 0) {
+                        
+        
+                        $averagevalue = $coursesum/$allsubjectcount;
+        
+            
+                        $resultAverageAdd = new ResultAverage();
+                        $resultAverageAdd->regno = $singleregno;
+                        $resultAverageAdd->systemnumber = "0";
+                        $resultAverageAdd->schoolid = Auth::user()->schoolid;
+                        $resultAverageAdd->classid = $classid;
+                        $resultAverageAdd->term = $term;
+                        $resultAverageAdd->session = $schoolsession;
+                        $resultAverageAdd->sumofmarks = $coursesum;
+                        $resultAverageAdd->average = $averagevalue;
+                        $resultAverageAdd->position = "0";
+                        $resultAverageAdd->section_id = $section;
+                        $resultAverageAdd->save(); 
+    
+                        // return $resultAverageAdd;
+                    }
+        
+         
+                }
+            
+                    $processposition = ResultAverage::where(['classid'=>$classid, 'term'=>$term, 'session'=>$schoolsession, 'section_id'=>$section])->orderBy('average', 'desc')->get();
+                    
+                    $positiondeterminantarray = array();
+            
+                for ($i=0; $i < count($processposition); $i++) { 
+                    $id = $processposition[$i]['average'];
+                    array_push($positiondeterminantarray, $id);
+                }
+            
+                for ($i=0; $i < count($processposition); $i++) { 
+            
+                    $mainScore = $processposition[$i]['average'];
+                    $mainScoreId = $processposition[$i]['id'];
+            
+                    $positiongotten = array_search($mainScore, $positiondeterminantarray);
+            
+                    $updateposition = ResultAverage::find($mainScoreId);
+                    $updateposition->position = $positiongotten + 1;
+                    $updateposition->save();
+                }
+        
+                //change status of result ready model 
+                $resultReady = ResultReadyModel::find($request->notif_id);
+                $resultReady->status = 1;
+                $resultReady->save();
+                
+                if ($term == "3") {
+                    
+                    for ($i=0; $i < count($studentregnumberarray); $i++) { 
+            
+                        $fetchAllStudentAverageMarkAndProcess = ResultAverage::where(['regno'=> $studentregnumberarray[$i], 'session'=>$schoolsession, 'section_id'=>$section, 'classid'=>$classid])->sum('average');
+            
+                        $promomarks = $fetchAllStudentAverageMarkAndProcess / 2;
+
+                        $addtopromoaverageTable = PromotionAverage_sec::updateOrCreate(
+                            ['schoolid'=>Auth::user()->schoolid, 'regno'=>$studentregnumberarray[$i], 'session'=>$schoolsession],
+                            ['schoolid'=>Auth::user()->schoolid, 'regno'=>$studentregnumberarray[$i], 'session'=>$schoolsession, 'promomarks'=>$promomarks]
+                        );
+                    
+                    }
+                }
+    
+                
+            
+                return "success";
+            } catch (\Throwable $th) {
+                //throw $th;
+    
+                return $th;
             }
-        }
-    
-        return "success";
+
+        });
+
     }
 }
 

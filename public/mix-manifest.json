@@ -2,7 +2,20 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/app1.js": "/js/app1.js",
+    "/js/app_discount.js": "/js/app_discount.js",
+    "/js/appaddstudent.js": "/js/appaddstudent.js",
+    "/js/appallusers.js": "/js/appallusers.js",
+    "/js/appcalender.js": "/js/appcalender.js",
+    "/js/appelective.js": "/js/appelective.js",
+    "/js/appfees.js": "/js/appfees.js",
+    "/js/appformmaster.js": "/js/appformmaster.js",
     "/js/appmanagestaff.js": "/js/appmanagestaff.js",
     "/js/appmarks.js": "/js/appmarks.js",
-    "/js/appteachers.js": "/js/appteachers.js"
+    "/js/appmarksteachers.js": "/js/appmarksteachers.js",
+    "/js/appmoto.js": "/js/appmoto.js",
+    "/js/apppromotion.js": "/js/apppromotion.js",
+    "/js/appreasign.js": "/js/appreasign.js",
+    "/js/appresult.js": "/js/appresult.js",
+    "/js/appteachers.js": "/js/appteachers.js",
+    "/js/appviewstudentpri.js": "/js/appviewstudentpri.js"
 }

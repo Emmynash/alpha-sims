@@ -266,6 +266,7 @@
     });
 
     function scrollocation(){
+      document.getElementById('accountscroll').className = "nav-link active"
         document.getElementById('invoicelistscroll').className = "nav-link active"
     }
 
