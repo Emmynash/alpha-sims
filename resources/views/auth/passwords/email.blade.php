@@ -7,10 +7,13 @@
 
 <div class="container-fluid">
     <div class="row h-100" style="height: 100%;">
-        <div class="col-12 col-md-12 h-100" style="margin: 0 auto; background-color: #0EA1A1;">
-        
+        <div class="col-12 col-md-12 h-100" style="margin: 0 auto;">
+            <br>
+            <br>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <p class="h4 mb-4">{{ app('currentTenant')->name }}</p>
+            </div>
            <div class="card login-card">
-                
                 <!-- Default form login -->
                 <form class="text-center border border-light p-3" method="POST" action="{{ route('password.email') }}">
                     @csrf
