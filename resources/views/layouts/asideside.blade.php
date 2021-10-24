@@ -592,72 +592,43 @@
             {{-- @if (isset($studentDetails)) --}}
 
          
-                @if (Auth::user()->hasRole('Student'))
-
-                <li class="nav-item has-treeview">
-                    <a id="studentoptions" href="#" class="nav-link">
-                      <i class="nav-icon fas fa-align-left"></i> 
-                      <p>
-                        Students Options
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="examsmarkstudent" href="/exammark" class="nav-link">
-                           <i class="nav-icon fas fa-clipboard-list"></i> 
-                          <p>Get exams marks</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="/viewallstudents" class="nav-link">
-                           <i class="nav-icon fas fa-clipboard-list"></i> 
-                          <p>Get attendance status</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="/result" class="nav-link">
-                          <i class="nav-icon fas fa-vials"></i> 
-                          <p>Result</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon far fa-money-bill-alt"></i> 
-                      <p>
-                        Payments
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="{{ route('student_fees') }}" class="nav-link">
-                          <i class="nav-icon fas fa-plus"></i> 
-                          <p>Invoices</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="{{ route('payment_history') }}" class="nav-link">
-                           <i class="nav-icon fas fa-clipboard-list"></i> 
-                          <p>Transactions</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); 
-                    document.getElementById('logout-form').submit();">
-                      <i class="nav-icon fas fa-sign-out-alt"></i> 
-                      <p>
-                        SignOut
-                      </p>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                      @csrf
-                    </form>
-                  </li>
+            @if(Auth::user()->hasRole('Student'))
+            <li class="nav-item has-treeview">
+              <a id="resultmainscroll" href="#" class="nav-link">
+                  <i class="fas fa-vials nav-icon"></i>
+                <p>
+                  Result
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a id="resultmaingenscroll" href="/result_view_sec" class="nav-link">
+                    <i class="far fa-eye nav-icon"></i>
+                    <p>Generate</p> 
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('student_fees') }}" class="nav-link">
+                <i class="fas fa-wallet nav-icon"></i>
+                <p>Fee Payment</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('payment_history') }}" class="nav-link">
+                <i class="fas fa-wallet nav-icon"></i>
+                <p>Transactions</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('manage_subject_student') }}" class="nav-link">
+                <i class="fas fa-wallet nav-icon"></i>
+                <p>Manage Subjects</p>
+              </a>
+            </li>
+            @endif
 
 {{--------------------------------------------------------------------------------------}}
 {{--                                 teachers role                                    --}}
@@ -806,7 +777,7 @@
                 </li>
                     
                 @endif
-              @endif
+ 
 
 
           
