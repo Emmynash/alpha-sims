@@ -84,8 +84,9 @@
     <a href="/login"><button class="btn btn-info btn-sm">LogIn</button></a>
 </div>
 <div class="login-box">
-  <div class="login-logo card">
-    <a href="/"><b>Alpha</b>SIMS</a>
+  <div class="login-logo">
+    {{-- <a href="/"><b>Alpha</b>SIMS</a> --}}
+    <p>{{ app('currentTenant')->name }}</p>
   </div>
   <!-- /.login-logo -->
   <div class="card">
