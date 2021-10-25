@@ -312,13 +312,18 @@ class HomeController extends Controller
 
             }
 
+            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
             $mainStudentDetails = array(
                 'studentsDetailsMain'=> $addstudentsec,
                 'addsubjects' => $addsubjects,
                 'todayMonth' => $todayMonth,
                 'monthcount' => $monthcount,
-                'daysarray' => $daysarray
+                'daysarray' => $daysarray,
+                'schooldetails'=>$schooldetails
             );
+
+            
 
             return view('secondary.student.student_dash')->with('mainStudentDetails', $mainStudentDetails);
         }

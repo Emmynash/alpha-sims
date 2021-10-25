@@ -337,6 +337,12 @@
                 </a>
               </li>
             @endcan
+            <li class="nav-item">
+              <a href="{{ route('assignment_teachers') }}" class="nav-link">
+                <i class="fas fa-cogs nav-icon"></i>
+                <p>Assignment</p>
+              </a>
+            </li>
             @endif
 
             @can('take teachers attendance')
@@ -581,16 +587,6 @@
               </form>
             </li>
 
-
-
-
-
-
-
-
-
-            {{-- @if (isset($studentDetails)) --}}
-
          
             @if(Auth::user()->hasRole('Student'))
             <li class="nav-item has-treeview">
@@ -628,12 +624,18 @@
                 <p>Manage Subjects</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="{{ route('assignment_student') }}" class="nav-link">
+                <i class="fas fa-cogs nav-icon"></i>
+                <p>Assignment</p>
+              </a>
+            </li>
             @endif
 
 {{--------------------------------------------------------------------------------------}}
 {{--                                 teachers role                                    --}}
 {{--------------------------------------------------------------------------------------}}
-
+{{-- 
               @if (Auth::user()->role == "Teacher")
         
                   <li class="nav-item has-treeview">
@@ -673,12 +675,7 @@
                           <p>Add New</p>
                         </a>
                       </li>
-                      {{-- <li class="nav-item">
-                        <a id="viewmarkslist" href="/viewmarks" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Mark list</p>
-                        </a>
-                      </li> --}}
+                     
                     </ul>
                   </li>
         
@@ -715,12 +712,7 @@
                           <p>Generate</p>
                         </a>
                       </li>
-                      {{-- <li class="nav-item">
-                        <a href="/result" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Search</p>
-                        </a>
-                      </li> --}}
+                     
                     </ul>
                   </li>
         
@@ -729,7 +721,16 @@
                       <i class="nav-icon fas fa-exchange-alt"></i> 
                       <p>
                         Promotion
-                        {{-- <i class="right fas fa-angle-left"></i> --}}
+                        
+                      </p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item has-treeview">
+                    <a id="promotionaside" href="/promotion" class="nav-link">
+                      <i class="nav-icon fas fa-exchange-alt"></i> 
+                      <p>
+                        Assignment
                       </p>
                     </a>
                   </li>
@@ -746,13 +747,13 @@
                       @csrf
                     </form>
                   </li>
-                  @endif
+                  @endif --}}
 {{-----------------------------------------------------------------------------------}}
 {{--                              supervisor                                       --}}
 {{-----------------------------------------------------------------------------------}}
                 @if (Auth::user()->role == "Supervisor")
 
-                <li class="nav-item has-treeview">
+                {{-- <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-address-card"></i> 
                     <p>
@@ -774,7 +775,7 @@
                       </a>
                     </li>
                   </ul>
-                </li>
+                </li> --}}
                     
                 @endif
  
