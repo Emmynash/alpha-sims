@@ -103,15 +103,15 @@
                         <div class="form-group">
                             <label for="">Subject Name</label>
                             <input type="Text" value="{{ $subject->subjectname }}" name="" class="form-control form-control-sm">
-                            <input type="Text" value="{{ $subject->id }}" name="subjectid" class="form-control form-control-sm">
+                            <input type="hidden" value="{{ $subject->id }}" name="subjectid" class="form-control form-control-sm">
                         </div>
                         <div class="form-group">
-                            <label for="">Select a Class</label>
-                            <input type="Text" value="{{ $classid }}" name="classid" class="form-control form-control-sm">
+                            {{-- <label for="">Select a Class</label> --}}
+                            <input type="hidden" value="{{ $classid }}" name="classid" class="form-control form-control-sm">
                         </div>
                         <div class="form-group">
-                            <label for="">Select a Section</label>
-                            <input type="Text" value="{{ $sectionid }}" name="sectionid" class="form-control form-control-sm">
+                            {{-- <label for="">Select a Section</label> --}}
+                            <input type="hidden" value="{{ $sectionid }}" name="sectionid" class="form-control form-control-sm">
                         </div>
                         <div class="form-group">
                             <label for="">Assignment description</label>
