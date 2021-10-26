@@ -56,6 +56,13 @@
                             <p style="margin: 0px; padding-left: 10px;">Description: <i style="font-style: normal; font-weight: bold;">{{ $item->description }}</i></p>
                             <p style="margin: 0px; padding-left: 10px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
                             <p style="margin: 0px; padding-left: 10px;">Status:</p>
+                            <div style="margin: 10px;">
+                              <button type="submit" form="deleteassignment{{ $item->id }}" class="btn btn-sm btn-danger">Delete</button>
+                            </div>
+                            <form action="{{ route('deleteassignment', $item->id) }}" method="post" id="deleteassignment{{ $item->id }}">
+                              @csrf
+                              @method('delete')
+                            </form>
                             {{-- <div class="row" style="margin-left: 10px;">
                                 <div class="col-12 col-md-6">
                                     <form action="" method="post">

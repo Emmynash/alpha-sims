@@ -141,5 +141,13 @@ class AssignmentController extends Controller
             ->with('success', 'File uploaded successfully');
     }
 
+    public function delete($id)
+    {
+        $deleteassignment = AssignmentTable::find($id);
+        $deleteassignment->delete();
+
+        return back()->with('success', 'deleted successfully');
+    }
+
 
 }

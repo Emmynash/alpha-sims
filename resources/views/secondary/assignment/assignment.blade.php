@@ -78,9 +78,9 @@
                                   <label for="">Assignment Text</label>
                                   <textarea name="assignmenttext" id="" cols="30" rows="5" class="form-control form-control-sm"></textarea>
                                 </div>
-                                <input type="text" name="subjectid" value="{{ $item->subjectid }}">
-                                <input type="text" name="sectionid" value="{{ $item->sectionid }}">
-                                <input type="text" name="classid" value="{{ $item->classid }}">
+                                <input type="hidden" name="subjectid" value="{{ $item->subjectid }}">
+                                <input type="hidden" name="sectionid" value="{{ $item->sectionid }}">
+                                <input type="hidden" name="classid" value="{{ $item->classid }}">
                                 <div class="form-group">
                                   <label for="">Upload Assignment</label>
                                   <input type="file" name="filelink" class="form-control form-control-sm">
