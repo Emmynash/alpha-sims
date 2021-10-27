@@ -24,9 +24,6 @@ use App\FeesInvoiceItems;
 use App\PaymentRecord;
 use App\StudentDiscount;
 use App\Repository\Fees\FeePayment;
-use App\Services\PaymentService;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 
 
@@ -195,6 +192,46 @@ class AccountController extends Controller
         return view('secondary.accounting.inoivces', compact('feeInvoices', 'getSettledInvoices', 'getPendingInvoices', 'getSettledInvoicesThisTerm', 'getPendingInvoicesThisTerm', 'schooldetails'));
     }
 
+    public function viewinvoices($id)
+    {
+        $discount = 0;
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $getInvoice = FeesInvoice::join('addstudent_secs', 'addstudent_secs.id','=','fees_invoices.system_id')
+                    ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                    ->where(['fees_invoices.id'=> $id, 'fees_invoices.schoolid'=>Auth::user()->schoolid])->select('fees_invoices.*', 'users.firstname', 'users.lastname', 'users.phonenumber', 'users.email')->first();
+        $getInvoiceItems = FeesInvoiceItems::where('invoice_id', $id)->get();
+        
+        $getDiscount = StudentDiscount::where('regno', $getInvoice->system_id)->first();
+        if ($getDiscount == null) {
+            $discount = 0;
+        } else {
+            $discount = $getDiscount->percent;
+        }
+        
+
+        return view('secondary.accounting.viewinvoice', compact('schooldetails', 'getInvoiceItems', 'getInvoice', 'discount'));
+    }
+
+    public function printinvoice($id)
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $getInvoice = FeesInvoice::join('users', 'users.id','=','fees_invoices.system_id')->where('fees_invoices.id', $id)->select('fees_invoices.*', 'users.firstname', 'users.lastname', 'users.phonenumber', 'users.email')->first();
+        $getInvoiceItems = FeesInvoiceItems::where('invoice_id', $id)->get();
+
+        return view('secondary.accounting.invoiceprint', compact('schooldetails', 'getInvoiceItems', 'getInvoice'));
+    }
+
+    public function invoicePaymentHistory($id)
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $paymentRecord = PaymentRecord::where('invoice_number', $id)->get();
+
+        return view('secondary.accounting.invoicepaymenthistory', compact('schooldetails', 'paymentRecord'));
+    }
+
     public function orderRequest()
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
@@ -293,6 +330,7 @@ class AccountController extends Controller
             if ($request->amount < 1) {
                 return response()->json(['response'=>'Empty field not allowed', 'code' => 401]);
             }
+
 
             //add payment record 
 

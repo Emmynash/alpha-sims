@@ -169,12 +169,15 @@
                             @if ($item->status == 0)
                               @if ($item->amount_paid != $item->amount)
                                 <button class="btn btn-sm btn-warning">Partial</button>
+                                <a href="{{ route('viewinvoices', $item->id) }}"><button class="btn btn-sm btn-warning"><i class="fa fa-print"></i></button></a>
                               @elseif($item->amount_paid == null)
                                 <button class="btn btn-sm btn-danger">Pending</button>
+                                <a href="{{ route('viewinvoices', $item->id) }}"><button class="btn btn-sm btn-warning"><i class="fa fa-print"></i></button></a>
                               @endif
                             
-                            @else
+                            @else 
                                 <button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
+                                <a href="{{ route('viewinvoices', $item->id) }}"><button class="btn btn-sm btn-warning"><i class="fa fa-print"></i></button></a>
                             @endif
                           </td>
                         </tr>
