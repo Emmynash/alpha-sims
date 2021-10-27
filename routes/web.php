@@ -4,7 +4,7 @@ use App\Http\Controllers\PromotionController_sec;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
+use Spatie\Multitenancy\Models\Tenant;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +19,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', "PagesController@index");
 
+Route::get('/selectdomain', [
+    'as' => 'redirect-route',
+    'uses' => 'PagesController@domainSelect',
+]);
+
+
+
+
+
+Route::middleware(['tenant'])->group(function () {
+
+
+
 
 Route::group(['prefix' => 'pri'], function () {
-
+    
     Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
         Route::get('/viewclasslist', 'ClassesController@index')->name('viewclasslist');
     });
@@ -290,7 +303,7 @@ Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
 
 
 
-Route::group(['prefix' => 'sec'], function () {
+Route::group(['prefix' => 'sec', 'middleware'=>'tenant'], function () {
 
     Route::group(['prefix' => 'setting', 'middleware' => ['auth', 'can:settings']], function () { //School setup route grades_sec
 
@@ -514,10 +527,13 @@ Route::group(['middleware' => ['auth', 'can:manage marks']], function () {
     Route::get('get_school_basic_details', 'AddstudentmakrsController_secs@getSchoolBasicDetails');
     Route::get('/fetch_students_marks/{id}/{sectionid}', 'AddstudentmakrsController_secs@fetchstudentssubject');
     Route::get('fetch_student_sections/{id}', 'AddstudentmakrsController_secs@fetchStudentSections');
+    Route::get('fetchsubassessment/{id}/{studentid}', 'AddstudentmakrsController_secs@fetchsubassessment');
     Route::POST('/fetch_subject_details', 'AddstudentmakrsController_secs@fetchsubjectdetails');
     Route::POST('/fetch_subject_student_details', 'AddstudentmakrsController_secs@getallstudentsandmarks');
     Route::POST('/add_marks_main', 'AddstudentmakrsController_secs@addmarksmiain')->name('add_marks_main');
     Route::POST('/marks_process_main', 'AddstudentmakrsController_secs@processPosition');
+    Route::POST('/add_student_scores', 'AddstudentmakrsController_secs@addStudentRecord');
+    Route::POST('/get_student_scores', 'AddstudentmakrsController_secs@getScoreRecord');
 });
 
 
@@ -636,6 +652,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::post('/fees_part_payment', 'AccountController@feesPartPayment')->name('fees_part_payment');
          Route::post('/add_student_discount', 'AccountController@addStudentDiscount')->name('add_student_discount');
          Route::get('/get_all_student_discount', 'AccountController@get_all_student_discount')->name('get_all_student_discount');
+         Route::get('/discontinue_discount/{id}', 'AccountController@discontinue_discount')->name('discontinue_discount');
 
          Route::group(['middleware' => ['can:add event']], function () { // library module
             Route::post('/post_event', 'CalenderController@postAnEvent')->name('post_event');
@@ -659,5 +676,4 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/login', 'AccountController@feesPartPayment')->name('fees_part_payment');
 });
 
-
-// -----------------------------------------------------------------------------------------
+});

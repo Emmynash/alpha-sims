@@ -19,6 +19,7 @@ class SchoolSetup{
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
             if ($schoolDetails->schooltype == "Secondary") {
+<<<<<<< HEAD
     
                 $classlist = array("JSS1", "JSS2", "JSS3", "SSS1", "SSS2", "SSS3");
     
@@ -49,10 +50,50 @@ class SchoolSetup{
                     //     $addclasses_sec->status = 1;
                     //     $addclasses_sec->save();
                     // }
+=======
         
-                }
+>>>>>>> f685bbfef1c5e9150ceb31ef7385dff081d92adb
         
-                return "success";
+                        try {
+
+                            $result = str_split(strtoupper($request->classname));
+
+                            if($result[0] == "S"){
+                                if($request->classtype != 2){
+                                    return 'classtypeerror';
+                                }
+                            }else if($result[0] == "J"){
+                                if($request->classtype != 1){
+                                    return 'classtypeerror';
+                                }
+                            }else{
+                                return 'invalidclass';
+                            }
+
+                            $addclasses_sec = Classlist_sec::updateOrCreate(
+                                [
+                                    'schoolid' => Auth::user()->schoolid, 
+                                    'classname' => strtoupper($request->classname)],
+                                [
+                                    'schoolid' => Auth::user()->schoolid, 
+                                    'classname' => strtoupper($request->classname), 
+                                    'classtype'=>$request->classtype,
+                                    'studentcount' => 0, 
+                                    'status' => 1,
+                                    'index' => $request->classindex
+                                ]
+                            );
+
+                            return "success";
+
+                        } catch (\Throwable $th) {
+                            
+                            return $th;
+
+                        }
+
+        
+                
             }else{
     
                 $classlistType = $request->classListType;

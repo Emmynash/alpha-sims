@@ -109,8 +109,7 @@
                     <table class="table table-hover text-nowrap">
                         <thead>
                         <tr>
-                            <th>GPA For</th>
-                            <th>GPA Name No</th>
+                            <th>Grade Name</th>
                             <th>Mark From</th>
                             <th>Mark To</th>
                             <th>Points</th>
@@ -122,7 +121,6 @@
                           @if (count($addgrades) > 0)
                             @foreach ($addgrades as $grades)
                             <tr>
-                              <td>{{$grades->gpafor}}</td>
                               <td>{{$grades->gpaname}}</td>
                               <td>{{$grades->marksfrom}}</td>
                               <td>{{$grades->marksto}}</td>

@@ -150,7 +150,9 @@
                       <th>Session</th>
                       <th>Purpose</th>
                       <th>Amount</th>
+                      <th>Date</th>
                       <th>Status</th>
+                      <th>Action</th>
                     </tr>
                     
                   </thead>
@@ -172,9 +174,48 @@
                           <td>{{$item->session}}</td>
                           <td>{{$item->purpose}}</td>
                           <td>{{$item->amount}}</td>
+                          <td>{{ $item->created_at }}</td>
                           <td>{{$item->status}}</td>
-                          {{-- <td></td> --}}
-                          {{-- <td></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editclassname"><i class="fas fa-eye"></i></button></td> --}}
+
+                          @if ($item->purpose == "Fees Part Payment")
+
+                            <!-- The Modal -->
+                            <div class="modal" id="view_transaction_details">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+  
+                                  <!-- Modal Header -->
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">Transaction Details</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  </div>
+  
+                                  <!-- Modal body -->
+                                  <div class="modal-body">
+                                    <p>Transaction Date: {{ $item->created_at }} <i style="color: green;">{{$item->status}}</i></p>
+                                    <p>Transaction Type: Fees Payment</p>
+                                    <p>Student Name: {{ $item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id) == null ? "N.A":($item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id)->firstname." ".$item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id) == null ? "N.A":$item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id)->firstname) }}</p>
+                                    <p>Student Class: {{ $item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id) == null ? "N.A":$item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id)->classname }}</p>
+                                    <p>Invoice ID: {{ $item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id) == null ? "N.A":$item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id)->invoice_number }}</p>
+                                    <p>Amount Paid: ₦{{ $item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id) == null ? "N.A":$item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id)->amount_paid }}</p>
+                                    <p>Total Amount: ₦{{ $item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id) == null ? "N.A":$item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id)->amount }}</p>
+                                    <p>Transaction Amount: ₦{{$item->amount}}</p>
+                                    <p>Balance: ₦{{ $item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id) == null ? "N.A":$item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id)->amount - $item->getTransactionDetails($item->system_id, $item->session, $item->term, $item->school_id)->amount_paid }}</p>
+                                    <p>Transaction Completed By:</p>
+                                  </div>
+  
+                                  <!-- Modal footer -->
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                  </div>
+  
+                                </div>
+                              </div>
+                            </div>
+                              
+                          @endif
+                          
+                          <td></button> <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#view_transaction_details"><i class="fas fa-eye"></i></button></td>
                         </tr>
                       @endforeach
                     @endif

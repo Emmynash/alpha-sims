@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 
+    <style>
+        .rotated {
+                writing-mode: tb-rl;
+                transform: rotate(-180deg);
+            }
+    </style>
+
 </head>
 <body>
     
@@ -37,7 +44,7 @@
 
         <div class="" style="margin-top: 60px;" id="printnotready">
             <div class="" class="" style="width: 794px; margin: 0 auto;">
-                <div class="print-container" style="width: 794px; border: 2px solid black; border-style: dashed;">
+                <div class="print-container" style="width: 794px;">
                     <div style="display: flex;">
                         <div id="imagelogo" style="width: 25%; height: 100px; display: flex; align-items: center; justify-content: center;">
     
@@ -130,6 +137,7 @@
                         <i style="text-decoration: underline; font-style: normal; font-weight: bold;">ACADEMIC RECORDS</i>
                     </div>
                     <br>
+<<<<<<< HEAD
                     <div>
                         <table style="width: 95%; margin: 0 auto;" id="category">
                             <thead style="text-align: center;">
@@ -190,11 +198,69 @@
                                                 </td>
                                             <tr>
     
-                                    @endforeach
+=======
+                    <div style="display: flex;">
+                        <div style="width: 30%; height: 500px; border: 1px solid black;">
+                            <div style="border-bottom: 1px solid black">
+                                <i style="font-style: normal;">Subjects</i>
+                            </div>
+                            <div style="margin-top: 70px; border-top: 1px solid black;">
+                                @foreach ($subjects as $item)
+                                    <div style="height: 30px; border-bottom: 1px solid black;">
+                                        <i style="font-style: normal; font-size: 15px; padding-left: 10px;">{{ $item->subjectname }}</i>
+                                    </div>
                                     
-                                @endif
-                            </tbody>
-                        </table>
+                                @endforeach
+                            </div>
+
+                        </div>
+                        @foreach ($assessments as $item)
+                            <div style="height: 500px; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black;">
+                                <div style="border-bottom: 1px solid black">
+                                    <center><i style="font-style: normal;">{{ $item->name }}</i></center>
+                                </div>
+                                <div style="height: 100%; display: flex;">
+                                    @foreach ($item->getSubassessments as $itemSub)
+                                        
+                                        <div style="height: 100%; width:100%; border-right: 1px solid black;">
+                                            <div style="border-bottom: 1px solid black; height: 70px;">
+                                                <center><i class="rotated" style="writing-mode: vertical-lr; margin: 0px; padding: 5px; font-size: 10px;">{{ $itemSub->subname }}</i></center>
+                                            </div>
+                                            @foreach ($subjects as $itemsubmarks)
+                                            <div style="height: 30px; width: 100%; border-bottom: 1px solid black;">
+                                                <center><i style="font-style: normal; padding: 0px 5px 0px 5px;">{{ $itemsubmarks->getSubjectMark($studentdetails->id, $itemsubmarks->id, $schoolsession, $item->id, $itemSub->id) == null ? 0: $itemsubmarks->getSubjectMark($studentdetails->id, $itemsubmarks->id, $schoolsession, $item->id, $itemSub->id)->scrores }}</i></center>
+                                            </div>
+                                            @endforeach
+                                            
+
+                                        </div>
+>>>>>>> f685bbfef1c5e9150ceb31ef7385dff081d92adb
+                                    @endforeach
+
+                                    
+                                </div>
+                            </div>
+                        @endforeach
+                        <div style="width: 10%; height: 500px; border-right: 1px solid black; border-top: 1px solid black; border-bottom: 1px solid black;">
+                            <div style="border-bottom: 1px solid black">
+                                <i style="font-style: normal;">Total</i>
+                            </div>
+                            <div style="margin-top: 70px; border-top: 1px solid black;">
+                                @foreach ($subjects as $itemsubmarks)
+                                    <div style="height: 30px; width: 100%; border-bottom: 1px solid black;">
+                                        <center><i style="font-style: normal; padding: 0px 5px 0px 5px;">0</i></center>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                        </div>
+                        <div style="width: 10%; height: 500px; border: 1px solid black;">
+                            <div style="border-bottom: 1px solid black">
+                                <i style="font-style: normal;">Grades</i>
+                            </div>
+
+                        </div>
+                        
                     </div>
                     <br>
                     <div style="">

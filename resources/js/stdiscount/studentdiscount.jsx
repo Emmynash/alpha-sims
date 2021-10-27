@@ -9,23 +9,29 @@ import axios from 'axios';
 function StudentDiscount() {
 
     const [studentlist, setStudentlist] = useState([]);
+    const [isLoading, setisLoading] = useState(true);
 
     useEffect(() => {
-        getStudentsWithElectives()
+        getStudentsWithDiscount()
         return () => {
             // cleanup
         };
     }, []);
 
-    function getStudentsWithElectives() {
+    function getStudentsWithDiscount() {
+
+        setisLoading(true)
 
         axios.get('/gen/get_all_student_discount').then(response=>{
+
+            setisLoading(false)
 
             console.log(response)
 
             setStudentlist(response.data.response)
 
         }).catch(e=>{
+            setisLoading(false)
 
             console.log(e)
 
@@ -33,10 +39,33 @@ function StudentDiscount() {
         
     }
 
+    function discontinueDiscount(id) {
+        setisLoading(true)
+
+        axios.get('/gen/discontinue_discount/'+id).then(response=>{
+
+            getStudentsWithDiscount()
+
+        }).catch(e=>{
+            setisLoading(false)
+
+            console.log(e)
+
+        })
+
+        
+    }
+
     return(
         <div>
-            {/* <button type="button" className="btn btn-sm btn-info" data-toggle="modal" data-target="#myModal">Add Discount</button> */}
-            {/* <hr /> */}
+            {isLoading ? <div style={{ zIndex:'1000', position:'absolute', top:'0', bottom:'0', left:'0', right:'0', background:'white', opacity:'0.4' }}>
+
+            </div>:""}
+            {isLoading ? <div>
+                <div className="text-center">
+                    <div className="spinner-border"></div>
+                </div>
+            </div>:""}
             <div>
                 <div className="row">
                     <div className="col-12 col-md-4">
@@ -44,6 +73,10 @@ function StudentDiscount() {
                             <input type="text" placeholder="search by name" className="form-control form-control-sm" />
                         </div>
                     </div>
+                </div>
+                <div className="alert alert-info">
+                    <i>By clicking the Discontinue button, it imply you are removing the student from the list of student with discount. However, if the request was sent after invoice was generated, it means the effect will only be seen the next time another invoice is generated for the student.</i>
+
                 </div>
             </div>
             <div className="card">
@@ -63,9 +96,9 @@ function StudentDiscount() {
                             studentlist.map(d=>(
                                 <tr>
                                     <td>{d.admission_no}</td>
-                                    <td>{d.firstname} {d.middlename} {d.lastname}</td>
+                                    <td>{d.firstname} {d.lastname}</td>
                                     <td>{d.percent}%</td>
-                                    <td><button type="button" className="btn btn-sm btn-danger badge">Discontinue</button> <button type="button" className="btn btn-sm btn-info badge">View</button></td>
+                                    <td><button type="button" className="btn btn-sm btn-danger badge" onClick={()=>discontinueDiscount(d.id)}>Discontinue</button></td>
                                 </tr>
                             ))
                         }

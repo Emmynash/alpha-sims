@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Classlist_sec extends Model
 {
+    protected $guarded = [];
+
     public function fetchFormMasters($id) {
         return $id;
     }

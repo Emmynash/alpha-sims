@@ -129,7 +129,8 @@
                     <th>Serial No.</th>
                     <th>Name</th>
                     <th>Invoice Number</th>
-                    <th>Amount</th>
+                    <th>Total Amount</th>
+                    <th>Amount Paid</th>
                     <th>Term</th>
                     <th>Session</th>
                     <th>Class</th>
@@ -160,12 +161,18 @@
                           <td>{{ $item->firstname }} {{ $item->middlename }} {{ $item->lastname }}</td>
                           <td>{{ $item->invoice_number }}</td>
                           <td>{{ $item->amount }}</td>
+                          <td>{{ $item->amount_paid }}</td>
                           <td>{{ $item->term }}</td>
                           <td>{{ $item->session }}</td>
                           <td>{{ $item->classname }}</td>
                           <td>
                             @if ($item->status == 0)
-                            <button class="btn btn-sm btn-warning">Pending</button>
+                              @if ($item->amount_paid != $item->amount)
+                                <button class="btn btn-sm btn-warning">Partial</button>
+                              @elseif($item->amount_paid == null)
+                                <button class="btn btn-sm btn-danger">Pending</button>
+                              @endif
+                            
                             @else
                                 <button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
                             @endif

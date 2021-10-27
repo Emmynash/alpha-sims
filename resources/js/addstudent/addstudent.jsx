@@ -23,28 +23,12 @@ function AddStudents() {
         studentsectionallocated: '',
         studenttype: '',
         studentsystemnumber: '',
-        studentgender: '',
-        studentreligion: '',
-        fathersname: '',
-        fathersphonenumber: '',
-        mothersname: '',
-        mothersphonenumber: '',
-        dateofbirth: '',
-        bloodgroup: '',
-        studenthouse: '',
-        nationality: '',
-        studentclub: '',
-        studentaddress_sec: '',
         admissionname: '',
         firstname: '',
         middlename: '',
         lastname:'',
         isRegistered: '',
-        phonenumber: '',
         email: '',
-        states: '',
-        lga:'',
-        hometown:''
     })
 
     useEffect(() => {
@@ -361,8 +345,8 @@ function AddStudents() {
                         </div>
                         <div style={{ margin:'10px' }}>
                             <hr />
-                            <i>Student Details</i>
-                            <div className="row">
+                            {/* <i>Student Details</i> */}
+                            {/* <div className="row">
                                 <div className="col-12 col-md-4">
                                     <select onChange={(e)=>handleChangeStates(e)} name="states" value={regForm.states} id="" className="form-control form-control-sm">
                                         <option value="">Select State</option>
@@ -382,9 +366,9 @@ function AddStudents() {
                                 <div className="col-12 col-md-4">
                                     <input type="text" name="hometown" onChange={handleChange} value={regForm.hometown} className="form-control form-control-sm" placeholder="Home Town"/>
                                 </div>
-                            </div>
+                            </div> */}
                             <br />
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col-12 col-md-4">
                                     <select name="studentgender" value={regForm.studentgender} id="" onChange={handleChange} className="form-control form-control-sm">
                                         <option value="">Select gender</option>
@@ -407,8 +391,8 @@ function AddStudents() {
                                         ))}
                                     </select>
                                 </div>
-                            </div>
-                            <br />
+                            </div> */}
+                            {/* <br />
                             <div className="row">
                                 <div className="col-12 col-md-4">
                                     <div className="form-group">
@@ -417,8 +401,8 @@ function AddStudents() {
                                     </div>
                                 </div>
                             </div>
-                            <hr />
-                            <i>Clubs and society</i>
+                            <hr /> */}
+                            {/* <i>Clubs and society</i>
                             <div>
                                 <div className="row">
                                     <div className="col-12 col-md-6">
@@ -431,8 +415,8 @@ function AddStudents() {
                                     </div>
                                 </div>
                             </div>
-                            <hr />
-                            <i>Guaduan Detials</i>
+                            <hr /> */}
+                            {/* <i>Guaduan Detials</i>
                             <div className="row">
                                 <div className="col-12 col-md-6">
                                     <div className="form-group">
@@ -450,8 +434,8 @@ function AddStudents() {
                                         <input type="number" name="mothersphonenumber" onChange={handleChange} value={regForm.mothersphonenumber} className="form-control form-control-sm" placeholder="Mother's phone"/>
                                     </div>
                                 </div>
-                            </div>
-                            <hr />
+                            </div> */}
+                            {/* <hr />
                             <i>Address</i>
                             <div className="row">
                                 <div className="col-12 col-md-6">
@@ -459,7 +443,7 @@ function AddStudents() {
                                         <textarea name="studentaddress_sec" id="" onChange={handleChange} value={regForm.studentaddress_sec} cols="30" rows="5" className="form-control form-control-sm"></textarea>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             <button onClick={addStudentMain} className="btn btn-sm btn-info">Submit</button>
                         </div>
                         

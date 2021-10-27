@@ -69556,7 +69556,11 @@ function ReasignClass() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+<<<<<<< HEAD
 module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha/alpha-sims-react/resources/js/appreasign.js */"./resources/js/appreasign.js");
+=======
+module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/appreasign.js */"./resources/js/appreasign.js");
+>>>>>>> f685bbfef1c5e9150ceb31ef7385dff081d92adb
 
 
 /***/ })

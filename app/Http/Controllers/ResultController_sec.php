@@ -20,8 +20,11 @@ use App\Repository\Result\ResultAverageProcess;
 use App\ResultReadyModel;
 use PDF;
 use App;
+use App\AssesmentModel;
 use App\ElectiveAdd;
+use App\RecordMarks;
 use App\User;
+use Svg\Tag\Rect;
 
 class ResultController_sec extends Controller
 {
@@ -116,15 +119,16 @@ class ResultController_sec extends Controller
 
             for ($i=0; $i < count($subjectSum); $i++) { 
 
-              $addmarksCheck = Addmark_sec::where(['subjectid' => $subjectSum[$i], 'term' => $request->term, 'session'=>$request->session, 'regno'=>$request->student_reg_no])->get();
+              $addmarksCheck = Addsubject_sec::find($subjectSum[$i]);
 
-                if (count($addmarksCheck) > 0) {
+                // if (count($addmarksCheck) > 0) {
 
-                    if ((int)$addmarksCheck[0]->totalmarks > 0) {
-                        $getSingleSubject = Addsubject_sec::find($subjectSum[$i]);
-                        array_push($subject, $getSingleSubject);
-                    }
-                }
+                //     if ((int)$addmarksCheck[0]->totalmarks > 0) {
+                //         $getSingleSubject = Addsubject_sec::find($subjectSum[$i]);
+                        
+                //     }
+                // }
+                array_push($subject, $addmarksCheck);
             }
 
             $subjects = collect($subject);
@@ -145,8 +149,10 @@ class ResultController_sec extends Controller
             }else{
 
                 if ($checkclasstype->classtype == 1) {
+
+                    $assessments = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
     
-                    return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
+                    return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass', 'assessments'));
                 } else {
                     return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
                 }

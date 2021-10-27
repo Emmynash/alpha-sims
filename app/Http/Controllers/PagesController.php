@@ -20,7 +20,7 @@ use App\AdmissionsTbl;
 use App\Classlist_sec;
 use App\FormTeachers;
 use App\TeacherSubjects;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Redirect;
@@ -200,13 +200,18 @@ class PagesController extends Controller
         
         if(Auth::guest()){
             
-        $addpost = Addpost::where('status', 'Approved')->get();
 
-        return view('pages.index')->with('addpost', $addpost);
+
+        return view('pages.index');
             
         }else{
             return redirect('/home');
         }
+    }
+
+    public function domainSelect()
+    {
+        return view('secondary.domain.domain');
     }
 
     public function addTerm(Request $request)
