@@ -633,6 +633,9 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::get('/index_fees', 'AccountController@index_fees')->name('index_fees');
          Route::get('/summary', 'AccountController@summary')->name('summary')->middleware(['auth', 'can:view account summary']); 
          Route::get('/invoices', 'AccountController@invoices')->name('invoices')->middleware(['auth', 'can:invoice management']); 
+         Route::get('/viewinvoices/{id}', 'AccountController@viewinvoices')->name('viewinvoices')->middleware(['auth', 'can:invoice management']); 
+         Route::get('/printinvoice/{id}', 'AccountController@printinvoice')->name('printinvoice')->middleware(['auth', 'can:invoice management']); 
+         Route::get('/invoicepaymenthis/{id}', 'AccountController@invoicePaymentHistory')->name('invoicepaymenthis')->middleware(['auth', 'can:invoice management']); 
          Route::get('/unpaid_fees', 'AccountController@unpaid_fees')->name('unpaid_fees')->middleware(['auth', 'can:invoice management']); 
          Route::get('/order_request', 'AccountController@orderRequest')->name('order_request')->middleware(['auth', 'can:can send or receive request']);
 

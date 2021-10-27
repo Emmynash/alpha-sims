@@ -148,6 +148,8 @@ class ResultController_sec extends Controller
 
             }else{
 
+                
+
                 if ($checkclasstype->classtype == 1) {
 
                     $assessments = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();

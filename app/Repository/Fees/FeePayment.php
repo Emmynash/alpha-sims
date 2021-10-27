@@ -362,6 +362,7 @@ class FeePayment{
         $addPaymentRecord->schoolid = Auth::user()->schoolid; 
         $addPaymentRecord->term = $schoolDetails->term;
         $addPaymentRecord->session = $schoolDetails->schoolsession;
+        $addPaymentRecord->invoice_number = $checkFeeInvoiceExist->invoice_number;
         $addPaymentRecord->save();
 
         return "Payment done";
@@ -421,7 +422,7 @@ class FeePayment{
     
             for ($i=0; $i < $schoolData->count(); $i++) { 
     
-                $checkIfItemAdded = FeesInvoiceItems::where(['session'=>$schoolDetails->schoolsession, 'term' => $schoolDetails->term, 'category_name' => $schoolData[$i]['categoryname']])->get();
+                $checkIfItemAdded = FeesInvoiceItems::where(['system_id'=>$userid, 'session'=>$schoolDetails->schoolsession, 'term' => $schoolDetails->term, 'category_name' => $schoolData[$i]['categoryname']])->get();
     
                 if ($checkIfItemAdded->count()< 1) {
                     $addInvoiceItems = new FeesInvoiceItems();
