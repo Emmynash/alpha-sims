@@ -17,6 +17,7 @@ use App\Addgrades;
 use App\Addteachers_sec;
 use App\Addstudent_sec;
 use App\Addsubject_sec;
+use App\CalenderModel;
 use App\TeacherSubjects;
 use App\TeacherSubjectPris;
 use Illuminate\Support\Facades\Auth;
@@ -600,6 +601,7 @@ class HomeController extends Controller
             $addsubject_secs_main = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->pluck('subjectname')->toArray();
             $addsubject_secs = array_unique($addsubject_secs_main);
             $classlist_sec = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
+            $events = CalenderModel::orderBy('created_at', 'DESC')->get();
 
             $detailsArray = array(
                 "addteachers_secs"=>$addteachers_secs,
@@ -610,7 +612,7 @@ class HomeController extends Controller
 
             
             
-            return view('secondary.index_sec')->with('detailsArray', $detailsArray);
+            return view('secondary.index_sec', compact('events'))->with('detailsArray', $detailsArray);
         }
 
 

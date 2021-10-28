@@ -6,7 +6,6 @@ use App\Addpost;
 use App\Addstudent_sec;
 use App\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
