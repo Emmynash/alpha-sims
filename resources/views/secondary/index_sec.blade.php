@@ -115,7 +115,7 @@
                     <th>Event ID</th>
                     <th>Title</th>
                     <th>Start Date/time</th>
-                    <th>Date</th>
+                    <th>End Date</th>
                   </tr>
                   </thead>
                   <tbody>
