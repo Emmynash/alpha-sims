@@ -469,6 +469,32 @@ class AccountController extends Controller
         
     }
 
+    public function item_finish_notification(Request $request)
+    {
+    
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+
+        $addrequest = new RequestModelAccount();
+        $addrequest->amountrequesting = 0.00;
+        $addrequest->reasonforrequest = $request->item_name." is about to be out of stock. We have ".$request->item_quantity. " remaining";
+        $addrequest->schoolid = (int)Auth::user()->schoolid;
+        $addrequest->seeenstatus = false;
+        $addrequest->status = "Unattended";
+        $addrequest->term = $schooldetails->term;
+        $addrequest->session = $schooldetails->schoolsession;
+        $addrequest->dateaccepted = "";
+        
+        $addrequest->sender = (int)Auth::user()->id;
+        $addrequest->save();
+
+        return back()->with('success', 'Request sent successfully');  
+            
+        
+        
+    }
+
     public function addInvoiceOrder(Request $request, $id)
     {
 

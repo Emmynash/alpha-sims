@@ -646,6 +646,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::post('/fetchstudentdataforfee', 'AccountController@fetchstudentdataforfee')->name('fetchstudentdataforfee'); 
          Route::post('/confirm_money_received_fees', 'AccountController@confirmMoneyReceived')->name('confirm_money_received_fees');
          Route::post('/sendmoneyrequest', 'AccountController@sendMoneyRequest')->name('sendmoneyrequest');
+         Route::post('/notify-item-finish', 'AccountController@item_finish_notification')->name('notify-item-finish');
          Route::get('/inventory', 'AccountController@inventory')->name('inventory')->middleware(['auth', 'can:access inventory']);
          Route::post('/inventory_add_item', 'AccountController@inventory_add_item')->name('inventory_add_item');
          Route::post('/add_invoice_order/{id}', 'AccountController@addInvoiceOrder')->name('add_invoice_order'); 

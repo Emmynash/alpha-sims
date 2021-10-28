@@ -692,7 +692,7 @@ class HomeController extends Controller
         }
 
         $uploadProfileImage = User::find(Auth::user()->id);
-        $uploadProfileImage->profileimg = $profileFinal;
+        $uploadProfileImage->profileimg =$request->profilepix !=null ? $profileFinal : "https://drive.google.com/uc?export=view&id=189c7bIDY4gI8PfFaP-xA3t_Udgle48YG";
         $uploadProfileImage->save();
 
         $addstudent= User::where('id', Auth::user()->id)->get();

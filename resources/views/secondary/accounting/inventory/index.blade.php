@@ -202,7 +202,12 @@
                                           </div>
                                         </div>
                                         <button class="btn btn-sm btn-danger" style="margin-bottom: 5px;">Delete Item</button>
-                                        <button class="btn btn-sm btn-success">Click to notify the admin that an item is about to finish</button>
+                                       <form action="{{ route('notify-item-finish') }}" method="post">
+                                         @csrf
+                                         <input type="hidden" name="item_name" value="{{  $item->nameofitem }}">
+                                         <input type="hidden" name="item_quanty" value="{{  $item->quantity }}">
+                                          <button type="submit" class="btn btn-sm btn-success">Click to notify the admin that an item is about to finish</button>
+                                       </form>
                                       </div>
                                     </div>
                                     
