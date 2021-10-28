@@ -14,7 +14,7 @@ class ChangeFieldTypeToAddstudentSecsTable extends Migration
     public function up()
     {
         Schema::table('addstudent_secs', function (Blueprint $table) {
-            $table->text('insession')->nullable()->change();
+            $table->text('insession')->nullable();
             $table->text('gender')->nullable()->change();
             $table->text('studenthouse')->nullable()->change();
             $table->text('studentreligion')->nullable()->change();
