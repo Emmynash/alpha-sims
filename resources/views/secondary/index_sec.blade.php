@@ -130,11 +130,11 @@
                     </tr>
                         
                     @endforeach
-                  
+                  {{-- shdfkjhfkjdhfkjdsf --}}
                   </tbody>
                 </table>
               </div>
-              <!-- /.table-responsive -->
+              <!-- /.table-responsive --> 
             </div>
             <!-- /.card-body -->
             <div class="card-footer clearfix">
