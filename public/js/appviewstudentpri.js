@@ -69665,7 +69665,7 @@ function ViewStudentPri() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha/alpha-sims-react/resources/js/appviewstudentpri.js */"./resources/js/appviewstudentpri.js");
+module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha-fix/alpha-sims-react/resources/js/appviewstudentpri.js */"./resources/js/appviewstudentpri.js");
 
 
 /***/ })
