@@ -45,7 +45,7 @@
 
                     @foreach ($getAssignments as $item)
 
-                      <div class="card">
+                      {{-- <div class="card">
                         <p style="margin: 0px; padding-left: 10px;">Start Date: <i style="font-style: normal; font-weight: bold;">{{ $item->startdate }}</i></p>
                         <p style="margin: 0px; padding-left: 10px;">Submission: <i style="font-style: normal; font-weight: bold;">{{ $item->submissiondate }}</i></p>
                         <p style="margin: 0px; padding-left: 10px;">Subject: <i style="font-style: normal; font-weight: bold;">{{ $item->subjectname }}</i></p>
@@ -57,7 +57,37 @@
                           <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#submitassignment{{ $item->id }}">Submit Assignment</button>
                         </div>
 
-                    </div>
+                    </div> --}}
+
+
+                      <!-- Main content -->
+                      <section class="content">
+                        <div class="container-fluid">
+                          <div class="card card-primary card-outline">
+                            <div class="card-header">
+                              <h3 class="card-title">Assignment for <i style="font-style: normal;">{{ $item->subjectname }}</h3>
+                            </div> <!-- /.card-body -->
+                            <div class="card-body">
+                              <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Description: <i style="font-style: normal;">{{ $item->description }}</i></p>
+                              <br>
+                              <strong>TimeLine</strong>
+                              <div>
+                                <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Start Date: <i style="font-style: normal; font-weight: bold;">{{  date("d M Y", strtotime($item->startdate)) }}</i></p>
+                                <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Submission: <i style="font-style: normal; font-weight: bold;">{{  date("d M Y", strtotime($item->submissiondate)) }}</i></p>
+                                <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Class/Section: <i style="font-style: normal; font-weight: bold;">{{ $item->classname }}</i><i style="font-style: normal; font-weight: bold;">{{ $item->sectionname }}</i></p>
+                              
+                                <p style="margin: 0px; padding-left: 10px; font-size: 13px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
+                                <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status:</p>
+                              </div>
+                              <div style="margin: 10px;">
+                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#submitassignment{{ $item->id }}">Submit Assignment</button>
+                              </div>
+                            </div><!-- /.card-body -->
+                          </div>
+                        </div><!-- /.container-fluid -->
+                      </section>
+                      <!-- /.content -->
+
 
                             <!-- The Modal -->
                       <div class="modal" id="submitassignment{{ $item->id }}">

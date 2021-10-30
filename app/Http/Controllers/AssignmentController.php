@@ -109,8 +109,7 @@ class AssignmentController extends Controller
             'term'=>$schooldetails->term
         ]);
 
-        return back()
-            ->with('success', 'File uploaded successfully');
+        return back()->with('success', 'File uploaded successfully');
     }
 
     public function submitAssignmentStudent(Request $request)

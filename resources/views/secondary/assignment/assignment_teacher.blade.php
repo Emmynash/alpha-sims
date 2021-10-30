@@ -31,9 +31,7 @@
     </div>
     <!-- /.content-header -->
 
-    <div>
-        @include('layouts.message')
-    </div>
+
 
     <!-- Main content -->
     <section class="content">

@@ -36,6 +36,10 @@
       <div class="container-fluid">
 
         <div>
+            @include('layouts.message')
+        </div>
+
+        <div>
 
             <div class="row">
                 <div class="col-12 col-md-12">
@@ -48,33 +52,37 @@
                     <hr>
                     @foreach ($getAssignments as $item)
 
-                        <div class="card">
-                            <p style="margin: 0px; padding-left: 10px;">Start Date: <i style="font-style: normal; font-weight: bold;">{{ $item->startdate }}</i></p>
-                            <p style="margin: 0px; padding-left: 10px;">Submission: <i style="font-style: normal; font-weight: bold;">{{ $item->submissiondate }}</i></p>
-                            <p style="margin: 0px; padding-left: 10px;">Subject: <i style="font-style: normal; font-weight: bold;">{{ $item->subjectname }}</i></p>
-                            <p style="margin: 0px; padding-left: 10px;">Class/Section: <i style="font-style: normal; font-weight: bold;">{{ $item->classname }}</i><i style="font-style: normal; font-weight: bold;">{{ $item->sectionname }}</i></p>
-                            <p style="margin: 0px; padding-left: 10px;">Description: <i style="font-style: normal; font-weight: bold;">{{ $item->description }}</i></p>
-                            <p style="margin: 0px; padding-left: 10px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
-                            <p style="margin: 0px; padding-left: 10px;">Status:</p>
-                            <div style="margin: 10px;">
-                              <button type="submit" form="deleteassignment{{ $item->id }}" class="btn btn-sm btn-danger">Delete</button>
-                            </div>
-                            <form action="{{ route('deleteassignment', $item->id) }}" method="post" id="deleteassignment{{ $item->id }}">
-                              @csrf
-                              @method('delete')
-                            </form>
-                            {{-- <div class="row" style="margin-left: 10px;">
-                                <div class="col-12 col-md-6">
-                                    <form action="" method="post">
-                                        @csrf
-                                        <div class="form-group">
-                                            <label for="">Upload Your Assignment Here</label>
-                                            <input type="file" class="form-control form-control-sm">
-                                        </div>
+                            <!-- Main content -->
+                            <section class="content">
+                              <div class="container-fluid">
+                                <div class="card card-primary card-outline">
+                                  <div class="card-header">
+                                    <h3 class="card-title">Assignment for <i style="font-style: normal;">{{ $item->subjectname }}</h3>
+                                  </div> <!-- /.card-body -->
+                                  <div class="card-body">
+                                    <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Description: <i style="font-style: normal;">{{ $item->description }}</i></p>
+                                    <br>
+                                    <strong>TimeLine</strong>
+                                    <div>
+                                      <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Start Date: <i style="font-style: normal; font-weight: bold;">{{  date("d M Y", strtotime($item->startdate)) }}</i></p>
+                                      <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Submission: <i style="font-style: normal; font-weight: bold;">{{  date("d M Y", strtotime($item->submissiondate)) }}</i></p>
+                                      <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Class/Section: <i style="font-style: normal; font-weight: bold;">{{ $item->classname }}</i><i style="font-style: normal; font-weight: bold;">{{ $item->sectionname }}</i></p>
+                                    
+                                      <p style="margin: 0px; padding-left: 10px; font-size: 13px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
+                                      <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status:</p>
+                                    </div>
+                                    <div style="margin: 10px;">
+                                      <button type="submit" form="deleteassignment{{ $item->id }}" class="btn btn-sm btn-danger">Delete</button>
+                                    </div>
+                                    <form action="{{ route('deleteassignment', $item->id) }}" method="post" id="deleteassignment{{ $item->id }}">
+                                      @csrf
+                                      @method('delete')
                                     </form>
+                                  </div><!-- /.card-body -->
                                 </div>
-                            </div> --}}
-                        </div>
+                              </div><!-- /.container-fluid -->
+                            </section>
+                            <!-- /.content -->
                         
                     @endforeach
                     
