@@ -36,6 +36,10 @@
       <div class="container-fluid">
 
         <div>
+            @include('layouts.message')
+        </div>
+
+        <div>
 
             <div class="row">
                 <div class="col-12 col-md-12">
@@ -44,20 +48,6 @@
                     </div>
 
                     @foreach ($getAssignments as $item)
-
-                      {{-- <div class="card">
-                        <p style="margin: 0px; padding-left: 10px;">Start Date: <i style="font-style: normal; font-weight: bold;">{{ $item->startdate }}</i></p>
-                        <p style="margin: 0px; padding-left: 10px;">Submission: <i style="font-style: normal; font-weight: bold;">{{ $item->submissiondate }}</i></p>
-                        <p style="margin: 0px; padding-left: 10px;">Subject: <i style="font-style: normal; font-weight: bold;">{{ $item->subjectname }}</i></p>
-                        <p style="margin: 0px; padding-left: 10px;">Class/Section: <i style="font-style: normal; font-weight: bold;">{{ $item->classname }}</i><i style="font-style: normal; font-weight: bold;">{{ $item->sectionname }}</i></p>
-                        <p style="margin: 0px; padding-left: 10px;">Description: <i style="font-style: normal; font-weight: bold;">{{ $item->description }}</i></p>
-                        <p style="margin: 0px; padding-left: 10px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
-                        <p style="margin: 0px; padding-left: 10px;">Status:</p>
-                        <div style="margin: 10px;">
-                          <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#submitassignment{{ $item->id }}">Submit Assignment</button>
-                        </div>
-
-                    </div> --}}
 
 
                       <!-- Main content -->
