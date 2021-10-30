@@ -19,29 +19,6 @@ class PromotionController_sec extends Controller
 {
     public function index(){
 
-        // $classlist_sec = Classlist_sec::where('schoolid',Auth::user()->schoolid)->get();
-        // $addsection_sec = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
-        // $addpost = Addpost::where('id', Auth::user()->schoolid)->get();
-
-        // if ($addpost[0]['schoolsession'] == NULL) {
-        //     return back()->with('error', 'School Session not set');
-        // }
-
-        // $alldetails = array(
-        //     'classlist_sec'=>$classlist_sec,
-        //     'addsection_sec'=>$addsection_sec,
-        //     'addpost'=>$addpost
-        // );
-
-        // $currentsession = $alldetails['addpost'][0]['schoolsession'];
-
-        // $explodesession = explode("/", $currentsession);
-
-        // $oldsessionleft = $explodesession[0] - 1;
-        // $oldsessionright = $explodesession[1] - 1;
-
-        // $oldsessionboth = $oldsessionleft."/".$oldsessionright;
-
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
         return view('secondary.promotion.promotion_sec', compact('schooldetails'));
@@ -73,7 +50,7 @@ class PromotionController_sec extends Controller
                         
                         // fetch classes in ascending order depends on if schools are entered in ascending order as instructed
 
-                        $classlist_secs = Classlist_sec::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->orderBy("id", "ASC")->get();
+                        $classlist_secs = Classlist_sec::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->orderBy("indexp", "ASC")->get();
                         $a = array();
                         for ($i=0; $i < count($classlist_secs); $i++) { 
                             $addsubjectid = $classlist_secs[$i]['id'];
