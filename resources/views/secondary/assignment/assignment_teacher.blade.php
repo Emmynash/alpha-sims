@@ -45,10 +45,19 @@
                         <i style="padding: 10px; font-style: normal;">Subject List</i>
                     </div>
                     @foreach ($getTeacherSubjects as $item)
-                        <a href="{{ route('assignment_view', ['id'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid]) }}"><div class="card">
-                            <p style="margin: 0px; padding-left: 10px;">Subject: {{ $item->subjectname }}</p>
-                            <p style="margin: 0px; padding-left: 10px;">Class/Section: {{ $item->classname }}{{ $item->sectionname }}</p>
-                        </div></a>
+                        <a href="{{ route('assignment_view', ['id'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid]) }}">
+                          <div class="card">
+                            <div class="card-header">
+                              <i><i class="fas fa-th-list"></i></i>
+                            </div>
+                            <div class="card-body">
+                              <div>
+                                <p style="margin: 0px; padding-left: 10px; color: black; font-size: 13px;">Subject: {{ $item->subjectname }}</p>
+                                <p style="margin: 0px; padding-left: 10px; color: black; font-size: 13px;">Class/Section: {{ $item->classname }}{{ $item->sectionname }}</p>
+                              </div>
+                            </div>
+                        </div>
+                      </a>
                     @endforeach
                     
                 </div>
