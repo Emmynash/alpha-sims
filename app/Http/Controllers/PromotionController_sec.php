@@ -56,10 +56,14 @@ class PromotionController_sec extends Controller
                             $addsubjectid = $classlist_secs[$i]['id'];
                                 array_push($a, $addsubjectid);
                         }
+
+                        
                         
                         $promofromclass = $request->input('promofromclass'); // class you are promoting from
 
-                        if (max($a) == $promofromclass) // check if the id of the class we are promoting from is same as the one we are proting to. if same, no promotion allowed
+                            $countClass = count($a);
+
+                        if ( $a[$countClass-1] == $promofromclass) // check if the id of the class we are promoting from is same as the one we are proting to. if same, no promotion allowed
                         {
                             return response()->json(['success'=>'nopromo', 'addstudent_sec'=>collect($addstudent_sec)]);
                         }
