@@ -666,6 +666,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
             Route::get('/assignment_subject', 'AssignmentController@assignment_subject')->name('assignment_subject');
             Route::post('/post_assignment', 'AssignmentController@post_assignment')->name('post_assignment');
             Route::delete('/deleteassignment/{id}', 'AssignmentController@delete')->name('deleteassignment');
+            Route::get('/view_submission/{subjectid}/{classid}/{sectionid}', 'AssignmentController@viewsubmissions')->name('view_submission');
         });
 
 });

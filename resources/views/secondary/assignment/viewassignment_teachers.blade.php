@@ -67,12 +67,15 @@
                                       <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Start Date: <i style="font-style: normal; font-weight: bold;">{{  date("d M Y", strtotime($item->startdate)) }}</i></p>
                                       <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Submission: <i style="font-style: normal; font-weight: bold;">{{  date("d M Y", strtotime($item->submissiondate)) }}</i></p>
                                       <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Class/Section: <i style="font-style: normal; font-weight: bold;">{{ $item->classname }}</i><i style="font-style: normal; font-weight: bold;">{{ $item->sectionname }}</i></p>
-                                    
-                                      <p style="margin: 0px; padding-left: 10px; font-size: 13px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
+                                      @if ($item->filelink != NULL)
+                                          <p style="margin: 0px; padding-left: 10px; font-size: 13px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
+                                      @endif
+                                      
                                       <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status:</p>
                                     </div>
                                     <div style="margin: 10px;">
                                       <button type="submit" form="deleteassignment{{ $item->id }}" class="btn btn-sm btn-danger">Delete</button>
+                                      <a href="{{ route('view_submission', ['subjectid'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid]) }}"><button type="submit" class="btn btn-sm btn-success">View Submissions</button></a>
                                     </div>
                                     <form action="{{ route('deleteassignment', $item->id) }}" method="post" id="deleteassignment{{ $item->id }}">
                                       @csrf

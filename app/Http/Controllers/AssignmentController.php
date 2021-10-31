@@ -8,6 +8,7 @@ use App\Addsubject_sec;
 use App\AssignmentSubmission;
 use App\AssignmentTable;
 use App\Classlist_sec;
+use App\SubAssesmentModel;
 use App\TeacherSubjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -83,61 +84,129 @@ class AssignmentController extends Controller
     public function post_assignment(Request $request)
     {
 
-        $validated = $request->validate([
-            'startdate' => 'required',
-            'submissiondate' => 'required',
-            'subjectid' => 'required',
-            'classid' => 'required',
-            'sectionid' => 'required',
-            'description' => 'required',
-            'assignmentfile' => 'required|image|mimes:jpeg,png,jpg,pdf,doc|max:4048'
-        ]);
+        if($request->hasFile('assignmentfile')){
 
-        $response = cloudinary()->upload($request->file('assignmentfile')->getRealPath())->getSecurePath();
+            $validated = $request->validate([
+                'startdate' => 'required',
+                'submissiondate' => 'required',
+                'subjectid' => 'required',
+                'classid' => 'required',
+                'sectionid' => 'required',
+                'description' => 'required',
+                'assignmentfile' => 'required|image|mimes:jpeg,png,jpg,pdf,doc|max:4048'
+            ]);
 
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
-        
-        $postAssignment = AssignmentTable::create([
-            'startdate'=>$request->startdate,
-            'submissiondate'=>$request->submissiondate,
-            'subjectid'=>$request->subjectid,
-            'classid'=>$request->classid,
-            'sectionid'=>$request->sectionid,
-            'description'=>$request->description,
-            'filelink'=>$response,
-            'session'=>$schooldetails->schoolsession,
-            'term'=>$schooldetails->term
-        ]);
+            $response = cloudinary()->upload($request->file('assignmentfile')->getRealPath())->getSecurePath();
 
-        return back()->with('success', 'File uploaded successfully');
+            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+            $postAssignment = AssignmentTable::create([
+                'startdate'=>$request->startdate,
+                'submissiondate'=>$request->submissiondate,
+                'subjectid'=>$request->subjectid,
+                'classid'=>$request->classid,
+                'sectionid'=>$request->sectionid,
+                'description'=>$request->description,
+                'filelink'=>$response,
+                'session'=>$schooldetails->schoolsession,
+                'term'=>$schooldetails->term
+            ]);
+
+            return back()->with('success', 'File uploaded successfully');
+
+        }else{
+
+
+            $validated = $request->validate([
+                'startdate' => 'required',
+                'submissiondate' => 'required',
+                'subjectid' => 'required',
+                'classid' => 'required',
+                'sectionid' => 'required',
+                'description' => 'required',
+            ]);
+
+
+            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+            $postAssignment = AssignmentTable::create([
+                'startdate'=>$request->startdate,
+                'submissiondate'=>$request->submissiondate,
+                'subjectid'=>$request->subjectid,
+                'classid'=>$request->classid,
+                'sectionid'=>$request->sectionid,
+                'description'=>$request->description,
+                'session'=>$schooldetails->schoolsession,
+                'term'=>$schooldetails->term
+            ]);
+
+            return back()->with('success', 'File uploaded successfully');
+
+
+
+        }
+
+
     }
 
     public function submitAssignmentStudent(Request $request)
     {
-        $validated = $request->validate([
-            'subjectid' => 'required',
-            'classid' => 'required',
-            'sectionid' => 'required',
-            'assignmenttext' => 'required',
-            'filelink' => 'required|image|mimes:jpeg,png,jpg,pdf,doc|max:4048'
-        ]);
 
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        $response = cloudinary()->upload($request->file('filelink')->getRealPath())->getSecurePath();
+        if($request->hasFile('filelink')){
 
-        $submitAssignment = AssignmentSubmission::updateOrCreate(
-            ['session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'subjectid'=>$request->subjectid, 'classid'=>$request->classid, 'sectionid'=>$request->sectionid],
-            ['session'=>$schooldetails->schoolsession, 
-            'term'=>$schooldetails->term, 
-            'subjectid'=>$request->subjectid, 
-            'classid'=>$request->classid,
-            'filelink'=>$response,
-            'sectionid'=>$request->sectionid,
-            'description'=>$request->assignmenttext]);
+            $validated = $request->validate([
+                'subjectid' => 'required',
+                'classid' => 'required',
+                'sectionid' => 'required',
+                'assignmenttext' => 'required',
+                'filelink' => 'required|image|mimes:jpeg,png,jpg,pdf,doc|max:4048'
+            ]);
 
-            return back()
-            ->with('success', 'File uploaded successfully');
+            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+            $response = cloudinary()->upload($request->file('filelink')->getRealPath())->getSecurePath();
+    
+            $submitAssignment = AssignmentSubmission::updateOrCreate(
+                ['session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'subjectid'=>$request->subjectid, 'classid'=>$request->classid, 'sectionid'=>$request->sectionid],
+                ['session'=>$schooldetails->schoolsession, 
+                'term'=>$schooldetails->term, 
+                'subjectid'=>$request->subjectid, 
+                'classid'=>$request->classid,
+                'filelink'=>$response,
+                'sectionid'=>$request->sectionid,
+                'description'=>$request->assignmenttext]);
+    
+                return back()
+                ->with('success', 'File uploaded successfully');
+
+        }else{
+            $validated = $request->validate([
+                'subjectid' => 'required',
+                'classid' => 'required',
+                'sectionid' => 'required',
+                'assignmenttext' => 'required',
+            ]);
+
+            $schooldetails = Addpost::find(Auth::user()->schoolid);
+    
+            $submitAssignment = AssignmentSubmission::updateOrCreate(
+                ['session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'subjectid'=>$request->subjectid, 'classid'=>$request->classid, 'sectionid'=>$request->sectionid, 'userid'=>Auth::user()->id],
+                ['session'=>$schooldetails->schoolsession, 
+                'term'=>$schooldetails->term, 
+                'subjectid'=>$request->subjectid, 
+                'classid'=>$request->classid,
+                'sectionid'=>$request->sectionid,
+                'description'=>$request->assignmenttext,
+                'userid'=>Auth::user()->id]);
+    
+                return back()
+                ->with('success', 'File uploaded successfully');
+        }
+
+
+
+
     }
 
     public function delete($id)
@@ -146,6 +215,20 @@ class AssignmentController extends Controller
         $deleteassignment->delete();
 
         return back()->with('success', 'deleted successfully');
+    }
+
+    public function viewsubmissions($subjectid, $classid, $sectionid)
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $submissions = AssignmentSubmission::join('classlist_secs', 'classlist_secs.id','=', 'assignment_submissions.classid')
+                     ->join('addsection_secs', 'addsection_secs.id','=','assignment_submissions.sectionid')
+                     ->join('addsubject_secs', 'addsubject_secs.id','=','assignment_submissions.subjectid')
+                     ->join('users', 'users.id','=','assignment_submissions.userid')
+                     ->where(['subjectid'=>$subjectid, 'assignment_submissions.classid'=>$classid, 'sectionid'=>$sectionid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term])
+                     ->select('assignment_submissions.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsubject_secs.subjectname', 'users.firstname', 'users.lastname')->get();
+
+        return view('secondary.assignment.viewsubmission', compact('schooldetails', 'submissions'));
     }
 
 
