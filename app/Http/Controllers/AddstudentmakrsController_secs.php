@@ -135,7 +135,7 @@ class AddstudentmakrsController_secs extends Controller
                     $join->on('assessment_table_totals.regno', '=', 'addstudent_secs.id');
                     $join->where(['assessment_table_totals.subjectid' => $subjectbyclassid, 'assessment_table_totals.term'=> $schoolterm]);
                 })
-                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'assessment_table_totals.totals', 'assessment_table_totals.grade', 'assessment_table_totals.id as markid')
+                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'assessment_table_totals.totals', 'assessment_table_totals.grade', 'assessment_table_totals.id as markid', 'assessment_table_totals.position')
                 ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
 
                 $assessment = AssesmentModel::where('schoolid',Auth::user()->schoolid)->pluck('id')->toArray();
@@ -309,7 +309,7 @@ class AddstudentmakrsController_secs extends Controller
 
             $recordMarks = RecordMarks::updateOrcreate(
                 ['subjectid'=>$request->subjectid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term,
-            'section_id'=>$request->section_id, 'student_id'=>$request->student_id, 'assesment_id'=>$request->assesment_id, 'subassessment_id'=>$request->subassessment_id],
+                'section_id'=>$request->section_id, 'student_id'=>$request->student_id, 'assesment_id'=>$request->assesment_id, 'subassessment_id'=>$request->subassessment_id],
                 ['subjectid'=>$request->subjectid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term,
                 'section_id'=>$request->section_id, 'student_id'=>$request->student_id, 'scrores'=>$request->scrores, 
                 'class_id'=>$request->class_id, 'school_id'=>Auth::user()->schoolid, 'assesment_id'=>$request->assesment_id, 'subassessment_id'=>$request->subassessment_id]);
@@ -338,6 +338,47 @@ class AddstudentmakrsController_secs extends Controller
                     ['regno'=>$request->student_id, 'schoolid'=>Auth::user()->schoolid,
                     'catid'=>$request->assesment_id, 'classid'=>$request->class_id, 'subjectid'=>$request->subjectid,
                     'totals'=>$getSubjecttoal, 'term' =>$schooldetails->term, 'session'=>$schooldetails->schoolsession, 'sectionid'=>$request->section_id, 'grade'=>$gradeFinal]);
+
+
+                    
+                    DB::beginTransaction();
+
+                    try {
+                                            //calculate student position
+                    $getAllTotalMarks = AssessmentTableTotal::where(['schoolid'=>Auth::user()->schoolid,
+                                        'classid'=>$request->class_id, 'subjectid'=>$request->subjectid, 'term' =>$schooldetails->term, 'session'=>$schooldetails->schoolsession, 'sectionid'=>$request->section_id,])->orderBy('totals', 'desc')->get();
+
+                        $subjectscrorearray = array();
+                        
+                        for ($i=0; $i < count($getAllTotalMarks); $i++) { 
+                            $score = (int)$getAllTotalMarks[$i]['totals'];
+                                array_push($subjectscrorearray, $score);
+                        }
+            
+                        for ($i=0; $i < count($getAllTotalMarks); $i++) { 
+            
+                            $mainScore = (int)$getAllTotalMarks[$i]['totals'];
+                            $mainScoreId = $getAllTotalMarks[$i]['id'];
+                            $positiongotten = array_search($mainScore, $subjectscrorearray);
+                            $newPosition = $positiongotten + 1;
+            
+                            DB::table('assessment_table_totals')->where('id',$mainScoreId)->update(array(
+                                'position'=>$newPosition
+                            ));
+            
+                        }
+            
+                        DB::commit();
+                        // all good
+                        // return $subjectscrorearray;
+                        
+                    } catch (\Exception $e) {
+                        DB::rollback();
+            
+                        return $e;
+                        // something went wrong
+                    }
+
 
                 return response()->json(['response'=>"Process was successful", 'code'=>200], 200);
 
