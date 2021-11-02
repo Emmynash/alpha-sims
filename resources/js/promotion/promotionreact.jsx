@@ -18,6 +18,7 @@ function Promotion() {
     const [promotionFromSection, setPromotionSection] = useState(0)
     const [promotionToId, setPromotionToId] = useState('')
     const [addstudentSec, setaddstudent_sec] = useState([])
+    const [isLoading, setisLoading] = useState(false)
 
     useEffect(() => {
         fetchSchoolDetails()
@@ -41,9 +42,11 @@ function Promotion() {
 
 
     function fetchSchoolDetails() {
+        setisLoading(true);
 
         axios.get('/get_school_details').then(response=> {
             console.log(response);
+            setisLoading(false)
             // console.log(setJ)
             setPromotionAverage(response.data.schoolDetails.promotionaverage)
             setAverageStatus(response.data.schoolDetails.averagestatus)
@@ -55,6 +58,7 @@ function Promotion() {
 
 
         }).catch(e=>{
+            setisLoading(false)
             console.log(e);
         });
 
@@ -86,6 +90,7 @@ function Promotion() {
     }
 
     function getStudentForPromotion() {
+        setisLoading(true)
         const data = new FormData()
         data.append("promofromclass", promotionFromClass),
         data.append("promofromsection", promotionFromSection),
@@ -95,15 +100,20 @@ function Promotion() {
                 "Content-type": "application/json"
             }
         }).then(response=>{
-            console.log(response)
+            setisLoading(false)
+            console.log(response.data)
             if(response.data.success == "nopromo"){
+                
                 setPromotionToClass("GRAD")
+                // setPromotionToId(response.data.success.classlist_secs[0].id)
+                setaddstudent_sec(response.data.addstudent_sec)
             }else{
                 setPromotionToClass(response.data.success.classlist_secs[0].classname)
                 setPromotionToId(response.data.success.classlist_secs[0].id)
                 setaddstudent_sec(response.data.success.addstudent_sec)
             }
         }).catch(e=>{
+            setisLoading(false)
             console.log(e)
 
         })
@@ -116,6 +126,8 @@ function Promotion() {
             myalert("Must not be Zero", 'error')
         }else{
 
+            setisLoading(true)
+
             const data = new FormData()
             data.append("average", promotionAverage),
             data.append('key', 'averageMark')
@@ -125,7 +137,7 @@ function Promotion() {
                 }
             }).then(response=>{
                 console.log(response)
-
+                setisLoading(false)
                 if (response.data.response == "success") {
                     myalert("Promotion Average Updated Successfully", 'success')
                 }else{
@@ -133,6 +145,7 @@ function Promotion() {
                 }
     
             }).catch(e=>{
+                setisLoading(false)
                 console.log(e)
             })
         }
@@ -143,7 +156,7 @@ function Promotion() {
         if (promotionAverage == 0) {
             myalert("Must not be Zero", 'error')
         }else{
-
+            setisLoading(true)
             const data = new FormData()
             data.append("average", status),
             data.append('key', '')
@@ -153,20 +166,21 @@ function Promotion() {
                 }
             }).then(response=>{
                 console.log(response)
-
+                setisLoading(false)
                 if (response.data.response == "success") {
                     myalert("Promotion Status Updated Successfully", 'success')
                 }else{
                     myalert("Unknown Error", 'error')
                 }
             }).catch(e=>{
+                setisLoading(false)
                 console.log(e)
             })
         }
     }
 
     function promoteStudent() {
-        
+        setisLoading(true)
         const data = new FormData()
         data.append("classfrom", promotionFromClass),
         data.append("classto", promotionToId),
@@ -182,21 +196,31 @@ function Promotion() {
             }
         }).then(response=>{
             console.log(response)
-            if (response.data.response == "success") {
-                myalert("Promotion Successful", 'success')
+            setisLoading(false)
+            if (response.data.code == "200") {
+                myalert(response.data.message, 'success')
+                getStudentForPromotion();
             }else{
-                myalert("Unknown Error", 'error')
+                myalert(response.data.message, 'error')
             }
 
 
         }).catch(e=>{
             console.log(e)
+            setisLoading(false)
             myalert("Unknown Error", 'error')
         })
     }
 
     return(
         <div>
+        {isLoading ? <div className="text-center">
+                    <div class="spinner-border"></div>
+            </div>:''}
+            {isLoading ? <div style={{ position:'absolute', top:'0', bottom:'0', left:'0', right:'0', zIndex:'1000', background:'white', opacity:'0.4' }}>
+
+            </div>:""}
+
             <div className="card">
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-6">

@@ -104,30 +104,7 @@ class StudentController_sec extends Controller
             $validator = Validator::make($request->all(),[
                 'studentclassallocated' => 'required',
                 'studentsectionallocated' => 'required',
-<<<<<<< HEAD
-                // 'studenttype' => 'required',
-                // 'studentgender' => 'required',
-                // 'studentreligion' => 'required',
-                // 'fathersname' => 'required',
-                // 'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                // 'mothersname' => 'required',
-                // 'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                // 'dateofbirth' => 'required',
-                // 'studenthouse' => 'required',
-                // 'studentclub' => 'required',
-                // 'studentaddress_sec' => 'required',
                 'admissionname' => 'required',
-                // 'firstname' => 'required',
-                // 'middlename' => 'required',
-                // 'lastname' => 'required',
-                // 'phonenumber' => 'required',
-                // 'email' => 'required|email',
-                // 'states' => 'required',
-                // 'lga' => 'required',
-                // 'hometown' => 'required',
-=======
-                'admissionname' => 'required',
->>>>>>> f685bbfef1c5e9150ceb31ef7385dff081d92adb
                 'admissiondate'=>'required'
             ]);
 
@@ -149,9 +126,6 @@ class StudentController_sec extends Controller
                 return response()->json(['errors'=>$freshRegistration]);
             }
     
-<<<<<<< HEAD
-
-=======
     
             $rollNumberProcess = $this->addstudent_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $request->input('studentclassallocated')])->get();
     
@@ -201,7 +175,6 @@ class StudentController_sec extends Controller
             $user->assignRole('Student');
     
             return response()->json(['response'=>'success']);
->>>>>>> f685bbfef1c5e9150ceb31ef7385dff081d92adb
 
         }else{
 
@@ -284,22 +257,22 @@ class StudentController_sec extends Controller
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        if ($schooldetails->schooltype == "Primary") {
+        // if ($schooldetails->schooltype == "Primary") {
 
-            $studentDetails = Addstudent::where('usernamesystem', Auth::user()->id)->first();
+        //     $studentDetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
 
-            $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
-                                ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
-                                ->select('amount_tables.*', 'payment_categories.categoryname')->get();
+        //     $schoolData = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+        //                         ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
+        //                         ->select('amount_tables.*', 'payment_categories.categoryname')->get();
     
             
-            $sumAmount = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
-                        ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
-                        ->select('amount_tables.*', 'payment_categories.categoryname')->sum('amount');
+        //     $sumAmount = AmountTable::join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
+        //                 ->where(['amount_tables.class_id'=>$studentDetails->classid, 'amount_tables.school_id'=>Auth::user()->schoolid])
+        //                 ->select('amount_tables.*', 'payment_categories.categoryname')->sum('amount');
     
-            return view('secondary.student.fees', compact('schoolData', 'sumAmount', 'schooldetails'));
+        //     return view('secondary.student.fees', compact('schoolData', 'sumAmount', 'schooldetails'));
             
-        }else{
+        // }else{
 
            $studentDetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
 
@@ -314,7 +287,7 @@ class StudentController_sec extends Controller
     
             return view('secondary.student.fees', compact('schoolData', 'sumAmount', 'schooldetails'));
 
-        }
+        // }
 
 
     }
@@ -324,18 +297,18 @@ class StudentController_sec extends Controller
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        if ($schooldetails->schooltype == "Primary") {
+        // if ($schooldetails->schooltype == "Primary") {
 
-            $feeInvoices = FeesInvoice::
-            join('classlists', 'classlists.id','=','fees_invoices.classid')
-                    ->select('fees_invoices.*', 'classlists.classnamee as classname')
-                    ->where(['system_id'=>Auth::user()->id])->get();
+        //     $feeInvoices = FeesInvoice::
+        //     join('classlists', 'classlists.id','=','fees_invoices.classid')
+        //             ->select('fees_invoices.*', 'classlists.classnamee as classname')
+        //             ->where(['system_id'=>Auth::user()->id])->get();
 
             
 
-            return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails'));
+        //     return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails'));
             
-        }else{
+        // }else{
             
             $feeInvoices = FeesInvoice::
             join('classlist_secs', 'classlist_secs.id','=','fees_invoices.classid')
@@ -347,7 +320,7 @@ class StudentController_sec extends Controller
             $paymentRecord = PaymentRecord::where(['regno'=>$getUserRegNo->id])->get();
 
             return view('secondary.student.transaction', compact('feeInvoices', 'schooldetails', 'paymentRecord'));
-        }
+        // }
 
 
     }

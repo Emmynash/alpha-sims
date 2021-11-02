@@ -10,7 +10,11 @@
     "require": {
         "php": "^8.0.0",
         "barryvdh/laravel-dompdf": "^0.9.0",
+<<<<<<< HEAD
         "doctrine/dbal": "^3.1",
+=======
+        "cloudinary-labs/cloudinary-laravel": "^1.0",
+>>>>>>> 856cc416354918c06f16f5a527775d90b213e4e2
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^7.3.0",
         "laravel/framework": "^8.0",

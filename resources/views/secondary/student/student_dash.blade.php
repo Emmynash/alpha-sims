@@ -2,7 +2,13 @@
 
 @section('content')
 
-@include('layouts.aside_sec')
+
+
+@if ($mainStudentDetails['schooldetails']->schooltype == "Primary")
+@include('layouts.asideside') 
+@else
+  @include('layouts.aside_sec')
+@endif
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
