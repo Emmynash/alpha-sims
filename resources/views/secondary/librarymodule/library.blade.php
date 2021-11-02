@@ -370,7 +370,7 @@
                                     if (data.data.data.length >0) {
                                         for (let index = 0; index < data.data.data.length; index++) {
                                         const element = data.data.data[index];
-
+                                            console.log(element)
                                         var available = "";
                                         var borrowed = "";
 
@@ -396,7 +396,7 @@
                                         
                                         // document.getElementById(idforabouttext).value = element.aboutbook;
 
-                                        html += "<div class='col-md-2' style='margin-bottom: 30px;'><div class='card' style='height: 200px; margin-bottom:5px; display: flex; flex-direction: column;'>"+"<div class='text-center' style='height: 70%;'><img src='/storage/cover/"+element.file+"' alt='' width='auto' height='100%'></div>"+"<div class='default-color-dark' style='height: 30%;'><div class='text-center' style='display: flex; flex-direction: column;''>"+"<i class='text-white' style='font-style: normal; font-size: 10px;'>"+element.booktitle+"</i>"+"<h5 class='cat_text'><i class='text-white' style='font-style: normal; font-size: 10px;'>"+element.categoryname+"</i></h5>"+"</div></div>"+"<div class='default-color-dark' style='display: flex; align-items: center; justify-content: center; margin-bottom: -5px;'><button onclick=\"detailsModal('"+element.booktitle+"', '"+idforabouttext+"', '"+element.bookauthor+"', '"+element.categoryname+"', '"+element.id+"', '"+element.file+"', '"+element.bookisbn+"', '"+element.datebook+"', '"+element.booktype+"', '"+element.fileebook+"')\" style='padding: 5px; font-size: 9px;' class='btn btn-sm btn-info'><i class='fas fa-eye'></i> Details</button><textarea id='"+idforabouttext+"' style='display: none;'>"+element.aboutbook+"</textarea></div>"+"</div></div>";
+                                        html += "<div class='col-md-2' style='margin-bottom: 30px;'><div class='card' style='height: 200px; margin-bottom:5px; display: flex; flex-direction: column;'>"+"<div class='text-center' style='height: 70%;'><img src='storage/cover/"+element.file+"' alt='' width='auto' height='100%'></div>"+"<div class='default-color-dark' style='height: 30%;'><div class='text-center' style='display: flex; flex-direction: column;''>"+"<i class='text-white' style='font-style: normal; font-size: 10px;'>"+element.booktitle+"</i>"+"<h5 class='cat_text'><i class='text-white' style='font-style: normal; font-size: 10px;'>"+element.categoryname+"</i></h5>"+"</div></div>"+"<div class='default-color-dark' style='display: flex; align-items: center; justify-content: center; margin-bottom: -5px;'><button onclick=\"detailsModal('"+element.booktitle+"', '"+idforabouttext+"', '"+element.bookauthor+"', '"+element.categoryname+"', '"+element.id+"', '"+element.file+"', '"+element.bookisbn+"', '"+element.datebook+"', '"+element.booktype+"', '"+element.fileebook+"')\" style='padding: 5px; font-size: 9px;' class='btn btn-sm btn-info'><i class='fas fa-eye'></i> Details</button><textarea id='"+idforabouttext+"' style='display: none;'>"+element.aboutbook+"</textarea></div>"+"</div></div>";
                                             
                                         }
                                         $("#bookssgotten").html(html);
