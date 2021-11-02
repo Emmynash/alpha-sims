@@ -24,7 +24,7 @@
           <img id="profileimgmainpix" src="{{asset('storage/schimages/'.Auth::user()->profileimg)}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-        <a href="#" class="d-block">{{ Auth::user()->firstname }} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</a>
+        
         </div>
         {{-- <div class="info">
           <a href="#" class="d-block">{{ Auth::user()->role }}</a>

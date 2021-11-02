@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Addpost;
 use App\Addsection_sec;
+use App\Addstudent_sec;
 use App\Addsubject_sec;
 use App\AssignmentSubmission;
 use App\AssignmentTable;
@@ -18,12 +19,13 @@ class AssignmentController extends Controller
     public function index()
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $getClassid = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
 
         $getAssignments = AssignmentTable::join('addsubject_secs', 'addsubject_secs.id','=','assignment_tables.subjectid')
                                     ->join('classlist_secs', 'classlist_secs.id','=','assignment_tables.classid')
                                     ->join('addsection_secs', 'addsection_secs.id','=','assignment_tables.sectionid')
                                     ->select('assignment_tables.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname')
-                                    ->where(['session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term])->get();
+                                    ->where(['session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'assignment_tables.classid'=>$getClassid->classid, 'assignment_tables.sectionid'=>$getClassid->studentsection])->get();
 
         return view('secondary.assignment.assignment', compact('schooldetails', 'getAssignments'));
     }
