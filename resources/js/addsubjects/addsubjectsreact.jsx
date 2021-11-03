@@ -137,26 +137,15 @@ function AddSubject() {
             setClasslist(response.data.classesAll)
             setsubjectcount(response.data.allsubjects.length)
             setallsubjects(response.data.allSubjectmain)
-            setCoreSubjects(response.data.coresubjects.length)
             setelectivesubjectscount(response.data.electivesubjects.length)
             setschoolsection(response.data.schoolsection)
-            setexamsstatus(response.data.schoolDetails.exams)
-            setca1status(response.data.schoolDetails.ca1)
-            setca2status(response.data.schoolDetails.ca2)
-            setca3status(response.data.schoolDetails.ca3)
             setgetElectivesSettingNumber(response.data.getElectivesSettingNumber)
             setschooltype(response.data.schoolDetails.schooltype)
 
             if (response.data.subjectScores == null) {
-                setExamsMark(0)
-                setCa1Mark(0)
-                setCa2Mark(0)
-                setCa3Mark(0)
+
             }else{
-                setExamsMark(response.data.subjectScores.examsfull)
-                setCa1Mark(response.data.subjectScores.ca1full)
-                setCa2Mark(response.data.subjectScores.ca2full)
-                setCa3Mark(response.data.subjectScores.ca3full)
+
             }
 
         }).catch(e=>{

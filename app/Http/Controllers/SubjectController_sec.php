@@ -51,32 +51,38 @@ class SubjectController_sec extends Controller
 
     public function addsubject_sec(){
         
-        $classesAll = $this->classlist_sec->where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
+        try {
 
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+            $classesAll = $this->classlist_sec->where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
 
-        $allsubjects = Addsubject_sec::join('classlist_secs', 'classlist_secs.id', '=', 'addsubject_secs.classid')
-                ->leftJoin('addsection_secs', 'addsection_secs.id','=','addsubject_secs.subjectsectione')
-                ->select('addsubject_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')
-                ->where('addsubject_secs.schoolid', Auth::user()->schoolid)->get();
-
-        $allSubjectmain = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->get();
-
-        // $coresubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'2'])->get();
-
-        // $electivesubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'1'])->get();
-
-        $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
-
-        $subjectScores = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
-
-        $getElectivesSettingNumber = Electives_sec::join('classlist_secs', 'classlist_secs.id','=','electives_secs.classid')
-                                    ->join('addsection_secs', 'addsection_secs.id','=','electives_secs.sectionid')
-                                    ->where('electives_secs.schoolid',Auth::user()->schoolid)
-                                    ->select('electives_secs.*', 'addsection_secs.sectionname', 'classlist_secs.classname')->get();
-        
-
-        return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'schoolsection'=>$schoolsection, 'subjectScores'=>$subjectScores, 'getElectivesSettingNumber'=>$getElectivesSettingNumber, 'allSubjectmain'=>$allSubjectmain]);
+            $schoolDetails = Addpost::find(Auth::user()->schoolid);
+    
+            $allsubjects = Addsubject_sec::join('classlist_secs', 'classlist_secs.id', '=', 'addsubject_secs.classid')
+                    ->select('addsubject_secs.*', 'classlist_secs.classname',)
+                    ->where('addsubject_secs.schoolid', Auth::user()->schoolid)->get();
+    
+            $allSubjectmain = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->get();
+    
+            // $coresubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'2'])->get();
+    
+            // $electivesubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'1'])->get();
+    
+            $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
+    
+            $subjectScores = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
+    
+            $getElectivesSettingNumber = Electives_sec::join('classlist_secs', 'classlist_secs.id','=','electives_secs.classid')
+                                        ->join('addsection_secs', 'addsection_secs.id','=','electives_secs.sectionid')
+                                        ->where('electives_secs.schoolid',Auth::user()->schoolid)
+                                        ->select('electives_secs.*', 'addsection_secs.sectionname', 'classlist_secs.classname')->get();
+            
+    
+            return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'schoolsection'=>$schoolsection, 'subjectScores'=>$subjectScores, 'getElectivesSettingNumber'=>$getElectivesSettingNumber, 'allSubjectmain'=>$allSubjectmain]);
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+        }
     }
 
     public function store(Request $request){
