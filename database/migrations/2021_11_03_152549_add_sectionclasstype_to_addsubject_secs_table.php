@@ -14,7 +14,7 @@ class AddChangeClassidToAddsubjectSecsTable extends Migration
     public function up()
     {
         Schema::table('addsubject_secs', function (Blueprint $table) {
-            $table->integer('classid')->nullable()->change();
+            $table->integer('sectionclasstype');
         });
     }
 
@@ -26,7 +26,7 @@ class AddChangeClassidToAddsubjectSecsTable extends Migration
     public function down()
     {
         Schema::table('addsubject_secs', function (Blueprint $table) {
-            $table->integer('classid')->nullable()->change();
+            $table->integer('sectionclasstype');
         });
     }
 }
