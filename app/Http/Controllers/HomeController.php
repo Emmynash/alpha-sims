@@ -332,7 +332,11 @@ class HomeController extends Controller
                 
                 if ($user->hasRole('Bursar')) {
 
-                    return view('pages.accounting.bursar');
+                   $getSchool = User::join('addposts', 'addposts.id','=','users.schoolid')
+                                ->where('users.id', Auth::user()->id)
+                                ->select('users.*', 'addposts.schoolname')->first();
+
+                    return view('pages.accounting.bursar', compact('getSchool'));
                     
                 }
 

@@ -71,7 +71,7 @@ class AssignmentController extends Controller
                                     ->join('classlist_secs', 'classlist_secs.id','=','assignment_tables.classid')
                                     ->join('addsection_secs', 'addsection_secs.id','=','assignment_tables.sectionid')
                                     ->select('assignment_tables.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname')
-                                    ->where(['subjectid'=>$id, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term])->get();
+                                    ->where(['subjectid'=>$id, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'assignment_tables.classid'=>$classid])->get();
     
             return view('secondary.assignment.viewassignment_teachers', compact('schooldetails', 'subject', 'classid', 'sectionid', 'getAssignments'));
         } catch (\Throwable $th) {
