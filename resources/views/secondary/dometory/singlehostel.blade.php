@@ -385,17 +385,17 @@
                     <div class="card shadow-none" style="border: 1px solid rgb(207, 203, 203); border-radius: 0px;">
 
                         <div class="text-center">
-                            <i id="infodatahostel" style="font-size: 10px; font-style: normal; color: red;"></i>
+                            <i id="infodatahostel" style="font-size: 10px; font-style: normal; color: blue;"></i>
                         </div>
 
                         <form id="addstudenthostelform" action="javascript:console.log('submited');" method="post" style="margin: 10px;">
                             @csrf
                             <div>
-                                <i style="font-size: 10px; font-style: normal; color: red;">Add students to hostel by REGNO (Seperate each REGNO with a comma for multile entries) </i>
+                                <i style="font-size: 10px; font-style: normal; color: blue;">Add students to hostel by REGNO (Seperate each REGNO with a comma for multile entries) </i>
                             </div>
                             <div class="form-group">
                                 <div style="display: flex; flex-direction: row;">
-                                    <button style="background: transparent; border: none; border-top: 1px solid rgb(196, 191, 191); border-bottom: 1px solid rgb(196, 191, 191); border-left: 1px solid rgb(196, 191, 191);" disabled><i class="fas fa-sort-numeric-up"></i></button>
+                                    <button style="background: transparent; border: none; border-top: 1px solid rgb(44, 141, 231); border-bottom: 1px solid rgb(196, 191, 191); border-left: 1px solid rgb(196, 191, 191);" disabled><i class="fas fa-sort-numeric-up"></i></button>
                                     <input type="text" name="addstudentstorooms" class="form-control form-control-sm" placeholder="eg. 23,45,67" style="border-radius: 0px;">
                                 </div>
                             </div>
@@ -493,7 +493,7 @@
 
                                 var newidcollapse = "#demo"+element.id;
                                 var newidcollapsehash = "demo"+element.id;
-                                var imguser = '/storage/schimages/'+element.profileimg;
+                                var imguser = element.profileimg == null ? 'https://gravatar.com/avatar/?s=200&d=retro' :'/storage/schimages/'+element.profileimg;
 
                                 console.log(newidcollapsehash)
 
@@ -546,3 +546,4 @@
      </script>
 </body>
 </html>
+

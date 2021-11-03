@@ -69764,6 +69764,7 @@ function Promotion() {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha/alpha-sims-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
 =======
 module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
@@ -69771,6 +69772,9 @@ module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-reac
 =======
 module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha-fix/alpha-sims-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
 >>>>>>> 856cc416354918c06f16f5a527775d90b213e4e2
+=======
+module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
+>>>>>>> f9d542d6a86cffa70f39f6193782593cb47f96f7
 
 
 /***/ })
