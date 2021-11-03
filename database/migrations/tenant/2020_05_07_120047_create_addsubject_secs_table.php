@@ -17,20 +17,7 @@ class CreateAddsubjectSecsTable extends Migration
             $table->bigIncrements('id');
             $table->string('schoolid');
             $table->string('classid');
-            $table->string('subjectcode');
             $table->string('subjectname');
-            $table->string('subjecttype');
-            $table->string('gradesystem');
-            $table->string('totalfull');
-            $table->string('totalpass');
-            $table->string('examfull');
-            $table->string('exampass');
-            $table->string('ca1full');
-            $table->string('ca1pass');
-            $table->string('ca2full');
-            $table->string('ca2pass');
-            $table->string('ca3full');
-            $table->string('ca3pass');
             $table->timestamps();
         });
     }
