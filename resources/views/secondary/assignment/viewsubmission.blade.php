@@ -71,22 +71,54 @@
                                           <p style="margin: 0px; padding-left: 10px; font-size: 13px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
                                       @endif
                                       
-                                      <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status:</p>
+                                      <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status: {{ $item->status == null || $item->status == 0 ? "Not Assessed":"Assessed" }}</p>
                                       <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Student name: {{ $item->firstname }} {{ $item->lastname }}</p>
+                                      @if(!Auth::user()->hasRole('Student'))
+                                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#assignmentremark{{ $item->id }}">Remark</button>
+                                      @endif
+                                      
                                     </div>
-                                    {{-- <div style="margin: 10px;">
-                                      <button type="submit" form="deleteassignment{{ $item->id }}" class="btn btn-sm btn-danger">Delete</button> --}}
-                                      {{-- <a href="{{ route('view_submission') }}"><button type="submit" class="btn btn-sm btn-success">View Submissions</button></a> --}}
-                                    {{-- </div> --}}
-                                    {{-- <form action="{{ route('deleteassignment', $item->id) }}" method="post" id="deleteassignment{{ $item->id }}">
-                                      @csrf
-                                      @method('delete')
-                                    </form> --}}
+                                    
                                   </div><!-- /.card-body -->
                                 </div>
                               </div><!-- /.container-fluid -->
                             </section>
                             <!-- /.content -->
+
+                            <!-- The Modal -->
+                            <div class="modal" id="assignmentremark{{ $item->id }}">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                  <!-- Modal Header -->
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">{{ $item->firstname }} {{ $item->lastname }}</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  </div>
+
+                                  <!-- Modal body -->
+                                  <div class="modal-body">
+                                    <form action="{{ route('remark_assignment') }}" method="post" id="remarkform{{ $item->id }}">
+                                      @csrf
+                                      <div class="form-group">
+                                          <textarea class="form-control form-control-sm" name="comment" id="" cols="30" rows="5" placeholder="comment"></textarea>
+                                      </div>
+                                      <div class="form-group">
+                                          <input type="number" name="score" class="form-control form-control-sm" id="" placeholder="enter score(optional)">
+                                      </div>
+                                      <input type="text" name="submissionid" id="" value={{ $item->id }}>
+                                    </form>
+                                  </div>
+
+                                  <!-- Modal footer -->
+                                  <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success btn-sm" form="remarkform{{ $item->id }}">Submit</button>
+                                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
                         
                     @endforeach
                     

@@ -71,6 +71,7 @@
                               </div>
                               <div style="margin: 10px;">
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#submitassignment{{ $item->id }}">Submit Assignment</button>
+                                <a href="{{ route('view_submission_student', ['subjectid'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid]) }}"><button class="btn btn-info btn-sm">View Submissions</button></a>
                               </div>
                             </div><!-- /.card-body -->
                           </div>

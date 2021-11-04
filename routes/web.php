@@ -656,6 +656,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
         Route::group(['middleware' => ['auth', 'role:Student']], function () { // assignment module
             Route::get('/assignment_student', 'AssignmentController@index')->name('assignment_student');
             Route::post('/assignment_submit', 'AssignmentController@submitAssignmentStudent')->name('assignment_submit');
+            Route::get('/view_submission_student/{subjectid}/{classid}/{sectionid}', 'AssignmentController@viewsubmissions')->name('view_submission_student');
             
         });
 
@@ -667,6 +668,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
             Route::post('/post_assignment', 'AssignmentController@post_assignment')->name('post_assignment');
             Route::delete('/deleteassignment/{id}', 'AssignmentController@delete')->name('deleteassignment');
             Route::get('/view_submission/{subjectid}/{classid}/{sectionid}', 'AssignmentController@viewsubmissions')->name('view_submission');
+            Route::post('/remark_assignment', 'AssignmentController@remarkAssignment')->name('remark_assignment');
         });
 
 });
