@@ -69381,6 +69381,11 @@ function Promotion() {
       addstudentSec = _useState22[0],
       setaddstudent_sec = _useState22[1];
 
+  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState24 = _slicedToArray(_useState23, 2),
+      isLoading = _useState24[0],
+      setisLoading = _useState24[1];
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
     return function () {// cleanup
@@ -69404,8 +69409,10 @@ function Promotion() {
   }
 
   function fetchSchoolDetails() {
+    setisLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_school_details').then(function (response) {
-      console.log(response); // console.log(setJ)
+      console.log(response);
+      setisLoading(false); // console.log(setJ)
 
       setPromotionAverage(response.data.schoolDetails.promotionaverage);
       setAverageStatus(response.data.schoolDetails.averagestatus);
@@ -69414,6 +69421,7 @@ function Promotion() {
       setClassSection(response.data.classsection);
       setpreviousSessionmain(response.data.previousSessionmain);
     })["catch"](function (e) {
+      setisLoading(false);
       console.log(e);
     });
   }
@@ -69443,22 +69451,27 @@ function Promotion() {
   }
 
   function getStudentForPromotion() {
+    setisLoading(true);
     var data = new FormData();
     data.append("promofromclass", promotionFromClass), data.append("promofromsection", promotionFromSection), data.append("promofromsession", previousSessionmain), axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/promotion_student_ftech_sec", data, {
       headers: {
         "Content-type": "application/json"
       }
     }).then(function (response) {
-      console.log(response);
+      setisLoading(false);
+      console.log(response.data);
 
       if (response.data.success == "nopromo") {
-        setPromotionToClass("GRAD");
+        setPromotionToClass("GRAD"); // setPromotionToId(response.data.success.classlist_secs[0].id)
+
+        setaddstudent_sec(response.data.addstudent_sec);
       } else {
         setPromotionToClass(response.data.success.classlist_secs[0].classname);
         setPromotionToId(response.data.success.classlist_secs[0].id);
         setaddstudent_sec(response.data.success.addstudent_sec);
       }
     })["catch"](function (e) {
+      setisLoading(false);
       console.log(e);
     });
   }
@@ -69468,6 +69481,7 @@ function Promotion() {
     if (promotionAverage == 0) {
       myalert("Must not be Zero", 'error');
     } else {
+      setisLoading(true);
       var data = new FormData();
       data.append("average", promotionAverage), data.append('key', 'averageMark');
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/update_promotion_average", data, {
@@ -69476,6 +69490,7 @@ function Promotion() {
         }
       }).then(function (response) {
         console.log(response);
+        setisLoading(false);
 
         if (response.data.response == "success") {
           myalert("Promotion Average Updated Successfully", 'success');
@@ -69483,6 +69498,7 @@ function Promotion() {
           myalert("Unknown Error", 'error');
         }
       })["catch"](function (e) {
+        setisLoading(false);
         console.log(e);
       });
     }
@@ -69493,6 +69509,7 @@ function Promotion() {
     if (promotionAverage == 0) {
       myalert("Must not be Zero", 'error');
     } else {
+      setisLoading(true);
       var data = new FormData();
       data.append("average", status), data.append('key', '');
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/update_promotion_average", data, {
@@ -69501,6 +69518,7 @@ function Promotion() {
         }
       }).then(function (response) {
         console.log(response);
+        setisLoading(false);
 
         if (response.data.response == "success") {
           myalert("Promotion Status Updated Successfully", 'success');
@@ -69508,12 +69526,14 @@ function Promotion() {
           myalert("Unknown Error", 'error');
         }
       })["catch"](function (e) {
+        setisLoading(false);
         console.log(e);
       });
     }
   }
 
   function promoteStudent() {
+    setisLoading(true);
     var data = new FormData();
     data.append("classfrom", promotionFromClass), data.append("classto", promotionToId), data.append("promofromsection", promotionFromSection), data.append("previoussession", previousSessionmain), data.append("newsession", schoolSession), data.append("promotionaverage", promotionAverage), data.append("promotewithaverage", averagestatus), data.append("nextClassDisplayname", poromotionToClass);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/promotion_main_query", data, {
@@ -69522,19 +69542,37 @@ function Promotion() {
       }
     }).then(function (response) {
       console.log(response);
+      setisLoading(false);
 
-      if (response.data.response == "success") {
-        myalert("Promotion Successful", 'success');
+      if (response.data.code == "200") {
+        myalert(response.data.message, 'success');
+        getStudentForPromotion();
       } else {
-        myalert("Unknown Error", 'error');
+        myalert(response.data.message, 'error');
       }
     })["catch"](function (e) {
       console.log(e);
+      setisLoading(false);
       myalert("Unknown Error", 'error');
     });
   }
 
-  return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "text-center"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      "class": "spinner-border"
+    })) : '', isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      style: {
+        position: 'absolute',
+        top: '0',
+        bottom: '0',
+        left: '0',
+        right: '0',
+        zIndex: '1000',
+        background: 'white',
+        opacity: '0.4'
+      }
+    }) : "", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "card"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row",
@@ -69724,7 +69762,19 @@ function Promotion() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha/alpha-sims-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
+=======
 module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
+>>>>>>> f685bbfef1c5e9150ceb31ef7385dff081d92adb
+=======
+module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha-fix/alpha-sims-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
+>>>>>>> 856cc416354918c06f16f5a527775d90b213e4e2
+=======
+module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/apppromotion.js */"./resources/js/apppromotion.js");
+>>>>>>> f9d542d6a86cffa70f39f6193782593cb47f96f7
 
 
 /***/ })

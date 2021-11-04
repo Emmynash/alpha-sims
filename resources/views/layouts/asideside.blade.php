@@ -24,7 +24,7 @@
           <img id="profileimgmainpix" src="{{asset('storage/schimages/'.Auth::user()->profileimg)}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-        <a href="#" class="d-block">{{ Auth::user()->firstname }} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</a>
+        
         </div>
         {{-- <div class="info">
           <a href="#" class="d-block">{{ Auth::user()->role }}</a>
@@ -337,6 +337,12 @@
                 </a>
               </li>
             @endcan
+            <li class="nav-item">
+              <a href="{{ route('assignment_teachers') }}" class="nav-link">
+                <i class="fas fa-cogs nav-icon"></i>
+                <p>Assignment</p>
+              </a>
+            </li>
             @endif
 
             @can('take teachers attendance')
@@ -581,88 +587,55 @@
               </form>
             </li>
 
-
-
-
-
-
-
-
-
-            {{-- @if (isset($studentDetails)) --}}
-
          
-                @if (Auth::user()->hasRole('Student'))
-
-                <li class="nav-item has-treeview">
-                    <a id="studentoptions" href="#" class="nav-link">
-                      <i class="nav-icon fas fa-align-left"></i> 
-                      <p>
-                        Students Options
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a id="examsmarkstudent" href="/exammark" class="nav-link">
-                           <i class="nav-icon fas fa-clipboard-list"></i> 
-                          <p>Get exams marks</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="/viewallstudents" class="nav-link">
-                           <i class="nav-icon fas fa-clipboard-list"></i> 
-                          <p>Get attendance status</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="/result" class="nav-link">
-                          <i class="nav-icon fas fa-vials"></i> 
-                          <p>Result</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon far fa-money-bill-alt"></i> 
-                      <p>
-                        Payments
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="{{ route('student_fees') }}" class="nav-link">
-                          <i class="nav-icon fas fa-plus"></i> 
-                          <p>Invoices</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="{{ route('payment_history') }}" class="nav-link">
-                           <i class="nav-icon fas fa-clipboard-list"></i> 
-                          <p>Transactions</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); 
-                    document.getElementById('logout-form').submit();">
-                      <i class="nav-icon fas fa-sign-out-alt"></i> 
-                      <p>
-                        SignOut
-                      </p>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                      @csrf
-                    </form>
-                  </li>
+            @if(Auth::user()->hasRole('Student'))
+            <li class="nav-item has-treeview">
+              <a id="resultmainscroll" href="#" class="nav-link">
+                  <i class="fas fa-vials nav-icon"></i>
+                <p>
+                  Result
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a id="resultmaingenscroll" href="/result_view_sec" class="nav-link">
+                    <i class="far fa-eye nav-icon"></i>
+                    <p>Generate</p> 
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('student_fees') }}" class="nav-link">
+                <i class="fas fa-wallet nav-icon"></i>
+                <p>Fee Payment</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('payment_history') }}" class="nav-link">
+                <i class="fas fa-wallet nav-icon"></i>
+                <p>Transactions</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('manage_subject_student') }}" class="nav-link">
+                <i class="fas fa-wallet nav-icon"></i>
+                <p>Manage Subjects</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('assignment_student') }}" class="nav-link">
+                <i class="fas fa-cogs nav-icon"></i>
+                <p>Assignment</p>
+              </a>
+            </li>
+            @endif
 
 {{--------------------------------------------------------------------------------------}}
 {{--                                 teachers role                                    --}}
 {{--------------------------------------------------------------------------------------}}
-
+{{-- 
               @if (Auth::user()->role == "Teacher")
         
                   <li class="nav-item has-treeview">
@@ -702,12 +675,7 @@
                           <p>Add New</p>
                         </a>
                       </li>
-                      {{-- <li class="nav-item">
-                        <a id="viewmarkslist" href="/viewmarks" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Mark list</p>
-                        </a>
-                      </li> --}}
+                     
                     </ul>
                   </li>
         
@@ -744,12 +712,7 @@
                           <p>Generate</p>
                         </a>
                       </li>
-                      {{-- <li class="nav-item">
-                        <a href="/result" class="nav-link">
-                           <i class="fas fa-clipboard-list"></i> 
-                          <p>Search</p>
-                        </a>
-                      </li> --}}
+                     
                     </ul>
                   </li>
         
@@ -758,7 +721,16 @@
                       <i class="nav-icon fas fa-exchange-alt"></i> 
                       <p>
                         Promotion
-                        {{-- <i class="right fas fa-angle-left"></i> --}}
+                        
+                      </p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item has-treeview">
+                    <a id="promotionaside" href="/promotion" class="nav-link">
+                      <i class="nav-icon fas fa-exchange-alt"></i> 
+                      <p>
+                        Assignment
                       </p>
                     </a>
                   </li>
@@ -775,13 +747,13 @@
                       @csrf
                     </form>
                   </li>
-                  @endif
+                  @endif --}}
 {{-----------------------------------------------------------------------------------}}
 {{--                              supervisor                                       --}}
 {{-----------------------------------------------------------------------------------}}
                 @if (Auth::user()->role == "Supervisor")
 
-                <li class="nav-item has-treeview">
+                {{-- <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-address-card"></i> 
                     <p>
@@ -803,10 +775,10 @@
                       </a>
                     </li>
                   </ul>
-                </li>
+                </li> --}}
                     
                 @endif
-              @endif
+ 
 
 
           

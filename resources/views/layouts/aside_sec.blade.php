@@ -23,7 +23,7 @@
             </form>
             {{-- <button id="button">trigger file selection</button> --}}
           </div>
-          <img id="profileimgmainpix" src="{{asset( Auth::user()->profileimg !=null ? 'storage/schimages/'.Auth::user()->profileimg:'https://drive.google.com/uc?export=view&id=189c7bIDY4gI8PfFaP-xA3t_Udgle48YG')}}" class="img-circle elevation-2" alt="User Image">
+          <img id="profileimgmainpix" src="{{asset( Auth::user()->profileimg !=null ? 'storage/schimages/'.Auth::user()->profileimg:'https://gravatar.com/avatar/?s=200&d=retro')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
         <a href="{{ route('myprofile') }}" class="d-block">{{Auth::user()->firstname}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</a>
