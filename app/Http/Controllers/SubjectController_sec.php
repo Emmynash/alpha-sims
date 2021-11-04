@@ -10,6 +10,7 @@ use App\Addpost;
 use App\Addsection_sec;
 use App\CLassSubjects;
 use App\Electives_sec;
+use App\RecordMarks;
 use App\SubjectScoreAllocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,11 +22,12 @@ class SubjectController_sec extends Controller
     private $addsubject_sec;
     private $addmark_sec;
 
-    function __construct(Classlist_sec $classlist_sec, Addsubject_sec $addsubject_sec, Addmark_sec $addmark_sec)
+    function __construct(Classlist_sec $classlist_sec, Addsubject_sec $addsubject_sec, Addmark_sec $addmark_sec, RecordMarks $recordMarks)
     {
         $this->classlist_sec = $classlist_sec;
         $this->addsubject_sec = $addsubject_sec;
         $this->addmark_sec = $addmark_sec;
+        $this->recordMarks = $recordMarks;
     }
 
     public function index(){ 
@@ -139,9 +141,9 @@ class SubjectController_sec extends Controller
         $subjectname = $request->subjectname;
         $subjecttype = $request->subjecttype;
 
-
         
-        $checkIfSubjectHasAMarkRecord = $this->addmark_sec->where(["subjectid"=>$subjectid, "schoolid"=>Auth::user()->schoolid])->get();
+        
+        $checkIfSubjectHasAMarkRecord = $this->recordMarks->where(["subjectid"=>$subjectid, "school_id"=>Auth::user()->schoolid])->get();
         
         if(count($checkIfSubjectHasAMarkRecord) > 0){
             
@@ -353,12 +355,8 @@ class SubjectController_sec extends Controller
     {
 
         try {
+
             $getClassSubject = CLassSubjects::find($subjectidAlloc);
-
-            $deleteAddedMarks = Addmark_sec::where(['classid'=>$getClassSubject->classid, 'section'=>$getClassSubject->sectionid, 'subjectid'=>$getClassSubject->subjectid])->delete();
-
-            // Addmark_sec::destroy($deleteAddedMarks);
-
             $getClassSubject->delete();
 
             return response()->json(['response'=>"success"]);

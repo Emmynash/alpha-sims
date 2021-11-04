@@ -86441,78 +86441,43 @@ function AddSubject() {
 
   var _useState29 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState30 = _slicedToArray(_useState29, 2),
-      ca1status = _useState30[0],
-      setca1status = _useState30[1];
+      classElectives = _useState30[0],
+      setClassElectives = _useState30[1];
 
   var _useState31 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState32 = _slicedToArray(_useState31, 2),
-      ca2status = _useState32[0],
-      setca2status = _useState32[1];
+      sectionElectives = _useState32[0],
+      setSectionElectives = _useState32[1];
 
   var _useState33 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState34 = _slicedToArray(_useState33, 2),
-      ca3status = _useState34[0],
-      setca3status = _useState34[1];
+      numberElectives = _useState34[0],
+      setNumberElectives = _useState34[1];
 
-  var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState36 = _slicedToArray(_useState35, 2),
-      examsmark = _useState36[0],
-      setExamsMark = _useState36[1];
+      getElectivesSettingNumber = _useState36[0],
+      setgetElectivesSettingNumber = _useState36[1];
 
-  var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState38 = _slicedToArray(_useState37, 2),
-      ca1mark = _useState38[0],
-      setCa1Mark = _useState38[1];
-
-  var _useState39 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
-      _useState40 = _slicedToArray(_useState39, 2),
-      ca2mark = _useState40[0],
-      setCa2Mark = _useState40[1];
-
-  var _useState41 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
-      _useState42 = _slicedToArray(_useState41, 2),
-      ca3mark = _useState42[0],
-      setCa3Mark = _useState42[1];
-
-  var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
-      _useState44 = _slicedToArray(_useState43, 2),
-      classElectives = _useState44[0],
-      setClassElectives = _useState44[1];
-
-  var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
-      _useState46 = _slicedToArray(_useState45, 2),
-      sectionElectives = _useState46[0],
-      setSectionElectives = _useState46[1];
-
-  var _useState47 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
-      _useState48 = _slicedToArray(_useState47, 2),
-      numberElectives = _useState48[0],
-      setNumberElectives = _useState48[1];
-
-  var _useState49 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
-      _useState50 = _slicedToArray(_useState49, 2),
-      getElectivesSettingNumber = _useState50[0],
-      setgetElectivesSettingNumber = _useState50[1];
-
-  var _useState51 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
-      _useState52 = _slicedToArray(_useState51, 2),
-      isLoading = _useState52[0],
-      setisLoading = _useState52[1];
+      isLoading = _useState38[0],
+      setisLoading = _useState38[1];
 
   var _React$useState = react__WEBPACK_IMPORTED_MODULE_0___default.a.useState(false),
       _React$useState2 = _slicedToArray(_React$useState, 2),
       modalIsOpen = _React$useState2[0],
       setIsOpen = _React$useState2[1];
 
-  var _useState53 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
-      _useState54 = _slicedToArray(_useState53, 2),
-      classSubjectFetched = _useState54[0],
-      setclassSubjectFetched = _useState54[1];
+  var _useState39 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState40 = _slicedToArray(_useState39, 2),
+      classSubjectFetched = _useState40[0],
+      setclassSubjectFetched = _useState40[1];
 
-  var _useState55 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
-      _useState56 = _slicedToArray(_useState55, 2),
-      show = _useState56[0],
-      setShow = _useState56[1];
+  var _useState41 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState42 = _slicedToArray(_useState41, 2),
+      show = _useState42[0],
+      setShow = _useState42[1];
 
   var handleClose = function handleClose() {
     return setShow(false);
@@ -86520,34 +86485,34 @@ function AddSubject() {
 
   var subtitle;
 
-  var _useState57 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+  var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     subjectname: '',
     classid: '',
     subjecttype: '',
     sectionid: '',
     subjectid: ''
   }),
-      _useState58 = _slicedToArray(_useState57, 2),
-      updatesubject = _useState58[0],
-      setUpdatesubject = _useState58[1];
+      _useState44 = _slicedToArray(_useState43, 2),
+      updatesubject = _useState44[0],
+      setUpdatesubject = _useState44[1];
 
-  var _useState59 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+  var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     subjectname: '',
     sectionclasstype: ''
   }),
-      _useState60 = _slicedToArray(_useState59, 2),
-      addsubjectdata = _useState60[0],
-      setSubjectData = _useState60[1];
+      _useState46 = _slicedToArray(_useState45, 2),
+      addsubjectdata = _useState46[0],
+      setSubjectData = _useState46[1];
 
-  var _useState61 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+  var _useState47 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     subjectid: '',
     classid: '',
     sectionid: '',
     subjecttype: ''
   }),
-      _useState62 = _slicedToArray(_useState61, 2),
-      asignSubjectClass = _useState62[0],
-      setasignSubjectClass = _useState62[1];
+      _useState48 = _slicedToArray(_useState47, 2),
+      asignSubjectClass = _useState48[0],
+      setasignSubjectClass = _useState48[1];
 
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   var columns = [{
@@ -86583,13 +86548,13 @@ function AddSubject() {
   function fetchSchoolDetails() {
     setisLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/get_all_subjects').then(function (response) {
-      console.log(response); // console.log(setJ)
+      console.log(response.data.schoolsection); // console.log(setJ)
 
       setisLoading(false);
       setClasslist(response.data.classesAll);
       setsubjectcount(response.data.allsubjects.length);
-      setallsubjects(response.data.allSubjectmain);
-      setelectivesubjectscount(response.data.electivesubjects.length);
+      setallsubjects(response.data.allSubjectmain); // setelectivesubjectscount(response.data.electivesubjects.length)
+
       setschoolsection(response.data.schoolsection);
       setgetElectivesSettingNumber(response.data.getElectivesSettingNumber);
       setschooltype(response.data.schoolDetails.schooltype);
@@ -86621,38 +86586,6 @@ function AddSubject() {
       } // callback that will be executed after this alert is removed
 
     });
-  }
-
-  function handleChangeClasslist(e) {
-    setselectedclass(e.target.value);
-  }
-
-  function handleChangeSubjectName(e) {
-    setSubjectName(e.target.value);
-  }
-
-  function handleChangeSubjectType(e) {
-    setSubjectType(e.target.value);
-  }
-
-  function handleChangeSection(e) {
-    setSubjectSectione(e.target.value);
-  }
-
-  function handleChangeExamsFull(e) {
-    setExamsMark(e.target.value);
-  }
-
-  function handleChangeCa1Full(e) {
-    setCa1Mark(e.target.value);
-  }
-
-  function handleChangeCa2Full(e) {
-    setCa2Mark(e.target.value);
-  }
-
-  function handleChangeCa3Full(e) {
-    setCa3Mark(e.target.value);
   }
 
   function handleClassChangeEllectives(e) {
@@ -86962,63 +86895,9 @@ function AddSubject() {
         marginLeft: '10px',
         fontWeight: 'bold'
       }
-    }, electivesubjectscount)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "card"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "row",
-      style: {
-        margin: '10px'
-      }
-    }, examsstatus == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-3"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "number",
-      onChange: function onChange(e) {
-        return handleChangeExamsFull(e);
-      },
-      value: examsmark,
-      placeholder: "Exams mark",
-      className: "form-control form-control-sm"
-    })) : "", ca1status == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-3"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "number",
-      onChange: function onChange(e) {
-        return handleChangeCa1Full(e);
-      },
-      value: ca1mark,
-      placeholder: "CA1",
-      className: "form-control form-control-sm"
-    })) : "", ca2status == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-3"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "number",
-      placeholder: "CA2",
-      onChange: function onChange(e) {
-        return handleChangeCa2Full(e);
-      },
-      value: ca2mark,
-      className: "form-control form-control-sm"
-    })) : "", ca3status == 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-12 col-md-3"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "number",
-      placeholder: "CA3",
-      onChange: function onChange(e) {
-        return handleChangeCa3Full(e);
-      },
-      value: ca3mark,
-      className: "form-control form-control-sm"
-    })) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      style: {
-        margin: '0px 0px 10px 10px'
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      onClick: updateScoresOrAdd,
-      className: "btn btn-sm btn-info badge"
-    }, "Save")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, electivesubjectscount)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "alert alert-warning"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", null, "Note: subject type 2 core, 1 elective")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", null, "Note: subject type 2 Senior Secondary Subjects, 1 Junior Secondary Subjects")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-4"
@@ -87077,12 +86956,12 @@ function AddSubject() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
       onChange: handleAsignSubject,
       name: "sectionid",
-      value: asignSubjectClass.sectionid,
       className: "form-control form-control-sm"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       value: ""
-    }, "Select Arm"), schoolsection.map(function (d) {
+    }, "Select Arm "), schoolsection.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          key: d.id + "section",
           value: d.id
         }, d.sectionname)
       );
@@ -87118,6 +86997,7 @@ function AddSubject() {
       }
     }, "Classes Offering the subject")), classSubjectFetched.length > 0 ? classSubjectFetched.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: d.id + "classfetched",
           style: {
             display: 'flex',
             margin: '5px'
@@ -87330,6 +87210,7 @@ function AddSubject() {
       }
     }, getElectivesSettingNumber.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: d.id + "elelectivessetting",
           className: "card",
           style: {
             width: '95%',
