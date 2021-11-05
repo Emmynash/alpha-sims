@@ -106,7 +106,7 @@
                                       <div class="form-group">
                                           <input type="number" name="score" class="form-control form-control-sm" id="" placeholder="enter score(optional)">
                                       </div>
-                                      <input type="text" name="submissionid" id="" value={{ $item->id }}>
+                                      <input type="hidden" name="submissionid" id="" value={{ $item->id }}>
                                     </form>
                                   </div>
 
