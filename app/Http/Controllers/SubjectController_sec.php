@@ -71,7 +71,7 @@ class SubjectController_sec extends Controller
     
             $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
     
-            $subjectScores = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
+            // $subjectScores = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
     
             $getElectivesSettingNumber = Electives_sec::join('classlist_secs', 'classlist_secs.id','=','electives_secs.classid')
                                         ->join('addsection_secs', 'addsection_secs.id','=','electives_secs.sectionid')
@@ -79,7 +79,7 @@ class SubjectController_sec extends Controller
                                         ->select('electives_secs.*', 'addsection_secs.sectionname', 'classlist_secs.classname')->get();
             
     
-            return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'schoolsection'=>$schoolsection, 'subjectScores'=>$subjectScores, 'getElectivesSettingNumber'=>$getElectivesSettingNumber, 'allSubjectmain'=>$allSubjectmain]);
+            return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'schoolsection'=>$schoolsection, 'getElectivesSettingNumber'=>$getElectivesSettingNumber, 'allSubjectmain'=>$allSubjectmain]);
             
         } catch (\Throwable $th) {
             //throw $th;
@@ -110,7 +110,7 @@ class SubjectController_sec extends Controller
                 return response()->json(['response'=>'fields']);
             }
 
-            $checkExist = Addsubject_sec::where(['schoolid'=>Auth::user()->schoolid, 'sectionclasstype'=>$request->input('sectionclasstype'), 'subjectname'=>strtoupper($request->input('subjectname'))])->get();
+            $checkExist = Addsubject_sec::where(['schoolid'=>Auth::user()->schoolid, 'subjectname'=>strtoupper($request->input('subjectname'))])->get();
 
             if ($checkExist->count()>0) {
                 return response()->json(['response'=>'duplicate']);

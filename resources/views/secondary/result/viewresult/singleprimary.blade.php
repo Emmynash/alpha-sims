@@ -15,8 +15,8 @@
 <body>
     
 
-    <div class="card" style="height: 50px; display: flex; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; right: 0; border-radius: 0px; z-index: 999;">
-        <div style="display: flex; flex-direction: row;">
+    <div class="card" style="height: 50px; display: flex; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; border-radius: 0px; z-index: 999;">
+        <div style="display: flex; flex-direction: row; padding: 10px;">
             {{-- <a href="/result_view_sec"><button class="btn btn-sm btn-danger" id="btnPrintback" style="margin-right: 10px;">Back</button></a> --}}
             <button class="btn btn-sm btn-success" id="btnPrint">Print Result</button>
         </div>
@@ -35,23 +35,25 @@
 
     <div id="printJS-form">
 
-        <div class="" style="margin-top: 60px;" id="printnotready">
+        <div class="" style="margin-top: 0px;" id="printnotready">
             <div class="" class="" style="width: 794px; margin: 0 auto;">
-                <div class="print-container" style="width: 794px; border: 2px solid black; border-style: dashed;">
+                <div class="print-container" style="width: 794px; margin: 0;">
                     <div style="display: flex;">
                         <div id="imagelogo" style="width: 25%; height: 100px; display: flex; align-items: center; justify-content: center;">
     
-                                {{-- @if ($addschool->schoolLogo != Null) --}}
-                                    <img src="{{ asset('storage/schimages/'.$addschool->schoolLogo) }}" alt="" width="90px" height="90px">
-                                {{-- @endif --}}
+                                 @if ($addschool->schoolLogo != Null)
+                                    <img src="{{ $addschool->schoolLogo }}" alt="" width="90px" height="90px">
+                                 @endif
                             
                         </div>
                         <div style="width: 75%; height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                            <i style="font-size: 30px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schoolname}}</i>
-                            <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schooladdress}}, {{$addschool->mobilenumber}}</i>
-                            <i style="font-size: 15px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;"></i>
-                            <div>
-                                <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Termly Report</i>
+                            <div style="width: 75%; height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                                <i style="font-size: 30px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schoolname}}</i>
+                                <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schooladdress}}, {{$addschool->mobilenumber}}</i>
+                                <i style="font-size: 15px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;"></i>
+                                <div>
+                                    <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Junior Secondary School Termly Report</i>
+                                </div>
                             </div>
                         </div>
                         
@@ -63,15 +65,15 @@
                             <div class="" style="width: 95%; display: flex; flex-direction: column; margin: 0 auto;">
                                 <table>
                                     <tr>
-                                        <td><i style="font-size: 12px; font-style: normal;">Name of Student:</i></td>
-                                        <td><i id="studentname" style="font-size: 12px; font-style: normal; font-weight: bold; text-transform:uppercase;">{{ $studentdetails->getStudentName->firstname }} {{ $studentdetails->getStudentName->middlename }} {{ $studentdetails->getStudentName->lastname }}</i></td>
+                                        <td><i style="font-size: 14px; font-style: normal;">Name of Student:</i></td>
+                                        <td><i id="studentname" style="font-size: 14px; font-style: normal; font-weight: bold; text-transform:uppercase;">{{ $studentdetails->getStudentName->firstname }} {{ $studentdetails->getStudentName->middlename }} {{ $studentdetails->getStudentName->lastname }}</i></td>
                                     </tr>
                                     <tr>
-                                        <td><i style="font-size: 12px; font-style: normal;">Class:</i></td>
-                                        <td><i id="studentclass" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->getClassName->classname }} {{ $studentdetails->getSectionName->sectionname }}</i></td>
+                                        <td><i style="font-size: 14px; font-style: normal;">Class:</i></td>
+                                        <td><i id="studentclass" style="font-size: 14px; font-style: normal; font-weight: bold;">{{ $studentdetails->getClassName->classname }} {{ $studentdetails->getSectionName->sectionname }}</i></td>
                                     </tr>
                                     <tr>
-                                        <td><i style="font-size: 12px; font-style: normal;">Next Term Resumes:</i></td>
+                                        <td><i style="font-size: 14px; font-style: normal;">Next Term Resumes:</i></td>
                                         <td>
                                             @if ($term == 1)
                                                 <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermstarts }}</i> 
@@ -85,8 +87,8 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><i style="font-size: 12px; font-style: normal;">Sex:</i></td>
-                                        <td><i id="studentgender" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->gender }}</i></td>
+                                        <td><i style="font-size: 14px; font-style: normal;">Sex:</i></td>
+                                        <td><i id="studentgender" style="font-size: 14px; font-style: normal; font-weight: bold;">{{ $studentdetails->gender }}</i></td>
                                     </tr>
                                 </table>
                             </div>
@@ -96,8 +98,8 @@
                             <div style="width: 95%; display: flex; flex-direction: column; margin: 0 auto;">
                                 <table>
                                     <tr>
-                                        <td style="width: 40%;"><i style="font-size: 12px; font-style: normal;">Term:</i></td>
-                                        <td><i id="resultterm" style="font-size: 12px; font-style: normal; font-weight: bold;">
+                                        <td style="width: 40%;"><i style="font-size: 14px; font-style: normal;">Term:</i></td>
+                                        <td><i id="resultterm" style="font-size: 14px; font-style: normal; font-weight: bold;">
                                             @if ($term == 1)
                                                 <i style="font-style: normal;">First</i> 
                                             @elseif ($term == 2)
@@ -110,16 +112,16 @@
                                         </i></td>
                                     </tr>
                                     <tr>
-                                        <td><i style="font-size: 12px; font-style: normal;">Addmission No:</i></td>
-                                        <td><i id="regno" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $studentdetails->admission_no }}</i></td>
+                                        <td><i style="font-size: 14px; font-style: normal;">Addmission No:</i></td>
+                                        <td><i id="regno" style="font-size: 14px; font-style: normal; font-weight: bold;">{{ $studentdetails->admission_no }}</i></td>
                                     </tr>
                                     <tr>
-                                        <td><i style="font-size: 12px; font-style: normal;">Position: {{ $resultAverage == NULL ? "NAN":$resultAverage->position }}</i></td>
-                                        <td><i id="studentposition" style="font-size: 12px; font-style: normal; font-weight: bold;"> Out Of {{ $studentdetails->getClassCount($studentdetails->classid, $studentdetails->schoolsession, $studentdetails->studentsection)->count() }}</i></td>
+                                        <td><i style="font-size: 14px; font-style: normal;">Position: </i></td>
+                                        <td><i id="studentposition" style="font-size: 14px; font-style: normal; font-weight: bold;"> Out Of </i></td>
                                     </tr>
                                     <tr>
-                                        <td><i style="font-size: 12px; font-style: normal;">Session:</i></td>
-                                        <td><i id="querysession" style="font-size: 12px; font-style: normal; font-weight: bold;">{{ $schoolsession }}</i></td>
+                                        <td><i style="font-size: 14px; font-style: normal;">Session:</i></td>
+                                        <td><i id="querysession" style="font-size: 14px; font-style: normal; font-weight: bold;">{{ $schoolsession }}</i></td>
                                     </tr>
                                 </table>
                             </div>
@@ -134,73 +136,37 @@
                         <table style="width: 95%; margin: 0 auto;" id="category">
                             <thead style="text-align: center;">
                                 <tr>
-                                    <th style="font-size: 12px;">SUBJECTS</th>
-                                    @if ($addschool->caset == 1)
-                                        <th class="text-center  thdesign"><i class="text-center" style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Class Assignment</p></th>
-                                    @endif
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">First CA</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Second CA</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">EXAM SCORE</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">TOTAL MARK</i></th>
-                                    {{-- <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Points</i></th> --}}
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Average</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">POSITION</i></th>
-                                    <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Grade</i></th>
-                                    {{-- <th class="text-center  thdesign"><i style="font-size: 12px;">Teacher</i></th> --}}
-                                    <th class="text-center  thdesign">
-                                        <i style="font-size: 12px;">Year Summary</i>
-                                        <table style="width: 100%; margin: 0 auto;">
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">1st term</i></th>
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">2nd term</i></th>
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">3rd term</i></th>
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Avg. Score</i></th>
-                                            <th class="text-center  thdesign"><i style="writing-mode: vertical-lr; margin: 0px; padding: 5px;">Position</i></th>
-                                        </table>
-                                    </th>
-    
+                                    <th style="font-size: 14px;">SUBJECTS</th>
+                                    @foreach ($subCatAss as $item)
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">{{ $item->subname }}</i></th>
+                                    @endforeach
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
                                 </tr>
                             </thead>
                             <tbody id="resultprinttable">
-                                @if ($subjects->count() > 0)
-    
-                                    @foreach ($subjects as $item)
-    
-                                            <tr style='font-size: 12px; width: 150px;'>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->subjectname }}</center></td>
-                                                @if ($addschool->caset == 1)
-                                                    <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca3 }}</center></td>
-                                                @endif
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca2 }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->ca1 }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->exams }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->totalmarks }}</center></td>
-                                                {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->points }}</center></td> --}}
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getClassAverageMarkSubject($item->id, $term, $schoolsession) == NULL ? "0":round($item->getClassAverageMarkSubject($item->id, $term, $schoolsession)->average, 1) }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->position }}</center></td>
-                                                <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession) == NULL ? "0": $item->getSubjectMark($studentdetails->id, $item->id, $schoolsession)->grades }}</center></td>
-                                                {{-- <td class='text-center thdesign' style='font-size: 10px;'><center>{{ $item->getTeacherName($item->id) }}</td> --}}
-                                                <td class='text-center thdesign'>
-                                                    <table style="width: 100%; margin: 0 auto;">
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 1, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 1, $studentdetails->id)->totalmarks }}</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 2, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 2, $studentdetails->id)->totalmarks }}</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getResultSummary($item->id, $schoolsession, 3, $studentdetails->id) == NULL ? "0":$item->getResultSummary($item->id, $schoolsession, 3, $studentdetails->id)->totalmarks }}</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;">{{ $item->getAverageScore($item->id, $schoolsession, $studentdetails->id) == NULL ? "0":round($item->getAverageScore($item->id, $schoolsession, $studentdetails->id)) }}</i></th>
-                                                        <th><i class="text-center" style="margin: 0px; padding: 10px; font-style: normal; font-weight: normal;"></i></th>
-                                                    </table>
-                                                </td>
-                                            <tr>
-    
-                                    @endforeach
+
+                                @foreach ($resultMain as $item)
+
+                                    <tr style='font-size: 14px;'>
+                                        <td class='' style='font-size: 14px;'>{{ $item->subjectname }}</td>
+                                        @foreach ($item->getAssessments($item->id) as $itemA)
+                                            <td class='text-center' style='font-size: 14px;'><center>{{ $itemA->getSubjectScores($itemA->id) == NULL ? "---":$itemA->getSubjectScores($itemA->id)->score }}</center></td>
+                                        @endforeach
+                                        <td class='text-center thdesign' style='font-size: 14px;'><center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->total }}</center></td>
+                                        <td class='text-center thdesign' style='font-size: 14px;'><center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":round($item->getAssessmentsTotal($item->id)->average, 1) }}</center></td>
+                                        <td class='text-center thdesign' style='font-size: 14px;'><center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->grade }}</center></td>
+                                    <tr>
                                     
-                                @endif
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
                     <br>
                     <div style="">
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: {{ round(empty($resultAverage) ? "NAN":$resultAverage->sumofmarks, 2) }}</i>
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ round(empty($resultAverage) ? "NAN":$resultAverage->average, 2) }}</i>
-                        {{-- <i style="margin: 10px 0px 0px 50px; font-style: normal;">Final Grade: {{ $addschool->getGrade(empty($resultAverage) ? "NAN":$resultAverage->average, $studentClass->classtype) }}</i> --}}
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: {{ $computedAverage == NULL ? "N.A": $computedAverage->examstotal}}</i>
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ $computedAverage == NULL ? "N.A": $computedAverage->studentaverage}}</i> 
                     </div>
                     <center><div class="text-center" style="width: 95%; margin: 10px auto;">
                         @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
@@ -209,13 +175,13 @@
                             @endforeach
                         @endif
                     </div></center>
-                    {{-- <div style="width: 95%; margin: 3px auto;">
+                    <center><div style="width: 95%; margin: 3px auto;">
                         @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                             @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                                 <i style="font-size: 10px; font-style: normal;">({{ $item->marksfrom }}-{{ $item->marksto }}) = {{ $item->point }}</i>
                             @endforeach
                         @endif
-                    </div> --}}
+                    </div></center>
                     {{-- <div style="width: 95%; margin: 3px auto;">
                         @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                             @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
@@ -304,23 +270,16 @@
                         {{-- <div style="width: 95%; margin: 0 auto;" id="housemastersremark" class="collapse">
                             <center><input type="text" onkeydown="housemastercomment(this)" style="width: 95%; margin-top: 2px;" placeholder="From teacher comment"></center>
                         </div> --}}
-    
+                       
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                            Honours Or Prizes Won: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
-                        </div>
-                        {{-- <div style="width: 95%; margin: 0 auto;" id="honourorpricesremark" class="collapse">
-                            <center><input type="text" onkeydown="honourorprices(this)" style="width: 95%; margin-top: 2px;" placeholder="From teacher comment"></center>
-                        </div> --}}
-                        <br>
-                        <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                            Form Master's Remarks <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                            FORM MASTER'S REMARK <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
                         </div>
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                            Head of School's Comments: 
+                            HEAD OF SCHOOL'S COMMENT: 
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
-                            @if ($resultAverage != NULL)
+                            {{-- @if ($resultAverage != NULL)
     
                                 @if($resultAverage->average >= 90 && $resultAverage->average <= 100)
                                     An excellent performance.
@@ -336,22 +295,55 @@
                                 @endif
     
                                 
-                            @endif
+                            @endif --}}
                             
                             </i>
                         </div>
                         
                     </div>
                     <br>
-                    <div style="width: 95%; display: flex; flex-direction: row; margin: 0 auto;">
-                        <div class="" style="width: 50%; height: 50px; display: flex; flex-direction: row; align-items: center;">
-                            {{-- <img src="{{asset('storage/schimages/'.$allDetails['addpost'][0]['schoolprincipalsignature'])}}" alt="" width="90px" height="90px"> --}}
-                            <i style="font-size: 13px; font-style: normal;">Head of School's Signature</i></i>
-                            <img src="{{asset('storage/schimages/'.$addschool->schoolprincipalsignature)}}" alt="" height="50px">
-    
+                    <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
+                        HEAD TEACHERS SIGNATURE: 
+                        <i style="font-style: normal;" id=""><img src="{{$addschool->schoolprincipalsignature}}" alt="" srcset="" height="50px"></i>
+                    </div>
+
+                    <br>
+                    <div style="display: flex;">
+                        <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
+                            NEXT TERM BEGINS: <i style="font-style: normal;" id="honourorpricesremarkmain">
+                                @if ($term == 1)
+                                    <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermstarts }}</i> 
+                                @elseif ($term == 2)
+                                    <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermstarts }}</i>
+                                @elseif ($term == 3)
+                                    <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
+                                @else
+                                    <i style="font-style: normal; font-weight: bold;">NAN</i>
+                                @endif
+                            </i>
                         </div>
-                        <div class="" style="width:50%; height: 50px;">
-                            <!--<i style="font-size: 13px; font-style: normal;">Date<i>_________________________________</i></i>-->
+                        <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
+                            NEXT TERM ENDS: <i style="font-style: normal;" id="honourorpricesremarkmain">
+                                @if ($term == 1)
+                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermends }}</i> 
+                                @elseif ($term == 2)
+                                    <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermends }}</i>
+                                @elseif ($term == 3)
+                                    <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermends }}</i>
+                                @else
+                                    <i style="font-style: normal; font-weight: bold;">NAN</i>
+                                @endif
+                            </i>
+                        </div>
+                    </div>
+                    {{-- <div style="width: 95%; display: flex; flex-direction: row; margin: 0 auto;">
+                        <div class="" style="width: 50%; height: 50px; display: flex; flex-direction: row; align-items: center;">
+                            <i style="font-size: 13px; font-style: normal;">Head of School's Signature</i></i>
+                            <img src="{{ $addschool->schoolprincipalsignature }}" alt="" height="50px">
+    
+                        </div> --}}
+                        {{-- <div class="" style="width:50%; height: 50px;"> --}}
+                            <!--<i style="font-size: 13px; font-style: normal;">Date<i>_________________________________</i></i>
                         </div>
                     </div>
     

@@ -21,8 +21,11 @@ use App\ResultReadyModel;
 use PDF;
 use App;
 use App\AssesmentModel;
+use App\ComputedAverages;
 use App\ElectiveAdd;
 use App\RecordMarks;
+use App\ResultSubjectsModel;
+use App\SubAssesmentModel;
 use App\User;
 use Svg\Tag\Rect;
 
@@ -94,6 +97,8 @@ class ResultController_sec extends Controller
             'session'=>'required'
         ]);
 
+        
+
 
         try {
             $classid = $request->input('classid');
@@ -106,6 +111,19 @@ class ResultController_sec extends Controller
             $studentdetails = Addstudent_sec::find($regNo);
     
             $addschool = Addpost::find(Auth::user()->schoolid);
+
+            $resultMain = ResultSubjectsModel::where(['result_subjects_models.term'=>$term, 'result_subjects_models.studentregno'=>$regNo, 'result_subjects_models.session'=>$schoolsession])->get();
+
+            $subCatAss = SubAssesmentModel::all();
+
+            $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+
+            $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
+
+            $studentClass = Classlist_sec::find($classid);
+            $computedAverage = ComputedAverages::where(['session'=>$schoolsession, 'regno'=>$regNo, 'term'=>$term])->first();
+
+            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'motolistbeha', 'motolistskills', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$studentdetails->studentsection, 'subjecttype'=>2])->pluck('subjectid')->toArray();
@@ -212,6 +230,8 @@ class ResultController_sec extends Controller
            $resultAverage = $resultAverageProcess->processResultAverage($request);
 
             // if ($resultAverage == "success") {
+
+                return $resultAverage;
                 
                 $process_class_average = $processClassAverage->processresult($request);
     

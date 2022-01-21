@@ -76,8 +76,7 @@ class TeachersController_sec extends Controller
             $addschool = $this->addpost->where('id', Auth::user()->schoolid)->get();
             $addsubject_sec = DB::table('addsubject_secs')
                     ->join('classlist_secs', 'classlist_secs.id','=','addsubject_secs.classid')
-                    ->leftJoin('addsection_secs', 'addsection_secs.id','=','addsubject_secs.subjectsectione')
-                    ->select('addsubject_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname')
+                    ->select('addsubject_secs.*', 'classlist_secs.classname')
                     ->where('addsubject_secs.schoolid', $schoolId,)->get();
     
             $getAllTeachersWithSubject = TeacherSubjects::join('users', 'users.id','=','teacher_subjects.user_id')

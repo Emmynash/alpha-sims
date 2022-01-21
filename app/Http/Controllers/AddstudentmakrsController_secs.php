@@ -267,14 +267,14 @@ class AddstudentmakrsController_secs extends Controller
 
         $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
 
-        $subjectScore = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
+        // $subjectScore = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
 
         $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
         
 
 
-        return response()->json(['classlist'=>$classlist, 'subjects'=>$subjects, 'schoolsection'=>$schoolsection, 'schooldetails'=>$schooldetails, 'subjectScore'=>$subjectScore, 'assessment'=>$assessment]);
+        return response()->json(['classlist'=>$classlist, 'subjects'=>$subjects, 'schoolsection'=>$schoolsection, 'schooldetails'=>$schooldetails, 'assessment'=>$assessment]);
         
     }
 

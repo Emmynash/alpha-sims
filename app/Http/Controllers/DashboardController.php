@@ -301,34 +301,28 @@ class DashboardController extends Controller
     
     public function updatelogosig(Request $request){
         
-        if($request->input('logo') == "logo"){
+        if($request->logo == "logo"){
             
             $validatedData = $request->validate([
                 'schoolLogo' => 'image|max:2048|mimes:jpeg,png,jpg|required',
             ]);
             
             if ($request->hasFile('schoolLogo')) {
-
-                //get file name with extension
-                $schoolLogoExt = $request->file('schoolLogo')->getClientOriginalName();
-    
-                //get just file names
-                $fileNameLogo = pathinfo($schoolLogoExt, PATHINFO_FILENAME);
-    
-                //get just extensions
-                $extensionSchoolLogo = $request->file('schoolLogo')->getClientOriginalExtension();
-    
-                //file name to store
-                $schoolLogoFinal = $fileNameLogo."_".time().$extensionSchoolLogo;
-    
-                //upload image
-                $pathLogo = $request->file('schoolLogo')->storeAs('public/schimages', $schoolLogoFinal);
                 
-                $addschool = Addpost::find(Auth::user()->schoolid);
-                $addschool->schoolLogo = $schoolLogoFinal;
-                $addschool->save();
-                
-                return back()->with("success", "updated successfully...");
+                try {
+                    $response = cloudinary()->upload($request->file('schoolLogo')->getRealPath())->getSecurePath();
+                    // dd($response);
+                    //update profile image
+            
+                    $updateProfile = Addpost::find(Auth::user()->schoolid);
+                    $updateProfile->schoolLogo = $response;
+                    $updateProfile->save();
+            
+                    return back()->with('success', 'image uploaded successfully');
+        
+                } catch (\Throwable $th) {
+                    return back()->with('error', 'there was an error, please contact admin');
+                }
             
             }
             
@@ -342,26 +336,21 @@ class DashboardController extends Controller
             
             if ($request->hasFile('schoolprincipalsignature')) {
 
-                //get file name with extension
-                $principalSignatureExt = $request->file('schoolprincipalsignature')->getClientOriginalName();
-    
-                //get just file names
-                $fileNameSignature = pathinfo($principalSignatureExt, PATHINFO_FILENAME);
-    
-                //get just extensions
-                $extensionSignature = $request->file('schoolprincipalsignature')->getClientOriginalExtension();
-    
-                //file name to store
-                $principalSignatureFinal = $fileNameSignature."_".time().$extensionSignature;
-    
-                //upload image
-                $pathSignature = $request->file('schoolprincipalsignature')->storeAs('public/schimages', $principalSignatureFinal);
+                try {
+                    $response = cloudinary()->upload($request->file('schoolprincipalsignature')->getRealPath())->getSecurePath();
+                    // dd($response);
+                    //update profile image
+            
+                    $updateProfile = Addpost::find(Auth::user()->schoolid);
+                    $updateProfile->schoolprincipalsignature = $response;
+                    $updateProfile->save();
+            
+                    return back()->with('success', 'image uploaded successfully');
+        
+                } catch (\Throwable $th) {
+                    return back()->with('error', 'there was an error, please contact admin');
+                }
                 
-                $addschool = Addpost::find(Auth::user()->schoolid);
-                $addschool->schoolprincipalsignature = $principalSignatureFinal;
-                $addschool->save();
-                
-                return back()->with("success", "updated successfully...");
                 
             }
             

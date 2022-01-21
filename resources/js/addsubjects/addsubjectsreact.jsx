@@ -118,7 +118,7 @@ function AddSubject() {
     function fetchSchoolDetails() {
         setisLoading(true)
         axios.get('/get_all_subjects').then(response=> {
-            console.log(response.data.schoolsection);
+            console.log(response.data);
             // console.log(setJ)
             setisLoading(false)
             setClasslist(response.data.classesAll)
@@ -129,11 +129,7 @@ function AddSubject() {
             setgetElectivesSettingNumber(response.data.getElectivesSettingNumber)
             setschooltype(response.data.schoolDetails.schooltype)
 
-            if (response.data.subjectScores == null) {
 
-            }else{
-
-            }
 
         }).catch(e=>{
             console.log(e);

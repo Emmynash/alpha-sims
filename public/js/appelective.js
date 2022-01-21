@@ -70511,19 +70511,7 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha/alpha-sims-react/resources/js/appelective.js */"./resources/js/appelective.js");
-=======
 module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/appelective.js */"./resources/js/appelective.js");
->>>>>>> f685bbfef1c5e9150ceb31ef7385dff081d92adb
-=======
-module.exports = __webpack_require__(/*! /Users/macbookpro/Documents/alpha-fix/alpha-sims-react/resources/js/appelective.js */"./resources/js/appelective.js");
->>>>>>> 856cc416354918c06f16f5a527775d90b213e4e2
-=======
-module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/appelective.js */"./resources/js/appelective.js");
->>>>>>> f9d542d6a86cffa70f39f6193782593cb47f96f7
 
 
 /***/ })

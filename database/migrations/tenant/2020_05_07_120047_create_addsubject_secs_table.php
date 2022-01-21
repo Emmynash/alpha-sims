@@ -16,8 +16,9 @@ class CreateAddsubjectSecsTable extends Migration
         Schema::create('addsubject_secs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('schoolid');
-            $table->string('classid');
+            $table->string('classid')->nullable();
             $table->string('subjectname');
+            $table->integer('sectionclasstype');
             $table->timestamps();
         });
     }

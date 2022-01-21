@@ -66,4 +66,9 @@ class Addsubject_sec extends Model
         return $getSubjects = Addsubject_sec::all();
     }
 
+    public function getSubjectTotal($regno, $session, $term, $subjectid)
+    {
+        return AssessmentTableTotal::where(['regno'=>$regno, 'session'=>$session, 'term'=>$term, 'subjectid'=>$subjectid])->first();
+    }
+
 }
