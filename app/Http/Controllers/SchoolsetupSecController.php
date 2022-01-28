@@ -175,10 +175,11 @@ class SchoolsetupSecController extends Controller
 
         try {
            $query = $schoolSetup->setupClasses($request);
+           return response()->json(array('msg' => 'Process successful', 'code'=>200), 200);
             if($query == "success"){
                 return response()->json(array('msg' => 'Class added successfully', 'code'=>200), 200);
-            }else if($query == "classtypeerror"){
-                return response()->json(array('msg' => 'Class type does not corespond with class name', 'code'=>401), 200);
+            }else if($query == "unsuccessful"){
+                return response()->json(array('msg' => 'Class could not be added', 'code'=>401), 200);
             }else{
                 return response()->json(array('msg' => 'Invalid request. Please referr to the users manual', 'code'=>409), 200);
             }

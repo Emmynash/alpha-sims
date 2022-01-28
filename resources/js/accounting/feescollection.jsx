@@ -39,6 +39,7 @@ function FeesCollection() {
     const [classSelected, setClassSelected] = useState('')
     const [selectedSection, setSelectedSection] = useState('')
     const [studentList, setStudentList] = useState([])
+    const [studentListfiltered, setStudentListFiltered] = useState(studentList)
     const [partamount, setpartamount] = useState(0)
     const [paymentRecord, setPaymentRecord] = useState([])
     const [totalamount, setTotalAmount] = useState(0)
@@ -68,6 +69,20 @@ function FeesCollection() {
               console.log('closed')
             } // callback that will be executed after this alert is removed
           })
+    }
+
+    const handleSearch = (event) => {
+
+        let value = event.target.value.toLowerCase();
+        let result = [];
+        console.log(value);
+
+        result = studentList.filter((data) => {
+            return data.firstname.toLowerCase().search(value) != 1;
+        });
+
+        setStudentListFiltered(result);
+
     }
 
 
@@ -167,6 +182,7 @@ function FeesCollection() {
                 console.log(response);
                 setIsLoading(false)
                 setStudentList(response.data.data)
+                setStudentListFiltered(response.data.data)
 
                 setEntireClass(true)
     
@@ -301,7 +317,7 @@ function FeesCollection() {
                     <p style={{ margin:'0px' }}>Get student using either addmission number or by querying the entireclass</p>
                 </div>
 
-                {isLoading ? <div className="text-center"><div class="spinner-border"></div></div>:""}
+                {isLoading ? <div className="text-center"><div className="spinner-border"></div></div>:""}
 
                 <div className="card">
                     <div className="row" style={{ margin:'10px' }}>
@@ -352,7 +368,7 @@ function FeesCollection() {
                             <h3 className="card-title">Student List</h3>
                             <div className="card-tools">
                             <div className="input-group input-group-sm" style={{width: '150px'}}>
-                                <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
+                                <input type="text" name="table_search" className="form-control float-right" placeholder="Search" onChange={(event) => handleSearch(event)}/>
                                 <div className="input-group-append">
                                 <button type="submit" className="btn btn-default">
                                     <i className="fas fa-search" />
@@ -372,7 +388,7 @@ function FeesCollection() {
                                 </tr>
                             </thead>
                             <tbody>
-                                { studentList.map(student=>(
+                                { studentListfiltered.map(student=>(
                                     <tr key={student.id+"studentList"}>
                                         <td>{student.admission_no}</td>
                                         <td>{student.firstname} {student.middlename} {student.lastname}</td>

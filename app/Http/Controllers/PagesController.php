@@ -14,6 +14,7 @@ use App\Addgrades_sec;
 use App\FormTeachers;
 use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Multitenancy\Models\Tenant;
 use Validator;
 use Spatie\Permission\Models\Role;
 

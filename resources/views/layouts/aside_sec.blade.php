@@ -23,7 +23,7 @@
             </form>
             {{-- <button id="button">trigger file selection</button> --}}
           </div>
-          <img id="profileimgmainpix" src="{{asset( Auth::user()->profileimg !=null ? 'storage/schimages/'.Auth::user()->profileimg:'https://gravatar.com/avatar/?s=200&d=retro')}}" class="img-circle elevation-2" alt="User Image">
+          <img id="profileimgmainpix" src="{{asset( Auth::user()->profileimg !=null ? Auth::user()->profileimg:'https://gravatar.com/avatar/?s=200&d=retro')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
         <a href="{{ route('myprofile') }}" class="d-block">{{Auth::user()->firstname}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</a>
@@ -392,14 +392,14 @@
             @endcan
 
             @if (Auth::user()->hasRole('Teacher'))
-            <li class="nav-item has-treeview">
+            {{-- <li class="nav-item has-treeview">
               <a id="teacheredit" href="/editteacherprofile" class="nav-link">
                 <i class="fas fa-user-edit nav-icon"></i>
                 <p>
                   Edit Profile
                 </p>
               </a>
-            </li>
+            </li> --}}
 
             <li class="nav-item">
                 <a id="markmanageoption" href="{{ route('teacher_sec_remark') }}" class="nav-link">

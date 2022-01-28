@@ -614,6 +614,8 @@ Route::post('webhook', 'WebhookController@handle');
 
 //profile controller
 Route::get('myprofile', 'MyProfileController@index')->name('myprofile');
+Route::post('updatepassword', 'MyProfileController@updatePassword')->name('updatepassword');
+Route::post('updateprofile', 'MyProfileController@updateProfile')->name('updateprofile');
 
 
 

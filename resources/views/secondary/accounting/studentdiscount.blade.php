@@ -46,7 +46,7 @@
             </div>
     </div>
 
-    <script src="{{ asset('js/app_discount.js') }}"></script>
+    <script src="{{ asset('js/app_discount.js?v=1') }}"></script>
 
     <script>
         function scrollocation(){

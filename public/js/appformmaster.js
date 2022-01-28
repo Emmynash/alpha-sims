@@ -69256,6 +69256,11 @@ function AddFormMaster() {
       getFormMasters = _useState18[0],
       setgetFormMasters = _useState18[1];
 
+  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(getFormMasters),
+      _useState20 = _slicedToArray(_useState19, 2),
+      getFormMastersFiltered = _useState20[0],
+      setgetFormMastersFiltered = _useState20[1];
+
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchPageDetails();
@@ -69270,6 +69275,7 @@ function AddFormMaster() {
       setAllClasses(response.data.classesAll);
       setSection_sec(response.data.addsection_sec);
       setgetFormMasters(response.data.getFormMasters);
+      setgetFormMastersFiltered(response.data.getFormMasters);
     })["catch"](function (e) {
       console.log(e);
     });
@@ -69290,6 +69296,16 @@ function AddFormMaster() {
 
     });
   }
+
+  var handleSearch = function handleSearch(event) {
+    var value = event.target.value.toLowerCase();
+    var result = [];
+    console.log(value);
+    result = getFormMasters.filter(function (data) {
+      return data.firstname.toLowerCase().search(value) != -1;
+    });
+    setgetFormMastersFiltered(result);
+  };
 
   function handleChangeTeachersSystemNumber(e) {
     setSystemNumber(e.target.value);
@@ -69441,7 +69457,10 @@ function AddFormMaster() {
       type: "text",
       name: "table_search",
       className: "form-control float-right",
-      placeholder: "Search"
+      placeholder: "Search",
+      onChange: function onChange(event) {
+        return handleSearch(event);
+      }
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "input-group-append"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -69453,7 +69472,7 @@ function AddFormMaster() {
       className: "card-body table-responsive p-0"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "table table-hover text-nowrap"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "System No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Class"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Section"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Date Asigned"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, getFormMasters.map(function (d) {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "System No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Class"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Section"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Date Asigned"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, getFormMastersFiltered.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: d.id + "formteachertable"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.firstname, " ", d.middlename, " ", d.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.teacher_id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.classname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.sectionname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, formatter.format(Date.parse(d.created_at))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {

@@ -7,6 +7,7 @@ import { useAlert } from 'react-alert'
 function ManageStaff() {
 
     const [stafList, setStaffList] = useState([])
+    const [stafListfiltered, setStaffListfiltered] = useState(stafList)
     const [systemnumber, setSystemNumber] = useState(0)
     const [stafverify, setstafverify] = useState([])
     const [isverifying, setisverifying] = useState(false)
@@ -66,9 +67,24 @@ function ManageStaff() {
             console.log(e)
             
         })
-        
-        
     }
+
+
+    const handleSearch = (event) => {
+
+        let value = event.target.value.toLowerCase();
+
+        let result = [];
+
+        console.log(value);
+
+        result = stafList.filter((data) => {
+            return data.name.toLowerCase().search(value) != -1;
+        });
+        setStaffListfiltered(result);
+
+    }
+
 
     function handleChangeSystemNumber(e) {
         setSystemNumber(e.target.value)
@@ -84,6 +100,7 @@ function ManageStaff() {
             console.log(response);
 
             setStaffList(response.data.stafflist)
+            setStaffListfiltered(response.data.stafflist)
             setrole(response.data.role)
             
 
@@ -152,7 +169,7 @@ function ManageStaff() {
                         <h3 className="card-title">Staff List</h3>
                         <div className="card-tools">
                         <div className="input-group input-group-sm" style={{width: '150px'}}>
-                            <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
+                            <input type="text" name="table_search" className="form-control float-right" placeholder="Search" onChange={(event) => handleSearch(event)}/>
                             <div className="input-group-append">
                             <button type="submit" className="btn btn-default">
                                 <i className="fas fa-search" />
@@ -173,8 +190,8 @@ function ManageStaff() {
                             </tr>
                         </thead>
                         <tbody>
-                            {stafList.map(staff=>(
-                                <tr>
+                            {stafListfiltered.map(staff=>(
+                                <tr key={staff.id}>
                                     <td>{staff.name}</td>
                                     <td>{staff.systemno}</td>
                                     <td>{staff.role}</td>
@@ -219,7 +236,7 @@ function ManageStaff() {
                                             </div>
                                             <div className="col-md-8 text-center">
                                                 { stafverify.map(details=>(
-                                                    <div>
+                                                    <div key={details.id+"names"}>
                                                         <p style={{ margin:'2px' }}>{details.firstname}</p>
                                                         <p style={{ margin:'2px' }}>{details.middlename}</p>
                                                         <p style={{ margin:'2px' }}>{details.lastname}</p>
@@ -232,7 +249,7 @@ function ManageStaff() {
                                             <select onChange={(e)=>handleChangeRole(e)} name="" className="form-control-sm form-control" id="">
                                                 <option value="">Select a role</option>
                                                 {role.length > 0 ? role.map(rolemain=>(
-                                                    rolemain.name !="Teacher" && rolemain.name != "Student" ? <option value={rolemain.id}>{rolemain.name}</option>:""
+                                                    rolemain.name !="Teacher" && rolemain.name != "Student" ? <option key={rolemain.id+"role"} value={rolemain.id}>{rolemain.name}</option>:""
                                                 )):""}
                                             </select>
                                         </div>
@@ -287,8 +304,8 @@ function ManageStaff() {
                                         :
 
                                         viewStaffres.formClasses.length > 0 ? viewStaffres.formClasses.map(d=>(
-                                            <div>{d.classname+" "+d.sectionname}</div>
-                                        )): <div>Not a Form Teacher</div>
+                                            <div key={d.id+'sec'}>{d.classname+" "+d.sectionname}</div>
+                                        )): <div key={d.id+'sec'}>Not a Form Teacher</div>
                                     }
 
                                </div>
@@ -305,8 +322,8 @@ function ManageStaff() {
                                         ""
                                         :
                                         viewStaffres.teachersSubject.length > 0 ? viewStaffres.teachersSubject.map(d=>(
-                                            <div>{d.subjectname}({d.classname+""+d.sectionname})</div>
-                                        )):<div>You are not a teacher</div>
+                                            <div key={d.id+'sub'}>{d.subjectname}({d.classname+""+d.sectionname})</div>
+                                        )):<div key={d.id+'sub'}>You are not a teacher</div>
                                     }
 
                                </div>

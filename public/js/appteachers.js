@@ -69276,10 +69276,15 @@ var AddTeachers = function AddTeachers() {
       teacherList = _useState26[0],
       setTeacherList = _useState26[1];
 
-  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(teacherList),
       _useState28 = _slicedToArray(_useState27, 2),
-      isUnasigning = _useState28[0],
-      setUnasigning = _useState28[1];
+      teacherListfiltered = _useState28[0],
+      setTeacherListfiltered = _useState28[1];
+
+  var _useState29 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState30 = _slicedToArray(_useState29, 2),
+      isUnasigning = _useState30[0],
+      setUnasigning = _useState30[1];
 
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
@@ -69299,6 +69304,7 @@ var AddTeachers = function AddTeachers() {
       setSection_sec(response.data.addsection_sec); // setAllTeachersWithSubject(response.data.getAllTeachersWithSubject)
 
       setTeacherList(response.data.getAllTeachers);
+      setTeacherListfiltered(response.data.getAllTeachers);
     })["catch"](function (e) {
       console.log(e);
       setisLoading(false);
@@ -69428,6 +69434,16 @@ var AddTeachers = function AddTeachers() {
     }
   }
 
+  var handleSearch = function handleSearch(event) {
+    var value = event.target.value.toLowerCase();
+    var result = [];
+    console.log(value);
+    result = teacherList.filter(function (data) {
+      return data.firstname.toLowerCase().search(value) != 1;
+    });
+    setTeacherListfiltered(result);
+  };
+
   function unasignSubjectToTeacher(tableid) {
     // if (systemNumber !="" && subjectid != 0 && systemNumber !=0 && classid !=0) {
     setisLoading(true);
@@ -69517,7 +69533,10 @@ var AddTeachers = function AddTeachers() {
       type: "text",
       name: "table_search",
       className: "form-control float-right",
-      placeholder: "Search"
+      placeholder: "Search",
+      onChange: function onChange(event) {
+        return handleSearch(event);
+      }
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "input-group-append"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -69529,7 +69548,7 @@ var AddTeachers = function AddTeachers() {
       className: "card-body table-responsive p-0"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "table table-hover text-nowrap"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Teachers Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Sys No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Date Asigned"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, teacherList.length > 0 ? teacherList.map(function (teachers) {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Teachers Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Sys No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Date Asigned"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, teacherListfiltered.map(function (teachers) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: teachers.id
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.firstname, " ", teachers.middlename, " ", teachers.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, teachers.systemid), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, formatter.format(Date.parse(teachers.created_at))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -69541,7 +69560,7 @@ var AddTeachers = function AddTeachers() {
           className: "btn btn-sm btn-info badge"
         }, "view")))
       );
-    }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal fade",
       id: "asign-subject",
       "data-backdrop": "false"

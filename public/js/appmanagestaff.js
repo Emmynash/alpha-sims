@@ -69329,40 +69329,45 @@ function ManageStaff() {
       stafList = _useState2[0],
       setStaffList = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(stafList),
       _useState4 = _slicedToArray(_useState3, 2),
-      systemnumber = _useState4[0],
-      setSystemNumber = _useState4[1];
+      stafListfiltered = _useState4[0],
+      setStaffListfiltered = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState6 = _slicedToArray(_useState5, 2),
-      stafverify = _useState6[0],
-      setstafverify = _useState6[1];
+      systemnumber = _useState6[0],
+      setSystemNumber = _useState6[1];
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState8 = _slicedToArray(_useState7, 2),
-      isverifying = _useState8[0],
-      setisverifying = _useState8[1];
+      stafverify = _useState8[0],
+      setstafverify = _useState8[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      role = _useState10[0],
-      setrole = _useState10[1];
+      isverifying = _useState10[0],
+      setisverifying = _useState10[1];
 
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState12 = _slicedToArray(_useState11, 2),
-      selectedrole = _useState12[0],
-      setselectedrole = _useState12[1];
+      role = _useState12[0],
+      setrole = _useState12[1];
 
-  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState14 = _slicedToArray(_useState13, 2),
-      viewStaffres = _useState14[0],
-      setViewStaffres = _useState14[1];
+      selectedrole = _useState14[0],
+      setselectedrole = _useState14[1];
 
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
       _useState16 = _slicedToArray(_useState15, 2),
-      isLoadingStaff = _useState16[0],
-      setIsLoadingStaff = _useState16[1];
+      viewStaffres = _useState16[0],
+      setViewStaffres = _useState16[1];
+
+  var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+      _useState18 = _slicedToArray(_useState17, 2),
+      isLoadingStaff = _useState18[0],
+      setIsLoadingStaff = _useState18[1];
 
   var alert = Object(react_alert__WEBPACK_IMPORTED_MODULE_3__["useAlert"])();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
@@ -69411,6 +69416,16 @@ function ManageStaff() {
     });
   }
 
+  var handleSearch = function handleSearch(event) {
+    var value = event.target.value.toLowerCase();
+    var result = [];
+    console.log(value);
+    result = stafList.filter(function (data) {
+      return data.name.toLowerCase().search(value) != -1;
+    });
+    setStaffListfiltered(result);
+  };
+
   function handleChangeSystemNumber(e) {
     setSystemNumber(e.target.value);
   }
@@ -69423,6 +69438,7 @@ function ManageStaff() {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/manage_saff_sec_alloc').then(function (response) {
       console.log(response);
       setStaffList(response.data.stafflist);
+      setStaffListfiltered(response.data.stafflist);
       setrole(response.data.role);
     })["catch"](function (e) {
       console.log(e);
@@ -69487,7 +69503,10 @@ function ManageStaff() {
       type: "text",
       name: "table_search",
       className: "form-control float-right",
-      placeholder: "Search"
+      placeholder: "Search",
+      onChange: function onChange(event) {
+        return handleSearch(event);
+      }
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "input-group-append"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -69499,8 +69518,10 @@ function ManageStaff() {
       className: "card-body table-responsive p-0"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "table table-hover text-nowrap"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "system No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Role"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, stafList.map(function (staff) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, staff.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, staff.systemno), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, staff.role), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "system No."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Role"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, stafListfiltered.map(function (staff) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+          key: staff.id
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, staff.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, staff.systemno), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, staff.role), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "btn btn-sm btn-success badge",
           "data-toggle": "modal",
           "data-target": "#viewstaff",
@@ -69570,7 +69591,9 @@ function ManageStaff() {
     }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-md-8 text-center"
     }, stafverify.map(function (details) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: details.id + "names"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
           style: {
             margin: '2px'
           }
@@ -69600,6 +69623,7 @@ function ManageStaff() {
       value: ""
     }, "Select a role"), role.length > 0 ? role.map(function (rolemain) {
       return rolemain.name != "Teacher" && rolemain.name != "Student" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+        key: rolemain.id + "role",
         value: rolemain.id
       }, rolemain.name) : "";
     }) : ""))) : "")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -69668,9 +69692,13 @@ function ManageStaff() {
         overflowY: 'scroll'
       }
     }, isLoadingStaff ? "" : viewStaffres.formClasses.length > 0 ? viewStaffres.formClasses.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, d.classname + " " + d.sectionname)
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: d.id + 'sec'
+        }, d.classname + " " + d.sectionname)
       );
-    }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Not a Form Teacher"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      key: d.id + 'sec'
+    }, "Not a Form Teacher"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-md-12"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "card"
@@ -69687,9 +69715,13 @@ function ManageStaff() {
         overflowY: 'scroll'
       }
     }, isLoadingStaff ? "" : viewStaffres.teachersSubject.length > 0 ? viewStaffres.teachersSubject.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, d.subjectname, "(", d.classname + "" + d.sectionname, ")")
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: d.id + 'sub'
+        }, d.subjectname, "(", d.classname + "" + d.sectionname, ")")
       );
-    }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "You are not a teacher")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      key: d.id + 'sub'
+    }, "You are not a teacher")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "alert alert-warning"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       style: {

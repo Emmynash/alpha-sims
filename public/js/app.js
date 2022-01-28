@@ -81246,13 +81246,15 @@ function SchoolSetUp() {
 
   function addSchoolClassList() {
     if (classSetup.classindex != "" && classSetup.classname != "" && classSetup.classtype != "") {
+      console.log(classSetup);
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/addclasses_sec", classSetup, {
         headers: {
           "Content-type": "application/json"
         }
       }).then(function (response) {
-        // console.log(response.status)
-        // setClassnamesch('')
+        console.log(response);
+        setClassnamesch('');
+
         if (response.data.code == 200) {
           myalert(response.data.msg, 'success');
         }

@@ -17,6 +17,7 @@ function AddMarks() {
     const [selectedsubject, setselectedsubject] = useState('')
     const [selectedsection, setselectedsection] = useState('')
     const [studentlist, setStudentList] = useState([])
+    const [studentListfiltered, setStudentListFiltered] = useState(studentlist)
     const [isLoading, seIsLoading] = useState(false)
     const alert = useAlert()
     const [assessment, setSchoolAssessments] = useState([])
@@ -53,6 +54,20 @@ function AddMarks() {
             // cleanup
         };
     }, []);
+
+    const handleSearch = (event) => {
+
+        let value = event.target.value.toLowerCase();
+        let result = [];
+        console.log(value);
+
+        result = studentlist.filter((data) => {
+            return data.firstname.toLowerCase().search(value) != -1;
+        });
+
+        setStudentListFiltered(result);
+
+    }
 
     function myalert(msg, type) {
         alert.show(msg, {
@@ -124,8 +139,6 @@ function AddMarks() {
     }
 
     function handleChangeSection(e) {
-
-        
 
         setStudentList([])
         setSubjects([])
@@ -213,6 +226,7 @@ function AddMarks() {
             }else{
                 myalert('success', 'success')
                 setStudentList(response.data.studentlist)
+                setStudentListFiltered(response.data.studentlist)
             }
 
 
@@ -482,7 +496,7 @@ function AddMarks() {
                                 <h3 className="card-title">Students ({studentlist.length})</h3>
                                 <div className="card-tools">
                                 <div className="input-group input-group-sm" style={{width: '150px'}}>
-                                    <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
+                                    <input type="text" name="table_search" className="form-control float-right" placeholder="Search" onChange={(event) => handleSearch(event)}/>
                                     <div className="input-group-append">
                                     <button type="submit" className="btn btn-default">
                                         <i className="fas fa-search" />
@@ -510,7 +524,7 @@ function AddMarks() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {studentlist.map(student=>(
+                                    {studentListfiltered.map(student=>(
                                         <tr key={student.id+"addmarks"}>
                                             <td>{student.firstname} {student.middlename} {student.lastname}</td>
                                             <td>{student.admission_no}</td>

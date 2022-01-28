@@ -38,7 +38,8 @@
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-
+  @stack('custom-style-head')
+  @stack('custom-script-head')
 
 
   <style>
@@ -72,6 +73,12 @@
 
 #myUL li a:hover:not(.header) {
   background-color: #eee;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
 }
   </style>
 
@@ -2232,6 +2239,21 @@
   $('#jssthreetosssone').modal('show');
 
  }
+
+ const file = document.querySelector('#file');
+  file.addEventListener('change', (e) => {
+    // Get the selected file
+    console.log("e")
+    const [file] = e.target.files;
+    // Get the file name and size
+    const { name: fileName, size } = file;
+    // Convert size in bytes to kilo bytes
+    const fileSize = (size / 1000).toFixed(2);
+    // Set the text content
+    const fileNameAndSize = `${fileName} - ${fileSize}KB`;
+    document.querySelector('.file-name').textContent = fileNameAndSize;
+  });
+ 
  </script>
   @stack('custom-scripts')
 </body>
