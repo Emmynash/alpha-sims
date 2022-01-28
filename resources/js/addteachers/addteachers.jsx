@@ -202,7 +202,7 @@ const AddTeachers=()=>{
         console.log(value);
 
         result = teacherList.filter((data) => {
-            return data.firstname.toLowerCase().search(value) != 1;
+            return data.firstname.toLowerCase().search(value) != -1;
         });
         setTeacherListfiltered(result);
 

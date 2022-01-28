@@ -78,7 +78,7 @@ function FeesCollection() {
         console.log(value);
 
         result = studentList.filter((data) => {
-            return data.firstname.toLowerCase().search(value) != 1;
+            return data.firstname.toLowerCase().search(value) != -1;
         });
 
         setStudentListFiltered(result);

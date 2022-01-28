@@ -69439,7 +69439,7 @@ var AddTeachers = function AddTeachers() {
     var result = [];
     console.log(value);
     result = teacherList.filter(function (data) {
-      return data.firstname.toLowerCase().search(value) != 1;
+      return data.firstname.toLowerCase().search(value) != -1;
     });
     setTeacherListfiltered(result);
   };
