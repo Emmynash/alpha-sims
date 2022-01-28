@@ -19,7 +19,7 @@ class MyProfileController extends Controller
         return view('secondary.myprofile.myprofile');
     }
 
-    public function updatePassword(AuthService $authService, Request $request)
+    public function updatePassword(Authservice $authService, Request $request)
     {
         $validatedData = $request->validate([
             'currentpassword' => 'required',
