@@ -64,7 +64,7 @@
 
         document.getElementById("submitBtn").addEventListener("click", myFunction);  
         function myFunction() {  
-          window.location.href="http://"+domain.value+".alpha-sims-react.test/login";  
+          window.location.href="http://"+domain.value+".alpha-sims.com/login";  
         }
     </script>
 
