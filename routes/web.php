@@ -27,11 +27,19 @@ Route::get('/selectdomain', [
 
 
 
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
+    Route::get('/admin', "LandLordController@dashUltimate")->name('admin');
+    Route::get('/schoollist', "LandLordController@schoolList")->name('schoollist');
+    Route::post('/onboard', "LandLordController@onBoard")->name('onboard');
+});
+
+
+
 
 Route::middleware(['tenant'])->group(function () {
 
 
-
+    Auth::routes(['verify' => true]);
 
 Route::group(['prefix' => 'pri'], function () {
     
@@ -152,15 +160,7 @@ Route::group(['prefix' => 'pri'], function () {
         Route::POST('/studentatt', 'StudentController@studentAtt')->name('studentatt');
 
     });
-
-    
-
-
-
-
-
-    
-    
+  
 });
 
 
@@ -241,7 +241,7 @@ Route::POST('/editteachersdata', ['uses' => 'TeachersController@editteachersdata
 
 Route::POST('/deletesubject', ['uses' => 'SubjectController@deleteSubject','roles' => ['Admin', 'Teacher']])->middleware('roles');
 
-Auth::routes(['verify' => true]);
+
 
 // Route::get('/home', 'HomeController@index')->name('home');
 Route::POST('/uploadProfilePix', 'HomeController@uploadProfilePix')->middleware('auth');

@@ -91,177 +91,34 @@ class HomeController extends Controller
 
                 $schoolid = Auth::user()->schoolid;
 
-                $getFormClass = Addteachers_sec::where('systemid', Auth::user()->id)->get();
-
-                if ($getFormClass->count() <1) {
-                    $formTeacher = "";
-                }else{
-                    if ($getFormClass[0]['formteacher'] == "") {
-                        $formTeacher = "";
-                    }else{
-                        $formClass = Classlist_sec::where('id', $getFormClass[0]['formteacher'])->get();
-    
-                        $formTeacher = $formClass[0]['classname'];
-                    }
-
-                }
-
-
-
-                if ($getFormClass->count() <1) {
-                    $allocatedSubject = [];
-                }else{
-                    if ($getFormClass[0]['subject'] == "") {//ewrkejkwjekwjekwjekwjekwe
-                        $allocatedSubject = [];
-                    }else{
-                        $allocatedSubject = $getFormClass[0]['teachclass'];
-    
-                        $studentsInClass = DB::table('addstudent_secs')
-                                            ->join('users', 'users.id','=','addstudent_secs.usernamesystem') 
-                                            ->where('classid', $allocatedSubject)
-                                            ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')->get();
-    
-    
-                    }
-                }
-
-
+               $formTeacher = Addteachers_sec::join('classlist_secs', 'classlist_secs.id','=','addteachers_secs.formteacher')->select('addteachers_secs.*', 'classlist_secs.classname')->where('systemid', Auth::user()->id)->first();
 
                 $getTeacherDetails = Addteachers_sec::join('addposts', 'addposts.id','=','addteachers_secs.schoolid')
                                     ->where(['addteachers_secs.schoolid'=>$schoolid, 'addteachers_secs.systemid'=>Auth::user()->id])
                                     ->select('addteachers_secs.*', 'addposts.schoolname')->first();
                 
-
-                
                 $getTeacherId = Addteachers_sec::where('systemid', Auth::user()->id)->first();
-                
-
-                
                 $subjectTeacherOffer = TeacherSubjects::join('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id')
                                         ->select('teacher_subjects.*', 'addsection_secs.sectionname')
                                         ->where('user_id', Auth::user()->id)->get();
                 
                 $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-                
-
                 return view('secondary.teachers.teacher_dash',compact('getTeacherDetails', 'formTeacher', 'subjectTeacherOffer', 'schooldetails'));
             }
 
-
-
-
             $user = User::find(Auth::user()->id);
             $user->hasRole('Student');
-
         if ($user->hasRole('Student')) {
             $schoolid = Auth::user()->schoolid;
-
-            // return Addstudent_sec::leftjoin('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-            
-            // ->where(['addstudent_secs.usernamesystem'=> Auth::user()->id, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
-            // ->select('addstudent_secs.*', 'classlist_secs.classname')->first();
-
           $addstudentsec = Addstudent_sec::leftjoin('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
                             ->join('addposts', 'addposts.id','=','addstudent_secs.schoolid')
                             ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection') 
                             ->where(['addstudent_secs.usernamesystem'=> Auth::user()->id, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
                             ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addposts.schoolname')->first();
-
-            
-
-
-            // $idf = $addstudentsec->toJson();
-            // $studentsDetailsMain = json_decode($idf, true)[0];
-            $classid = $addstudentsec->classid;
-
-            $addsubjects = Addsubject_sec::where('classid', $classid)->get();
-
-
-            $datemain = Carbon::now();
-            $attDate = $datemain->toDateString();
-
-            $dateExplode = explode("-", $attDate);
-            $monthdateOnly = $dateExplode[0]."-".$dateExplode[1];
-
-            $studentAttendance = DB::table('student_ats')
-                                ->join('addstudent_secs', 'addstudent_secs.id','=','student_ats.regnumber')
-                                ->select('student_ats.*', 'addstudent_secs.id as adnum')
-                                ->where(['student_ats.schoolid' => Auth::user()->schoolid, 'student_ats.systemid' => Auth::user()->id, 'student_ats.monthtoday'=>$monthdateOnly])->get();
-            
-            $idf = $studentAttendance->toJson();
-            $studentAttendancemain = json_decode($idf, true);
-
-            // return $studentAttendance;
-
-            $todayMonth = '';
-            $monthcount = '';
-            $daysarray = array();
-
-            if (count($studentAttendance) > 0) {
-                $monthlyDate = $studentAttendancemain[0]['monthtoday'];
-
-                $monthlyMain = explode('-', $monthlyDate);
-
-                $mainValue = $monthlyMain[1];
-
-                $jan = array("month" => "01", "days" => "31");
-                $feb = array("month" => "02", "days" => "29");
-                $mar = array("month" => "03", "days" => "31");
-                $april = array("month" => "04", "days" => "30");
-                $may = array("month" => "05", "days" => "31");
-                $june = array("month" => "06", "days" => "30");
-                $july = array("month" => "07", "days" => "31");
-                $august = array("month" => "08", "days" => "31");
-                $sept = array("month" => "09", "days" => "30");
-                $october = array("month" => "10", "days" => "31");
-                $nov = array("month" => "11", "days" => "30");
-                $dec = array("month" => "12", "days" => "31");
-
-                $month = array($jan,$feb,$mar,$april,$may,$june,$july,$august,$sept,$october,$nov,$dec);
-
-                // return $month;
-
-
-
-                for ($i=0; $i < count($month); $i++) { 
-                    $monthMain = $month[$i]["month"];
-                    // echo $monthMain;
-                    if ($monthMain == $mainValue) {
-                        $todayMonth = $monthMain;
-                        $monthcount = $month[$i]["days"];
-                    } 
-                }
-
-                
-
-                for ($i=0; $i < count($studentAttendancemain); $i++) { 
-
-                    $datetoday = $studentAttendancemain[$i]['datetoday'];
-
-                    $datetodayexplode = explode('-', $datetoday);
-
-                    $attendanceRegNum = $datetodayexplode[2];
-                    array_push($daysarray, $attendanceRegNum);
-                    // echo $datetoday;
-                }
-
-            }
-
+            $addsubjects = Addsubject_sec::where('classid', $addstudentsec->classid)->get();
             $schooldetails = Addpost::find(Auth::user()->schoolid);
-
-            $mainStudentDetails = array(
-                'studentsDetailsMain'=> $addstudentsec,
-                'addsubjects' => $addsubjects,
-                'todayMonth' => $todayMonth,
-                'monthcount' => $monthcount,
-                'daysarray' => $daysarray,
-                'schooldetails'=>$schooldetails
-            );
-
-            
-
-            return view('secondary.student.student_dash')->with('mainStudentDetails', $mainStudentDetails);
+            return view('secondary.student.student_dash', compact('addstudentsec', 'addsubjects', 'schooldetails'));
         }
                 $user = User::find(Auth::user()->id);
                 $user->hasRole('Bursar');
@@ -648,4 +505,6 @@ class HomeController extends Controller
         return response()->json(['success'=>$addstudent[0]['profileimg']]);
 
     }
+
+
 }

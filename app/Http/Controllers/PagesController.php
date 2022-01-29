@@ -20,6 +20,7 @@ use Spatie\Permission\Models\Role;
 
 class PagesController extends Controller
 {
+
     public function index(){
         
         if(Auth::guest()){

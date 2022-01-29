@@ -11,7 +11,7 @@ const AddTeachers=()=>{
     const [section_sec, setSection_sec] = useState([])
     const [allTeachersWithSubject, setAllTeachersWithSubject] = useState([])
     const [systemNumber, setSystemNumber] = useState('')
-    const [teacherDetail, setTeacherdetails] = useState([])
+    const [teacherDetail, setTeacherdetails] = useState({})
     const [verified, setverified] = useState(false)
     const [isloadingTeacher, setisloadingTeacher] = useState(false)
     const [classid, setclassid] = useState(0)
@@ -381,13 +381,13 @@ const AddTeachers=()=>{
                                                 </div>
                                             </div>
                                             <div className="col-md-8 text-center">
-                                                {teacherDetail.map(details=>(
+                                                {teacherDetail == null ? <></>:
                                                     <div>
-                                                        <p style={{ margin:'2px' }}>{details.firstname}</p>
-                                                        <p style={{ margin:'2px' }}>{details.middlename}</p>
-                                                        <p style={{ margin:'2px' }}>{details.lastname}</p>
+                                                        <p style={{ margin:'2px' }}>{teacherDetail.firstname}</p>
+                                                        <p style={{ margin:'2px' }}>{teacherDetail.middlename}</p>
+                                                        <p style={{ margin:'2px' }}>{teacherDetail.lastname}</p>
                                                     </div>
-                                                ))}
+                                                }
                                                 
                                             </div>
                                         </div>

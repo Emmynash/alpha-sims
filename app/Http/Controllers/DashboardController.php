@@ -128,10 +128,18 @@ class DashboardController extends Controller
     public function updatelogosig(Imageupload $imageUpload, Request $request)
     {
 
-        $validatedData = $request->validate([
+        $rules = [
             'image' => 'image|max:2048|mimes:jpeg,png,jpg|required',
-            'key' => 'required'
-        ]);
+            'key' => 'required',
+        ];
+    
+        $customMessages = [
+            'required' => 'The :attribute field can not be blank.',
+            'mimes' => 'file must be an image(jpeg, png, jpg)',
+            'max' => 'file must not be greater than 2mb'
+        ];
+    
+        $this->validate($request, $rules, $customMessages);
 
         try {
             $uploadRes = $imageUpload->imageUpload($request);

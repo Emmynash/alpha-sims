@@ -118,7 +118,7 @@ class TeachersController_sec extends Controller
             return response()->json(['response'=>$validator->errors()->keys()]);
         }
 
-        $userdetailfetch = $this->user->where('id', $request->input('mastersystemnumber'))->get();
+        $userdetailfetch = User::find($request->input('mastersystemnumber'));
         // check if this system number is for a student
         // $addstudent_sec = $this->addstudent_sec->where('usernamesystem', $request->input('mastersystemnumber'))->get();
         // $addstudentPrimary = $this->addstudent->where('usernamesystem', $request->input('mastersystemnumber'))->get();
@@ -127,7 +127,7 @@ class TeachersController_sec extends Controller
         //     return response()->json(['exist'=>'noaccount']);
         // }
 
-        $roles = $userdetailfetch[0]->getRoleNames();
+        $roles = $userdetailfetch->getRoleNames();
 
         if ($roles->count() > 0) {
 
@@ -145,7 +145,7 @@ class TeachersController_sec extends Controller
                 return response()->json(['response'=>'noaccount']);
             }
         }else {
-            return response()->json(['userdetailfetch'=>$userdetailfetch]);
+            return response()->json(['userdetailfetch'=>$userdetailfetch], 200);
         }
 
         return response()->json(['userdetailfetch'=>$userdetailfetch], 200);
@@ -228,6 +228,12 @@ class TeachersController_sec extends Controller
 
             $getSubjectToRemoveFromTeacher = TeacherSubjects::find($request->tableid);
             $getSubjectToRemoveFromTeacher->delete();
+            $check = TeacherSubjects::where('user_id', $getSubjectToRemoveFromTeacher->user_id)->get();
+            if($check->count() < 1){
+                $getUser = User::find($getSubjectToRemoveFromTeacher->user_id);
+                $getUser->removeRole('Teacher');
+            }
+            
             return response()->json(['response'=>'success']);
         } catch (\Throwable $th) {
             //throw $th;
@@ -435,8 +441,8 @@ class TeachersController_sec extends Controller
         for ($i=0; $i < $getEnteredSubjects->count(); $i++) { 
             array_push($arrayOfSubjectId, $getEnteredSubjects[$i]);
         }
-
-        return view('secondary.teachers.resultremark.resultremark', compact('teacherSubject', 'arrayOfSubjectId'));
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        return view('secondary.teachers.resultremark.resultremark', compact('teacherSubject', 'arrayOfSubjectId', 'schooldetails'));
         
     }
 

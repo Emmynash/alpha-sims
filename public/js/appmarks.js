@@ -69579,7 +69579,7 @@ function AddMarks() {
   function getSubAssessmentCat(catid) {
     setfetchingSubassessment(true);
     setAssessmentRecord(_objectSpread({}, assessmentRecord, _defineProperty({}, 'assesment_id', catid)));
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('fetchsubassessment/' + catid + '/' + assessmentRecord.student_id).then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetchsubassessment/' + catid + '/' + assessmentRecord.student_id).then(function (response) {
       console.log(response.data);
       setfetchingSubassessment(false);
       setSchoolSubAssessments(response.data.subassessment);

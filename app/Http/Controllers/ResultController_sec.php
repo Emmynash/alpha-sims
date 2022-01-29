@@ -34,28 +34,9 @@ class ResultController_sec extends Controller
     public function index(){
 
         $classlist_sec = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
-        
-        if(Auth::user()->role == "Student"){
-            $studentdetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->get();
-            
-            $allDetails = array(
-                'classlist_sec'=>$classlist_sec,
-                'studentdetails'=>$studentdetails
-            );
-            
-        }else{
-            
-            $allDetails = array(
-                'classlist_sec'=>$classlist_sec
-            );
-            
-        }
-
-        // $allDetails = array(
-        //     'classlist_sec'=>$classlist_sec
-        // );
-
-        return view('secondary.result_sec')->with('allDetails', $allDetails);
+        $studentdetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        return view('secondary.result_sec', compact('schooldetails', 'classlist_sec', 'studentdetails'));
     }
 
     public function viewResult(Request $request){

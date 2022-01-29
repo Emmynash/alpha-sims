@@ -328,7 +328,7 @@ function AddMarks() {
           ['assesment_id']: catid,
         });
 
-        axios.get('fetchsubassessment/'+catid+'/'+assessmentRecord.student_id).then(response=>{
+        axios.get('/fetchsubassessment/'+catid+'/'+assessmentRecord.student_id).then(response=>{
 
             console.log(response.data)
 

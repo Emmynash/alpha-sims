@@ -52,7 +52,7 @@
 <div class="login-box">
   <div class="login-logo">
     {{-- <a href="/"><b>Alpha</b>SIMS</a> --}}
-    <p>{{ app('currentTenant')->name }}</p>
+    {{-- <p>{{ app('currentTenant')->name }}</p> --}}
   </div>
   <!-- /.login-logo -->
   <div class="card">

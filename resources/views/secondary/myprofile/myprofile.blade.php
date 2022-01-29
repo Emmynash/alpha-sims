@@ -1,8 +1,12 @@
-@extends('layouts.app_sec')
+@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@include('layouts.aside_sec')
+@if ($schooldetails->schooltype == "Primary")
+@include('layouts.asideside') 
+@else
+  @include('layouts.aside_sec')
+@endif
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -31,6 +35,7 @@
     <section class="content">
       <div class="container-fluid">
         @include('layouts.message')
+        
         <div class="row">
             <div class="col-12 col-md-4">
                 <div class="card">
@@ -45,8 +50,10 @@
                       @csrf
                       <div class="form-group" style="display: flex; align-item: center; justify-content: center;">
                         <div class="file-input">
+                          <i style="font-size: 10px;, font-style: normal;">Selelect a pix to update your profile pix Note:(not greater than 2MB)</i>
                           <input type="file" name="image" id="" class="">
-                          <input type="hidden" name="key" value="profile" id="">
+                          <input type="hidden" name="key" value="profile" id=""><br>
+                          <small class="text-danger">{{ $errors->first('image') }}</small>
                           </label>
                         </div>
                       </div>

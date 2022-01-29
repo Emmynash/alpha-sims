@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Addpost;
 use App\Services\Authservice;
 use App\User;
 use Illuminate\Http\Request;
@@ -13,10 +14,8 @@ class MyProfileController extends Controller
 {
     public function index()
     {
-        //get user role
-        // return $roles = Auth::user()->hasAnyRole(['Admin', 'HeadOfSchool']);
-
-        return view('secondary.myprofile.myprofile');
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        return view('secondary.myprofile.myprofile', compact('schooldetails'));
     }
 
     public function updatePassword(Authservice $authService, Request $request)

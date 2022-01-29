@@ -288,7 +288,7 @@ class AddstudentmakrsController_secs extends Controller
 
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['msg'=>'error']);
+            return response()->json(['msg'=>$th]);
         }
     }
 

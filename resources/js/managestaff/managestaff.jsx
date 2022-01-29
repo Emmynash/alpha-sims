@@ -191,8 +191,8 @@ function ManageStaff() {
                         </thead>
                         <tbody>
                             {stafListfiltered.map(staff=>(
-                                <tr key={staff.id}>
-                                    <td>{staff.name}</td>
+                                <tr key={staff.systemno+"stamn"}>
+                                    <td>{staff.name}{staff.id}</td>
                                     <td>{staff.systemno}</td>
                                     <td>{staff.role}</td>
                                     <td>
@@ -249,7 +249,7 @@ function ManageStaff() {
                                             <select onChange={(e)=>handleChangeRole(e)} name="" className="form-control-sm form-control" id="">
                                                 <option value="">Select a role</option>
                                                 {role.length > 0 ? role.map(rolemain=>(
-                                                    rolemain.name !="Teacher" && rolemain.name != "Student" ? <option key={rolemain.id+"role"} value={rolemain.id}>{rolemain.name}</option>:""
+                                                    rolemain.name !="Teacher" && rolemain.name != "Student" ? <option key={rolemain.id+"role"} value={rolemain.id}>{rolemain.name}</option>:<option key={rolemain.id+"role"} disabled={true}>{rolemain.name}</option>
                                                 )):""}
                                             </select>
                                         </div>
@@ -305,7 +305,7 @@ function ManageStaff() {
 
                                         viewStaffres.formClasses.length > 0 ? viewStaffres.formClasses.map(d=>(
                                             <div key={d.id+'sec'}>{d.classname+" "+d.sectionname}</div>
-                                        )): <div key={d.id+'sec'}>Not a Form Teacher</div>
+                                        )): <div>Not a Form Teacher</div>
                                     }
 
                                </div>
@@ -321,9 +321,9 @@ function ManageStaff() {
                                         isLoadingStaff ? 
                                         ""
                                         :
-                                        viewStaffres.teachersSubject.length > 0 ? viewStaffres.teachersSubject.map(d=>(
+                                        viewStaffres == null ? <></>: viewStaffres.teachersSubject.length > 0 ? viewStaffres.teachersSubject.map(d=>(
                                             <div key={d.id+'sub'}>{d.subjectname}({d.classname+""+d.sectionname})</div>
-                                        )):<div key={d.id+'sub'}>You are not a teacher</div>
+                                        )):<div >You are not a teacher</div>
                                     }
 
                                </div>

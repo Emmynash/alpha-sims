@@ -21,14 +21,11 @@
             </form>
             {{-- <button id="button">trigger file selection</button> --}}
           </div>
-          <img id="profileimgmainpix" src="{{asset('storage/schimages/'.Auth::user()->profileimg)}}" class="img-circle elevation-2" alt="User Image">
+          <img id="profileimgmainpix" src="{{asset( Auth::user()->profileimg !=null ? Auth::user()->profileimg:'https://gravatar.com/avatar/?s=200&d=retro')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-        
+        <a href="{{ route('myprofile') }}" class="d-block">{{Auth::user()->firstname}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</a>
         </div>
-        {{-- <div class="info">
-          <a href="#" class="d-block">{{ Auth::user()->role }}</a>
-        </div> --}}
       </div>
 
       <!-- Sidebar Menu -->
@@ -300,14 +297,14 @@
             @endcan
 
             @if (Auth::user()->hasRole('Teacher'))
-              <li class="nav-item has-treeview">
+              {{-- <li class="nav-item has-treeview">
                 <a id="editteacher" href="{{ route('editprofileteacher') }}" class="nav-link">
                   <i class="nav-icon fas fa-user-edit"></i> 
                   <p>
                     Edit Profile
                   </p>
                 </a>
-              </li>
+              </li> --}}
               <li class="nav-item">
                   <a id="markmanageoption" href="{{ route('teacher_sec_remark') }}" class="nav-link">
                       <i class="fas fa-check-double nav-icon"></i>
@@ -461,7 +458,7 @@
             @endcan
   
 
-  
+            @can('result module')
             <li class="nav-item has-treeview">
               <a id="resultaside" href="#" class="nav-link">
                 <i class="nav-icon fas fa-vials"></i> 
@@ -492,6 +489,7 @@
                 </li> --}}
               </ul>
             </li>
+            @endcan
 
             @can('student promotion')
               <li class="nav-item has-treeview">
@@ -574,18 +572,7 @@
 
 
 
-            <li class="nav-item">
-              <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); 
-              document.getElementById('logout-form').submit();">
-                <i class="nav-icon fas fa-sign-out-alt"></i> 
-                <p>
-                  SignOut
-                </p>
-              </a>
-              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
-              </form>
-            </li>
+            
 
          
             @if(Auth::user()->hasRole('Student'))
@@ -779,7 +766,18 @@
                     
                 @endif
  
-
+                <li class="nav-item">
+                  <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); 
+                  document.getElementById('logout-form').submit();">
+                    <i class="nav-icon fas fa-sign-out-alt"></i> 
+                    <p>
+                      SignOut
+                    </p>
+                  </a>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                  </form>
+                </li>
 
           
       </nav>

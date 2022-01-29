@@ -40,7 +40,7 @@
                 <div class="card-body box-profile">
                   <div class="text-center">
                     <img class="profile-user-img img-fluid img-circle"
-                         src="{{asset('storage/schimages/'.Auth::user()->profileimg)}}"
+                         src="{{Auth::user()->profileimg ?? "https://gravatar.com/avatar/?s=200&d=retro"}}"
                          alt="User profile picture">
                   </div>
   
@@ -65,10 +65,10 @@
                       <!--<b>Gender</b> <a class="float-right">{{$getTeacherDetails->gender}}</a>-->
                     </li>
                     <!--<li class="list-group-item">-->
-                    <!--    @if ($getTeacherDetails->formsection == "")-->
+                    <!--    @if ($formTeacher == null)-->
                     <!--    <b>Form Master</b> <a class="float-right">No</a>-->
                     <!--    @else-->
-                    <!--<b>Form Master</b> <a class="float-right">{{$formTeacher}}{{$getTeacherDetails->formsection}}</a>-->
+                    <!--<b>Form Master</b> <a class="float-right">{{$formTeacher->classname}}{{$getTeacherDetails->formsection}}</a>-->
                     <!--    @endif-->
                       
                     <!--</li>-->
