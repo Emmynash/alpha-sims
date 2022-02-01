@@ -161,7 +161,7 @@ function Moto() {
             <button data-toggle="modal" data-target="#getstudents" className="btn btn-info btn-sm">Get Students</button>
             <hr />
             <div className="alert alert-warning">
-                <i>Note: Psychomotor can only be entered once you won't have another chance to edit</i>
+                <i>Note: You can enter Psycomotor multiple times all you need to do is to fill and resubmit.</i>
             </div>
             <div className="row">
                 <div className="col-12">
@@ -201,7 +201,7 @@ function Moto() {
                                     
 
                                     {takenarray.includes(d.id) ? 
-                                        <td><button className="btn btn-sm badge btn-success">Completed</button></td>:
+                                        <td><button className="btn btn-sm badge btn-success" data-toggle="modal" data-target="#addmotomain" onClick={()=>setUserId(d.id, d.firstname+" "+d.middlename+" "+d.lastname)}>Completed</button></td>:
                                         <td><button className="btn btn-sm badge btn-info" data-toggle="modal" data-target="#addmotomain" onClick={()=>setUserId(d.id, d.firstname+" "+d.middlename+" "+d.lastname)}>Add</button></td>}
                                         
                                         

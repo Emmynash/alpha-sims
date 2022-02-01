@@ -39,6 +39,7 @@ function FeesCollection() {
     const [classSelected, setClassSelected] = useState('')
     const [selectedSection, setSelectedSection] = useState('')
     const [studentList, setStudentList] = useState([])
+    const [studentListfiltered, setStudentListFiltered] = useState(studentList)
     const [partamount, setpartamount] = useState(0)
     const [paymentRecord, setPaymentRecord] = useState([])
     const [totalamount, setTotalAmount] = useState(0)
@@ -68,6 +69,20 @@ function FeesCollection() {
               console.log('closed')
             } // callback that will be executed after this alert is removed
           })
+    }
+
+    const handleSearch = (event) => {
+
+        let value = event.target.value.toLowerCase();
+        let result = [];
+        console.log(value);
+
+        result = studentList.filter((data) => {
+            return data.firstname.toLowerCase().search(value) != -1;
+        });
+
+        setStudentListFiltered(result);
+
     }
 
 
@@ -167,6 +182,7 @@ function FeesCollection() {
                 console.log(response);
                 setIsLoading(false)
                 setStudentList(response.data.data)
+                setStudentListFiltered(response.data.data)
 
                 setEntireClass(true)
     
@@ -194,14 +210,11 @@ function FeesCollection() {
         }).then(response=>{
             console.log(response)
             setIsLoading(false)
-            if (response.data.data == "over charge") {
-                myalert("Over charge","error")
-            }else if(response.data.data == "payment done"){
-                myalert("Student fees paid in full","error")
-            }
-            
-            else if(response.data.data == "success"){
-                myalert("Payment Successfull","success")
+
+            if(response.data.code == 401){
+                myalert(response.data.response, "error")
+            }else if(response.data.code == 200){
+                myalert(response.data.response, "success")
                 refresh(regno)
             }
             
@@ -304,7 +317,7 @@ function FeesCollection() {
                     <p style={{ margin:'0px' }}>Get student using either addmission number or by querying the entireclass</p>
                 </div>
 
-                {isLoading ? <div className="text-center"><div class="spinner-border"></div></div>:""}
+                {isLoading ? <div className="text-center"><div className="spinner-border"></div></div>:""}
 
                 <div className="card">
                     <div className="row" style={{ margin:'10px' }}>
@@ -355,7 +368,7 @@ function FeesCollection() {
                             <h3 className="card-title">Student List</h3>
                             <div className="card-tools">
                             <div className="input-group input-group-sm" style={{width: '150px'}}>
-                                <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
+                                <input type="text" name="table_search" className="form-control float-right" placeholder="Search" onChange={(event) => handleSearch(event)}/>
                                 <div className="input-group-append">
                                 <button type="submit" className="btn btn-default">
                                     <i className="fas fa-search" />
@@ -375,7 +388,7 @@ function FeesCollection() {
                                 </tr>
                             </thead>
                             <tbody>
-                                { studentList.map(student=>(
+                                { studentListfiltered.map(student=>(
                                     <tr key={student.id+"studentList"}>
                                         <td>{student.admission_no}</td>
                                         <td>{student.firstname} {student.middlename} {student.lastname}</td>
@@ -420,10 +433,10 @@ function FeesCollection() {
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-8">
-                                                <label>Fee Bulk Payment</label>
+                                                {/* <label>Fee Bulk Payment</label>
                                                 <div className="orm-group">
                                                     <button className="btn btn-sm btn-info" data-toggle="modal" data-target="#bulkpayment">Make Bulk Payment</button>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>
@@ -478,15 +491,15 @@ function FeesCollection() {
                     </div>
 
                     <div style={{ margin:'10px' }}>
-                        <button onClick={()=>payfeesInFull(studentDetails.usernamesystem)} className="btn btn-sm btn-info">Confirm Full Payment</button> 
-                        <button className="btn btn-sm btn-warning" data-toggle="modal" data-target="#partpayment">Part Payment</button>
+                        {/* <button onClick={()=>payfeesInFull(studentDetails.usernamesystem)} className="btn btn-sm btn-info">Confirm Full Payment</button>  */}
+                        <button className="btn btn-sm btn-warning" data-toggle="modal" data-target="#partpayment">Make Payment</button>
                     </div>
 
                     <div className="modal fade" id="partpayment" data-backdrop="false">
                         <div className="modal-dialog">
                             <div className="modal-content">
                             <div className="modal-header">
-                                <h4 className="modal-title">Patial Payment</h4>
+                                <h4 className="modal-title">Make Payment</h4>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                                 </button>

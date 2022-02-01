@@ -92,6 +92,8 @@ class StudentController_sec extends Controller
 
     public function store(RegisterStudents $registerStudents, Request $request){
 
+        // return $request;
+
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
@@ -102,26 +104,7 @@ class StudentController_sec extends Controller
             $validator = Validator::make($request->all(),[
                 'studentclassallocated' => 'required',
                 'studentsectionallocated' => 'required',
-                // 'studenttype' => 'required',
-                // 'studentgender' => 'required',
-                // 'studentreligion' => 'required',
-                // 'fathersname' => 'required',
-                // 'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                // 'mothersname' => 'required',
-                // 'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                // 'dateofbirth' => 'required',
-                // 'studenthouse' => 'required',
-                // 'studentclub' => 'required',
-                // 'studentaddress_sec' => 'required',
                 'admissionname' => 'required',
-                // 'firstname' => 'required',
-                // 'middlename' => 'required',
-                // 'lastname' => 'required',
-                // 'phonenumber' => 'required',
-                // 'email' => 'required|email',
-                // 'states' => 'required',
-                // 'lga' => 'required',
-                // 'hometown' => 'required',
                 'admissiondate'=>'required'
             ]);
 
@@ -143,7 +126,55 @@ class StudentController_sec extends Controller
                 return response()->json(['errors'=>$freshRegistration]);
             }
     
-
+    
+            $rollNumberProcess = $this->addstudent_sec->where(['schoolid' => Auth::user()->schoolid, 'classid' => $request->input('studentclassallocated')])->get();
+    
+    
+                $a = array();
+    
+                for ($i=0; $i < count($rollNumberProcess); $i++) {
+                    
+                    $rollnumber = $rollNumberProcess[$i]['renumberschoolnew'];
+                    array_push($a, $rollnumber);
+                }
+    
+                if (count($a) > 0) {
+                    $maxrollnum = max($a);
+                    $newrolnumber = $maxrollnum + 1;
+                }else{
+                    $newrolnumber = '1';
+                }
+    
+    
+            $Addstudent = new Addstudent_sec();
+            $Addstudent->classid = $request->input('studentclassallocated');
+            $Addstudent->schoolid = Auth::user()->schoolid;
+            $Addstudent->usernamesystem = $request->input('studentsystemnumber');
+            $Addstudent->renumberschoolnew = $newrolnumber;
+            $Addstudent->studentsection = $request->input('studentsectionallocated');
+            $Addstudent->schoolsession = $schooldetails->schoolsession;
+            $Addstudent->studentshift = $request->input('studenttype');
+            $Addstudent->sessionstatus = 0;
+            $Addstudent->admission_no = $request->admissionname;
+            $Addstudent->admissiondate = $request->admissiondate;
+            $Addstudent->save();
+    
+            //asign student role
+    
+            $userId = $this->user->where('id', $request->input('studentsystemnumber'))->first();
+            $userIdFinal = $userId->id;
+    
+            //update schoolId field
+            $schoolIdUpdate = $this->user->find($userIdFinal);
+            $schoolIdUpdate->schoolid = Auth::user()->schoolid;;
+            $schoolIdUpdate->role = "Student";
+            $schoolIdUpdate->save();
+    
+            $user = User::find($request->input('studentsystemnumber'));
+    
+            $user->assignRole('Student');
+    
+            return response()->json(['response'=>'success']);
 
         }else{
 
@@ -152,26 +183,10 @@ class StudentController_sec extends Controller
             $validator = Validator::make($request->all(),[
                 'studentclassallocated' => 'required',
                 'studentsectionallocated' => 'required',
-                // 'studenttype' => 'required',
-                // 'studentgender' => 'required',
-                // 'studentreligion' => 'required',
-                // 'fathersname' => 'required',
-                // 'fathersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                // 'mothersname' => 'required',
-                // 'mothersphonenumber' => 'required|regex:/(0)[0-9]{10}/',
-                // 'dateofbirth' => 'required',
-                // 'studenthouse' => 'required',
-                // 'studentclub' => 'required',
-                // 'studentaddress_sec' => 'required',
                 'admissionname' => 'required',
                 'firstname' => 'required',
-                // 'middlename' => 'required',
                 'lastname' => 'required',
-                // 'phonenumber' => 'required',
                 'email' => 'required|email',
-                // 'states' => 'required',
-                // 'lga' => 'required',
-                // 'hometown' => 'required',
                 'admissiondate'=>'required'
             ]);
 

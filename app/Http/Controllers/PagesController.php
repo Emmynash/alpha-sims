@@ -9,204 +9,32 @@ use App\Classlist;
 use App\Addhouses;
 use App\Addsection;
 use App\AddClub;
-use App\Addmarks;
 use App\Addgrades;
 use App\Addgrades_sec;
-use App\Addhouse_sec;
-use App\Addsection_sec;
-use App\Addstudent_sec;
-use App\Addsubject_sec;
-use App\AdmissionsTbl;
-use App\Classlist_sec;
 use App\FormTeachers;
 use App\TeacherSubjects;
-use Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Redirect;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Multitenancy\Models\Tenant;
 use Validator;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class PagesController extends Controller
 {
+
     public function index(){
-
-
-
-            // DB::transaction(function()
-            // {
-                
-
-
-
-            //     $allList = AdmissionsTbl::all();
-
-            //     //create email address for students dummy.. firstname plus serial number
-        
-            //     $arrayList = array();
-            //     $passwordMain = Hash::make('password');
-        
-            //     for ($i=0; $i < $allList->count(); $i++) { 
-        
-                    
-                    
-        
-            //         $explodeadmissionno = explode('/', $allList[$i]['AdmNo']);
-        
-            //         $dummyemailis = $allList[$i]['Surname'].$explodeadmissionno[3]."@gmail.com";
-        
-        
-        
-            //         $checkIfEntered = User::where('email', $dummyemailis)->get();
-        
-        
-            //         if (count($checkIfEntered) < 1) {
-                    
-        
-            //         //student name
-            //         $firstname = $allList[$i]['Surname'];
-            //         $middlename = $allList[$i]['Othernames'];
-            //         $explode = explode(",", $allList[$i]['PGPhoneNo']);
-            //         $phone = $explode[0];
-            //         $fathername = $allList[$i]['PGName'];
-            //         $address = $allList[$i]['PGHomeAdd'];
-            //         $dateofbirth = $allList[$i]['BirthDate'];
-            //         $dateAdmited = $allList[$i]['DateAdm'];
-            //         $states = $allList[$i]['State'];
-            //         $lga = $allList[$i]['LGA'];
-            //         $hometown = $allList[$i]['HomeTown'];
-            //         $class = $allList[$i]['ClassAdm'];
-            //         $houses = $allList[$i]['House'];
-            //         $religion = $allList[$i]['Religion'];
-            //         $studentHouse = Addhouse_sec::where(['schoolid'=>"8", 'housename'=>$houses])->first();
-            //         $studentHouseMain = $studentHouse->id;
-            //         $gender = $allList[$i]['Gender'];
-        
-        
-        
-        
-        
-            //         //get student section
-        
-            //         $section = $allList[$i]['ClassAdm'];
-        
-            //         $explodeClass = str_split($section);
-        
-            //         if (count($explodeClass) > 5) {
-            //             $getsection = Addsection_sec::where(['schoolid'=>"8", 'sectionname'=>$explodeClass[5]])->first();
-        
-            //             $studentclass = $explodeClass[0].$explodeClass[1].$explodeClass[2].$explodeClass[4];
-        
-            //         }else{
-            //             $getsection = Addsection_sec::where(['schoolid'=>"8", 'sectionname'=>$explodeClass[4]])->first();
-        
-            //             $studentclass = $explodeClass[0].$explodeClass[1].$explodeClass[2].$explodeClass[3];
-            //         }
-        
-            //         $studentsectionidmain = $getsection->id;
-        
-            //         //get class id
-            //         $getStudentClass = Classlist_sec::where(['schoolid'=>"8", "classname"=>$studentclass])->first();
-        
-            //         $classidMain = $getStudentClass->id;
-        
-        
-        
-            //         //create account for user now
-        
-            //         $createUser = new User();
-            //         $createUser->firstname = $firstname;
-            //         $createUser->lastname = $middlename;
-            //         $createUser->email = $dummyemailis;
-            //         $createUser->schoolid = "8";
-            //         $createUser->role = "Student";
-            //         $createUser->phonenumber = $phone;
-            //         $createUser->password = $passwordMain;
-            //         $createUser->save();
-        
-        
-        
-            //         $rollNumberProcess = Addstudent_sec::where(['schoolid' => "8", 'classid' => $classidMain])->get();
-            
-            
-            //         $a = array();
-        
-            //         for ($i=0; $i < count($rollNumberProcess); $i++) {
-                        
-            //             $rollnumber = $rollNumberProcess[$i]['renumberschoolnew'];
-            //             array_push($a, $rollnumber);
-            //         }
-        
-            //         if (count($a) > 0) {
-            //             $maxrollnum = max($a);
-            //             $newrolnumber = $maxrollnum + 1;
-            //         }else{
-            //             $newrolnumber = '1';
-            //         }
-        
-        
-        
-            //         $Addstudent = new Addstudent_sec();
-            //         $Addstudent->classid = $classidMain;
-            //         $Addstudent->schoolid = "8";
-            //         $Addstudent->usernamesystem = $createUser->id;
-            //         $Addstudent->renumberschoolnew = $newrolnumber;
-            //         $Addstudent->nationality = "Nigerian";
-            //         $Addstudent->studentsection = $studentsectionidmain;
-            //         $Addstudent->schoolsession = "2020/2021";
-            //         $Addstudent->gender = $gender;
-            //         $Addstudent->studenthouse = $studentHouseMain;
-            //         $Addstudent->studentreligion = $religion;
-            //         $Addstudent->studentfathername = $fathername;
-            //         $Addstudent->studentfathernumber = $phone;
-            //         $Addstudent->studentpresenthomeaddress = $address;
-            //         $Addstudent->studentpermanenthomeaddress = $address;
-            //         $Addstudent->dateOfBirth = $dateofbirth;
-            //         $Addstudent->sessionstatus = 0;
-            //         $Addstudent->admission_no = $allList[$i]['AdmNo'];
-            //         $Addstudent->states = $states;
-            //         $Addstudent->lga = $lga;
-            //         $Addstudent->hometown = $hometown;
-            //         $Addstudent->dateadmited = $dateAdmited;
-            //         $Addstudent->save();
-            
-            //         //asign student role
-            
-            //         $user = User::find($createUser->id);
-            
-            //         $user->assignRole('Student');
-        
-        
-        
-            //             array_push($arrayList, $getStudentClass->id);
-        
-            //     }
-        
-            //         }
-
-
-
-
-
-
-            // });
-
-
-
-
-            // return "Success";
-
         
         if(Auth::guest()){
             
-        $addpost = Addpost::where('status', 'Approved')->get();
-
-        return view('pages.index')->with('addpost', $addpost);
+            return view('pages.index');
             
         }else{
             return redirect('/home');
         }
+    }
+
+    public function domainSelect()
+    {
+        return view('secondary.domain.domain');
     }
 
     public function addTerm(Request $request)

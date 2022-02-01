@@ -497,7 +497,7 @@ class SuperController extends Controller
 
     public function roleList()
     {
-        $role = Role::all();
+        $role = Role::with('permissions')->get();
 
         return view('super.roleslist', compact('role'));
     }

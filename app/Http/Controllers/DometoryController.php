@@ -158,7 +158,7 @@ class DometoryController extends Controller
 
             $regno = $explodedids[$i];
 
-            $addstudent_sec = Addstudent_sec::where(['id'=>$regno, 'schoolid'=> Auth::user()->schoolid])->get();
+            $addstudent_sec = Addstudent_sec::where(['admission_no'=>$regno, 'schoolid'=> Auth::user()->schoolid])->get();
 
             if (count($addstudent_sec) > 0) {
 

@@ -14,9 +14,13 @@ use App\ResultAverage;
 use App\Addstudent_sec;
 use App\PromotionAverage_sec;
 use App\Addteachers_sec;
+use App\AssesmentModel;
+use App\AssessmentTableTotal;
 use App\CLassSubjects;
 use App\ElectiveAdd;
+use App\RecordMarks;
 use App\Repository\Result\GetSubjectPosition;
+use App\SubAssesmentModel;
 use App\SubjectScoreAllocation;
 use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
@@ -127,14 +131,23 @@ class AddstudentmakrsController_secs extends Controller
             
                 $studentlist = DB::table('addstudent_secs')
                 ->join('users', 'users.id', '=', 'addstudent_secs.usernamesystem')
-                ->leftJoin('addmark_secs', function($join) use($subjectbyclassid, $schoolterm){
-                    $join->on('addmark_secs.regno', '=', 'addstudent_secs.id');
-                    $join->where(['addmark_secs.subjectid' => $subjectbyclassid, 'addmark_secs.term'=> $schoolterm]);
+                ->leftJoin('assessment_table_totals', function($join) use($subjectbyclassid, $schoolterm){
+                    $join->on('assessment_table_totals.regno', '=', 'addstudent_secs.id');
+                    $join->where(['assessment_table_totals.subjectid' => $subjectbyclassid, 'assessment_table_totals.term'=> $schoolterm]);
                 })
-                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmark_secs.subjectid', 'addmark_secs.exams', 'addmark_secs.grades', 'addmark_secs.totalmarks', 'addmark_secs.ca1', 'addmark_secs.ca2', 'addmark_secs.ca3', 'addmark_secs.id as markid', 'addmark_secs.position')
+                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'assessment_table_totals.totals', 'assessment_table_totals.grade', 'assessment_table_totals.id as markid', 'assessment_table_totals.position')
                 ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
+
+                $assessment = AssesmentModel::where('schoolid',Auth::user()->schoolid)->pluck('id')->toArray();
+
+                for ($i=0; $i < count($assessment); $i++) { 
+
+                    
+                    
+                }
+
     
-                return response()->json(['studentlist'=>$studentlist, 'a'=>$a], 200);
+                return response()->json(['studentlist'=>$studentlist, 'assessment'=>$assessment], 200);
     
             }else{
 
@@ -142,11 +155,11 @@ class AddstudentmakrsController_secs extends Controller
             
                 $studentlist = Addstudent_sec::
                 join('users', 'users.id', '=', 'addstudent_secs.usernamesystem')
-                ->leftJoin('addmark_secs', function($join) use($subjectbyclassid, $schoolterm){
-                    $join->on('addmark_secs.regno', '=', 'addstudent_secs.id');
-                    $join->where(['addmark_secs.subjectid' => $subjectbyclassid, 'addmark_secs.term'=> $schoolterm]);
+                ->leftJoin('assessment_table_totals', function($join) use($subjectbyclassid, $schoolterm){
+                    $join->on('assessment_table_totals.regno', '=', 'addstudent_secs.id');
+                    $join->where(['assessment_table_totals.subjectid' => $subjectbyclassid, 'assessment_table_totals.term'=> $schoolterm]);
                 })
-                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'addmark_secs.subjectid', 'addmark_secs.exams', 'addmark_secs.grades', 'addmark_secs.totalmarks', 'addmark_secs.ca1', 'addmark_secs.ca2', 'addmark_secs.ca3', 'addmark_secs.id as markid', 'addmark_secs.position')
+                ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'assessment_table_totals.totals', 'assessment_table_totals.grade', 'assessment_table_totals.id as markid')
                 ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
 
                 $mainList = array();
@@ -254,10 +267,142 @@ class AddstudentmakrsController_secs extends Controller
 
         $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
 
-        $subjectScore = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
+        // $subjectScore = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
+
+        $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+
+        
 
 
-        return response()->json(['classlist'=>$classlist, 'subjects'=>$subjects, 'schoolsection'=>$schoolsection, 'schooldetails'=>$schooldetails, 'subjectScore'=>$subjectScore]);
+        return response()->json(['classlist'=>$classlist, 'subjects'=>$subjects, 'schoolsection'=>$schoolsection, 'schooldetails'=>$schooldetails, 'assessment'=>$assessment]);
+        
+    }
+
+    public function fetchsubassessment($id, $studentid)
+    {
+        try {
+
+            $subassessment = SubAssesmentModel::where(['status'=>1, 'catid'=>$id])->get();
+
+            return response()->json(['subassessment'=>$subassessment]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['msg'=>$th]);
+        }
+    }
+
+    public function addStudentRecord(Request $request)
+    {
+
+        try {
+            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+
+            //check if the value entered is within range of allocated marks
+            $checkRange = SubAssesmentModel::find($request->subassessment_id);
+
+            if($request->scrores > $checkRange->maxmarks){
+                return response()->json(['response'=>"marks entered must be within the allocated range...", 'code'=>409], 200);
+            }
+
+
+            $recordMarks = RecordMarks::updateOrcreate(
+                ['subjectid'=>$request->subjectid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term,
+                'section_id'=>$request->section_id, 'student_id'=>$request->student_id, 'assesment_id'=>$request->assesment_id, 'subassessment_id'=>$request->subassessment_id],
+                ['subjectid'=>$request->subjectid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term,
+                'section_id'=>$request->section_id, 'student_id'=>$request->student_id, 'scrores'=>$request->scrores, 
+                'class_id'=>$request->class_id, 'school_id'=>Auth::user()->schoolid, 'assesment_id'=>$request->assesment_id, 'subassessment_id'=>$request->subassessment_id]);
+
+                //compile subject total
+
+                $getSubjecttoal = RecordMarks::where(['subjectid'=>$request->subjectid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'section_id'=>$request->section_id, 'student_id'=>$request->student_id])->sum('scrores');
+
+                //get student grade.
+                $getGrade = Addgrades_sec::where('schoolid', Auth::user()->schoolid)->get();
+
+                $gradeFinal = '';
+
+                for ($i=0; $i < count($getGrade); $i++) { 
+                    
+                    if ($getSubjecttoal >= (int)$getGrade[$i]->marksfrom && $getSubjecttoal <= (int)$getGrade[$i]->marksto) {
+                        $gradeFinal = $getGrade[$i]->gpaname;
+                    }
+
+                }
+
+                //add values to record table
+                $addTotalMarks = AssessmentTableTotal::updateOrcreate(
+                    ['regno'=>$request->student_id, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$request->class_id, 'subjectid'=>$request->subjectid,
+                    'term' =>$schooldetails->term, 'session'=>$schooldetails->schoolsession, 'sectionid'=>$request->section_id],
+                    ['regno'=>$request->student_id, 'schoolid'=>Auth::user()->schoolid,
+                    'catid'=>$request->assesment_id, 'classid'=>$request->class_id, 'subjectid'=>$request->subjectid,
+                    'totals'=>$getSubjecttoal, 'term' =>$schooldetails->term, 'session'=>$schooldetails->schoolsession, 'sectionid'=>$request->section_id, 'grade'=>$gradeFinal]);
+
+
+                    
+                    DB::beginTransaction();
+
+                    try {
+                                            //calculate student position
+                    $getAllTotalMarks = AssessmentTableTotal::where(['schoolid'=>Auth::user()->schoolid,
+                                        'classid'=>$request->class_id, 'subjectid'=>$request->subjectid, 'term' =>$schooldetails->term, 'session'=>$schooldetails->schoolsession, 'sectionid'=>$request->section_id,])->orderBy('totals', 'desc')->get();
+
+                        $subjectscrorearray = array();
+                        
+                        for ($i=0; $i < count($getAllTotalMarks); $i++) { 
+                            $score = (int)$getAllTotalMarks[$i]['totals'];
+                                array_push($subjectscrorearray, $score);
+                        }
+            
+                        for ($i=0; $i < count($getAllTotalMarks); $i++) { 
+            
+                            $mainScore = (int)$getAllTotalMarks[$i]['totals'];
+                            $mainScoreId = $getAllTotalMarks[$i]['id'];
+                            $positiongotten = array_search($mainScore, $subjectscrorearray);
+                            $newPosition = $positiongotten + 1;
+            
+                            DB::table('assessment_table_totals')->where('id',$mainScoreId)->update(array(
+                                'position'=>$newPosition
+                            ));
+            
+                        }
+            
+                        DB::commit();
+                        // all good
+                        // return $subjectscrorearray;
+                        
+                    } catch (\Exception $e) {
+                        DB::rollback();
+            
+                        return $e;
+                        // something went wrong
+                    }
+
+
+                return response()->json(['response'=>"Process was successful", 'code'=>200], 200);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response'=>$th, 'code'=>400], 200);
+        }
+        
+    }
+
+    public function getScoreRecord(Request $request)
+    {
+
+        try {
+            $getScoreRecord = RecordMarks::join('assesment_models', 'assesment_models.id','=','record_marks.assesment_id')
+                            ->join('sub_assesment_models', 'sub_assesment_models.id','=','record_marks.subassessment_id')
+                            ->where(['record_marks.subjectid' => $request->selected_subject, 'record_marks.class_id' => $request->selected_class, 'record_marks.term' => $request->selected_term, 'record_marks.session' => $request->currentsession, 'student_id' => $request->userid])
+                            ->select('record_marks.*', 'assesment_models.name', 'sub_assesment_models.subname')->get();
+
+            return response()->json(['response'=>$getScoreRecord, 'code'=>200], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+        }
         
     }
 

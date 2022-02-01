@@ -11,14 +11,14 @@
         "php": "^8.0.0",
         "barryvdh/laravel-dompdf": "^0.9.0",
         "cloudinary-labs/cloudinary-laravel": "^1.0",
-        "fideloper/proxy": "^4.0",
-        "guzzlehttp/guzzle": "^7.3.0",
+        "doctrine/dbal": "^3.3",
+        "fideloper/proxy": "^4.4",
         "laravel/framework": "^8.0",
-        "laravel/legacy-factories": "^1.1",
         "laravel/passport": "^10.1",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "nesbot/carbon": "^2.31",
+        "spatie/laravel-multitenancy": "^2.0",
         "spatie/laravel-permission": "^4.0",
         "unicodeveloper/laravel-paystack": "^1.0"
     },
@@ -36,7 +36,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "laravel/dusk"
+            ]
         }
     },
     "autoload": {
@@ -65,4 +67,5 @@
             "@php artisan key:generate --ansi"
         ]
     }
+    
 }

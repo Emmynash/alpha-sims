@@ -12,3 +12,4 @@ Homestead.json
 Homestead.yaml
 .env
 .phpunit.result.cache 
+/config/database.php

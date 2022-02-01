@@ -1,8 +1,12 @@
-@extends('layouts.app_sec')
+@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@include('layouts.aside_sec')
+@if ($schooldetails->schooltype == "Primary")
+@include('layouts.asideside') 
+@else
+  @include('layouts.aside_sec')
+@endif
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -40,8 +44,8 @@
                           <i style="font-size: 10px;">Select Class</i>
                             <select name="selectedclassmarks" id="" class="form-control form-control-sm">
                                 <option value="">Select a class</option>
-                                @if (count($allDetails['classlist_sec']) > 0)
-                                  @foreach ($allDetails['classlist_sec'] as $classes)
+                                @if (count($classlist_sec) > 0)
+                                  @foreach ($classlist_sec as $classes)
                                     <option value="{{$classes->id}}">{{$classes->classname}}</option>
                                   @endforeach
                                     
@@ -61,7 +65,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                           <i style="font-size: 10px;">Student reg no.</i>
-                            <input type="text" name="studentRegnomarks" value="{{ Auth::user()->role == 'Student' ?  $allDetails['studentdetails'][0]['id'] :''}}" {{ Auth::user()->role == "Student" ? "Readonly" : ""}} class="form-control form-control-sm">
+                            <input type="text" name="studentRegnomarks" value="{{ Auth::user()->role == 'Student' ?  $studentdetails->id :''}}" {{ Auth::user()->role == "Student" ? "Readonly" : ""}} class="form-control form-control-sm">
                         </div>
                         <div class="form-group">
                           <i style="font-size: 10px;">Session</i>

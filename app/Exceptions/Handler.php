@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Spatie\Multitenancy\Exceptions\NoCurrentTenant;
 
 class Handler extends ExceptionHandler
 {
@@ -34,6 +35,11 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $exception)
     {
+
+        $this->reportable(function (NoCurrentTenant $e) {
+            
+        });
+
         parent::report($exception);
     }
 
@@ -46,6 +52,15 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+
+        if ($exception instanceof NoCurrentTenant) {
+            return response()->view('secondary.domain.domain', [], 500);
+        }
+
+        // if (config('database.default') === 'landlord') {
+        //     return response()->view('secondary.domain.domain', [], 500);
+        // }
+        
         return parent::render($request, $exception);
     }
 

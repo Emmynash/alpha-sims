@@ -4,7 +4,7 @@ use App\Http\Controllers\PromotionController_sec;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
+use Spatie\Multitenancy\Models\Tenant;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +19,30 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', "PagesController@index");
 
+Route::get('/selectdomain', [
+    'as' => 'redirect-route',
+    'uses' => 'PagesController@domainSelect',
+]);
+
+
+
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
+    Route::get('/admin', "LandLordController@dashUltimate")->name('admin');
+    Route::get('/schoollist', "LandLordController@schoolList")->name('schoollist');
+    Route::post('/onboard', "LandLordController@onBoard")->name('onboard');
+});
+
+
+
+
+Route::middleware(['tenant'])->group(function () {
+
+
+    Auth::routes(['verify' => true]);
 
 Route::group(['prefix' => 'pri'], function () {
-
+    
     Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
         Route::get('/viewclasslist', 'ClassesController@index')->name('viewclasslist');
     });
@@ -139,15 +160,7 @@ Route::group(['prefix' => 'pri'], function () {
         Route::POST('/studentatt', 'StudentController@studentAtt')->name('studentatt');
 
     });
-
-    
-
-
-
-
-
-    
-    
+  
 });
 
 
@@ -228,7 +241,7 @@ Route::POST('/editteachersdata', ['uses' => 'TeachersController@editteachersdata
 
 Route::POST('/deletesubject', ['uses' => 'SubjectController@deleteSubject','roles' => ['Admin', 'Teacher']])->middleware('roles');
 
-Auth::routes(['verify' => true]);
+
 
 // Route::get('/home', 'HomeController@index')->name('home');
 Route::POST('/uploadProfilePix', 'HomeController@uploadProfilePix')->middleware('auth');
@@ -290,7 +303,7 @@ Route::group(['middleware' => ['auth', 'can:view edit class']], function () {
 
 
 
-Route::group(['prefix' => 'sec'], function () {
+Route::group(['prefix' => 'sec', 'middleware'=>'tenant'], function () {
 
     Route::group(['prefix' => 'setting', 'middleware' => ['auth', 'can:settings']], function () { //School setup route grades_sec
 
@@ -514,10 +527,13 @@ Route::group(['middleware' => ['auth', 'can:manage marks']], function () {
     Route::get('get_school_basic_details', 'AddstudentmakrsController_secs@getSchoolBasicDetails');
     Route::get('/fetch_students_marks/{id}/{sectionid}', 'AddstudentmakrsController_secs@fetchstudentssubject');
     Route::get('fetch_student_sections/{id}', 'AddstudentmakrsController_secs@fetchStudentSections');
+    Route::get('fetchsubassessment/{id}/{studentid}', 'AddstudentmakrsController_secs@fetchsubassessment');
     Route::POST('/fetch_subject_details', 'AddstudentmakrsController_secs@fetchsubjectdetails');
     Route::POST('/fetch_subject_student_details', 'AddstudentmakrsController_secs@getallstudentsandmarks');
     Route::POST('/add_marks_main', 'AddstudentmakrsController_secs@addmarksmiain')->name('add_marks_main');
     Route::POST('/marks_process_main', 'AddstudentmakrsController_secs@processPosition');
+    Route::POST('/add_student_scores', 'AddstudentmakrsController_secs@addStudentRecord');
+    Route::POST('/get_student_scores', 'AddstudentmakrsController_secs@getScoreRecord');
 });
 
 
@@ -598,6 +614,8 @@ Route::post('webhook', 'WebhookController@handle');
 
 //profile controller
 Route::get('myprofile', 'MyProfileController@index')->name('myprofile');
+Route::post('updatepassword', 'MyProfileController@updatePassword')->name('updatepassword');
+Route::post('updateprofile', 'MyProfileController@updateProfile')->name('updateprofile');
 
 
 
@@ -617,6 +635,9 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::get('/index_fees', 'AccountController@index_fees')->name('index_fees');
          Route::get('/summary', 'AccountController@summary')->name('summary')->middleware(['auth', 'can:view account summary']); 
          Route::get('/invoices', 'AccountController@invoices')->name('invoices')->middleware(['auth', 'can:invoice management']); 
+         Route::get('/viewinvoices/{id}', 'AccountController@viewinvoices')->name('viewinvoices')->middleware(['auth', 'can:invoice management']); 
+         Route::get('/printinvoice/{id}', 'AccountController@printinvoice')->name('printinvoice')->middleware(['auth', 'can:invoice management']); 
+         Route::get('/invoicepaymenthis/{id}', 'AccountController@invoicePaymentHistory')->name('invoicepaymenthis')->middleware(['auth', 'can:invoice management']); 
          Route::get('/unpaid_fees', 'AccountController@unpaid_fees')->name('unpaid_fees')->middleware(['auth', 'can:invoice management']); 
          Route::get('/order_request', 'AccountController@orderRequest')->name('order_request')->middleware(['auth', 'can:can send or receive request']);
 
@@ -627,6 +648,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::post('/fetchstudentdataforfee', 'AccountController@fetchstudentdataforfee')->name('fetchstudentdataforfee'); 
          Route::post('/confirm_money_received_fees', 'AccountController@confirmMoneyReceived')->name('confirm_money_received_fees');
          Route::post('/sendmoneyrequest', 'AccountController@sendMoneyRequest')->name('sendmoneyrequest');
+         Route::post('/notify-item-finish', 'AccountController@item_finish_notification')->name('notify-item-finish');
          Route::get('/inventory', 'AccountController@inventory')->name('inventory')->middleware(['auth', 'can:access inventory']);
          Route::post('/inventory_add_item', 'AccountController@inventory_add_item')->name('inventory_add_item');
          Route::post('/add_invoice_order/{id}', 'AccountController@addInvoiceOrder')->name('add_invoice_order'); 
@@ -636,6 +658,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
          Route::post('/fees_part_payment', 'AccountController@feesPartPayment')->name('fees_part_payment');
          Route::post('/add_student_discount', 'AccountController@addStudentDiscount')->name('add_student_discount');
          Route::get('/get_all_student_discount', 'AccountController@get_all_student_discount')->name('get_all_student_discount');
+         Route::get('/discontinue_discount/{id}', 'AccountController@discontinue_discount')->name('discontinue_discount');
 
          Route::group(['middleware' => ['can:add event']], function () { // library module
             Route::post('/post_event', 'CalenderController@postAnEvent')->name('post_event');
@@ -677,5 +700,4 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/login', 'AccountController@feesPartPayment')->name('fees_part_payment');
 });
 
-
-// -----------------------------------------------------------------------------------------
+});

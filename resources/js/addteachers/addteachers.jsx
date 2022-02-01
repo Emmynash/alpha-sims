@@ -11,7 +11,7 @@ const AddTeachers=()=>{
     const [section_sec, setSection_sec] = useState([])
     const [allTeachersWithSubject, setAllTeachersWithSubject] = useState([])
     const [systemNumber, setSystemNumber] = useState('')
-    const [teacherDetail, setTeacherdetails] = useState([])
+    const [teacherDetail, setTeacherdetails] = useState({})
     const [verified, setverified] = useState(false)
     const [isloadingTeacher, setisloadingTeacher] = useState(false)
     const [classid, setclassid] = useState(0)
@@ -19,6 +19,7 @@ const AddTeachers=()=>{
     const [sectionmain, setSection] = useState('')
     const [isLoading, setisLoading] = useState(false)
     const [teacherList, setTeacherList] = useState([])
+    const [teacherListfiltered, setTeacherListfiltered] = useState(teacherList)
     const [isUnasigning, setUnasigning] = useState(false)
     const alert = useAlert()
 
@@ -42,6 +43,7 @@ const AddTeachers=()=>{
             setSection_sec(response.data.addsection_sec)
             // setAllTeachersWithSubject(response.data.getAllTeachersWithSubject)
             setTeacherList(response.data.getAllTeachers)
+            setTeacherListfiltered(response.data.getAllTeachers)
             
 
 
@@ -191,6 +193,21 @@ const AddTeachers=()=>{
         
     }
 
+    const handleSearch = (event) => {
+
+        let value = event.target.value.toLowerCase();
+
+        let result = [];
+
+        console.log(value);
+
+        result = teacherList.filter((data) => {
+            return data.firstname.toLowerCase().search(value) != -1;
+        });
+        setTeacherListfiltered(result);
+
+    }
+
     function unasignSubjectToTeacher(tableid) {
 
         // if (systemNumber !="" && subjectid != 0 && systemNumber !=0 && classid !=0) {
@@ -283,7 +300,7 @@ const AddTeachers=()=>{
                     <h3 className="card-title">Teachers</h3>
                     <div className="card-tools">
                         <div className="input-group input-group-sm" style={{width: '150px'}}>
-                        <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
+                        <input type="text" name="table_search" className="form-control float-right" placeholder="Search" onChange={(event) => handleSearch(event)}/>
                         <div className="input-group-append">
                             <button type="submit" className="btn btn-default">
                             <i className="fas fa-search" />
@@ -304,9 +321,7 @@ const AddTeachers=()=>{
                         </tr>
                         </thead>
                         <tbody>
-                            { teacherList.length > 0 ? 
-                            
-                            teacherList.map(teachers=>(
+                            { teacherListfiltered.map(teachers=>(
 
                                     <tr key={teachers.id}>
                                         <td>{teachers.firstname} {teachers.middlename} {teachers.lastname}</td>
@@ -317,7 +332,7 @@ const AddTeachers=()=>{
                                         </td>
                                     </tr>
 
-                                )):<tr></tr>
+                                ))
 
                             }
                         </tbody>
@@ -366,13 +381,13 @@ const AddTeachers=()=>{
                                                 </div>
                                             </div>
                                             <div className="col-md-8 text-center">
-                                                {teacherDetail.map(details=>(
+                                                {teacherDetail == null ? <></>:
                                                     <div>
-                                                        <p style={{ margin:'2px' }}>{details.firstname}</p>
-                                                        <p style={{ margin:'2px' }}>{details.middlename}</p>
-                                                        <p style={{ margin:'2px' }}>{details.lastname}</p>
+                                                        <p style={{ margin:'2px' }}>{teacherDetail.firstname}</p>
+                                                        <p style={{ margin:'2px' }}>{teacherDetail.middlename}</p>
+                                                        <p style={{ margin:'2px' }}>{teacherDetail.lastname}</p>
                                                     </div>
-                                                ))}
+                                                }
                                                 
                                             </div>
                                         </div>

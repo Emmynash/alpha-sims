@@ -38,6 +38,7 @@
         "print-js": "^1.6.0",
         "react-alert": "^7.0.3",
         "react-alert-template-basic": "^1.0.2",
+        "react-beautiful-dnd": "^13.1.0",
         "react-bootstrap": "^1.6.1",
         "react-data-table-component": "^6.11.7",
         "react-modal": "^3.14.3",

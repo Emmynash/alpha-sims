@@ -4,7 +4,7 @@
 
 
 
-@if ($mainStudentDetails['schooldetails']->schooltype == "Primary")
+@if ($schooldetails->schooltype == "Primary")
 @include('layouts.asideside') 
 @else
   @include('layouts.aside_sec')
@@ -34,9 +34,6 @@
     <section class="content">
       <div class="container-fluid">
 
-
-
-
         <div class="row">
             <div class="col-md-3">
   
@@ -45,23 +42,23 @@
                 <div class="card-body box-profile">
                   <div class="text-center">
                     <img class="profile-user-img img-fluid img-circle"
-                         src="{{asset('storage/schimages/'.Auth::user()->profileimg)}}"
+                         src="{{Auth::user()->profileimg ?? "https://gravatar.com/avatar/?s=200&d=retro"}}"
                          alt="User profile picture">
                   </div>
   
                 <h3 class="profile-username text-center">{{Auth::user()->firstname}} {{Auth::user()->middlename}} {{AUth::user()->lastname}}</h3>
   
-                  <p class="text-muted text-center">{{$mainStudentDetails['studentsDetailsMain']['schoolname']}}</p>
+                  <p class="text-muted text-center">{{$addstudentsec->schoolname}}</p>
   
                   <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
-                    <b>Class</b> <a class="float-right">{{$mainStudentDetails['studentsDetailsMain']['classname']}}{{$mainStudentDetails['studentsDetailsMain']['sectionname']}}</a>
+                    <b>Class</b> <a class="float-right">{{$addstudentsec->classname}}{{$addstudentsec->sectionname}}</a>
                     </li>
                     <li class="list-group-item">
-                      <b>Admission. No:</b> <a class="float-right">{{$mainStudentDetails['studentsDetailsMain']['admission_no']}}</a>
+                      <b>Admission. No:</b> <a class="float-right">{{$addstudentsec->admission_no}}</a>
                     </li>
                     <li class="list-group-item">
-                      <b>Reg. No.</b> <a class="float-right">{{$mainStudentDetails['studentsDetailsMain']['id']}}</a>
+                      <b>Reg. No.</b> <a class="float-right">{{$addstudentsec->id}}</a>
                     </li>
                     <li class="list-group-item">
                     <b>System No.</b> <a class="float-right">{{Auth::user()->id}}</a>
@@ -70,7 +67,7 @@
                     <b>Role</b> <a class="float-right">{{Auth::user()->role}}</a>
                     </li>
                     <li class="list-group-item">
-                    <b>Gender</b> <a class="float-right">{{$mainStudentDetails['studentsDetailsMain']['gender']}}</a>
+                    <b>Gender</b> <a class="float-right">{{$addstudentsec->gender ?? "N.A"}}</a>
                     </li>
                   </ul>
                 </div>
@@ -88,20 +85,20 @@
                   <strong><i class="fas fa-book mr-1"></i> school</strong>
   
                   <p class="text-muted">
-                    {{$mainStudentDetails['studentsDetailsMain']['schoolname']}}
+                    {{$addstudentsec->schoolname}}
                   </p>
   
                   <hr>
   
                   <strong><i class="fas fa-map-marker-alt mr-1"></i> Address</strong>
   
-                  <p class="text-muted">{{$mainStudentDetails['studentsDetailsMain']['studentpermanenthomeaddress']}}</p>
+                  <p class="text-muted">{{$addstudentsec->studentpermanenthomeaddress}}</p>
   
                   <hr>
   
                   <strong><i class="fas fa-pencil-alt mr-1"></i> Date of Birth</strong>
   
-                <p class="text-muted">{{$mainStudentDetails['studentsDetailsMain']['dateOfBirth']}}</p>
+                <p class="text-muted">{{$addstudentsec->dateOfBirth}}</p>
   
                   <hr>
   
@@ -129,8 +126,8 @@
 
                         <br>
                         <ul class="list-group" id="myList" style="height: 400px; overflow-y: scroll;">
-                            @if (count($mainStudentDetails['addsubjects']) > 0)
-                                @foreach ($mainStudentDetails['addsubjects'] as $subject)
+                            @if (count($addsubjects) > 0)
+                                @foreach ($addsubjects as $subject)
                                     <li class="list-group-item" style="display: flex;">
                                         <div style="display: flex; flex-direction: column;">
                                             <i style="font-size: 10px; font-style: normal; font-weight: bold;">Subject</i>
@@ -154,7 +151,7 @@
                           <i style="margin-left: 5px;">Todays date is: {{date('Y-m-d')}}</i>
                       </div>
                       <div class="row">
-                        @if (count($mainStudentDetails['daysarray']) > 0)
+                        {{-- @if (count($mainStudentDetails['daysarray']) > 0)
                           @for ($i = 1; $i < $mainStudentDetails['monthcount'] + 1; $i++)
                             @if (in_array($i, $mainStudentDetails['daysarray']))
                               <div class="col-md-1 col-3">
@@ -169,12 +166,12 @@
                                 </div>
                               </div>
                             @endif
-                          @endfor
-                        @else
+                          @endfor --}}
+                        {{-- @else
                           <div class="card" style="height: 50px; width: 100%; display: flex; align-items: center; justify-content: center;">
                             <i>No Attendance taken this month</i>
                           </div>
-                        @endif
+                        @endif --}}
                       </div>
                     </div>
                     <!-- /.tab-pane -->

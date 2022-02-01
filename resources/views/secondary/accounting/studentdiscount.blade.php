@@ -20,8 +20,8 @@
         
                         <!--<i class="far fa-question-circle" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?" style="font-size: 25px;">-->
                         
-                        <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Summary"
-                        data-content="View the financial runnings of your school at a glance.">Need help?</button>
+                        <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Discount"
+                        data-content="This page shows the list of all students currently under school discount">Need help?</button>
         
                     </div><!-- /.col -->
                     <div class="col-sm-6">
@@ -46,7 +46,7 @@
             </div>
     </div>
 
-    <script src="{{ asset('js/app_discount.js') }}"></script>
+    <script src="{{ asset('js/app_discount.js?v=1') }}"></script>
 
     <script>
         function scrollocation(){

@@ -15,6 +15,7 @@ function AddFormMaster() {
     const [classid, setclassid] = useState(0)
     const [sectionmain, setSection] = useState('')
     const [getFormMasters, setgetFormMasters] = useState([])
+    const [getFormMastersFiltered, setgetFormMastersFiltered] = useState(getFormMasters)
     const alert = useAlert()
 
 
@@ -34,7 +35,7 @@ function AddFormMaster() {
             setAllClasses(response.data.classesAll)
             setSection_sec(response.data.addsection_sec)
             setgetFormMasters(response.data.getFormMasters)
-
+            setgetFormMastersFiltered(response.data.getFormMasters)
 
         }).catch(e=>{
             console.log(e);
@@ -54,6 +55,20 @@ function AddFormMaster() {
               console.log('closed')
             } // callback that will be executed after this alert is removed
           })
+    }
+
+    const handleSearch = (event) => {
+
+        let value = event.target.value.toLowerCase();
+        let result = [];
+        console.log(value);
+
+        result = getFormMasters.filter((data) => {
+            return data.firstname.toLowerCase().search(value) != -1;
+        });
+
+        setgetFormMastersFiltered(result);
+
     }
 
     function handleChangeTeachersSystemNumber(e) {
@@ -225,7 +240,7 @@ function AddFormMaster() {
                         <h3 className="card-title">Form Teachers</h3>
                         <div className="card-tools">
                         <div className="input-group input-group-sm" style={{width: '150px'}}>
-                            <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
+                            <input type="text" name="table_search" className="form-control float-right" placeholder="Search" onChange={(event) => handleSearch(event)}/>
                             <div className="input-group-append">
                             <button type="submit" className="btn btn-default">
                                 <i className="fas fa-search" />
@@ -248,7 +263,7 @@ function AddFormMaster() {
                             </tr>
                         </thead>
                         <tbody>
-                            { getFormMasters.map(d=>(
+                            { getFormMastersFiltered.map(d=>(
                                 <tr key={d.id+"formteachertable"}>
                                     <td>{d.firstname} {d.middlename} {d.lastname}</td>
                                     <td>{d.teacher_id}</td>

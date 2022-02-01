@@ -202,7 +202,12 @@
                                           </div>
                                         </div>
                                         <button class="btn btn-sm btn-danger" style="margin-bottom: 5px;">Delete Item</button>
-                                        <button class="btn btn-sm btn-success">Click to notify the admin that an item is about to finish</button>
+                                       <form action="{{ route('notify-item-finish') }}" method="post">
+                                         @csrf
+                                         <input type="hidden" name="item_name" value="{{  $item->nameofitem }}">
+                                         <input type="hidden" name="item_quanty" value="{{  $item->quantity }}">
+                                          <button type="submit" class="btn btn-sm btn-success">Click to notify the admin that an item is about to finish</button>
+                                       </form>
                                       </div>
                                     </div>
                                     
@@ -373,7 +378,7 @@
         <form action="{{ route('order_invoice_checkout') }}" method="post" id="checkoutinventory">
           @csrf
           <input type="hidden" name="invoiceid" value="{{ $itemforInventory == null ? "": $itemforInventory->id }}">
-          <input type="text" name="itemsamount" id="totalamountinvent">
+          <input type="hidden" name="itemsamount" id="totalamountinvent">
         </form>
         <button type="submit" form="checkoutinventory" class="btn btn-primary">Checkout</button>
       </div>

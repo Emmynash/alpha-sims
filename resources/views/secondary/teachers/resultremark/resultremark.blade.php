@@ -1,8 +1,12 @@
-@extends('layouts.app_sec')
+@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@include('layouts.aside_sec')
+@if ($schooldetails->schooltype == "Primary")
+@include('layouts.asideside') 
+@else
+  @include('layouts.aside_sec')
+@endif
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -48,10 +52,10 @@
 
                 <div class="card-tools">
                   <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+                    {{-- <input type="text" name="table_search" class="form-control float-right" placeholder="Search"> --}}
 
                     <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                      {{-- <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button> --}}
                     </div>
                   </div>
                 </div>
@@ -78,7 +82,7 @@
                           <td><button class="btn btn-sm btn-success" data-toggle="modal" data-target=""><i class="fas fa-check"></i></button> </td>
                           @else
                           <td>Pending</td>
-                          <td><button class="btn btn-sm btn-success" data-toggle="modal" data-target="#donemodal{{ $teacherSubjects->id }}"><i class="fas fa-plus"></i></button> </td>
+                          <td><button class="btn btn-sm btn-success" disabled data-toggle="modal" data-target="#donemodal{{ $teacherSubjects->id }}"><i class="fas fa-plus"></i></button> </td>
                           @endif
                           
 

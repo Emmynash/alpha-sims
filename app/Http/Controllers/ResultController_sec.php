@@ -20,36 +20,23 @@ use App\Repository\Result\ResultAverageProcess;
 use App\ResultReadyModel;
 use PDF;
 use App;
+use App\AssesmentModel;
+use App\ComputedAverages;
 use App\ElectiveAdd;
+use App\RecordMarks;
+use App\ResultSubjectsModel;
+use App\SubAssesmentModel;
 use App\User;
+use Svg\Tag\Rect;
 
 class ResultController_sec extends Controller
 {
     public function index(){
 
         $classlist_sec = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
-        
-        if(Auth::user()->role == "Student"){
-            $studentdetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->get();
-            
-            $allDetails = array(
-                'classlist_sec'=>$classlist_sec,
-                'studentdetails'=>$studentdetails
-            );
-            
-        }else{
-            
-            $allDetails = array(
-                'classlist_sec'=>$classlist_sec
-            );
-            
-        }
-
-        // $allDetails = array(
-        //     'classlist_sec'=>$classlist_sec
-        // );
-
-        return view('secondary.result_sec')->with('allDetails', $allDetails);
+        $studentdetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        return view('secondary.result_sec', compact('schooldetails', 'classlist_sec', 'studentdetails'));
     }
 
     public function viewResult(Request $request){
@@ -91,6 +78,8 @@ class ResultController_sec extends Controller
             'session'=>'required'
         ]);
 
+        
+
 
         try {
             $classid = $request->input('classid');
@@ -104,6 +93,19 @@ class ResultController_sec extends Controller
     
             $addschool = Addpost::find(Auth::user()->schoolid);
 
+            $resultMain = ResultSubjectsModel::where(['result_subjects_models.term'=>$term, 'result_subjects_models.studentregno'=>$regNo, 'result_subjects_models.session'=>$schoolsession])->get();
+
+            $subCatAss = SubAssesmentModel::all();
+
+            $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+
+            $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
+
+            $studentClass = Classlist_sec::find($classid);
+            $computedAverage = ComputedAverages::where(['session'=>$schoolsession, 'regno'=>$regNo, 'term'=>$term])->first();
+
+            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'motolistbeha', 'motolistskills', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$studentdetails->studentsection, 'subjecttype'=>2])->pluck('subjectid')->toArray();
             $getStudentElective = ElectiveAdd::where(['regno'=>$regNo, 'classid'=>$classid, 'sectionid'=>$studentdetails->studentsection])->pluck('subjectid')->toArray(); // get all student's elective subjects
@@ -116,15 +118,16 @@ class ResultController_sec extends Controller
 
             for ($i=0; $i < count($subjectSum); $i++) { 
 
-              $addmarksCheck = Addmark_sec::where(['subjectid' => $subjectSum[$i], 'term' => $request->term, 'session'=>$request->session, 'regno'=>$request->student_reg_no])->get();
+              $addmarksCheck = Addsubject_sec::find($subjectSum[$i]);
 
-                if (count($addmarksCheck) > 0) {
+                // if (count($addmarksCheck) > 0) {
 
-                    if ((int)$addmarksCheck[0]->totalmarks > 0) {
-                        $getSingleSubject = Addsubject_sec::find($subjectSum[$i]);
-                        array_push($subject, $getSingleSubject);
-                    }
-                }
+                //     if ((int)$addmarksCheck[0]->totalmarks > 0) {
+                //         $getSingleSubject = Addsubject_sec::find($subjectSum[$i]);
+                        
+                //     }
+                // }
+                array_push($subject, $addmarksCheck);
             }
 
             $subjects = collect($subject);
@@ -144,9 +147,13 @@ class ResultController_sec extends Controller
 
             }else{
 
+                
+
                 if ($checkclasstype->classtype == 1) {
+
+                    $assessments = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
     
-                    return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
+                    return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass', 'assessments'));
                 } else {
                     return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
                 }
@@ -204,6 +211,8 @@ class ResultController_sec extends Controller
            $resultAverage = $resultAverageProcess->processResultAverage($request);
 
             // if ($resultAverage == "success") {
+
+                return $resultAverage;
                 
                 $process_class_average = $processClassAverage->processresult($request);
     

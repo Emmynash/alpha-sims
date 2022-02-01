@@ -28,6 +28,8 @@
     </div>
     <!-- /.content-header -->
 
+    @include('layouts.message')
+
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -112,9 +114,9 @@
                      @csrf                     
                       <div class="form-group">
                         <label for="">School Logo</label>
-                        <input type="file" name="schoolLogo" class="form-control">
+                        <input type="file" name="image" class="form-control">
                       </div>
-                      <input type="hidden" name="logo" value="logo" id="">
+                      <input type="hidden" name="key" value="logo" id="">
                       <button type="submit" class="btn btn-sm btn-info">Save</button>
                     </form>
 

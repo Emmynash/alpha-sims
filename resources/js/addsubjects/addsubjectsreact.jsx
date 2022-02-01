@@ -36,13 +36,6 @@ function AddSubject() {
     const [search, setSearch] = useState("");
     const [filteredSubjects, setFilteredSubjects] = useState([]);
     const [examsstatus, setexamsstatus] = useState(0)
-    const [ca1status, setca1status] = useState(0)
-    const [ca2status, setca2status] = useState(0)
-    const [ca3status, setca3status] = useState(0)
-    const [examsmark, setExamsMark] = useState(0)
-    const [ca1mark, setCa1Mark] = useState(0)
-    const [ca2mark, setCa2Mark] = useState(0)
-    const [ca3mark, setCa3Mark] = useState(0)
     const [classElectives, setClassElectives] = useState(0)
     const [sectionElectives, setSectionElectives] = useState(0)
     const [numberElectives, setNumberElectives] = useState(0)
@@ -113,12 +106,6 @@ function AddSubject() {
         });
     }
 
-
-
-
-
-
-
     useEffect(() => {
 
         fetchSchoolDetails()
@@ -131,33 +118,18 @@ function AddSubject() {
     function fetchSchoolDetails() {
         setisLoading(true)
         axios.get('/get_all_subjects').then(response=> {
-            console.log(response);
+            console.log(response.data);
             // console.log(setJ)
             setisLoading(false)
             setClasslist(response.data.classesAll)
             setsubjectcount(response.data.allsubjects.length)
             setallsubjects(response.data.allSubjectmain)
-            setCoreSubjects(response.data.coresubjects.length)
-            setelectivesubjectscount(response.data.electivesubjects.length)
+            // setelectivesubjectscount(response.data.electivesubjects.length)
             setschoolsection(response.data.schoolsection)
-            setexamsstatus(response.data.schoolDetails.exams)
-            setca1status(response.data.schoolDetails.ca1)
-            setca2status(response.data.schoolDetails.ca2)
-            setca3status(response.data.schoolDetails.ca3)
             setgetElectivesSettingNumber(response.data.getElectivesSettingNumber)
             setschooltype(response.data.schoolDetails.schooltype)
 
-            if (response.data.subjectScores == null) {
-                setExamsMark(0)
-                setCa1Mark(0)
-                setCa2Mark(0)
-                setCa3Mark(0)
-            }else{
-                setExamsMark(response.data.subjectScores.examsfull)
-                setCa1Mark(response.data.subjectScores.ca1full)
-                setCa2Mark(response.data.subjectScores.ca2full)
-                setCa3Mark(response.data.subjectScores.ca3full)
-            }
+
 
         }).catch(e=>{
             console.log(e);
@@ -185,38 +157,6 @@ function AddSubject() {
               console.log('closed')
             } // callback that will be executed after this alert is removed
           })
-    }
-
-    function handleChangeClasslist(e) {
-        setselectedclass(e.target.value);
-    }
-
-    function handleChangeSubjectName(e) {
-        setSubjectName(e.target.value);
-    }
-
-    function handleChangeSubjectType(e) {
-        setSubjectType(e.target.value);
-    } 
-
-    function handleChangeSection(e) {
-        setSubjectSectione(e.target.value);
-    }
-
-    function handleChangeExamsFull(e){
-        setExamsMark(e.target.value)
-    }
-
-    function handleChangeCa1Full(e){
-        setCa1Mark(e.target.value)
-    }
-
-    function handleChangeCa2Full(e){
-        setCa2Mark(e.target.value)
-    }
-
-    function handleChangeCa3Full(e){
-        setCa3Mark(e.target.value)
     }
 
     function handleClassChangeEllectives(e) {
@@ -533,33 +473,10 @@ function AddSubject() {
 
             <div>
 
-                <div>
-                    <div className="card">
-                        <div className="row" style={{ margin:'10px' }}>
-                            { examsstatus == 1 ? <div className="col-12 col-md-3">
-                                <input type="number" onChange={(e)=>handleChangeExamsFull(e)} value={examsmark} placeholder="Exams mark" className="form-control form-control-sm" />
-                            </div>:""}
-                            { ca1status == 1 ? <div className="col-12 col-md-3">
-                                <input type="number" onChange={(e)=>handleChangeCa1Full(e)} value={ca1mark} placeholder="CA1" className="form-control form-control-sm" />
-                            </div>:""}
-                            {ca2status == 1 ? <div className="col-12 col-md-3">
-                                <input type="number" placeholder="CA2" onChange={(e)=>handleChangeCa2Full(e)} value={ca2mark} className="form-control form-control-sm" />
-                            </div>:""}
-                            {ca3status == 1 ? <div className="col-12 col-md-3">
-                                <input type="number" placeholder="CA3" onChange={(e)=>handleChangeCa3Full(e)} value={ca3mark} className="form-control form-control-sm" />
-                            </div>:""}
-                        </div>
-                        <div style={{ margin:'0px 0px 10px 10px' }}>
-                            <button onClick={updateScoresOrAdd} className="btn btn-sm btn-info badge">Save</button>
-                        </div>
-                    </div>
-                </div>
-
-
             <div>
                     <br />
                     <div className="alert alert-warning">
-                        <i>Note: subject type 2 core, 1 elective</i>
+                        <i>Note: subject type 2 Senior Secondary Subjects, 1 Junior Secondary Subjects</i>
                     </div>
                     <div className="row">
                         <div className="col-12 col-md-4">
@@ -582,8 +499,6 @@ function AddSubject() {
                     <br />
 
             </div>
-
-                {/* <DataTablePage subjectdata={allsubjects}/> */}
                
 
             </div>
@@ -613,12 +528,13 @@ function AddSubject() {
                                             </select>
                                         </div>
                                     </div>
+                                    
                                     <div className="col-12 col-md-6">
                                         <div className="form-group">
-                                            <select onChange={handleAsignSubject} name="sectionid" value={asignSubjectClass.sectionid} className="form-control form-control-sm">
-                                                <option value="">Select Arm</option>
+                                            <select onChange={handleAsignSubject} name="sectionid" className="form-control form-control-sm">
+                                                <option value="">Select Arm </option>
                                                 { schoolsection.map(d=>(
-                                                    <option value={d.id}>{d.sectionname}</option>
+                                                    <option key={d.id+"section"} value={d.id}>{d.sectionname}</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -646,7 +562,7 @@ function AddSubject() {
                                     <i style={{ fontStyle:'normal', fontSize:'14px', padding:'10px' }}>Classes Offering the subject</i>
                                 </div>
                                 {classSubjectFetched.length > 0 ? classSubjectFetched.map(d=>(
-                                    <div style={{ display:'flex', margin:'5px' }}>
+                                    <div key={d.id+"classfetched"} style={{ display:'flex', margin:'5px' }}>
                                         <i style={{ fontStyle:'normal', fontSize:'14px' }}>{d.classname}</i><i>{d.sectionname}</i><div style={{ flex:'0.5' }}></div> <i style={{ fontStyle:'normal', fontSize:'14px' }}>{d.subjecttype == 1 ? "Elective":"Core"}</i>
                                         <div style={{ flex:'1' }}></div>
                                         <button className="btn btn-sm btn-danger badge" onClick={()=>deleteClassForSubject(d.id)}>Remove</button>
@@ -794,7 +710,7 @@ function AddSubject() {
                         </div>
                         <div className="" style={{ height:'300px', overflowY:'scroll' }}>
                             {getElectivesSettingNumber.map(d=>(
-                                <div  className="card" style={{ width:'95%', margin:'5px' }}>
+                                <div key={d.id+"elelectivessetting"}  className="card" style={{ width:'95%', margin:'5px' }}>
                                     <i style={{ marginLeft:'5px', fontStyle:'normal', }}>{d.classname}{d.sectionname}</i><i style={{ marginLeft:'5px', fontStyle:'normal', }}>No. of allowed electives ({d.number_ellectives})</i>
                                 </div>
                             ))}

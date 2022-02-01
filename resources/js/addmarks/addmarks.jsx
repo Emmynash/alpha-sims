@@ -17,8 +17,12 @@ function AddMarks() {
     const [selectedsubject, setselectedsubject] = useState('')
     const [selectedsection, setselectedsection] = useState('')
     const [studentlist, setStudentList] = useState([])
+    const [studentListfiltered, setStudentListFiltered] = useState(studentlist)
     const [isLoading, seIsLoading] = useState(false)
     const alert = useAlert()
+    const [assessment, setSchoolAssessments] = useState([])
+    const [subassessment, setSchoolSubAssessments] = useState([])
+    const [fetchingSubassessment, setfetchingSubassessment] = useState(false);
     
     const [examsscore, setexamsscore] = useState(0)
     const [ca1score, setca1score] = useState(0)
@@ -26,18 +30,20 @@ function AddMarks() {
     const [ca3score, setca3score] = useState(0)
 
     const [studentId, setStudentId] = useState('')
-    const [markid, setmarkid] = useState('')
-
-    const [examsstatus, setexamsstatus] = useState(0)
-    const [ca1status, setca1status] = useState(0)
-    const [ca2status, setca2status] = useState(0)
-    const [ca3status, setca3status] = useState(0)
-
-    const [examsmark, setExamsMark] = useState(0)
     const [ca1mark, setCa1Mark] = useState(0)
     const [ca2mark, setCa2Mark] = useState(0)
-    const [ca3mark, setCa3Mark] = useState(0)
-    const [notallocated, setNotAllocated] = useState(true)
+    const [recordentered, setRecordEntered] = useState([])
+    const [loadingRecords, setLoadingEnteredRecords] = useState(true);
+
+    const [assessmentRecord, setAssessmentRecord] = useState({
+        student_id:'',
+        scrores:'',
+        subjectid:'',
+        section_id:'',
+        class_id:'',
+        assesment_id:'',
+        subassessment_id:''
+    })
 
 
     useEffect(() => {
@@ -48,6 +54,20 @@ function AddMarks() {
             // cleanup
         };
     }, []);
+
+    const handleSearch = (event) => {
+
+        let value = event.target.value.toLowerCase();
+        let result = [];
+        console.log(value);
+
+        result = studentlist.filter((data) => {
+            return data.firstname.toLowerCase().search(value) != -1;
+        });
+
+        setStudentListFiltered(result);
+
+    }
 
     function myalert(msg, type) {
         alert.show(msg, {
@@ -73,6 +93,7 @@ function AddMarks() {
             setschoolsection(response.data.schoolsection)
             setschoolsession(response.data.schooldetails.schoolsession)
             setschoolterm(response.data.schooldetails.term)
+            setSchoolAssessments(response.data.assessment)
 
             setexamsstatus(response.data.schooldetails.exams)
             setca1status(response.data.schooldetails.ca1)
@@ -104,6 +125,11 @@ function AddMarks() {
         setSubjects([])
         setSelectedClass(e.target.value)
         setselectedsection('')
+
+        setAssessmentRecord({
+            ...assessmentRecord,
+          ['class_id']: e.target.value,
+        });
     }
 
     function handleChangeSubject(e) {
@@ -113,10 +139,15 @@ function AddMarks() {
     }
 
     function handleChangeSection(e) {
+
         setStudentList([])
         setSubjects([])
         setselectedsection(e.target.value)
         getSubjectForClass(e.target.value)
+        setAssessmentRecord({
+            ...assessmentRecord,
+          ['section_id']: e.target.value,
+        });
     }
 
     function handleChangeTerm(e) {
@@ -130,8 +161,9 @@ function AddMarks() {
     function getSubjectForClass(sectionid){
         setSubjects([])
         seIsLoading(true)
+
         axios.get('/fetch_students_marks/'+selectedClass+"/"+sectionid).then(response=> {
-            console.log(response);
+            console.log("marks"+response);
             // console.log(setJ)
             // setClasslist(response.data.classlist)
             seIsLoading(false)
@@ -160,8 +192,6 @@ function AddMarks() {
                 setNotAllocated(false)
                 setschoolsection(response.data.schoolsection)
             }
-            
-
 
         }).catch(e=>{
             console.log(e);
@@ -172,6 +202,12 @@ function AddMarks() {
 
     function fetchAllStudentInClass(){
         seIsLoading(true)
+
+        setAssessmentRecord({
+            ...assessmentRecord,
+          ['subjectid']: selectedsubject,
+        });
+
         const data = new FormData()
         data.append("selected_class", selectedClass)
         data.append("selected_subject", selectedsubject)
@@ -183,13 +219,14 @@ function AddMarks() {
                 "Content-type": "application/json"
             }
         }).then(response=>{
-            console.log(response)
+            console.log(response.data)
             seIsLoading(false)
             if (response.data.response == "feilds") {
                 myalert('All fields required', 'error')
             }else{
                 myalert('success', 'success')
                 setStudentList(response.data.studentlist)
+                setStudentListFiltered(response.data.studentlist)
             }
 
 
@@ -199,35 +236,11 @@ function AddMarks() {
         })
     }
 
-    function addStudentMarksModal(exams, ca1, ca2, ca3, studentId, markid) {
-
-        if(exams == null){
-            setexamsscore(0)
-        }else{
-            setexamsscore(exams)
-        }
-
-        if(ca1 == null){
-            setca1score(0)
-        }else{
-            setca1score(ca1)
-        }
-
-        if(ca2 == null){
-            setca2score(0)
-        }else{
-            setca2score(ca2)
-        }
-
-        if(ca3 == null){
-            setca3score(0)
-        }else{
-            setca3score(ca3)
-        }
-        
-        setStudentId(studentId)
-        setmarkid(markid)
-        
+    function addStudentMarksModal(studentId) {
+        setAssessmentRecord({
+            ...assessmentRecord,
+          ['student_id']: studentId,
+        });
     }
 
     function closeModal() {
@@ -238,13 +251,12 @@ function AddMarks() {
     }
 
 
-    function handleChangeExams(e) {
+    function handleChangeScrores(e) {
 
-        if (e.target.value > examsmark) {
-            setexamsscore(0)
-        }else{
-            setexamsscore(e.target.value)
-        }
+        setAssessmentRecord({
+            ...assessmentRecord,
+          ['scrores']: e.target.value,
+        });
     }
 
     function handleChangeCa1(e) {
@@ -266,13 +278,13 @@ function AddMarks() {
 
     }
 
-    function handleChangeCa3(e) {
+    function clearScoreField() {
 
-        if (e.target.value > ca3mark) {
-            setca3score(0)
-        }else{
-            setca3score(e.target.value)
-        }
+        setAssessmentRecord({
+            ...assessmentRecord,
+          ['scrores']: '',
+        });
+
     }
 
 
@@ -307,6 +319,93 @@ function AddMarks() {
         })
     }
 
+    function getSubAssessmentCat(catid) {
+
+        setfetchingSubassessment(true)
+
+        setAssessmentRecord({
+            ...assessmentRecord,
+          ['assesment_id']: catid,
+        });
+
+        axios.get('/fetchsubassessment/'+catid+'/'+assessmentRecord.student_id).then(response=>{
+
+            console.log(response.data)
+
+            setfetchingSubassessment(false)
+
+            setSchoolSubAssessments(response.data.subassessment)
+
+        }).catch(e=>{
+            console.log(e)
+            setfetchingSubassessment(false)
+        })
+        
+    }
+
+    function addmarksModal(subcat) {
+
+        setAssessmentRecord({
+            ...assessmentRecord,
+          ['subassessment_id']: subcat,
+        });
+        
+    }
+
+    function addStudentScore() {
+
+        axios.post("/add_student_scores", assessmentRecord, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+
+            console.log(response)
+
+            if(response.data.code == 409){
+                myalert(response.data.response, 'error')
+            }else if(response.data.code == 200){
+                myalert(response.data.response, 'success')
+            }
+
+        }).catch(error=>{
+            console.log(error)
+        })
+        
+    }
+
+    function getScoreRecord(userid) {
+
+        setLoadingEnteredRecords(true);
+
+        const data = new FormData()
+        data.append("selected_class", selectedClass)
+        data.append("selected_subject", selectedsubject)
+        data.append("selected_term", schoolterm)
+        data.append('currentsession', schoolschool)
+        data.append('selected_section', selectedsection)
+        data.append('userid', userid)
+        axios.post("/get_student_scores", data, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response.data.code)
+
+            setLoadingEnteredRecords(false);
+
+            if(response.data.code == 200){
+                setRecordEntered(response.data.response)
+            }
+
+        }).catch(e=>{
+            console.log(e)
+            seIsLoading(false)
+            setLoadingEnteredRecords(false);
+        })
+        
+    }
+
 
     return(
         <div>
@@ -314,8 +413,8 @@ function AddMarks() {
 
             </div>:""}
             {isLoading ? <div>
-                <div class="text-center">
-                    <div class="spinner-border"></div>
+                <div className="text-center">
+                    <div className="spinner-border"></div>
                 </div>
             </div>:""}
             <div className="card">
@@ -353,11 +452,11 @@ function AddMarks() {
                     </div>
                     <div className="col-12 col-md-4">
                         <div className="form-group">
-                            <select onChange={(e)=>handleChangeTerm(e)} name="" className="form-control form-control-sm" id="">
+                            <select onChange={(e)=>handleChangeTerm(e)} value={schoolterm} name="" className="form-control form-control-sm" id="">
                                 <option value="">Select a Term</option>
-                                <option value="1" selected={schoolterm == 1 ? "selected":""}>First</option>
-                                <option value="2" selected={schoolterm == 2 ? "selected":""}>Second</option>
-                                <option value="3" selected={schoolterm == 3 ? "selected":""}>Third</option>
+                                <option value="1" >First</option>
+                                <option value="2" >Second</option>
+                                <option value="3" >Third</option>
                             </select>
                         </div>
                     </div>
@@ -373,6 +472,21 @@ function AddMarks() {
                 </div>
             </div>
 
+            <div>
+                <div className="row">
+                {
+                    assessment.map(d=>(
+                        <div key={d.id+"assessment"} className="col-12 col-md-3">
+                            <div className="card">
+                                <i style={{ padding:'5px', fontStyle:'normal', fontSize:'13px' }}>{d.name}({d.maxmark})</i>
+                            </div>
+                        </div>
+                    ))
+                }
+                    
+                </div>
+            </div>
+
            {studentlist.length > 0 ? <div>
                     <button onClick={fetchAllStudentInClass} className="btn btn-info btn-sm">Click to refresh Student List</button>
                     <div className="row">
@@ -382,7 +496,7 @@ function AddMarks() {
                                 <h3 className="card-title">Students ({studentlist.length})</h3>
                                 <div className="card-tools">
                                 <div className="input-group input-group-sm" style={{width: '150px'}}>
-                                    <input type="text" name="table_search" className="form-control float-right" placeholder="Search" />
+                                    <input type="text" name="table_search" className="form-control float-right" placeholder="Search" onChange={(event) => handleSearch(event)}/>
                                     <div className="input-group-append">
                                     <button type="submit" className="btn btn-default">
                                         <i className="fas fa-search" />
@@ -399,10 +513,10 @@ function AddMarks() {
                                     <th>Name</th>
                                     <th>Admission No</th>
                                     {/* <th>Roll No</th> */}
-                                    <th>Exams</th>
+                                    {/* <th>Exams</th>
                                     <th>CA1</th>
                                     <th>CA2</th>
-                                    <th>CA3</th>
+                                    <th>CA3</th> */}
                                     <th>Total</th>
                                     <th>Position</th>
                                     <th>Grade</th>
@@ -410,20 +524,22 @@ function AddMarks() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {studentlist.map(student=>(
+                                    {studentListfiltered.map(student=>(
                                         <tr key={student.id+"addmarks"}>
                                             <td>{student.firstname} {student.middlename} {student.lastname}</td>
                                             <td>{student.admission_no}</td>
                                             {/* <td>{student.renumberschoolnew}</td> */}
-                                            <td>{student.exams == 0 ? "---":student.exams}</td>
+                                            {/* <td>{student.exams == 0 ? "---":student.exams}</td>
                                             <td>{student.ca1 == 0 ? "---":student.ca1}</td>
                                             <td>{student.ca2 == 0 ? "---":student.ca2}</td>
-                                            <td>{student.ca3 == 0 ? "---":student.ca3}</td>
-                                            <td>{student.totalmarks}</td>
+                                            <td>{student.ca3 == 0 ? "---":student.ca3}</td> */}
+                                            <td>{student.totals}</td>
                                             <td>{student.position}</td>
-                                            <td>{student.grades}</td>
+                                            <td>{student.grade}</td>
                                             <td>
-                                                <button onClick={()=>addStudentMarksModal(student.exams, student.ca1, student.ca2, student.ca3, student.id, student.markid)} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button>
+                                                <button onClick={()=>addStudentMarksModal(student.id)} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button>
+
+                                                <button onClick={()=>getScoreRecord(student.id)} className="btn btn-sm btn-warning" data-toggle="modal" data-target="#view_single_student_result"><i className="fas fa-eye"></i></button>
                                             </td>
                                         </tr>
                                     ))}
@@ -439,7 +555,38 @@ function AddMarks() {
                     </div>
 
                     <div className="modal fade" id="add_student_marks" data-backdrop="false">
-                        <div className="modal-dialog">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h4 className="modal-title">Select a category</h4>
+                                    <button onClick={closeModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    
+                                    <div className="row">
+                                        {
+                                            assessment.map(d=>(
+                                                <div key={d.id+"subassessment"} className="col-12 col-md-12">
+                                                    <div className="card" onClick={()=>getSubAssessmentCat(d.id)} data-toggle="modal" data-target="#add_student_marks_sub">
+                                                        <i style={{ fontStyle:'normal', fontSize:'13px', padding:'5px' }}>{d.name}({d.maxmark})</i>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                    
+                                </div>
+                                <div className="modal-footer justify-content-between">
+                                    <button onClick={closeModal} type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade" id="add_student_marks_sub" data-backdrop="false">
+                        <div className="modal-dialog modal-sm">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h4 className="modal-title">Enter Student Scores</h4>
@@ -448,31 +595,95 @@ function AddMarks() {
                                     </button>
                                 </div>
                                 <div className="modal-body">
-                                    <div className="row">
-                                            {examsstatus == 1 ? <div className="col-12 col-md-6">
-                                                <label htmlFor="">Exams Fullmark({examsmark})</label>
-                                                <input type="number" onChange={(e)=>handleChangeExams(e)} className="form-control form-control-sm" value={examsscore} placeholder="exams scrore" />
-                                            </div>:""}
-                                            {ca1status == 1 ? <div className="col-12 col-md-6">
-                                                <label htmlFor="">Ca1 Fullmark({ca1mark})</label>
-                                                <input type="number" onChange={(e)=>handleChangeCa1(e)} className="form-control form-control-sm" value={ca1score} placeholder="ca1" />
-                                            </div>:""}
+
+                                {
+                                    fetchingSubassessment ? <p>Loading...</p>:<div className="row">
+                                        {
+                                            subassessment.map(d=>(
+                                                <div key={d.id+"subassessment2"} className="col-12 col-md-12">
+                                                    <div className="card" data-toggle="modal" onClick={()=>addmarksModal(d.id)} data-target="#add_student_marks_sub_main">
+                                                        <i style={{ fontStyle:'normal', fontSize:'13px', padding:'5px' }}>{d.subname}({d.maxmarks})</i>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
                                     </div>
-                                    <br/>
-                                    <div className="row">
-                                        {ca2status == 1 ? <div className="col-12 col-md-6">
-                                            <label htmlFor="">Ca2 Fullmark({ca2mark})</label>
-                                            <input type="number" onChange={(e)=>handleChangeCa2(e)} className="form-control form-control-sm" value={ca2score} placeholder="ca2" />
-                                        </div>:""}
-                                        {ca3status == 1 ? <div className="col-12 col-md-6">
-                                            <label htmlFor="">Ca3 Fullmark({ca3mark})</label>
-                                            <input type="number" onChange={(e)=>handleChangeCa3(e)} className="form-control form-control-sm" value={ca3score} placeholder="ca3" />
-                                        </div>:""}
-                                    </div>
+                                }
+                                    
+                                    
+                                    
                                 </div>
                                 <div className="modal-footer justify-content-between">
                                     <button onClick={closeModal} type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button onClick={addStudentMarks} type="button" className="btn btn-info btn-sm">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade" id="add_student_marks_sub_main" data-backdrop="false">
+                        <div className="modal-dialog modal-sm">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h4 className="modal-title">Enter Student Scores</h4>
+                                    <button onClick={clearScoreField} type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+
+                                    <div className="form-group">
+                                        <input className="form-control form-control-sm" name="scrores" value={assessmentRecord.scrores} onChange={handleChangeScrores} placeholder="Enter score"/>
+                                    </div>
+                                    <div className="form-group">
+                                        <button className="btn badge badge-info" onClick={addStudentScore}>Save</button>
+                                    </div>
+                                
+                                </div>
+                                <div className="modal-footer justify-content-between">
+                                    <button onClick={closeModal} type="button" onClick={clearScoreField} className="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade" id="view_single_student_result" data-backdrop="false">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h4 className="modal-title">Result recorded</h4>
+                                    <button onClick={closeModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    
+                                <div className="card-body table-responsive p-0">
+                                <table className="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Assessment</th>
+                                            <th>Sub-Assessment</th>
+                                            <th>Marks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            loadingRecords ? <p>Loading...</p>:recordentered.map(d=>(
+                                                <tr key={d.id+'record'}>
+                                                    <td>{d.name}</td>
+                                                    <td>{d.subname}</td>
+                                                    <td>{d.scrores}</td>
+                                                </tr>
+                                            ))
+                                        }
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                                    
+                                </div>
+                                <div className="modal-footer justify-content-between">
+                                    <button onClick={closeModal} type="button" className="btn btn-default" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>

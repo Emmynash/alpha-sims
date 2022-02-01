@@ -160,9 +160,9 @@ class SchoolsetupSecController extends Controller
         $updateSchoolSession->schoolsession = $request->session;
         $updateSchoolSession->firsttermstarts = $request->firsttermstarts;
         $updateSchoolSession->firsttermends = $request->firsttermends;
-        $updateSchoolSession->secondtermstarts = $request->secondtermstarts;
+        $updateSchoolSession->secondtermbegins = $request->secondtermstarts;
         $updateSchoolSession->secondtermends = $request->secondtermends;
-        $updateSchoolSession->thirdtermstarts = $request->thirdtermstarts;
+        $updateSchoolSession->thirdtermbegins = $request->thirdtermstarts;
         $updateSchoolSession->thirdtermends = $request->thirdtermends;
         $updateSchoolSession->save();
 
@@ -172,11 +172,16 @@ class SchoolsetupSecController extends Controller
     }
 
     public function addClasses(SchoolsetupSchoolSetup $schoolSetup, Request $request){
-        
+
         try {
-           return $query = $schoolSetup->setupClasses($request);
+           $query = $schoolSetup->setupClasses($request);
+           return response()->json(array('msg' => 'Process successful', 'code'=>200), 200);
             if($query == "success"){
-                return back()->with('success', 'process was successfull');
+                return response()->json(array('msg' => 'Class added successfully', 'code'=>200), 200);
+            }else if($query == "unsuccessful"){
+                return response()->json(array('msg' => 'Class could not be added', 'code'=>401), 200);
+            }else{
+                return response()->json(array('msg' => 'Invalid request. Please referr to the users manual', 'code'=>409), 200);
             }
         } catch (\Throwable $th) {
             return back()->with('error', 'error');
@@ -190,18 +195,18 @@ class SchoolsetupSecController extends Controller
         try {
             $classlist = Classlist_sec::find($id);
 
-            if ($classlist->status == 0) {
-                $classlist->status = 1;
-                $classlist->save();
-                return response()->json(['response'=>"success"]);
-            }else{
-                $classlist->status = 0;
-                $classlist->save();
-                return response()->json(['response'=>"success"]);
+            //check if there students in the class
+
+            $studentcountcheck = Addstudent_sec::where('classid', $id)->get();
+
+            if(count($studentcountcheck) > 0){
+                return response()->json(['msg'=>"Class cannot be deleted. Student exist in class", 'code'=>401], 200);
             }
+
+            $classlist->delete();
+                return response()->json(['msg'=>"class deleted successfully", 'code'=>200], 200);
         } catch (\Throwable $th) {
             //throw $th;
-            return $th;
             return response()->json(['response'=>"error"]);
         }
 
@@ -306,47 +311,11 @@ class SchoolsetupSecController extends Controller
         
     }
 
-    public function updateExamsStatus(Request $request)
-    {
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
-        $schoolDetails->exams = $request->examsstatus;
-        $schoolDetails->save();
-
-        return response()->json(['success'=>'success']);
-    }
-
-    public function updateCa1Status(Request $request)
-    {
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
-        $schoolDetails->ca1 = $request->ca1status;
-        $schoolDetails->save();
-
-        return response()->json(['success'=>'success']);
-    }
-
-    public function updateCa2Status(Request $request)
-    {
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
-        $schoolDetails->ca2 = $request->ca2status;
-        $schoolDetails->save();
-
-        return response()->json(['success'=>'success']);
-    }
-
-    public function updateCa3Status(Request $request)
-    {
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
-        $schoolDetails->ca3 = $request->ca3status;
-        $schoolDetails->save();
-
-        return response()->json(['success'=>'success']);
-    }
-
     public function fetchSchoolDetailsSetUp()
     {
         $schoolDetails = Addpost::where('id', Auth::user()->schoolid)->first();
 
-        $classlist = Classlist_sec::where("schoolid", Auth::user()->schoolid)->get();
+        $classlist = Classlist_sec::where("schoolid", Auth::user()->schoolid)->orderBy('index', 'asc')->get();
 
         $houselist = Addhouse_sec::where("schoolid", Auth::user()->schoolid)->get();
 
@@ -354,13 +323,13 @@ class SchoolsetupSecController extends Controller
 
         $clubs = Addclub_sec::where("schoolid", Auth::user()->schoolid)->get();
 
-        // $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->get();
+        $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->get();
 
-        // $subasscategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')
-        //                  ->where('sub_assesment_models.schoolid', Auth::user()->schoolid)
-        //                  ->select('sub_assesment_models.*', 'assesment_models.name')->get();
+        $subasscategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')
+                         ->where('sub_assesment_models.schoolid', Auth::user()->schoolid)
+                         ->select('sub_assesment_models.*', 'assesment_models.name')->get();
 
-        return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'houselist'=>$houselist, 'classsection'=>$classsection, 'clubs'=>$clubs]);
+        return response()->json(['schoolDetails'=>$schoolDetails, 'classlist'=>$classlist, 'houselist'=>$houselist, 'classsection'=>$classsection, 'clubs'=>$clubs, 'assessment'=>$assessment, 'subasscategory'=>$subasscategory]);
     }
 
     public function setup_school_sec()
@@ -384,9 +353,10 @@ class SchoolsetupSecController extends Controller
                     ['name'=>$request->name, 'maxmark'=>$request->maxmarks, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
                 );
 
+                return response()->json(['response'=>'success', 'code'=>200], 200);
+            }else{
+                return response()->json(['response'=>'Sum of marks must not be above 100', 'code'=>400], 200);
             }
-
-            return response()->json(['response'=>'success'], 200);
 
         } catch (\Throwable $th) {
             //throw $th;
@@ -407,10 +377,12 @@ class SchoolsetupSecController extends Controller
                     ['subname'=>$request->subname],
                     ['subname'=>$request->subname, 'catid'=>$request->catid, 'maxmarks'=>$request->submaxmarks, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
                 );
-
+                return response()->json(['response'=>'success', 'code'=>200], 200);
+            }else{
+                return response()->json(['response'=>'Out of range', 'code'=>400], 200);
             }
 
-            return response()->json(['response'=>'success'], 200);
+            
 
         } catch (\Throwable $th) {
             //throw $th;

@@ -24,9 +24,6 @@ use App\FeesInvoiceItems;
 use App\PaymentRecord;
 use App\StudentDiscount;
 use App\Repository\Fees\FeePayment;
-use App\Services\PaymentService;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 
 
@@ -157,6 +154,7 @@ class AccountController extends Controller
 
     public function summary()
     {
+
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
         $transactionHistory = TransactionRecord::where('school_id', Auth::user()->schoolid)->orderBy('created_at', 'desc')->paginate(10);
@@ -176,10 +174,11 @@ class AccountController extends Controller
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        $feeInvoices = FeesInvoice::
-                    join('classlist_secs', 'classlist_secs.id','=','fees_invoices.classid')
-                    ->join('users', 'users.id','=','fees_invoices.system_id')
-                    ->select('fees_invoices.*', 'classlist_secs.classname', 'users.firstname', 'users.middlename', 'users.lastname')
+        $feeInvoices = FeesInvoice::join('addstudent_secs', 'addstudent_secs.id','=','fees_invoices.system_id')
+                    ->leftjoin('classlist_secs', 'classlist_secs.id','=','fees_invoices.classid')
+                    ->leftjoin('users', 'users.id','=','addstudent_secs.usernamesystem')
+                    ->leftjoin('fees_tables', 'fees_tables.invoice_id','=','fees_invoices.id')
+                    ->select('fees_invoices.*', 'classlist_secs.classname', 'users.firstname', 'users.lastname', 'fees_tables.amount_paid')
                     ->where(['fees_invoices.schoolid'=>Auth::user()->schoolid])->get();
 
         $getSettledInvoices = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
@@ -191,6 +190,46 @@ class AccountController extends Controller
         $getPendingInvoicesThisTerm = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>0, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->get();
 
         return view('secondary.accounting.inoivces', compact('feeInvoices', 'getSettledInvoices', 'getPendingInvoices', 'getSettledInvoicesThisTerm', 'getPendingInvoicesThisTerm', 'schooldetails'));
+    }
+
+    public function viewinvoices($id)
+    {
+        $discount = 0;
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $getInvoice = FeesInvoice::join('addstudent_secs', 'addstudent_secs.id','=','fees_invoices.system_id')
+                    ->join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                    ->where(['fees_invoices.id'=> $id, 'fees_invoices.schoolid'=>Auth::user()->schoolid])->select('fees_invoices.*', 'users.firstname', 'users.lastname', 'users.phonenumber', 'users.email')->first();
+        $getInvoiceItems = FeesInvoiceItems::where('invoice_id', $id)->get();
+        
+        $getDiscount = StudentDiscount::where('regno', $getInvoice->system_id)->first();
+        if ($getDiscount == null) {
+            $discount = 0;
+        } else {
+            $discount = $getDiscount->percent;
+        }
+        
+
+        return view('secondary.accounting.viewinvoice', compact('schooldetails', 'getInvoiceItems', 'getInvoice', 'discount'));
+    }
+
+    public function printinvoice($id)
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $getInvoice = FeesInvoice::join('users', 'users.id','=','fees_invoices.system_id')->where('fees_invoices.id', $id)->select('fees_invoices.*', 'users.firstname', 'users.lastname', 'users.phonenumber', 'users.email')->first();
+        $getInvoiceItems = FeesInvoiceItems::where('invoice_id', $id)->get();
+
+        return view('secondary.accounting.invoiceprint', compact('schooldetails', 'getInvoiceItems', 'getInvoice'));
+    }
+
+    public function invoicePaymentHistory($id)
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+        $paymentRecord = PaymentRecord::where('invoice_number', $id)->get();
+
+        return view('secondary.accounting.invoicepaymenthistory', compact('schooldetails', 'paymentRecord'));
     }
 
     public function orderRequest()
@@ -230,6 +269,9 @@ class AccountController extends Controller
         try {
             $regno = $request->identity;
 
+            //get schooldetail
+            $schooldetails = Addpost::find(Auth::user()->schoolid);
+
             //check if identity is regno first
     
             $getStudentData = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
@@ -261,7 +303,7 @@ class AccountController extends Controller
             $totalfees = AmountTable::where("amount_tables.class_id", $getStudentData->classid)->sum('amount');
     
     
-            $paymentRecord = PaymentRecord::where('regno', $getStudentData->id)->get();
+            $paymentRecord = PaymentRecord::where(['regno'=> $getStudentData->id, 'term'=>$schooldetails->term])->get();
 
             $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
@@ -277,53 +319,58 @@ class AccountController extends Controller
         }
     }
 
-    public function feesPartPayment(FeePayment $feePayment, Request $request, PaymentService $paymentService)
+    public function feesPartPayment(FeePayment $feePayment, Request $request)
     {
 
-        // return $request;
 
         try {
-            $schoolDetails = Addpost::find(Auth::user()->schoolid);
+
             $studentDetails = Addstudent_sec::find($request->regno);
 
             if ($request->amount < 1) {
-
-                return response()->json(['data'=>'over charge']);
-
+                return response()->json(['response'=>'Empty field not allowed', 'code' => 401]);
             }
 
-            //check if school fees has been paid in full
-
-            // $checkTransaction = TransactionRecord::where(['term' => $schoolDetails->term, 'session' =>$schoolDetails->schoolsession, 'school_id'=>Auth::user()->schoolid, 'system_id'=>$studentDetails->usernamesystem, 'status'=>'success'])->get();
-    
-            // if ($checkTransaction->count() > 0) {
-            //     return response()->json(['data'=>'payment done']);
-            // }
 
             //add payment record 
 
-            $addPaymentRecord = $feePayment->addPaymentRecord($request);
-
             $paymentServiceRes = $feePayment->generateInvoice($request, $request->regno);
 
-            if ($addPaymentRecord == "payment done") {
-                return response()->json(['data'=>'payment done']);
+            if( $paymentServiceRes == "success"){
+
+                $addPaymentRecord = $feePayment->addPaymentRecord($request, $request->regno);
+
+                if ($addPaymentRecord == "Payment done") {
+
+                    $request->except(['regno', 'total_amount']);
+                    $request['usernamesystem'] = $studentDetails->usernamesystem;
+        
+                    //add amount to school wallet
+        
+                    $feePayment->addAmountToSchoolWallet($request);
+        
+                    $addTransactionRecord = $feePayment->addTransactionHistory($request, "Fees Part Payment");
+
+
+                    return response()->json(['response'=>'Payment was successful', 'code'=>200], 200);
+                }else if($addPaymentRecord == "Payment already"){
+                    return response()->json(['response'=>'Payment already done', 'code'=>200], 200);
+                }
+    
+                if ($addPaymentRecord == "over charge") {
+                    return response()->json(['response'=>'over charge', 'code'=>401], 200);
+                }
+    
+
+                
+                return response()->json(['data'=>'success']);
+            }else{
+                return response()->json(['response'=>'unknown error contact admin', 'code' => 401]);
             }
 
-            if ($addPaymentRecord == "over charge") {
-                return response()->json(['data'=>'over charge']);
-            }
 
-            $request->except(['regno', 'total_amount']);
-            $request['usernamesystem'] = $studentDetails->usernamesystem;
 
-            //add amount to school wallet
-
-            $feePayment->addAmountToSchoolWallet($request);
-
-            $addTransactionRecord = $feePayment->addTransactionHistory($request, "Fees Part Payment");
-
-            return response()->json(['data'=>'success']);
+            
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['data'=>$th]);
@@ -419,6 +466,32 @@ class AccountController extends Controller
 
 
 
+        
+    }
+
+    public function item_finish_notification(Request $request)
+    {
+    
+
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+
+        $addrequest = new RequestModelAccount();
+        $addrequest->amountrequesting = 0.00;
+        $addrequest->reasonforrequest = $request->item_name." is about to be out of stock. We have ".$request->item_quantity. " remaining";
+        $addrequest->schoolid = (int)Auth::user()->schoolid;
+        $addrequest->seeenstatus = false;
+        $addrequest->status = "Unattended";
+        $addrequest->term = $schooldetails->term;
+        $addrequest->session = $schooldetails->schoolsession;
+        $addrequest->dateaccepted = "";
+        
+        $addrequest->sender = (int)Auth::user()->id;
+        $addrequest->save();
+
+        return back()->with('success', 'Request sent successfully');  
+            
+        
         
     }
 
@@ -777,6 +850,22 @@ class AccountController extends Controller
             //throw $th;
             return response()->json(['response'=>$th]);
         }
+        
+    }
+
+    public function discontinue_discount($id)
+    {
+        try {
+            $deleteStudent = StudentDiscount::find($id);
+            $deleteStudent->delete();
+
+            return response()->json(['response'=>'Discount removed successfully', 'code'=>200], 200);
+
+        } catch (\Throwable $th) {
+            //throw $th; 
+            return response()->json(['response'=>'Discount not removed', 'code'=>401], 200);
+        }
+
         
     }
 }

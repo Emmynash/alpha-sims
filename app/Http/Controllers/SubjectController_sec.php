@@ -10,6 +10,7 @@ use App\Addpost;
 use App\Addsection_sec;
 use App\CLassSubjects;
 use App\Electives_sec;
+use App\RecordMarks;
 use App\SubjectScoreAllocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,11 +22,12 @@ class SubjectController_sec extends Controller
     private $addsubject_sec;
     private $addmark_sec;
 
-    function __construct(Classlist_sec $classlist_sec, Addsubject_sec $addsubject_sec, Addmark_sec $addmark_sec)
+    function __construct(Classlist_sec $classlist_sec, Addsubject_sec $addsubject_sec, Addmark_sec $addmark_sec, RecordMarks $recordMarks)
     {
         $this->classlist_sec = $classlist_sec;
         $this->addsubject_sec = $addsubject_sec;
         $this->addmark_sec = $addmark_sec;
+        $this->recordMarks = $recordMarks;
     }
 
     public function index(){ 
@@ -51,32 +53,38 @@ class SubjectController_sec extends Controller
 
     public function addsubject_sec(){
         
-        $classesAll = $this->classlist_sec->where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
+        try {
 
-        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+            $classesAll = $this->classlist_sec->where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
 
-        $allsubjects = Addsubject_sec::join('classlist_secs', 'classlist_secs.id', '=', 'addsubject_secs.classid')
-                ->leftJoin('addsection_secs', 'addsection_secs.id','=','addsubject_secs.subjectsectione')
-                ->select('addsubject_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')
-                ->where('addsubject_secs.schoolid', Auth::user()->schoolid)->get();
-
-        $allSubjectmain = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->get();
-
-        $coresubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'2'])->get();
-
-        $electivesubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'1'])->get();
-
-        $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
-
-        $subjectScores = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
-
-        $getElectivesSettingNumber = Electives_sec::join('classlist_secs', 'classlist_secs.id','=','electives_secs.classid')
-                                    ->join('addsection_secs', 'addsection_secs.id','=','electives_secs.sectionid')
-                                    ->where('electives_secs.schoolid',Auth::user()->schoolid)
-                                    ->select('electives_secs.*', 'addsection_secs.sectionname', 'classlist_secs.classname')->get();
-        
-
-        return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'coresubjects'=>$coresubjects, 'electivesubjects'=>$electivesubjects, 'schoolsection'=>$schoolsection, 'subjectScores'=>$subjectScores, 'getElectivesSettingNumber'=>$getElectivesSettingNumber, 'allSubjectmain'=>$allSubjectmain]);
+            $schoolDetails = Addpost::find(Auth::user()->schoolid);
+    
+            $allsubjects = Addsubject_sec::join('classlist_secs', 'classlist_secs.id', '=', 'addsubject_secs.classid')
+                    ->select('addsubject_secs.*', 'classlist_secs.classname',)
+                    ->where('addsubject_secs.schoolid', Auth::user()->schoolid)->get();
+    
+            $allSubjectmain = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->get();
+    
+            // $coresubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'2'])->get();
+    
+            // $electivesubjects = Addsubject_sec::where(['schoolid'=> Auth::user()->schoolid, 'subjecttype'=>'1'])->get();
+    
+            $schoolsection = Addsection_sec::where('schoolid', Auth::user()->schoolid)->get();
+    
+            // $subjectScores = SubjectScoreAllocation::where('schoolid', Auth::user()->schoolid)->first();
+    
+            $getElectivesSettingNumber = Electives_sec::join('classlist_secs', 'classlist_secs.id','=','electives_secs.classid')
+                                        ->join('addsection_secs', 'addsection_secs.id','=','electives_secs.sectionid')
+                                        ->where('electives_secs.schoolid',Auth::user()->schoolid)
+                                        ->select('electives_secs.*', 'addsection_secs.sectionname', 'classlist_secs.classname')->get();
+            
+    
+            return response()->json(['classesAll'=>$classesAll, 'schoolDetails'=>$schoolDetails, 'allsubjects'=>$allsubjects, 'schoolsection'=>$schoolsection, 'getElectivesSettingNumber'=>$getElectivesSettingNumber, 'allSubjectmain'=>$allSubjectmain]);
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+        }
     }
 
     public function store(Request $request){
@@ -102,7 +110,7 @@ class SubjectController_sec extends Controller
                 return response()->json(['response'=>'fields']);
             }
 
-            $checkExist = Addsubject_sec::where(['schoolid'=>Auth::user()->schoolid, 'sectionclasstype'=>$request->input('sectionclasstype'), 'subjectname'=>strtoupper($request->input('subjectname'))])->get();
+            $checkExist = Addsubject_sec::where(['schoolid'=>Auth::user()->schoolid, 'subjectname'=>strtoupper($request->input('subjectname'))])->get();
 
             if ($checkExist->count()>0) {
                 return response()->json(['response'=>'duplicate']);
@@ -133,9 +141,9 @@ class SubjectController_sec extends Controller
         $subjectname = $request->subjectname;
         $subjecttype = $request->subjecttype;
 
-
         
-        $checkIfSubjectHasAMarkRecord = $this->addmark_sec->where(["subjectid"=>$subjectid, "schoolid"=>Auth::user()->schoolid])->get();
+        
+        $checkIfSubjectHasAMarkRecord = $this->recordMarks->where(["subjectid"=>$subjectid, "school_id"=>Auth::user()->schoolid])->get();
         
         if(count($checkIfSubjectHasAMarkRecord) > 0){
             
@@ -347,12 +355,8 @@ class SubjectController_sec extends Controller
     {
 
         try {
+
             $getClassSubject = CLassSubjects::find($subjectidAlloc);
-
-            $deleteAddedMarks = Addmark_sec::where(['classid'=>$getClassSubject->classid, 'section'=>$getClassSubject->sectionid, 'subjectid'=>$getClassSubject->subjectid])->delete();
-
-            // Addmark_sec::destroy($deleteAddedMarks);
-
             $getClassSubject->delete();
 
             return response()->json(['response'=>"success"]);

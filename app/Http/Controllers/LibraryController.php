@@ -73,6 +73,15 @@ class LibraryController extends Controller
             if (count($addbooks) > 0) {
                 return response()->json(['already'=>'already']);
             }
+            if (!$request->hasFile('fileebook')) {
+                return response()->json(['imgerr'=>'imgerr']);
+            }
+            
+            
+            
+            $fileName = time().'.'.request()->file('fileebook')->getClientOriginalExtension();
+            
+            $pathProfile = $request->file('fileebook')->storeAs('public/ebook', $fileName);
     
             // if (!$request->hasFile('file')) {
             //     return response()->json(['imgerr'=>'imgerr']);
@@ -98,6 +107,7 @@ class LibraryController extends Controller
             $addpdf->file =  "https://www.mswordcoverpages.com/wp-content/uploads/2018/10/Book-cover-page-3-CRC.png";
             $addpdf->quantity = $request->input('quantity');
             $addpdf->available = $request->input('quantity');
+             $addpdf->fileebook = $fileName;
             $addpdf->booktype = "hard copy";
             $addpdf->save();
      
