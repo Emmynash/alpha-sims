@@ -6,9 +6,12 @@ use App\Addpost;
 use App\Addsection_sec;
 use App\Addstudent_sec;
 use App\Addsubject_sec;
+use App\AssesmentModel;
+use App\AssignmentRemark;
 use App\AssignmentSubmission;
 use App\AssignmentTable;
 use App\Classlist_sec;
+use App\RecordMarks;
 use App\SubAssesmentModel;
 use App\TeacherSubjects;
 use Illuminate\Http\Request;
@@ -67,13 +70,16 @@ class AssignmentController extends Controller
                 return back();
             }
 
+            //get subassessments
+            $assessments = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->select('sub_assesment_models.*', 'assesment_models.name')->get();
+
            $getAssignments = AssignmentTable::join('addsubject_secs', 'addsubject_secs.id','=','assignment_tables.subjectid')
                                     ->join('classlist_secs', 'classlist_secs.id','=','assignment_tables.classid')
                                     ->join('addsection_secs', 'addsection_secs.id','=','assignment_tables.sectionid')
                                     ->select('assignment_tables.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname')
                                     ->where(['subjectid'=>$id, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term])->get();
     
-            return view('secondary.assignment.viewassignment_teachers', compact('schooldetails', 'subject', 'classid', 'sectionid', 'getAssignments'));
+            return view('secondary.assignment.viewassignment_teachers', compact('schooldetails', 'subject', 'classid', 'sectionid', 'getAssignments', 'assessments'));
         } catch (\Throwable $th) {
             //throw $th;
             return $th;
@@ -95,7 +101,8 @@ class AssignmentController extends Controller
                 'classid' => 'required',
                 'sectionid' => 'required',
                 'description' => 'required',
-                'assignmentfile' => 'required|image|mimes:jpeg,png,jpg,pdf,doc|max:4048'
+                'assignmentfile' => 'required|image|mimes:jpeg,png,jpg,pdf,doc|max:4048',
+                'sub_assesment_id' => 'required'
             ]);
 
             $response = cloudinary()->upload($request->file('assignmentfile')->getRealPath())->getSecurePath();
@@ -111,7 +118,8 @@ class AssignmentController extends Controller
                 'description'=>$request->description,
                 'filelink'=>$response,
                 'session'=>$schooldetails->schoolsession,
-                'term'=>$schooldetails->term
+                'term'=>$schooldetails->term,
+                'sub_assesment_id'=>$request->sub_assesment_id
             ]);
 
             return back()->with('success', 'File uploaded successfully');
@@ -126,6 +134,8 @@ class AssignmentController extends Controller
                 'classid' => 'required',
                 'sectionid' => 'required',
                 'description' => 'required',
+                'sub_assesment_id' => 'required'
+                
             ]);
 
 
@@ -139,7 +149,8 @@ class AssignmentController extends Controller
                 'sectionid'=>$request->sectionid,
                 'description'=>$request->description,
                 'session'=>$schooldetails->schoolsession,
-                'term'=>$schooldetails->term
+                'term'=>$schooldetails->term,
+                'sub_assesment_id'=>$request->sub_assesment_id
             ]);
 
             return back()->with('success', 'File uploaded successfully');
@@ -177,7 +188,9 @@ class AssignmentController extends Controller
                 'classid'=>$request->classid,
                 'filelink'=>$response,
                 'sectionid'=>$request->sectionid,
-                'description'=>$request->assignmenttext]);
+                'description'=>$request->assignmenttext,
+                'userid'=>Auth::user()->id,
+                'assignment_id'=>$request->assignment_id]);
     
                 return back()
                 ->with('success', 'File uploaded successfully');
@@ -200,7 +213,8 @@ class AssignmentController extends Controller
                 'classid'=>$request->classid,
                 'sectionid'=>$request->sectionid,
                 'description'=>$request->assignmenttext,
-                'userid'=>Auth::user()->id]);
+                'userid'=>Auth::user()->id,
+                'assignment_id'=>$request->assignment_id]);
     
                 return back()
                 ->with('success', 'File uploaded successfully');
@@ -231,6 +245,85 @@ class AssignmentController extends Controller
                      ->select('assignment_submissions.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsubject_secs.subjectname', 'users.firstname', 'users.lastname')->get();
 
         return view('secondary.assignment.viewsubmission', compact('schooldetails', 'submissions'));
+    }
+
+
+    public function remarkAssignment(Request $request)
+    {
+        $validated = $request->validate([
+            'comment' => 'required',
+            'submissionid' => 'required'
+        ]);
+
+        return back()->with('info', 'Module under maintainance. Will be available soon');
+
+        return $getAssignment = AssignmentTable::find($request->assignment_id);
+
+        if($getAssignment->sub_assesment_id != "0"){
+
+            $schoolDetails = Addpost::find(Auth::user()->schoolid);
+
+            $addRemark = AssignmentRemark::updateOrCreate(
+                ['submissionid'=>$request->submissionid],
+                ['comment'=>$request->comment, 'submissionid'=>$request->submissionid, 'score'=>$request->score, 'assessment_cat'=>$getAssignment->sub_assesment_id]
+            );
+    
+            $updateStatus = AssignmentSubmission::find($request->submissionid);
+            $updateStatus->status = 1;
+            $updateStatus->save();
+    
+            $user_student = Addstudent_sec::where('usernamesystem', $updateStatus->userid)->first();
+
+            // getAddmarks data
+            // $subjectid = '';
+            // $section_id = '';
+            // $schoolsession = Auth::user()->schoolid;
+            // $student_id = $user_student->id;
+            // $scrores = '';
+            // $class_id = '';
+
+            $assessment_model = SubAssesmentModel::where('catid', $getAssignment->sub_assesment_id)->first();
+
+            $recordMarks = RecordMarks::updateOrcreate(
+                ['subjectid'=>$updateStatus->subjectid, 'session'=>$updateStatus->session, 'term'=>$updateStatus->term,
+                'section_id'=>$request->section_id, 'student_id'=>$user_student->id, 'assesment_id'=>$assessment_model->id, 'subassessment_id'=>$getAssignment->sub_assesment_id],
+                ['subjectid'=>$updateStatus->subjectid, 'session'=>$updateStatus->session, 'term'=>$updateStatus->term,
+                'section_id'=>$request->section_id, 'student_id'=>$user_student->id, 'scrores'=>$request->scrores, 
+                'class_id'=>$getAssignment->classid, 'school_id'=>Auth::user()->schoolid, 'assesment_id'=>$assessment_model->id, 'subassessment_id'=>$getAssignment->sub_assesment_id]);
+
+
+    
+            // $getResultForSubject = Addmark_sec::where(['term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession, 'subjectid'=>$updateStatus->subjectid, 'regno'=>$user_student->id, 'classid'=>$user_student->classid, 'section'=>$user_student->studentsection])->first();
+    
+            if($getResultForSubject == null){
+    
+                // $createRecord = Addmark_sec::updateOrCreate(
+                //     ['term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession, 'subjectid'=>$updateStatus->subjectid, 'regno'=>$user_student->id],
+                //     ['term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession, 'subjectid'=>$updateStatus->subjectid, 'regno'=>$user_student->id, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$user_student->classid, 'shift'=>"NA", 'section'=>$user_student->studentsection, $getAssignment->assessment_cat=>$request->score]);
+    
+            }else{
+    
+                $field = $getAssignment->assessment_cat;
+    
+                $getResultForSubject->$field += $request->score;
+                $getResultForSubject->save();
+    
+            }
+
+            return back()->with('success', 'Remart added successfully');
+
+        }else{
+            $schoolDetails = Addpost::find(Auth::user()->schoolid);
+
+            $addRemark = AssignmentRemark::updateOrCreate(
+                ['submissionid'=>$request->submissionid],
+                ['comment'=>$request->comment, 'submissionid'=>$request->submissionid, 'score'=>$request->score, 'assessment_cat'=>$getAssignment->assessment_cat]
+            );
+
+            return back()->with('success', 'Remart added successfully');
+        }
+
+        return back()->with('success', 'Remart added successfully');
     }
 
 

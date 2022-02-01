@@ -18,6 +18,7 @@ use App\Addteachers_sec;
 use App\Addstudent_sec;
 use App\Addsubject_sec;
 use App\CalenderModel;
+use App\Services\Imageupload;
 use App\TeacherSubjects;
 use App\TeacherSubjectPris;
 use Illuminate\Support\Facades\Auth;
@@ -421,44 +422,30 @@ class HomeController extends Controller
         
     }
 
-    public function uploadProfilePix(Request $request){
-        $validatedData = $request->validate([
-            'profilepix' => 'image|max:200|mimes:jpeg,png,jpg|required'
-        ]);
+    public function uploadProfilePix(Imageupload $imageUpload, Request $request){
+        $rules = [
+            'image' => 'image|max:2048|mimes:jpeg,png,jpg|required',
+            'key' => 'required',
+        ];
+    
+        $customMessages = [
+            'required' => 'The :attribute field can not be blank.',
+            'mimes' => 'file must be an image(jpeg, png, jpg)',
+            'max' => 'file must not be greater than 2mb'
+        ];
+    
+        $this->validate($request, $rules, $customMessages);
 
-        $realImage = $request->file('profilepix');
-        $imageSize = getimagesize( $realImage);
-        $widthOfImage = $imageSize[0];
-        $heightOfImage = $imageSize[1];
-
-        // if($widthOfImage != $heightOfImage){
-        //     return back()->with('error', 'invalid image dimension');
-        // }
-
-        if ($request->hasFile('profilepix')) {
-
-            //get file name with extension
-            $profilepixExt = $request->file('profilepix')->getClientOriginalName();
-
-            //get just file names
-            $fileNameProfile = pathinfo($profilepixExt, PATHINFO_FILENAME);
-
-            //get just extensions
-            $extensionProfilepix = $request->file('profilepix')->getClientOriginalExtension();
-
-            //file name to store
-            $profileFinal = $fileNameProfile."_".time().$extensionProfilepix;
-
-            //upload image
-            $pathProfile = $request->file('profilepix')->storeAs('public/schimages', $profileFinal);
-
+        try {
+            $uploadRes = $imageUpload->imageUpload($request);
+            if ($uploadRes == "Success") {
+                return back()->with('success', "Process was successful");
+            } else {
+                return back()->with('error', "Process failed");
+            }
+        } catch (\Throwable $th) {
+            return back()->with('error', "Process failed");
         }
-
-        $uploadProfileImage = User::find(Auth::user()->id);
-        $uploadProfileImage->profileimg = $profileFinal;
-        $uploadProfileImage->save();
-
-        return back()->with('success', 'profile image uploaded');
 
     }
     

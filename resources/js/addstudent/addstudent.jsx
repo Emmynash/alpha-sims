@@ -215,14 +215,14 @@ function AddStudents() {
             <form onSubmit={addStudentMain}>
             <div className="card">
                 <div className="alert alert-info" style={{ margin:'10px' }}>
-                    <i style={{ fontStyle:'normal', fontSize:'13px' }}>Ensure you register students with valid email addresse, this is important because login credentials will we sent via email to those who havent created an account prior to now.</i>   
+                    <i style={{ fontStyle:'normal', fontSize:'13px' }}>*Valid email addresses, as this is important... credentials will be sent... haven't created*</i>   
                 </div>
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-4">
                         <div className="card">
                             <div style={{ margin:'10px' }}>
                                 <div className="alert alert-info">
-                                    <i style={{ fontStyle:'normal', fontSize:'13px' }}>For students who have registered there system number is required for verification before class is allocated to them.</i>
+                                    <i style={{ fontStyle:'normal', fontSize:'13px' }}>*For students who have registered, their system number..*</i>
                                 </div>
                                 <select onChange={(e)=>handleChangeStudentRegStatus(e)} value={regForm.isRegistered} name="isRegistered" id="" className="form-control form-control-sm">
                                     <option value="">Select an option to proceed</option>

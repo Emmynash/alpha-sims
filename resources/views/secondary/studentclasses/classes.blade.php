@@ -64,10 +64,10 @@
               <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                   <thead>
-                    <tr>
+                    <tr style="text-align: center;">
                       <th>Code</th>
                       <th>class</th>
-                      <th>Number of student</th>
+                      <th >Number of students</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -76,7 +76,7 @@
                     @php $count = method_exists($classesAll, 'links') ? 1 : 0; @endphp
                       @foreach ($classesAll as $classesall)
                       @php $count = method_exists($classesAll, 'links') ? ($classesAll ->currentpage()-1) * $classesAll ->perpage() + $loop->index + 1 : $count + 1; @endphp
-                        <tr>
+                        <tr style="text-align: center;">
                           <td>{{$count}}</td>
                           <td>{{$classesall->classname}}</td>
                           <td>{{$classesall->getClassCount($classesall->id)}}</td>
@@ -99,7 +99,7 @@
                                     </button>
                                   </div>
                                   <div class="modal-body">
-                                      <i style="font-style: normal; font-size: 12px;">Classes are arraged in asending order and schould not be tempered with. Corrections are only allowed if the name was wrongly entered...</i>
+                                      <i style="font-style: normal; font-size: 12px;">Classes are arranged in asending order and schould not be tempered with. Corrections are only allowed if the name was wrongly entered...</i>
                                     <form id="editclassnameform{{$classesall->id}}" action="/editclassname" method="post">
                                         @csrf
                                         <input type="text" class="form-control form-control-sm" value="{{$classesall->classname}}" name="classname">
@@ -181,13 +181,6 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2012-2019 <a href="http://adminlte.io">Brightosoft</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 0.0.1
-    </div>
-  </footer>
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">

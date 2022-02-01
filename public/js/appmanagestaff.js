@@ -69710,7 +69710,7 @@ function ManageStaff() {
         padding: '2px',
         fontWeight: 'bold'
       }
-    }, "Teachers Subjects")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "Teacher's Subjects")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
         maxHeight: '200px',
         overflowY: 'scroll'

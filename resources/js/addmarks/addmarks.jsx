@@ -537,7 +537,7 @@ function AddMarks() {
                                             <td>{student.position}</td>
                                             <td>{student.grade}</td>
                                             <td>
-                                                <button onClick={()=>addStudentMarksModal(student.id)} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button>
+                                                <button onClick={()=>addStudentMarksModal(student.id)} style={{ marginRight: '5px' }} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button>
 
                                                 <button onClick={()=>getScoreRecord(student.id)} className="btn btn-sm btn-warning" data-toggle="modal" data-target="#view_single_student_result"><i className="fas fa-eye"></i></button>
                                             </td>

@@ -81744,7 +81744,7 @@ function SchoolSetUp() {
       style: {
         fontSize: '13px'
       }
-    }, "Use the form below to add classes to your school. You are expected to fill in the CLASS INDEX. Indexs are asigned from the bottom(i.e the lowest class should have the lowest index and they are numeric).")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "Use the form below to add classes to your school. You are expected to fill in the CLASS INDEXS. Indexs are assigned from the bottom(i.e the lowest class should have the lowest index and they are numeric).")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"

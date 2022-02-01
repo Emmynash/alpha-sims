@@ -340,12 +340,12 @@ Route::group(['prefix' => 'sec', 'middleware'=>'tenant'], function () {
     });
 
 
-    Route::group(['prefix' => 'moto', 'middleware' => ['auth', 'can:add psychomotor']], function () {
+    Route::group(['prefix' => 'moto', 'middleware' => ['auth', 'can:psychomotor module']], function () {
 
         //phycomoto secondary
-        Route::get('/student_moto', 'MotoController_sec@index','roles')->name('student_moto');
+        Route::get('/student_moto', 'MotoController_sec@index','roles')->name('student_moto')->middleware('can:add psychomotor');
         Route::get('/setting_moto', 'MotoController_sec@settingsmoto')->name('setting_moto')->middleware('can:add moto settings');
-        Route::post('/add_setting_moto', 'MotoController_sec@addSettingsMoto')->name('add_setting_moto');
+        Route::post('/add_setting_moto', 'MotoController_sec@addSettingsMoto')->name('add_setting_moto')->middleware('can:add moto settings');;
         Route::POST('/get_students_for_pyco', 'MotoController_sec@get_students_for_psyco')->name('get_students_for_pyco');
         Route::POST('/addmoto_main', 'MotoController_sec@addmotomain','roles')->name('addmoto_main');
         Route::get('/view_student/{id}', 'MotoController_sec@addFunNowMain')->name('view_student');
@@ -679,7 +679,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
         Route::group(['middleware' => ['auth', 'role:Student']], function () { // assignment module
             Route::get('/assignment_student', 'AssignmentController@index')->name('assignment_student');
             Route::post('/assignment_submit', 'AssignmentController@submitAssignmentStudent')->name('assignment_submit');
-            
+            Route::get('/view_submission_student/{subjectid}/{classid}/{sectionid}/{submissionid}', 'AssignmentController@viewsubmissions')->name('view_submission_student');
         });
 
         Route::group(['middleware' => ['auth', 'role:Teacher']], function () { // assignment module
@@ -690,6 +690,7 @@ Route::group(['prefix' => 'gen', 'middleware' => ['auth']], function () {
             Route::post('/post_assignment', 'AssignmentController@post_assignment')->name('post_assignment');
             Route::delete('/deleteassignment/{id}', 'AssignmentController@delete')->name('deleteassignment');
             Route::get('/view_submission/{subjectid}/{classid}/{sectionid}', 'AssignmentController@viewsubmissions')->name('view_submission');
+            Route::post('/remark_assignment', 'AssignmentController@remarkAssignment')->name('remark_assignment');
         });
 
 });

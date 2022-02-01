@@ -52,6 +52,7 @@ class MyProfileController extends Controller
             $updateProfile = User::find(Auth::user()->id);
             $updateProfile->firstname = $request->firstname;
             $updateProfile->lastname = $request->lastname;
+            $updateProfile->middlename = $request->middlename ?? "";
             $updateProfile->save();
 
             return back()->with('success', 'Profile updated');

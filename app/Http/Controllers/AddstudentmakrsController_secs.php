@@ -344,7 +344,7 @@ class AddstudentmakrsController_secs extends Controller
                     DB::beginTransaction();
 
                     try {
-                                            //calculate student position
+                    //calculate student position
                     $getAllTotalMarks = AssessmentTableTotal::where(['schoolid'=>Auth::user()->schoolid,
                                         'classid'=>$request->class_id, 'subjectid'=>$request->subjectid, 'term' =>$schooldetails->term, 'session'=>$schooldetails->schoolsession, 'sectionid'=>$request->section_id,])->orderBy('totals', 'desc')->get();
 

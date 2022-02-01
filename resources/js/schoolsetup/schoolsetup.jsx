@@ -644,7 +644,7 @@ function SchoolSetUp() {
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-6">
                         <div className="alert alert-warning">
-                            <i style={{ fontSize:'13px' }}>Use the form below to add classes to your school. You are expected to fill in the CLASS INDEX. Indexs are asigned from the bottom(i.e the lowest class should have the lowest index and they are numeric).</i>
+                            <i style={{ fontSize:'13px' }}>Use the form below to add classes to your school. You are expected to fill in the CLASS INDEXS. Indexs are assigned from the bottom(i.e the lowest class should have the lowest index and they are numeric).</i>
                         </div>
 
 

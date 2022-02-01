@@ -69530,7 +69530,7 @@ function AddStudents() {
         fontStyle: 'normal',
         fontSize: '13px'
       }
-    }, "Ensure you register students with valid email addresse, this is important because login credentials will we sent via email to those who havent created an account prior to now.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "*Valid email addresses, as this is important... credentials will be sent... haven't created*")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row",
       style: {
         margin: '10px'
@@ -69550,7 +69550,7 @@ function AddStudents() {
         fontStyle: 'normal',
         fontSize: '13px'
       }
-    }, "For students who have registered there system number is required for verification before class is allocated to them.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    }, "*For students who have registered, their system number..*")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
       onChange: function onChange(e) {
         return handleChangeStudentRegStatus(e);
       },

@@ -95,61 +95,71 @@
         </div>
 
 
-            <!-- The Modal -->
-            <div class="modal" id="postassignment">
-                <div class="modal-dialog">
-                <div class="modal-content">
-            
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                    <h4 class="modal-title">Post a New Assignment</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-            
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                    <form method="post" action="{{ route('post_assignment') }}" enctype="multipart/form-data" id="postassignmentM">
-                        @csrf
-                        <div class="form-group">
-                            <label for="">Start Date</label>
-                            <input type="date" name="startdate" class="form-control form-control-sm">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Submission Date</label>
-                            <input type="date" name="submissiondate" class="form-control form-control-sm">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Subject Name</label>
-                            <input type="Text" value="{{ $subject->subjectname }}" name="" class="form-control form-control-sm">
-                            <input type="hidden" value="{{ $subject->id }}" name="subjectid" class="form-control form-control-sm">
-                        </div>
-                        <div class="form-group">
-                            {{-- <label for="">Select a Class</label> --}}
-                            <input type="hidden" value="{{ $classid }}" name="classid" class="form-control form-control-sm">
-                        </div>
-                        <div class="form-group">
-                            {{-- <label for="">Select a Section</label> --}}
-                            <input type="hidden" value="{{ $sectionid }}" name="sectionid" class="form-control form-control-sm">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Assignment description</label>
-                            <textarea name="description" class="form-control form-control-sm" id="" cols="30" rows="5"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Upload a file(optional)</label>
-                            <input type="file" name="assignmentfile" class="form-control form-control-sm">
-                        </div>
-                    </form>
-                    </div>
-            
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                    <button  form="postassignmentM" class="btn btn-success btn-sm">Submit</button>
-                    </div>
-            
-                </div>
-                </div>
-        </div>
+             <!-- The Modal -->
+             <div class="modal" id="postassignment">
+              <div class="modal-dialog">
+              <div class="modal-content">
+          
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                  <h4 class="modal-title">Post a New Assignment</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+          
+                  <!-- Modal body -->
+                  <div class="modal-body">
+                  <form method="post" action="{{ route('post_assignment') }}" enctype="multipart/form-data" id="postassignmentM">
+                      @csrf
+                      <div class="form-group">
+                          <label for="">Start Date</label>
+                          <input type="date" name="startdate" class="form-control form-control-sm" min="<?php echo date("Y-m-d"); ?>">
+                      </div>
+                      <div class="form-group">
+                          <label for="">Submission Date</label>
+                          <input type="date" name="submissiondate" class="form-control form-control-sm" min="<?php echo date("Y-m-d"); ?>">
+                      </div>
+                      <div class="form-group">
+                          <label for="">Subject Name</label>
+                          <input type="Text" value="{{ $subject->subjectname }}" name="" class="form-control form-control-sm">
+                          <input type="hidden" value="{{ $subject->id }}" name="subjectid" class="form-control form-control-sm">
+                      </div>
+                      <div class="form-group">
+                          <select class="form-control form-control-sm" name="sub_assesment_id">
+                            <option value="">--Select catetgory--</option>
+                            @foreach ($assessments as $item)
+                              <option value="{{ $item->id }}">{{ $item->subname }}-{{ $item->name }}</option>
+                            @endforeach
+                              <option value="0">No Score</option>
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          {{-- <label for="">Select a Class</label> --}}
+                          <input type="hidden" value="{{ $classid }}" name="classid" class="form-control form-control-sm">
+                      </div>
+                      <div class="form-group">
+                          {{-- <label for="">Select a Section</label> --}}
+                          <input type="hidden" value="{{ $sectionid }}" name="sectionid" class="form-control form-control-sm">
+                      </div>
+                      <div class="form-group">
+                          <label for="">Assignment description</label>
+                          <textarea name="description" class="form-control form-control-sm" id="" cols="30" rows="5"></textarea>
+                      </div>
+                      <div class="form-group">
+                          <label for="">Upload a file(optional)</label>
+                          <i style="color: red; font-style: normal; font-size: 13px;">Note: Max upload size 4mb (doc, docx, pdf, jpeg, jpg, png)</i>
+                          <input type="file" name="assignmentfile" class="form-control form-control-sm">
+                      </div>
+                  </form>
+                  </div>
+          
+                  <!-- Modal footer -->
+                  <div class="modal-footer">
+                  <button  form="postassignmentM" class="btn btn-success btn-sm">Submit</button>
+                  </div>
+          
+              </div>
+              </div>
+      </div>
 
 
   
@@ -158,12 +168,5 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2012-2019 <a href="http://adminlte.io">Brightosoft</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 0.0.1
-    </div>
-  </footer>
     
 @endsection

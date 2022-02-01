@@ -69821,6 +69821,9 @@ function AddMarks() {
           onClick: function onClick() {
             return addStudentMarksModal(student.id);
           },
+          style: {
+            marginRight: '5px'
+          },
           className: "btn btn-sm btn-info",
           "data-toggle": "modal",
           "data-target": "#add_student_marks"

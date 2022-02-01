@@ -36,14 +36,14 @@
             <h5 style="color: red;">System No: {{Auth::user()->id}}</h5>
             <div class="row">
                 <div class="col-md-4" style="height: 100px;">
-                    <i style="font-style: normal;">Firstname: {{Auth::user()->firstname}}</i><br>
-                    <i style="font-style: normal;">Middlename: {{Auth::user()->middlename}}</i><br>
-                    <i style="font-style: normal;">Lastname: {{Auth::user()->lastname}}</i><br>
-                    <i style="font-style: normal;">PhoneNumber: {{Auth::user()->phonenumber}}</i>
+                    <i style="font-style: normal;">First Name: {{Auth::user()->firstname}}</i><br>
+                    <i style="font-style: normal;">Middle Name: {{Auth::user()->middlename}}</i><br>
+                    <i style="font-style: normal;">Last Name: {{Auth::user()->lastname}}</i><br>
+                    <i style="font-style: normal;">Phone Number: {{Auth::user()->phonenumber}}</i>
                 </div><br>
             </div>
             <div style="height: 100px; width: 100px; background-color: gray;">
-                <img src="{{asset('storage/schimages/'.Auth::user()->profileimg)}}" alt="" width="100px; height: 100px;">
+                <img src="{{Auth::user()->profileimg}}" alt="" width="100px; height: 100px;">
             </div>
             <br>
             <div class="row">
@@ -51,7 +51,8 @@
                     <form id="uploadprofilepix" method="POST" action="/uploadProfilePix" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
-                            <input type="file" class="form-control-file border @error('profilepix') is-invalid @enderror" name="profilepix">
+                            <input type="file" class="form-control-file border @error('image') is-invalid @enderror" name="image">
+                            <input type="hidden" name="key" value="profile">
                             @error('profilepix')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

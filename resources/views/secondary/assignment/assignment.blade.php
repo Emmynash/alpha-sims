@@ -65,12 +65,13 @@
                                 <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Start Date: <i style="font-style: normal; font-weight: bold;">{{  date("d M Y", strtotime($item->startdate)) }}</i></p>
                                 <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Submission: <i style="font-style: normal; font-weight: bold;">{{  date("d M Y", strtotime($item->submissiondate)) }}</i></p>
                                 <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Class/Section: <i style="font-style: normal; font-weight: bold;">{{ $item->classname }}</i><i style="font-style: normal; font-weight: bold;">{{ $item->sectionname }}</i></p>
-                              
+                                <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Assignment Category: <i style="font-style: normal; font-weight: bold;">{{  strtoupper($item->assessment_cat) }}</i></p>
                                 <p style="margin: 0px; padding-left: 10px; font-size: 13px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
                                 <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status:</p>
                               </div>
                               <div style="margin: 10px;">
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#submitassignment{{ $item->id }}">Submit Assignment</button>
+                                <a href="{{ route('view_submission_student', ['subjectid'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid, 'submissionid'=>$item->id]) }}"><button class="btn btn-info btn-sm">View Submissions</button></a>
                               </div>
                             </div><!-- /.card-body -->
                           </div>
@@ -101,8 +102,11 @@
                                 <input type="hidden" name="subjectid" value="{{ $item->subjectid }}">
                                 <input type="hidden" name="sectionid" value="{{ $item->sectionid }}">
                                 <input type="hidden" name="classid" value="{{ $item->classid }}">
+                                <input type="hidden" name="assignment_id" value="{{ $item->id }}">
+                                
                                 <div class="form-group">
                                   <label for="">Upload Assignment</label>
+                                  <i style="color: red; font-style: normal; font-size: 13px;">Note: Max upload size 4mb (doc, docx, pdf, jpeg, jpg, png)</i>
                                   <input type="file" name="filelink" class="form-control form-control-sm">
                                 </div>
                               </form>
@@ -132,15 +136,7 @@
   
       </div><!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2012-2019 <a href="http://adminlte.io">Brightosoft</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 0.0.1
-    </div>
-  </footer>
     
 @endsection

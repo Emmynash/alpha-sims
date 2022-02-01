@@ -314,9 +314,9 @@ const AddTeachers=()=>{
                     <table className="table table-hover text-nowrap">
                         <thead>
                         <tr>
-                            <th>Teachers Name</th>
+                            <th>Teacher's name</th>
                             <th>Sys No.</th>
-                            <th>Date Asigned</th>
+                            <th>Date assigned</th>
                             <th>Action</th>
                         </tr>
                         </thead>

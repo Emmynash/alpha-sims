@@ -314,7 +314,7 @@ function ManageStaff() {
                             <div className="col-md-12">
 
                                <div className="card">
-                                    <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px', fontWeight:'bold' }}>Teachers Subjects</i>
+                                    <i style={{ fontStyle:'normal', fontSize:'13px', padding:'2px', fontWeight:'bold' }}>Teacher's Subjects</i>
                                </div>
                                <div style={{ maxHeight:'200px', overflowY:'scroll' }}>
                                     {

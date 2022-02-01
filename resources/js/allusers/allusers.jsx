@@ -186,7 +186,7 @@ function AllUsers() {
                 <div className="row">
                   <div className="col-12 col-md-4">
                     <div className="form-group">
-                      <input type="text" className="form-control form-control-sm" onChange={(e) => setSearch(e.target.value)} placeholder="Search student name"/>
+                      <input type="text" className="form-control form-control-sm" onChange={(e) => setSearch(e.target.value)} placeholder="Search name"/>
                     </div>
                   </div>
                 </div>

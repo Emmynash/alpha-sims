@@ -50,7 +50,7 @@
                       @csrf
                       <div class="form-group" style="display: flex; align-item: center; justify-content: center;">
                         <div class="file-input">
-                          <i style="font-size: 10px;, font-style: normal;">Selelect a pix to update your profile pix Note:(not greater than 2MB)</i>
+                          <i style="font-size: 10px;, font-style: normal;">Select a profile pic. Note:(not greater than 2MB)</i>
                           <input type="file" name="image" id="" class="">
                           <input type="hidden" name="key" value="profile" id=""><br>
                           <small class="text-danger">{{ $errors->first('image') }}</small>
@@ -151,13 +151,6 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2012-2019 <a href="http://adminlte.io">Brightosoft</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 0.0.1
-    </div>
-  </footer>
 
 @endsection
 

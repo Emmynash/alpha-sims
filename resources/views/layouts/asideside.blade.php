@@ -428,7 +428,7 @@
                   </a>
               </li>
 
-            @can('add psychomotor')
+              @can('psychomotor module')
               <li class="nav-item has-treeview">
                 <a id="psyhcomoto" href="#" class="nav-link">
                     <i class="nav-icon fas fa-home"></i> 
@@ -438,12 +438,14 @@
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
+                  @can('add psychomotor')
                   <li class="nav-item">
                     <a id="psyhcomotoadd" href="{{ route('student_moto') }}" class="nav-link">
                       <i class="nav-icon fas fa-plus"></i> 
                       <p>add</p>
                     </a>
                   </li>
+                  @endcan
                   @can('add moto settings')
                   <li class="nav-item">
                     <a id="psyhcomotosettings" href="{{ route('setting_moto') }}" class="nav-link">
@@ -455,7 +457,8 @@
                   
                 </ul>
               </li>
-            @endcan
+              @endcan
+            
   
 
             @can('result module')
