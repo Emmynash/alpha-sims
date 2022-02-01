@@ -14,4 +14,3 @@ Homestead.yaml
 .phpunit.result.cache 
 /config/database.php
 node_modules
-node_modules
