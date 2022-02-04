@@ -29,6 +29,10 @@
           <div id="home" class="container tab-pane active"><br>
             <div class="alert alert-info alert-block">
                 <button type="button" class="close" data-dismiss="alert">×</button>	
+                <strong>If your account has been approved, refresh the page to proceed.</strong>
+            </div>
+            <div class="alert alert-info alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>	
                 <strong>Your registration was successfull, however, you are on this page because you don't belong to any school. To belong, get the below printout to your school but first upload your passport.</strong>
             </div>
             {{-- @include('layouts.message') --}}

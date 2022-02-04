@@ -57,7 +57,7 @@
                           </label>
                         </div>
                       </div>
-                      <button class="btn btn-sm btn-info" style="margin: 0 10px 10px 10px;">upload pix</button>
+                      <button class="btn btn-sm btn-info" style="margin: 0 10px 10px 10px;">upload pic</button>
                     </form>
                     
                   </div>

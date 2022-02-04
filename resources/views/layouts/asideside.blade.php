@@ -433,7 +433,7 @@
                 <a id="psyhcomoto" href="#" class="nav-link">
                     <i class="nav-icon fas fa-home"></i> 
                   <p>
-                    Pychomotor
+                    Psychomotor
                     <i class="right fas fa-angle-left"></i>
                   </p>
                 </a>
