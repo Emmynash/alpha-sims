@@ -129,7 +129,8 @@
                         
                         @foreach($subjectTeacherOffer as $teachersubjects)
 
-                          @if ($teachersubjects != null)
+                          @if ($teachersubjects->getSubjectName != null)
+                          
                           <div class="card">
                             <div style="padding: 5px;">
                                 <div>
