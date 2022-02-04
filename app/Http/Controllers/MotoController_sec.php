@@ -48,7 +48,24 @@ class MotoController_sec extends Controller
 
         return back()->with('success', 'process was successfull...');
 
+    }
 
+    public function editSettingsmoto(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'category' =>'required'
+        ]);
+
+        $addmoto = MotoList::find($request->id);
+        $addmoto->name = $request->name;
+        $addmoto->category = $request->category;
+        $addmoto->schoolid = (int)Auth::user()->schoolid;
+        $addmoto->save();
+
+        return back()->with('success', 'process was successfull...');
+        
     }
 
     public function get_students_for_psyco(Request $request){

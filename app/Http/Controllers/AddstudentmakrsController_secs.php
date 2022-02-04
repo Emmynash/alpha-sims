@@ -313,24 +313,17 @@ class AddstudentmakrsController_secs extends Controller
                 ['subjectid'=>$request->subjectid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term,
                 'section_id'=>$request->section_id, 'student_id'=>$request->student_id, 'scrores'=>$request->scrores, 
                 'class_id'=>$request->class_id, 'school_id'=>Auth::user()->schoolid, 'assesment_id'=>$request->assesment_id, 'subassessment_id'=>$request->subassessment_id]);
-
+                
                 //compile subject total
-
                 $getSubjecttoal = RecordMarks::where(['subjectid'=>$request->subjectid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'section_id'=>$request->section_id, 'student_id'=>$request->student_id])->sum('scrores');
-
                 //get student grade.
                 $getGrade = Addgrades_sec::where('schoolid', Auth::user()->schoolid)->get();
-
                 $gradeFinal = '';
-
                 for ($i=0; $i < count($getGrade); $i++) { 
-                    
                     if ($getSubjecttoal >= (int)$getGrade[$i]->marksfrom && $getSubjecttoal <= (int)$getGrade[$i]->marksto) {
                         $gradeFinal = $getGrade[$i]->gpaname;
                     }
-
                 }
-
                 //add values to record table
                 $addTotalMarks = AssessmentTableTotal::updateOrcreate(
                     ['regno'=>$request->student_id, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$request->class_id, 'subjectid'=>$request->subjectid,
@@ -338,50 +331,35 @@ class AddstudentmakrsController_secs extends Controller
                     ['regno'=>$request->student_id, 'schoolid'=>Auth::user()->schoolid,
                     'catid'=>$request->assesment_id, 'classid'=>$request->class_id, 'subjectid'=>$request->subjectid,
                     'totals'=>$getSubjecttoal, 'term' =>$schooldetails->term, 'session'=>$schooldetails->schoolsession, 'sectionid'=>$request->section_id, 'grade'=>$gradeFinal]);
-
-
-                    
                     DB::beginTransaction();
-
                     try {
                     //calculate student position
                     $getAllTotalMarks = AssessmentTableTotal::where(['schoolid'=>Auth::user()->schoolid,
                                         'classid'=>$request->class_id, 'subjectid'=>$request->subjectid, 'term' =>$schooldetails->term, 'session'=>$schooldetails->schoolsession, 'sectionid'=>$request->section_id,])->orderBy('totals', 'desc')->get();
-
                         $subjectscrorearray = array();
-                        
                         for ($i=0; $i < count($getAllTotalMarks); $i++) { 
                             $score = (int)$getAllTotalMarks[$i]['totals'];
                                 array_push($subjectscrorearray, $score);
                         }
-            
                         for ($i=0; $i < count($getAllTotalMarks); $i++) { 
-            
                             $mainScore = (int)$getAllTotalMarks[$i]['totals'];
                             $mainScoreId = $getAllTotalMarks[$i]['id'];
                             $positiongotten = array_search($mainScore, $subjectscrorearray);
                             $newPosition = $positiongotten + 1;
-            
                             DB::table('assessment_table_totals')->where('id',$mainScoreId)->update(array(
                                 'position'=>$newPosition
                             ));
-            
                         }
-            
                         DB::commit();
                         // all good
                         // return $subjectscrorearray;
                         
                     } catch (\Exception $e) {
                         DB::rollback();
-            
                         return $e;
                         // something went wrong
                     }
-
-
                 return response()->json(['response'=>"Process was successful", 'code'=>200], 200);
-
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['response'=>$th, 'code'=>400], 200);

@@ -128,23 +128,27 @@
                     <div class="active tab-pane" id="activity">
                         
                         @foreach($subjectTeacherOffer as $teachersubjects)
-                        
-                            <div class="card">
-                                <div style="padding: 5px;">
-                                    <div>
-                                        <i style="font-size: 12px; font-style: normal;">{{$teachersubjects->getSubjectName->subjectname}}</i>
-                                    </div>
-                                    <div>
-                                        <i style="font-size: 12px; font-style: normal;">{{$teachersubjects->getSubjectName->subjectcode}}</i>
-                                    </div>
-                                    <div>
-                                        <i style="font-size: 12px; font-style: normal;">{{$teachersubjects->getClassName->classname}}{{ $teachersubjects->sectionname }}</i>
-                                    </div>
-                                    {{-- <div>
-                                        <i style="font-size: 12px; font-style: normal;">Class Count: {{$teachersubjects->getClassCount($teachersubjects->classid)}}</i>
-                                    </div> --}}
+
+                          @if ($teachersubjects != null)
+                          <div class="card">
+                            <div style="padding: 5px;">
+                                <div>
+                                    <i style="font-size: 12px; font-style: normal;">{{$teachersubjects->getSubjectName->subjectname}}</i>
                                 </div>
+                                <div>
+                                    <i style="font-size: 12px; font-style: normal;">{{$teachersubjects->getSubjectName->subjectcode}}</i>
+                                </div>
+                                <div>
+                                    <i style="font-size: 12px; font-style: normal;">{{$teachersubjects->getClassName->classname}}{{ $teachersubjects->sectionname }}</i>
+                                </div>
+                                {{-- <div>
+                                    <i style="font-size: 12px; font-style: normal;">Class Count: {{$teachersubjects->getClassCount($teachersubjects->classid)}}</i>
+                                </div> --}}
                             </div>
+                        </div>
+                          @endif
+                        
+                            
                         
                         @endforeach
                         

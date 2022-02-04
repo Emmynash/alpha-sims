@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Addgrades_sec;
 use App\Addpost;
 use App\Addsection_sec;
 use App\Addstudent_sec;
 use App\Addsubject_sec;
 use App\AssesmentModel;
+use App\AssessmentTableTotal;
 use App\AssignmentRemark;
 use App\AssignmentSubmission;
 use App\AssignmentTable;
@@ -16,6 +18,7 @@ use App\SubAssesmentModel;
 use App\TeacherSubjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AssignmentController extends Controller
 {
@@ -241,8 +244,9 @@ class AssignmentController extends Controller
                      ->join('addsection_secs', 'addsection_secs.id','=','assignment_submissions.sectionid')
                      ->join('addsubject_secs', 'addsubject_secs.id','=','assignment_submissions.subjectid')
                      ->join('users', 'users.id','=','assignment_submissions.userid')
+                     ->leftjoin('assignment_remarks', 'assignment_remarks.submissionid','=','assignment_submissions.id')
                      ->where(['subjectid'=>$subjectid, 'assignment_submissions.classid'=>$classid, 'sectionid'=>$sectionid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term])
-                     ->select('assignment_submissions.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsubject_secs.subjectname', 'users.firstname', 'users.lastname')->get();
+                     ->select('assignment_submissions.*', 'classlist_secs.classname', 'assignment_remarks.comment', 'assignment_remarks.score', 'addsection_secs.sectionname', 'addsubject_secs.subjectname', 'users.firstname', 'users.lastname')->get();
 
         return view('secondary.assignment.viewsubmission', compact('schooldetails', 'submissions'));
     }
@@ -255,9 +259,9 @@ class AssignmentController extends Controller
             'submissionid' => 'required'
         ]);
 
-        return back()->with('info', 'Module under maintainance. Will be available soon');
+        // return back()->with('info', 'Module under maintainance. Will be available soon');
 
-        return $getAssignment = AssignmentTable::find($request->assignment_id);
+        $getAssignment = AssignmentTable::find($request->assignment_id);
 
         if($getAssignment->sub_assesment_id != "0"){
 
@@ -265,7 +269,7 @@ class AssignmentController extends Controller
 
             $addRemark = AssignmentRemark::updateOrCreate(
                 ['submissionid'=>$request->submissionid],
-                ['comment'=>$request->comment, 'submissionid'=>$request->submissionid, 'score'=>$request->score, 'assessment_cat'=>$getAssignment->sub_assesment_id]
+                ['comment'=>$request->comment, 'submissionid'=>$request->submissionid, 'score'=>$request->score, 'assesment_id'=>$getAssignment->sub_assesment_id]
             );
     
             $updateStatus = AssignmentSubmission::find($request->submissionid);
@@ -282,33 +286,62 @@ class AssignmentController extends Controller
             // $scrores = '';
             // $class_id = '';
 
-            $assessment_model = SubAssesmentModel::where('catid', $getAssignment->sub_assesment_id)->first();
+            $assessment_model = SubAssesmentModel::where('id', $getAssignment->sub_assesment_id)->first();
 
             $recordMarks = RecordMarks::updateOrcreate(
                 ['subjectid'=>$updateStatus->subjectid, 'session'=>$updateStatus->session, 'term'=>$updateStatus->term,
-                'section_id'=>$request->section_id, 'student_id'=>$user_student->id, 'assesment_id'=>$assessment_model->id, 'subassessment_id'=>$getAssignment->sub_assesment_id],
+                'section_id'=>$user_student->studentsection, 'student_id'=>$user_student->id, 'assesment_id'=>$assessment_model->catid, 'subassessment_id'=>$getAssignment->sub_assesment_id],
                 ['subjectid'=>$updateStatus->subjectid, 'session'=>$updateStatus->session, 'term'=>$updateStatus->term,
-                'section_id'=>$request->section_id, 'student_id'=>$user_student->id, 'scrores'=>$request->scrores, 
-                'class_id'=>$getAssignment->classid, 'school_id'=>Auth::user()->schoolid, 'assesment_id'=>$assessment_model->id, 'subassessment_id'=>$getAssignment->sub_assesment_id]);
+                'section_id'=>$user_student->studentsection, 'student_id'=>$user_student->id, 'scrores'=>$request->score, 
+                'class_id'=>$getAssignment->classid, 'school_id'=>Auth::user()->schoolid, 'assesment_id'=>$assessment_model->catid, 'subassessment_id'=>$getAssignment->sub_assesment_id]);
 
 
-    
-            // $getResultForSubject = Addmark_sec::where(['term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession, 'subjectid'=>$updateStatus->subjectid, 'regno'=>$user_student->id, 'classid'=>$user_student->classid, 'section'=>$user_student->studentsection])->first();
-    
-            if($getResultForSubject == null){
-    
-                // $createRecord = Addmark_sec::updateOrCreate(
-                //     ['term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession, 'subjectid'=>$updateStatus->subjectid, 'regno'=>$user_student->id],
-                //     ['term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession, 'subjectid'=>$updateStatus->subjectid, 'regno'=>$user_student->id, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$user_student->classid, 'shift'=>"NA", 'section'=>$user_student->studentsection, $getAssignment->assessment_cat=>$request->score]);
-    
-            }else{
-    
-                $field = $getAssignment->assessment_cat;
-    
-                $getResultForSubject->$field += $request->score;
-                $getResultForSubject->save();
-    
-            }
+                //compile subject total
+                $getSubjecttoal = RecordMarks::where(['subjectid'=>$updateStatus->subjectid, 'session'=>$updateStatus->session, 'term'=>$updateStatus->term, 'section_id'=>$user_student->studentsection, 'student_id'=>$user_student->id])->sum('scrores');
+                //get student grade.
+                $getGrade = Addgrades_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $gradeFinal = '';
+                for ($i=0; $i < count($getGrade); $i++) { 
+                    if ($getSubjecttoal >= (int)$getGrade[$i]->marksfrom && $getSubjecttoal <= (int)$getGrade[$i]->marksto) {
+                        $gradeFinal = $getGrade[$i]->gpaname;
+                    }
+                }
+                //add values to record table
+                $addTotalMarks = AssessmentTableTotal::updateOrcreate(
+                    ['regno'=>$user_student->id, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$getAssignment->classid, 'subjectid'=>$updateStatus->subjectid,
+                    'term' =>$updateStatus->term, 'session'=>$updateStatus->session, 'sectionid'=>$user_student->studentsection],
+                    ['regno'=>$user_student->id, 'schoolid'=>Auth::user()->schoolid,
+                    'catid'=>$assessment_model->catid, 'classid'=>$getAssignment->classid, 'subjectid'=>$updateStatus->subjectid,
+                    'totals'=>$getSubjecttoal, 'term' =>$updateStatus->term, 'session'=>$updateStatus->session, 'sectionid'=>$user_student->studentsection, 'grade'=>$gradeFinal]);
+                    DB::beginTransaction();
+                    try {
+                    //calculate student position
+                    $getAllTotalMarks = AssessmentTableTotal::where(['schoolid'=>Auth::user()->schoolid,
+                                        'classid'=>$getAssignment->classid, 'subjectid'=>$updateStatus->subjectid, 'term' =>$updateStatus->term, 'session'=>$updateStatus->session, 'sectionid'=>$user_student->studentsection,])->orderBy('totals', 'desc')->get();
+                        $subjectscrorearray = array();
+                        for ($i=0; $i < count($getAllTotalMarks); $i++) { 
+                            $score = (int)$getAllTotalMarks[$i]['totals'];
+                                array_push($subjectscrorearray, $score);
+                        }
+                        for ($i=0; $i < count($getAllTotalMarks); $i++) { 
+                            $mainScore = (int)$getAllTotalMarks[$i]['totals'];
+                            $mainScoreId = $getAllTotalMarks[$i]['id'];
+                            $positiongotten = array_search($mainScore, $subjectscrorearray);
+                            $newPosition = $positiongotten + 1;
+                            DB::table('assessment_table_totals')->where('id',$mainScoreId)->update(array(
+                                'position'=>$newPosition
+                            ));
+                        }
+                        DB::commit();
+                        // all good
+                        // return $subjectscrorearray;
+                        
+                    } catch (\Exception $e) {
+                        DB::rollback();
+                        return $e;
+                        // something went wrong
+                    }
+            
 
             return back()->with('success', 'Remart added successfully');
 
@@ -317,7 +350,7 @@ class AssignmentController extends Controller
 
             $addRemark = AssignmentRemark::updateOrCreate(
                 ['submissionid'=>$request->submissionid],
-                ['comment'=>$request->comment, 'submissionid'=>$request->submissionid, 'score'=>$request->score, 'assessment_cat'=>$getAssignment->assessment_cat]
+                ['comment'=>$request->comment, 'submissionid'=>$request->submissionid, 'score'=>$request->score, 'assesment_id'=>$getAssignment->sub_assesment_id]
             );
 
             return back()->with('success', 'Remart added successfully');

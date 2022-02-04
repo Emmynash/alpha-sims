@@ -33,7 +33,7 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-
+        @include('layouts.message')
 
         <div class="card" style="border-top: 2px solid #0B887C;">
           <div id="spinnermotoprocess" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; display: none; align-items: center; justify-content: center; z-index: 999;">
@@ -84,9 +84,53 @@
                     @foreach ($addmoto as $moto)
                         <div class="col-md-4 col-12">
                             <div class="card" style="border-radius: 0px; border-left: 10px solid green;">
-                                <p style="padding-left: 10px;">{{ $moto->name }}</p>
+                                <p style="padding-left: 5px;">{{ $moto->name }}</p>
                                 {{-- <i style="position: absolute; top:0; right: 0; bottom: 0; border-radius: 5px; color: #fff; background-color: red; padding: 5px;" class="">x</i> --}}
+                                <div style="margin: 10px;">
+                                  <button class="btn btn-sm btn-info badge" data-toggle="modal" data-target="#editmoto{{ $moto->id }}">Edit</button>
+                                  {{-- <button class="btn btn-sm btn-danger badge" data-toggle="modal" data-target="#deletemoto">Delete</button> --}}
+                                </div>
                             </div>
+                        </div>
+
+                        <!-- The Modal -->
+                        <div class="modal" id="editmoto{{ $moto->id }}">
+                          <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+
+                              <!-- Modal Header -->
+                              <div class="modal-header">
+                                <h6 class="modal-title">Update</h6>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              </div>
+
+                              <!-- Modal body -->
+                              <div class="modal-body">
+                                <form action="{{ route('edit_setting_moto') }}" method="post" id="editmotoMain{{ $moto->id }}">
+                                  @csrf
+                                  <div class="form-group">
+                                    <input class="form-control" name="name" value={{ $moto->name }}>
+                                    <input class="form-control" type="hidden" name="id" value={{ $moto->id }}>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="">Select Category</label>
+                                    <select name="category" class="form-control form-control-sm" value={{ $moto->category }}>
+                                      <option value="">Select an option</option>
+                                      <option value="behaviour" {{ $moto->category == "behaviour" ? "selected":"" }}>Behaviour</option>
+                                      <option value="skills" {{ $moto->category == "skills" ? "selected":"" }}>Skills</option>
+                                    </select>
+                                </div>
+                                </form>
+                              </div>
+
+                              <!-- Modal footer -->
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success btn-sm" form="editmotoMain{{ $moto->id }}">Save</button>
+                              </div>
+
+                            </div>
+                          </div>
                         </div>
                     @endforeach
                 @endif
