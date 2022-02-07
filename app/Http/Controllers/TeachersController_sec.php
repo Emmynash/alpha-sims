@@ -127,28 +127,33 @@ class TeachersController_sec extends Controller
         //     return response()->json(['exist'=>'noaccount']);
         // }
 
-        $roles = $userdetailfetch->getRoleNames();
+            try {
+                $roles = $userdetailfetch->getRoleNames();
 
-        if ($roles->count() > 0) {
-
-            if ($roles[0] == "Teacher") {
-                $userschoolid = $userdetailfetch[0]->schoolid;
-
-                if ($userschoolid != Auth::user()->schoolid) {
-
-                    return response()->json(['response'=>'noaccount']);
-
+                if ($roles->count() > 0) {
+        
+                    if ($roles[0] == "Teacher") {
+                        $userschoolid = $userdetailfetch->schoolid;
+        
+                        if ($userschoolid != Auth::user()->schoolid) {
+        
+                            return response()->json(['response'=>'noaccount']);
+        
+                        }
+        
+                        return response()->json(['userdetailfetch'=>$userdetailfetch]);
+                    }else {
+                        return response()->json(['response'=>'noaccount']);
+                    }
+                }else {
+                    return response()->json(['userdetailfetch'=>$userdetailfetch], 200);
                 }
-
-                return response()->json(['userdetailfetch'=>$userdetailfetch]);
-            }else {
-                return response()->json(['response'=>'noaccount']);
+        
+                return response()->json(['userdetailfetch'=>$userdetailfetch], 200);
+            } catch (\Throwable $th) {
+                //throw $th;
+                return response()->json(['userdetailfetch'=>$th], 400);
             }
-        }else {
-            return response()->json(['userdetailfetch'=>$userdetailfetch], 200);
-        }
-
-        return response()->json(['userdetailfetch'=>$userdetailfetch], 200);
     }
 
     public function allocateFormMaster(Request $request){

@@ -9,7 +9,7 @@ function AddFormMaster() {
     const [allClasses, setAllClasses] = useState([])
     const [section_sec, setSection_sec] = useState([])
     const [systemNumber, setSystemNumber] = useState('')
-    const [teacherDetail, setTeacherdetails] = useState([])
+    const [teacherDetail, setTeacherdetails] = useState({})
     const [isloadingTeacher, setisloadingTeacher] = useState(false)
     const [verified, setverified] = useState(false)
     const [classid, setclassid] = useState(0)
@@ -305,20 +305,19 @@ function AddFormMaster() {
                             {verified ? <div className="col-12 col-md-6">
                                 <div className="card">
                                     <div className="row">
-                                        <div className="col-md-4">
+                                        <div className="col-md-4 col-6">
                                             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '5px'}}>
-                                                <img id="passportconfirm_sec2" style={{}} src="storage/schimages/profile.png" className="img-circle elevation-2" alt="" width="70px" height="70px" />
+                                                <img id="passportconfirm_sec2" style={{}} src={teacherDetail.profileimg == null ? "https://gravatar.com/avatar/?s=200&d=retro" : teacherDetail.profileimg} className="img-circle elevation-2" alt="" width="70px" height="70px" />
                                             </div>
                                         </div>
-                                        <div className="col-md-8">
-
-                                            {teacherDetail.map(d=>(
-                                                <div>
-                                                    <p style={{ margin:'2px' }}>{d.firstname}</p>
-                                                    <p style={{ margin:'2px' }}>{d.middlename}</p>
-                                                    <p style={{ margin:'2px' }}>{d.lastname}</p>
+                                        <div className="col-md-8 col-6">
+                                            {/* {teacherDetail.map(d=>( */}
+                                                <div className="text-center">
+                                                    <p style={{ margin:'2px' }}>{teacherDetail.firstname}</p>
+                                                    <p style={{ margin:'2px' }}>{teacherDetail.middlename}</p>
+                                                    <p style={{ margin:'2px' }}>{teacherDetail.lastname}</p>
                                                 </div>
-                                            ))}
+                                            {/* ))} */}
                                         </div>
                                     </div>
                                 </div>

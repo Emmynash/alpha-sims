@@ -69226,7 +69226,7 @@ function AddFormMaster() {
       systemNumber = _useState6[0],
       setSystemNumber = _useState6[1];
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
       _useState8 = _slicedToArray(_useState7, 2),
       teacherDetail = _useState8[0],
       setTeacherdetails = _useState8[1];
@@ -69536,7 +69536,7 @@ function AddFormMaster() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-md-4"
+      className: "col-md-4 col-6"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
         display: 'flex',
@@ -69547,29 +69547,28 @@ function AddFormMaster() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       id: "passportconfirm_sec2",
       style: {},
-      src: "storage/schimages/profile.png",
+      src: teacherDetail.profileimg == null ? "https://gravatar.com/avatar/?s=200&d=retro" : teacherDetail.profileimg,
       className: "img-circle elevation-2",
       alt: "",
       width: "70px",
       height: "70px"
     }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-md-8"
-    }, teacherDetail.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-          style: {
-            margin: '2px'
-          }
-        }, d.firstname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-          style: {
-            margin: '2px'
-          }
-        }, d.middlename), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-          style: {
-            margin: '2px'
-          }
-        }, d.lastname))
-      );
-    }))))) : ""), verified ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-md-8 col-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "text-center"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      style: {
+        margin: '2px'
+      }
+    }, teacherDetail.firstname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      style: {
+        margin: '2px'
+      }
+    }, teacherDetail.middlename), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      style: {
+        margin: '2px'
+      }
+    }, teacherDetail.lastname)))))) : ""), verified ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
