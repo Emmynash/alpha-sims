@@ -44,7 +44,7 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <script src="{{ asset('js/appformmaster.js?v=2') }}"></script>
+  <script src="{{ asset('js/appformmaster.js?v=3') }}"></script>
 
   <script>
     function scrollocation(){
