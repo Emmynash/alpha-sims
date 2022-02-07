@@ -1,0 +1,19 @@
+
+version: '3'
+
+services:
+
+  mysql-development:
+    image: mysql:8.0.17
+    environment:
+      MYSQL_ROOT_PASSWORD: rootuser
+      MYSQL_DATABASE: alphasims
+    ports:
+      - "3308:3306"
+  mysql-landlord:
+    image: mysql:8.0.17
+    environment:
+      MYSQL_ROOT_PASSWORD: rootuser
+      MYSQL_DATABASE: landlord
+    ports:
+      - "3309:3306"
