@@ -32,7 +32,8 @@ class MyProfileController extends Controller
         }elseif($res == "mismatch"){
             return back()->with("error", 'new password mismatch');
         }elseif($res == "success"){
-            return back()->with('success', 'Password change was successful');
+            Auth::logout();
+            return redirect('/login');
         }elseif($res == "wrongpassword"){
             return back()->with('error', 'The current password specified is wrong');
         }else{
