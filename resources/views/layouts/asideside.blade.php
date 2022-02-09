@@ -14,7 +14,7 @@
             <div class="spinner-border" style="width: 20px; height: 20px;"></div>
           </div>
           <div>
-            <button id="button" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; border: none; background: transparent; outline: none; color: white;"><i class="fas fa-camera"></i></button>
+            {{-- <button id="button" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; border: none; background: transparent; outline: none; color: white;"><i class="fas fa-camera"></i></button> --}}
             <form id="pixupdatelater" action="javascript:console.log('submited')" method="POST">
               @csrf
               <input id="profilepix" name="profilepix" type="file" style="visibility: hidden; position: absolute;"/>
