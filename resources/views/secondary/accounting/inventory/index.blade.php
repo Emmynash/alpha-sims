@@ -269,7 +269,7 @@
 
                             @foreach ($schooldetails->getClassList($schooldetails->id) as $item)
 
-                                <option value="{{ $item->id }}">{{ $schooldetails->schooltype == "Primary" ? $item->classnamee: $item->classname }}</option>
+                                <option value="{{ $item->id }}">{{ $schooldetails->schooltype == "Primary" ? $item->classname: $item->classname }}</option>
                                 
                             @endforeach
 
