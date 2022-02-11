@@ -79,7 +79,7 @@ class ResultAverageProcess{
                                             'session'=>$schoolsession
                                         ]);
                     
-                                        $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->get();
+                                        $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('schoolid', Auth::user()->schoolid)->get();
                     
                                         for ($k=0; $k < $getSubCategory->count(); $k++) { 
                                             $getSubjectTotalMark = AssessmentTableTotal::where(['regno'=>$getAllStudent[$i]->id, 'subjectid'=>$classSubjects[$j]->subjectid, 'term'=>$term, 'session'=>$schoolsession, 'classid'=>$classid])->first();
@@ -131,7 +131,7 @@ class ResultAverageProcess{
                                         'session'=>$schoolsession
                                     ]);
                 
-                                    $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->get();
+                                    $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('schoolid', Auth::user()->schoolid)->get();
                 
                                     for ($k=0; $k < $getSubCategory->count(); $k++) { 
                                         $getSubjectTotalMark = AssessmentTableTotal::where(['regno'=>$getAllStudent[$i]->id, 'subjectid'=>$classSubjects[$j]->subjectid, 'term'=>$term, 'session'=>$schoolsession, 'classid'=>$classid])->first();
