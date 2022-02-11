@@ -97,16 +97,35 @@ class AssignmentController extends Controller
 
         if($request->hasFile('assignmentfile')){
 
-            $validated = $request->validate([
+            // $validated = $request->validate([
+            //     'startdate' => 'required',
+            //     'submissiondate' => 'required',
+            //     'subjectid' => 'required',
+            //     'classid' => 'required',
+            //     'sectionid' => 'required',
+            //     'description' => 'required',
+            //     'assignmentfile' => 'required|image|mimes:jpeg,png,jpg,pdf,doc|max:4048',
+            //     'sub_assesment_id' => 'required'
+            // ]);
+
+            $rules = [
+                'assignmentfile' => 'required|mimes:jpeg,png,jpg,pdf,doc|max:4048',
+                'sub_assesment_id' => 'required',
                 'startdate' => 'required',
                 'submissiondate' => 'required',
                 'subjectid' => 'required',
                 'classid' => 'required',
                 'sectionid' => 'required',
                 'description' => 'required',
-                'assignmentfile' => 'required|image|mimes:jpeg,png,jpg,pdf,doc|max:4048',
-                'sub_assesment_id' => 'required'
-            ]);
+            ];
+        
+            $customMessages = [
+                'required' => 'The :attribute field can not be blank.',
+                'mimes' => 'file must be an image(jpeg, png, jpg, doc, pdf)',
+                'max' => 'file must not be greater than 2mb'
+            ];
+        
+            $this->validate($request, $rules, $customMessages);
 
             $response = cloudinary()->upload($request->file('assignmentfile')->getRealPath())->getSecurePath();
 
