@@ -59,7 +59,7 @@ return [
         'landlord' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'database' => env('LANDLORD_DATABASE_URL', 'landlord'),
+            'database' => env('LANDLORD_DB_DATABASE', 'landlord'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'username' => env('LANDLORD_DB_USERNAME', 'forge'),
             'password' => env('LANDLORD_DB_PASSWORD', ''),
