@@ -17,3 +17,14 @@ services:
       MYSQL_DATABASE: landlord
     ports:
       - "3309:3306"
+    volumes:
+      - $HOME/Workspace/Blue Algorithm/landlord.sql:/landlord.sql
+  mysql-demotest:
+    image: mysql:8.0.17
+    environment:
+      MYSQL_ROOT_PASSWORD: rootuser
+      MYSQL_DATABASE: demotest
+    ports:
+      - "3310:3306"
+    volumes:
+      - $HOME/Workspace/Blue Algorithm/alphasim_demo.sql:/tenant.sql
