@@ -95,7 +95,7 @@ class ResultController_sec extends Controller
 
             $resultMain = ResultSubjectsModel::where(['result_subjects_models.term'=>$term, 'result_subjects_models.studentregno'=>$regNo, 'result_subjects_models.session'=>$schoolsession])->get();
 
-            $subCatAss = SubAssesmentModel::all();
+            $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
             $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
@@ -103,6 +103,7 @@ class ResultController_sec extends Controller
 
             $studentClass = Classlist_sec::find($classid);
             $computedAverage = ComputedAverages::where(['session'=>$schoolsession, 'regno'=>$regNo, 'term'=>$term])->first();
+            
 
             return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'motolistbeha', 'motolistskills', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
@@ -142,7 +143,7 @@ class ResultController_sec extends Controller
             $studentClass = Classlist_sec::find($classid);
 
             if ($addschool->schooltype == "Primary") {
-
+                
                 return view('secondary.result.viewresult.singleprimary', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
 
             }else{
