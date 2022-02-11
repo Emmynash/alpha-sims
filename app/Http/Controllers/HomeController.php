@@ -125,8 +125,8 @@ class HomeController extends Controller
                 $user->hasRole('Bursar');
                 
                 if ($user->hasRole('Bursar')) {
-
-                    return view('pages.accounting.bursar');
+                    $schooldetails = Addpost::find(Auth::user()->schoolid);
+                    return view('pages.accounting.bursar', compact('schooldetails'));
                     
                 }
 

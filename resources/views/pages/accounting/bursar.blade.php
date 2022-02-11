@@ -34,20 +34,20 @@
               <div class="card-body box-profile">
                 <div class="text-center">
                   <img class="profile-user-img img-fluid img-circle"
-                       src="../../dist/img/user4-128x128.jpg"
+                       src="{{Auth::user()->profileimg ?? "https://gravatar.com/avatar/?s=200&d=retro"}}"
                        alt="User profile picture">
                 </div>
 
-                <h3 class="profile-username text-center">Nina Mcintire</h3>
+                <h3 class="profile-username text-center">{{ Auth::user()->firstname }} {{ Auth::user()->middlename }} {{ Auth::user()->lastname }}</h3>
 
-                <p class="text-muted text-center">Software Engineer</p>
+                <p class="text-muted text-center">Bursar</p>
 
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
-                    <b>Role</b> <a class="float-right">1,322</a>
+                    <b>Role</b> <a class="float-right">Bursar</a>
                   </li>
                   <li class="list-group-item">
-                    <b>System No.</b> <a class="float-right">543</a>
+                    <b>System No.</b> <a class="float-right">{{ Auth::user()->id }}</a>
                   </li>
                 </ul>
               </div>
@@ -62,35 +62,35 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <strong><i class="fas fa-book mr-1"></i> Education</strong>
+                <strong><i class="fas fa-book mr-1"></i> School</strong>
 
                 <p class="text-muted">
-                  B.S. in Computer Science from the University of Tennessee at Knoxville
+                  {{ $schooldetails->schoolname }}
                 </p>
 
                 <hr>
 
-                <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
+                <strong><i class="fas fa-map-marker-alt mr-1"></i> Date of birth</strong>
 
-                <p class="text-muted">Malibu, California</p>
+                <p class="text-muted"></p>
 
                 <hr>
 
-                <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+                <strong><i class="fas fa-pencil-alt mr-1"></i> Address</strong>
 
                 <p class="text-muted">
-                  <span class="tag tag-danger">UI Design</span>
+                  {{-- <span class="tag tag-danger">UI Design</span>
                   <span class="tag tag-success">Coding</span>
                   <span class="tag tag-info">Javascript</span>
                   <span class="tag tag-warning">PHP</span>
-                  <span class="tag tag-primary">Node.js</span>
+                  <span class="tag tag-primary">Node.js</span> --}}
                 </p>
 
                 <hr>
 
-                <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
+                {{-- <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
 
-                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p> --}}
               </div>
               <!-- /.card-body -->
             </div>
@@ -109,19 +109,19 @@
               <div class="card-body">
                 <div class="tab-content">
                   <div class="active tab-pane" id="activity">
-                    <p>dfdfd</p>
+                    <p></p>
 
                   </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="timeline">
-                    <p>csdsdsd</p>
+                    <p></p>
 
                   </div>
                   <!-- /.tab-pane -->
 
                   <div class="tab-pane" id="settings">
                       
-                    <p>fdfdfd</p>
+                    <p></p>
 
                   </div>
                   <!-- /.tab-pane -->
