@@ -54,7 +54,7 @@ function GenerateResult() {
         <div>
 
             {isLoading ? <div className="text-center">
-                    <div class="spinner-border"></div>
+                    <div className="spinner-border"></div>
             </div>:''}
             {isLoading ? <div style={{ position:'absolute', top:'0', bottom:'0', left:'0', right:'0', zIndex:'1000', background:'white', opacity:'0.4' }}>
 
