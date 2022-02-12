@@ -7,7 +7,6 @@ use App\Addpost;
 use App\Addsection_sec;
 use App\Addstudent_sec;
 use App\Addsubject_sec;
-use App\AssesmentModel;
 use App\AssessmentTableTotal;
 use App\AssignmentRemark;
 use App\AssignmentSubmission;
@@ -80,7 +79,7 @@ class AssignmentController extends Controller
                                     ->join('classlist_secs', 'classlist_secs.id','=','assignment_tables.classid')
                                     ->join('addsection_secs', 'addsection_secs.id','=','assignment_tables.sectionid')
                                     ->select('assignment_tables.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname')
-                                    ->where(['subjectid'=>$id, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term])->get();
+                                    ->where(['subjectid'=>$id, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'assignment_tables.classid'=>$classid])->get();
     
             return view('secondary.assignment.viewassignment_teachers', compact('schooldetails', 'subject', 'classid', 'sectionid', 'getAssignments', 'assessments'));
         } catch (\Throwable $th) {
@@ -259,16 +258,52 @@ class AssignmentController extends Controller
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        $submissions = AssignmentSubmission::join('classlist_secs', 'classlist_secs.id','=', 'assignment_submissions.classid')
-                     ->join('addsection_secs', 'addsection_secs.id','=','assignment_submissions.sectionid')
-                     ->join('addsubject_secs', 'addsubject_secs.id','=','assignment_submissions.subjectid')
-                     ->join('users', 'users.id','=','assignment_submissions.userid')
-                     ->leftjoin('assignment_remarks', 'assignment_remarks.submissionid','=','assignment_submissions.id')
-                     ->where(['subjectid'=>$subjectid, 'assignment_submissions.classid'=>$classid, 'sectionid'=>$sectionid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term])
-                     ->select('assignment_submissions.*', 'classlist_secs.classname', 'assignment_remarks.comment', 'assignment_remarks.score', 'addsection_secs.sectionname', 'addsubject_secs.subjectname', 'users.firstname', 'users.lastname')->get();
+        if(Auth::user()->hasRole('Student')){
 
-        return view('secondary.assignment.viewsubmission', compact('schooldetails', 'submissions'));
+            $submissions = AssignmentSubmission::join('classlist_secs', 'classlist_secs.id','=', 'assignment_submissions.classid')
+                        ->join('addsection_secs', 'addsection_secs.id','=','assignment_submissions.sectionid')
+                        ->join('addsubject_secs', 'addsubject_secs.id','=','assignment_submissions.subjectid')
+                        ->join('users', 'users.id','=','assignment_submissions.userid')
+                        ->where(['subjectid'=>$subjectid, 'assignment_submissions.classid'=>$classid, 'sectionid'=>$sectionid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term, 'userid'=>Auth::user()->id])
+                        ->select('assignment_submissions.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsubject_secs.subjectname', 'users.firstname', 'users.lastname')->get();
+
+            return view('secondary.assignment.viewsubmission', compact('schooldetails', 'submissions'));
+
+        }else{
+
+
+            $submissions = AssignmentSubmission::join('classlist_secs', 'classlist_secs.id','=', 'assignment_submissions.classid')
+                        ->join('addsection_secs', 'addsection_secs.id','=','assignment_submissions.sectionid')
+                        ->join('addsubject_secs', 'addsubject_secs.id','=','assignment_submissions.subjectid')
+                        ->join('users', 'users.id','=','assignment_submissions.userid')
+                        ->where(['subjectid'=>$subjectid, 'assignment_submissions.classid'=>$classid, 'sectionid'=>$sectionid, 'session'=>$schooldetails->schoolsession, 'term'=>$schooldetails->term])
+                        ->select('assignment_submissions.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsubject_secs.subjectname', 'users.firstname', 'users.lastname')->get();
+
+            return view('secondary.assignment.viewsubmission', compact('schooldetails', 'submissions'));
+
+        }
+
+
     }
+
+    // public function remarkAssignment(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'comment' => 'required',
+    //         'submissionid' => 'required'
+    //     ]);
+
+    //     $addRemark = AssignmentRemark::updateOrCreate(
+    //         ['submissionid'=>$request->submissionid],
+    //         ['comment'=>$request->comment, 'submissionid'=>$request->submissionid, 'score'=>$request->score]
+    //     );
+
+    //     $updateStatus = AssignmentSubmission::find($request->submissionid);
+    //     $updateStatus->status = 1;
+    //     $updateStatus->save();
+
+    //     return back()->with('success', 'Remart added successfully');
+    // }
 
 
     public function remarkAssignment(Request $request)

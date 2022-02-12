@@ -34,11 +34,19 @@
               <div class="card-body box-profile">
                 <div class="text-center">
                   <img class="profile-user-img img-fluid img-circle"
+<<<<<<< HEAD
                        src="{{Auth::user()->profileimg ?? "https://gravatar.com/avatar/?s=200&d=retro"}}"
                        alt="User profile picture">
                 </div>
 
                 <h3 class="profile-username text-center">{{ Auth::user()->firstname }} {{ Auth::user()->middlename }} {{ Auth::user()->lastname }}</h3>
+=======
+                       src="{{ Auth::user()->profileimg == NULL ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png": Auth::user()->profileimg}}"
+                       alt="User profile picture">
+                </div>
+
+                <h3 class="profile-username text-center">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</h3>
+>>>>>>> 7f9bf77ed5080c1ca9fd4feed93ed96160c8a25b
 
                 <p class="text-muted text-center">Bursar</p>
 
@@ -65,17 +73,26 @@
                 <strong><i class="fas fa-book mr-1"></i> School</strong>
 
                 <p class="text-muted">
+<<<<<<< HEAD
                   {{ $schooldetails->schoolname }}
+=======
+                  {{ $getSchool->schoolname }}
+>>>>>>> 7f9bf77ed5080c1ca9fd4feed93ed96160c8a25b
                 </p>
 
                 <hr>
 
+<<<<<<< HEAD
                 <strong><i class="fas fa-map-marker-alt mr-1"></i> Date of birth</strong>
+=======
+                <strong><i class="fas fa-map-marker-alt mr-1"></i> Address</strong>
+>>>>>>> 7f9bf77ed5080c1ca9fd4feed93ed96160c8a25b
 
                 <p class="text-muted"></p>
 
                 <hr>
 
+<<<<<<< HEAD
                 <strong><i class="fas fa-pencil-alt mr-1"></i> Address</strong>
 
                 <p class="text-muted">
@@ -85,6 +102,11 @@
                   <span class="tag tag-warning">PHP</span>
                   <span class="tag tag-primary">Node.js</span> --}}
                 </p>
+=======
+                <strong><i class="fas fa-pencil-alt mr-1"></i> Date of Birth</strong>
+
+
+>>>>>>> 7f9bf77ed5080c1ca9fd4feed93ed96160c8a25b
 
                 <hr>
 

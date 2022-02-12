@@ -71,7 +71,11 @@
                               </div>
                               <div style="margin: 10px;">
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#submitassignment{{ $item->id }}">Submit Assignment</button>
+<<<<<<< HEAD
                                 <a href="{{ route('view_submission_student', ['subjectid'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid, 'submissionid'=>$item->id]) }}"><button class="btn btn-info btn-sm">View Submissions</button></a>
+=======
+                                <a href="{{ route('view_submission_student', ['subjectid'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid]) }}"><button class="btn btn-info btn-sm">View Submissions</button></a>
+>>>>>>> 7f9bf77ed5080c1ca9fd4feed93ed96160c8a25b
                               </div>
                             </div><!-- /.card-body -->
                           </div>
