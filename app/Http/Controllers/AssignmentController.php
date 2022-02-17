@@ -189,13 +189,30 @@ class AssignmentController extends Controller
 
         if($request->hasFile('filelink')){
 
-            $validated = $request->validate([
-                'subjectid' => 'required',
-                'classid' => 'required',
-                'sectionid' => 'required',
+            // $validated = $request->validate([
+            //     'subjectid' => 'required',
+            //     'classid' => 'required',
+            //     'sectionid' => 'required',
+            //     'assignmenttext' => 'required',
+            //     'filelink' => 'required|mimes:jpeg,png,jpg,pdf,doc|max:4048'
+            // ]);
+
+            $rules = [
+                'filelink' => 'required|mimes:jpeg,png,jpg,pdf,doc|max:4048',
                 'assignmenttext' => 'required',
-                'filelink' => 'required|image|mimes:jpeg,png,jpg,pdf,doc|max:4048'
-            ]);
+                'sectionid' => 'required',
+                'classid' => 'required',
+                'subjectid' => 'required',
+                'subjectid' => 'required'
+            ];
+        
+            $customMessages = [
+                'required' => 'The :attribute field can not be blank.',
+                'mimes' => 'file must be an image(jpeg, png, jpg, doc, pdf)',
+                'max' => 'file must not be greater than 2mb'
+            ];
+
+
 
             $schooldetails = Addpost::find(Auth::user()->schoolid);
 

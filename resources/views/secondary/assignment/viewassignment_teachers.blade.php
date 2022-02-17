@@ -77,7 +77,7 @@
                                           <p style="margin: 0px; padding-left: 10px; font-size: 13px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
                                       @endif
                                       
-                                      <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status:</p>
+                                      {{-- <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status:{{ $item-> }}</p> --}}
                                     </div>
                                     <div style="margin: 10px;">
                                       <button type="submit" form="deleteassignment{{ $item->id }}" class="btn btn-sm btn-danger">Delete</button>
