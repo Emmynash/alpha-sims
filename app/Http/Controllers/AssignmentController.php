@@ -75,7 +75,7 @@ class AssignmentController extends Controller
             //get subassessments
             $assessments = SubAssesmentModel::join('assesment_models', 'assesment_models.id', '=', 'sub_assesment_models.catid')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->select('sub_assesment_models.*', 'assesment_models.name')->get();
 
-            $getAssignments = AssignmentTable::join('addsubject_secs', 'addsubject_secs.id', '=', 'assignment_tables.subjectid')
+           $getAssignments = AssignmentTable::join('addsubject_secs', 'addsubject_secs.id', '=', 'assignment_tables.subjectid')
                 ->join('classlist_secs', 'classlist_secs.id', '=', 'assignment_tables.classid')
                 ->join('addsection_secs', 'addsection_secs.id', '=', 'assignment_tables.sectionid')
                 ->select('assignment_tables.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname')
@@ -119,11 +119,11 @@ class AssignmentController extends Controller
 
 
                 $postAssignment = AssignmentTable::create([
-                    'startdate' => $request->startdate,
-                    'submissiondate' => $request->submissiondate,
-                    'subjectid' => $request->subjectid,
-                    'classid' => $request->classid,
-                    'sectionid' => $request->sectionid,
+                    'startdate' => $request->startDate,
+                    'submissiondate' => $request->submissionDate,
+                    'subjectid' => $request->subjectId,
+                    'classid' => $request->classId,
+                    'sectionid' => $request->sectionId,
                     'description' => $request->description,
                     'filelink' => $response,
                     'session' => $schoolDetails->schoolsession,
@@ -131,7 +131,7 @@ class AssignmentController extends Controller
                     'sub_assesment_id' => $request->sub_assesment_id
                 ]);
 
-                return back()->with('success', 'File uploaded successfully');
+                return back()->with('success', 'Assignment created successfully');
             } else {
 
 
@@ -147,21 +147,22 @@ class AssignmentController extends Controller
                 ]);
 
                 $postAssignment = AssignmentTable::create([
-                    'startdate' => $request->startdate,
-                    'submissiondate' => $request->submissiondate,
-                    'subjectid' => $request->subjectid,
-                    'classid' => $request->classid,
-                    'sectionid' => $request->sectionid,
+                    'startdate' => $request->startDate,
+                    'submissiondate' => $request->submissionDate,
+                    'subjectid' => $request->subjectId,
+                    'classid' => $request->classId,
+                    'sectionid' => $request->sectionId,
                     'description' => $request->description,
                     'session' => $schoolDetails->schoolsession,
                     'term' => $schoolDetails->term,
                     'sub_assesment_id' => $request->sub_assesment_id
                 ]);
 
-                return back()->with('success', 'File uploaded successfully');
+                return back()->with('success', 'Assignment created successfully');
             }
         } catch (\Throwable $th) {
             //throw $th;
+            return $th;
             return back();
         }
     }
