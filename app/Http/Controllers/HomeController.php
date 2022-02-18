@@ -304,11 +304,19 @@ class HomeController extends Controller
                 return view('secondary.index_sec', compact('events'))->with('detailsArray', $detailsArray);
             }else{
                 $addstudent = Addstudent_sec::where('schoolid', Auth::user()->schoolid)->get();
-                return view('pages.index_dash', compact('userSchool', 'classList', 'addHouses', 'addSection', 'addClub', 'addstudent', 'addteachers', 'addsubject', 'addgrades'));
+                $addteachers = Addteachers_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $addstudent = Addstudent_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $addsubject_secs_main = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->pluck('subjectname')->toArray();
+                $addsubject = array_unique($addsubject_secs_main);
+                $classList = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $events = CalenderModel::orderBy('created_at', 'DESC')->get();
+                return view('pages.index_dash', compact('userSchool', 'classList', 'addstudent', 'addteachers', 'addsubject'));
             }
 
         } catch (\Throwable $th) {
             //throw $th;
+
+            return $th;
         }
     }
 
