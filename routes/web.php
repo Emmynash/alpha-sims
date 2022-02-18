@@ -668,7 +668,7 @@ Route::middleware(['tenant'])->group(function () {
         Route::group(['middleware' => ['auth', 'role:Student']], function () { // assignment module
             Route::get('/assignment_student', 'AssignmentController@index')->name('assignment_student');
             Route::post('/assignment_submit', 'AssignmentController@submitAssignmentStudent')->name('assignment_submit');
-            Route::get('/view_submission_student/{subjectid}/{classid}/{sectionid}', 'AssignmentController@viewsubmissions')->name('view_submission_student');
+            Route::get('/view_submission_student/{subjectid}/{classid}/{sectionid}/{assignment_id}', 'AssignmentController@viewSubmissions')->name('view_submission_student');
         });
 
         Route::group(['middleware' => ['auth', 'role:Teacher']], function () { // assignment module
@@ -678,7 +678,7 @@ Route::middleware(['tenant'])->group(function () {
             Route::get('/assignment_subject', 'AssignmentController@assignment_subject')->name('assignment_subject');
             Route::post('/post_assignment', 'AssignmentController@post_assignment')->name('post_assignment');
             Route::delete('/deleteassignment/{id}', 'AssignmentController@delete')->name('deleteassignment');
-            Route::get('/view_submission/{subjectid}/{classid}/{sectionid}', 'AssignmentController@viewsubmissions')->name('view_submission');
+            Route::get('/view_submission/{subjectid}/{classid}/{sectionid}/{assignment_id}', 'AssignmentController@viewSubmissions')->name('view_submission');
             Route::post('/remark_assignment', 'AssignmentController@remarkAssignment')->name('remark_assignment');
         });
     });

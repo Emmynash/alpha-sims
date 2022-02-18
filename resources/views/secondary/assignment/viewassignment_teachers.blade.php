@@ -1,8 +1,8 @@
-@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
+@extends($schoolDetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@if ($schooldetails->schooltype == "Primary")
+@if ($schoolDetails->schooltype == "Primary")
 @include('layouts.asideside') 
 @else
   @include('layouts.aside_sec')
@@ -81,7 +81,7 @@
                                     </div>
                                     <div style="margin: 10px;">
                                       <button type="submit" form="deleteassignment{{ $item->id }}" class="btn btn-sm btn-danger">Delete</button>
-                                      <a href="{{ route('view_submission', ['subjectid'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid]) }}"><button type="submit" class="btn btn-sm btn-success">View Submissions</button></a>
+                                      <a href="{{ route('view_submission', ['subjectid'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid, 'assignment_id'=>$item->id]) }}"><button type="submit" class="btn btn-sm btn-success">View Submissions</button></a>
                                     </div>
                                     <form action="{{ route('deleteassignment', $item->id) }}" method="post" id="deleteassignment{{ $item->id }}">
                                       @csrf
@@ -118,16 +118,16 @@
                       @csrf
                       <div class="form-group">
                           <label for="">Start Date</label>
-                          <input type="date" name="startdate" class="form-control form-control-sm" min="<?php echo date("Y-m-d"); ?>">
+                          <input type="date" name="startDate" class="form-control form-control-sm" min="<?php echo date("Y-m-d"); ?>">
                       </div>
                       <div class="form-group">
                           <label for="">Submission Date</label>
-                          <input type="date" name="submissiondate" class="form-control form-control-sm" min="<?php echo date("Y-m-d"); ?>">
+                          <input type="date" name="submissionDate" class="form-control form-control-sm" min="<?php echo date("Y-m-d"); ?>">
                       </div>
                       <div class="form-group">
                           <label for="">Subject Name</label>
                           <input type="Text" value="{{ $subject->subjectname }}" name="" class="form-control form-control-sm">
-                          <input type="hidden" value="{{ $subject->id }}" name="subjectid" class="form-control form-control-sm">
+                          <input type="hidden" value="{{ $subject->id }}" name="subjectId" class="form-control form-control-sm">
                       </div>
                       <div class="form-group">
                           <select class="form-control form-control-sm" name="sub_assesment_id">
@@ -140,11 +140,11 @@
                       </div>
                       <div class="form-group">
                           {{-- <label for="">Select a Class</label> --}}
-                          <input type="hidden" value="{{ $classid }}" name="classid" class="form-control form-control-sm">
+                          <input type="hidden" value="{{ $classid }}" name="classId" class="form-control form-control-sm">
                       </div>
                       <div class="form-group">
                           {{-- <label for="">Select a Section</label> --}}
-                          <input type="hidden" value="{{ $sectionid }}" name="sectionid" class="form-control form-control-sm">
+                          <input type="hidden" value="{{ $sectionid }}" name="sectionId" class="form-control form-control-sm">
                       </div>
                       <div class="form-group">
                           <label for="">Assignment description</label>
@@ -153,7 +153,7 @@
                       <div class="form-group">
                           <label for="">Upload a file(optional)</label>
                           <i style="color: red; font-style: normal; font-size: 13px;">Note: Max upload size 4mb (doc, docx, pdf, jpeg, jpg, png)</i>
-                          <input type="file" name="assignmentfile" class="form-control form-control-sm">
+                          <input type="file" name="assignmentFile" class="form-control form-control-sm">
                       </div>
                   </form>
                   </div>

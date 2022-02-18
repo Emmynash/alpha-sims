@@ -46,10 +46,10 @@
                     <div class="card">
                         <i style="padding: 10px; font-style: normal;">Assignment List</i>
                     </div>
-                    {{-- <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#postassignment">
-                        Post Assignment
-                    </button> --}}
                     <hr>
+                    @if ($submissions->count() < 1)
+                        <p>No submission has been made yet</p>
+                    @endif
                     @foreach ($submissions as $item)
 
                             <!-- Main content -->
