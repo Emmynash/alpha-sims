@@ -69823,7 +69823,7 @@ function AddMarks() {
       className: "modal-header"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
       className: "modal-title"
-    }, "Select a category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, "Select score type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: closeModal,
       type: "button",
       className: "close",
@@ -69873,7 +69873,7 @@ function AddMarks() {
       className: "modal-header"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
       className: "modal-title"
-    }, "Enter Student Scores"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, "Enter subject scores"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: closeModal,
       type: "button",
       className: "close",
@@ -69923,7 +69923,7 @@ function AddMarks() {
       className: "modal-header"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
       className: "modal-title"
-    }, "Enter Student Scores"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, "Enter subject scores"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: clearScoreField,
       type: "button",
       className: "close",
@@ -69993,7 +69993,7 @@ function AddMarks() {
       className: "card"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "text-center"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Nothing to show"))))
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "No Record found"))))
   );
 }
 
