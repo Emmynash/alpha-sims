@@ -527,7 +527,7 @@ function AddMarks() {
                         <div className="modal-dialog modal-sm">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h4 className="modal-title">Select a category</h4>
+                                    <h4 className="modal-title">Select score type</h4>
                                     <button onClick={closeModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                     </button>
@@ -538,7 +538,7 @@ function AddMarks() {
                                         {
                                             assessment.map(d=>(
                                                 <div key={d.id+"subassessment"} className="col-12 col-md-12">
-                                                    <div className="card" onClick={()=>getSubAssessmentCat(d.id)} data-toggle="modal" data-target="#add_student_marks_sub">
+                                                    <div className="card" onClick={()=>getSubAssessmentCat(d.id)} data-toggle="modal" data-target="#add_student_marks_sub"> 
                                                         <i style={{ fontStyle:'normal', fontSize:'13px', padding:'5px' }}>{d.name}({d.maxmark})</i>
                                                     </div>
                                                 </div>
@@ -558,7 +558,7 @@ function AddMarks() {
                         <div className="modal-dialog modal-sm">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h4 className="modal-title">Enter Student Scores</h4>
+                                    <h4 className="modal-title">Enter subject scores</h4>
                                     <button onClick={closeModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                     </button>
@@ -593,7 +593,7 @@ function AddMarks() {
                         <div className="modal-dialog modal-sm">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h4 className="modal-title">Enter Student Scores</h4>
+                                    <h4 className="modal-title">Enter subject scores</h4>
                                     <button onClick={clearScoreField} type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                     </button>
@@ -659,11 +659,15 @@ function AddMarks() {
                     </div>
                         
           
-            </div>:<div className="card">
-                        <div className="text-center">
-                            <p>Nothing to show</p>
-                        </div>
-                </div>}
+            </div>
+                :
+                
+            <div className="card">
+                <div className="text-center">
+                    <p>No Record found</p>
+                </div>
+            </div>
+            }
         </div>
     )
     
