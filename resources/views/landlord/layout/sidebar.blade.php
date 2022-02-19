@@ -18,14 +18,14 @@
             <button id="button" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; border: none; background: transparent; outline: none; color: white;"><i class="fas fa-camera"></i></button>
             <form id="pixupdatelater" action="javascript:console.log('submited')" method="POST">
               @csrf
-              <input id="profilepix" name="profilepix" type="file" style="visibility: hidden; position: absolute;"/>
+              <input id="profilepix" name="profilepix" type="file" style="visibility: hidden; position: absolute;" />
             </form>
             {{-- <button id="button">trigger file selection</button> --}}
           </div>
           <img id="profileimgmainpix" src="{{asset( Auth::user()->profileimg !=null ? Auth::user()->profileimg:'https://gravatar.com/avatar/?s=200&d=retro')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-        <a href="{{ route('myprofile') }}" class="d-block">{{Auth::user()->firstname}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</a>
+          <a href="{{ route('myprofile') }}" class="d-block">{{Auth::user()->firstname}} {{Auth::user()->middlename}} {{Auth::user()->lastname}}</a>
         </div>
       </div>
 
@@ -85,7 +85,7 @@
             </a>
           </li>
 
-{{--           
+          {{--
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
@@ -680,10 +680,10 @@
             </a>
           </li>
         </ul> --}}
-        <li class="nav-item">
+          <li class="nav-item">
             <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); 
             document.getElementById('logout-form').submit();">
-              <i class="nav-icon fas fa-sign-out-alt"></i> 
+              <i class="nav-icon fas fa-sign-out-alt"></i>
               <p>
                 SignOut
               </p>
