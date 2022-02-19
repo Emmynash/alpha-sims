@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Addgrades_sec;
+
 use App\Addpost;
 use App\Addsection_sec;
 use App\Addstudent_sec;
 use App\Addsubject_sec;
-use App\AssessmentTableTotal;
-use App\AssignmentRemark;
 use App\AssignmentSubmission;
 use App\AssignmentTable;
 use App\Classlist_sec;
-use App\RecordMarks;
 use App\Services\AssignmentService;
 use App\SubAssesmentModel;
 use App\TeacherSubjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class AssignmentController extends Controller
 {
@@ -33,7 +29,7 @@ class AssignmentController extends Controller
             ->select('assignment_tables.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname')
             ->where(['session' => $schoolDetails->schoolsession, 'term' => $schoolDetails->term, 'assignment_tables.classid' => $getClassId->classid, 'assignment_tables.sectionid' => $getClassId->studentsection])->get();
 
-        return view('secondary.assignment.assignment', compact('schoolDetails', 'getAssignments'));
+        return view('features.assignment.assignment', compact('schoolDetails', 'getAssignments'));
     }
 
     public function assignment_teachers()
@@ -47,7 +43,7 @@ class AssignmentController extends Controller
             ->select('teacher_subjects.*', 'addsubject_secs.subjectname', 'addsubject_secs.id as subjectid', 'classlist_secs.classname', 'classlist_secs.id as classid', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')
             ->where(['user_id' => Auth::user()->id])->get();
 
-        return view('secondary.assignment.assignment_teacher', compact('schoolDetails', 'getTeacherSubjects'));
+        return view('features.assignment.assignment_teacher', compact('schoolDetails', 'getTeacherSubjects'));
     }
 
     public function assignment_view($id, $classid, $sectionid)
@@ -81,7 +77,7 @@ class AssignmentController extends Controller
                 ->select('assignment_tables.*', 'addsubject_secs.subjectname', 'classlist_secs.classname', 'addsection_secs.sectionname')
                 ->where(['subjectid' => $id, 'session' => $schoolDetails->schoolsession, 'term' => $schoolDetails->term, 'assignment_tables.classid' => $classid])->get();
 
-            return view('secondary.assignment.viewassignment_teachers', compact('schoolDetails', 'subject', 'classid', 'sectionid', 'getAssignments', 'assessments'));
+            return view('features.assignment.viewassignment_teachers', compact('schoolDetails', 'subject', 'classid', 'sectionid', 'getAssignments', 'assessments'));
         } catch (\Throwable $th) {
             return back();
         }
@@ -264,8 +260,8 @@ class AssignmentController extends Controller
 
     public function delete($id)
     {
-        $deleteassignment = AssignmentTable::find($id);
-        $deleteassignment->delete();
+        $deleteAssignment = AssignmentTable::find($id);
+        $deleteAssignment->delete();
 
         return back()->with('success', 'deleted successfully');
     }
@@ -284,7 +280,7 @@ class AssignmentController extends Controller
                 ->where(['subjectid' => $subjectid, 'assignment_submissions.classid' => $classid, 'assignment_submissions.assignment_id'=>$assignment_id, 'sectionid' => $sectionid, 'session' => $schooldetails->schoolsession, 'term' => $schooldetails->term, 'userid' => Auth::user()->id])
                 ->select('assignment_submissions.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsubject_secs.subjectname', 'users.firstname', 'users.lastname', 'assignment_remarks.comment', 'assignment_remarks.score')->get();
 
-            return view('secondary.assignment.viewsubmission', compact('schooldetails', 'submissions'));
+            return view('features.assignment.viewsubmission', compact('schooldetails', 'submissions'));
         } else {
 
 
@@ -296,7 +292,7 @@ class AssignmentController extends Controller
                 ->where(['subjectid' => $subjectid, 'assignment_submissions.classid' => $classid, 'sectionid' => $sectionid, 'assignment_submissions.assignment_id'=>$assignment_id, 'session' => $schooldetails->schoolsession, 'term' => $schooldetails->term])
                 ->select('assignment_submissions.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addsubject_secs.subjectname', 'users.firstname', 'users.lastname', 'assignment_remarks.comment', 'assignment_remarks.score')->get();
 
-            return view('secondary.assignment.viewsubmission', compact('schooldetails', 'submissions'));
+            return view('features.assignment.viewsubmission', compact('schooldetails', 'submissions'));
         }
     }
 

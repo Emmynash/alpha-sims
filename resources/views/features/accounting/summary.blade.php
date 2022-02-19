@@ -1,8 +1,8 @@
-@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
+@extends($schoolDetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@if ($schooldetails->schooltype == "Primary")
+@if ($schoolDetails->schooltype == "Primary")
 @include('layouts.asideside') 
 @else
   @include('layouts.aside_sec')
@@ -52,7 +52,7 @@
                 <div class="info-box-content">
                   <span class="info-box-text">Available Amount</span>
                   <span class="info-box-number">
-                    {{ $schooldetails->getTotalBal == null ? "0":$schooldetails->getTotalBal->total_amount }}
+                    {{ $schoolDetails->getTotalBal == null ? "0":$schoolDetails->getTotalBal->total_amount }}
                   </span>
                 </div>
                 <!-- /.info-box-content -->
@@ -66,7 +66,7 @@
   
                 <div class="info-box-content">
                   <span class="info-box-text">This Term</span>
-                  <span class="info-box-number">{{ $schooldetails->getTotalBalTerm($schooldetails->id) == null ? "0":$schooldetails->getTotalBalTerm($schooldetails->id)->total_amount }}</span>
+                  <span class="info-box-number">{{ $schoolDetails->getTotalBalTerm($schoolDetails->id) == null ? "0":$schoolDetails->getTotalBalTerm($schoolDetails->id)->total_amount }}</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>

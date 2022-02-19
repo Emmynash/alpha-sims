@@ -40,6 +40,10 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapAccountRoutes();
+
+        $this->mapAssignmentRoutes();
+
         //
     }
 
@@ -72,6 +76,24 @@ class RouteServiceProvider extends ServiceProvider
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
 
+
+    }
+
+    protected function mapAccountRoutes()
+    {
+        Route::prefix('acc')
+             ->middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/account.php'));
+
+    }
+
+    protected function mapAssignmentRoutes()
+    {
+        Route::prefix('ass')
+             ->middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/assignment.php'));
 
     }
 

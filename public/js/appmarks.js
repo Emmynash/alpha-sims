@@ -69547,35 +69547,6 @@ function AddMarks() {
     setAssessmentRecord(_objectSpread({}, assessmentRecord, _defineProperty({}, 'scrores', '')));
   }
 
-  function addStudentMarks() {
-    seIsLoading(true);
-    var data = new FormData();
-    data.append("classidmain", selectedClass);
-    data.append("currentsessionform", schoolschool);
-    data.append("currentterm", schoolterm);
-    data.append('studentregno', studentId);
-    data.append('subjectid', selectedsubject);
-    data.append("examsmarksentered", examsscore);
-    data.append("ca1marksentered", ca1score);
-    data.append("ca2marksentered", ca2score);
-    data.append('ca3marksentered', ca3score);
-    data.append('markidstudent', markid);
-    data.append('studentsection', selectedsection);
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/add_marks_main", data, {
-      headers: {
-        "Content-type": "application/json"
-      }
-    }).then(function (response) {
-      console.log(response); // setStudentList(response.data.studentlist)
-
-      seIsLoading(false);
-      fetchAllStudentInClass();
-    })["catch"](function (e) {
-      console.log(e);
-      seIsLoading(false);
-    });
-  }
-
   function getSubAssessmentCat(catid) {
     setfetchingSubassessment(true);
     setAssessmentRecord(_objectSpread({}, assessmentRecord, _defineProperty({}, 'assesment_id', catid)));
