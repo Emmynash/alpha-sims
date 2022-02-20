@@ -321,7 +321,8 @@ Route::middleware(['tenant'])->group(function () {
             Route::get('/addschool_sec', 'DashboardController@addschool')->middleware('auth')->middleware('verified')->name('addschool_sec');
             Route::POST('/update_term', 'SchoolsetupSecController@update_term')->name('update_term');
             Route::POST('/update_caset', 'SchoolsetupSecController@updatecaSet')->name('update_caset');
-            Route::POST('/setupassesment', 'SchoolsetupSecController@setUpAssesment')->name('setupassesment'); //
+            Route::POST('/setupassesment', 'SchoolsetupSecController@setUpAssesment')->name('setupassesment');
+            Route::POST('/update_assessment_position', 'SchoolsetupSecController@updateAssessmentOrder')->name('update_assessment_position'); 
             Route::POST('/subsetupassesment', 'SchoolsetupSecController@subAssessmentSetUp')->name('subsetupassesment');
             Route::GET('/setupcomment', 'SchoolsetupSecController@setupComment')->name('setupcomment');
             Route::POST('/setupnewcomment', 'SchoolsetupSecController@setupNewComment')->name('setupnewcomment');

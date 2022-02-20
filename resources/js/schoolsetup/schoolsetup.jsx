@@ -36,7 +36,8 @@ function SchoolSetUp() {
     const [subasscategory, setSubasscategory] = useState([])
     const [assessmentSetUp, setassessmentSetUp] = useState({
         name:'',
-        maxmarks:''
+        maxmarks:'',
+        order:''
     })
     const [subassessmentSetUp, setSubassessmentSetUp] = useState({
         catid:'',
@@ -59,6 +60,11 @@ function SchoolSetUp() {
         classname:'',
         classtype:'',
         classindex:''
+    })
+
+    const [switchPosition, setId] = useState({
+        sourceId:"",
+        destinationId:""
     })
 
     useEffect(() => {
@@ -402,7 +408,7 @@ function SchoolSetUp() {
     function setUpAssessment() {
 
 
-        axios.post("/sec/setting/setupassesment", assessmentSetUp, {
+        axios.post("/sec/setting/setupassesment", assessmentSetUp, { //update_assessment_position
             headers:{
                 "Content-type": "application/json"
             }
@@ -464,6 +470,79 @@ function SchoolSetUp() {
 
         console.log(classid)
         
+    }
+
+    function handleOndragEnds(result){
+
+        if(!result.destination) return;
+
+        const items = Array.from(assessment)
+
+        let sourceAssessmentId = ''
+        let destinationAssessmentId = ''
+
+        for (let index = 0; index < assessment.length; index++) {
+            const element = assessment[index];
+
+            if(index == result.source.index){
+                
+                sourceAssessmentId = element.id
+
+                setId({
+                    ...switchPosition,
+                  sourceId: element.id
+                });
+
+                console.log(sourceAssessmentId)
+            }
+
+            if(index == result.destination.index){
+                
+                destinationAssessmentId = element.id
+
+                setId({
+                    ...switchPosition,
+                  destinationId: element.id
+                });
+
+                console.log(switchPosition)
+            }
+
+        }
+
+        
+
+        const [orderedItems] = items.splice(result.source.index, 1)
+        items.splice(result.destination.index, 0, orderedItems)
+
+        setAssessment(items)
+
+        const data = new FormData()
+        data.append("sourceId", sourceAssessmentId),
+        data.append("destinationId", destinationAssessmentId),
+
+        
+
+        axios.post("/sec/setting/update_assessment_position", data, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response.data)
+            fetchSchoolDetails()
+            // if(response.data.code == 200){
+            //     myalert(response.data.response, 'success');
+                
+            // }else{
+            //     myalert(response.data.response, 'error');
+            // }
+            
+            
+        }).catch(e=>{
+            console.log(e)
+            // myalert('Unknown error', 'error');
+        })
+        console.log(result)
     }
 
 
@@ -563,21 +642,46 @@ function SchoolSetUp() {
                                             <input type="number" name="maxmarks" value={assessmentSetUp.maxmarks} onChange={handleAssessmentSetup} className="form-control form-control-sm"/>
                                         </div>
                                     </div>
+                                    <div className="col-12 col-md-6">
+                                        <div className="form-group">
+                                            <label>Order</label>
+                                            <input type="number" name="order" value={assessmentSetUp.order} onChange={handleAssessmentSetup} className="form-control form-control-sm"/>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="form-group">
                                     <button type="submit" className="btn btn-sm btn-info badge" onClick={setUpAssessment}>Save</button>
                                 </div>
-                                {
-                                    assessment.map(d=>(
-                                        <div key={d.id+"asessments"} className="card">
-                                            <div className="">
-                                                <div style={{ display:'flex', alignItems:'center' }} >
-                                                    <i style={{ fontStyle:'normal', fontSize:'10px', padding:'5px' }}> {d.name} ({d.maxmark})</i> <div style={{ flex:'1' }}></div>
+                                <div className='alert alert-info'>
+                                    Drag and drop to order assessment
+                                </div>  
+                                <DragDropContext onDragEnd={handleOndragEnds}>
+                                <Droppable droppableId='assessments'>
+                                {(provided)=>(
+                                    <div className="assessments" {...provided.droppableProps} ref={provided.innerRef}>
+                                    {
+                                    
+                                        assessment.map((d, index)=>(
+                                            <Draggable key={d.id+"asessments"} draggableId={d.id+"asessments"} index={index}>
+                                            {(provided)=>(
+                                                <div  className="card" {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                                                <div className="">
+                                                    <div style={{ display:'flex', alignItems:'center' }} >
+                                                        <i style={{ fontStyle:'normal', fontSize:'10px', padding:'5px' }}> {d.name} ({d.maxmark})</i> <div style={{ flex:'1' }}></div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))
-                                }
+                                            )}
+                                            
+                                            </Draggable>
+                                        ))
+                                    }
+                                    {provided.placeholder}
+                                    </div>
+                                )}
+                                
+                                </Droppable>
+                                </DragDropContext>
                                 
                             </div>
                             <div className="col-12 col-md-6">
@@ -747,7 +851,7 @@ function SchoolSetUp() {
                         {
                             classsection.length > 0 ? 
                             classsection.map(d => (
-                                <div kay={d.id+"classsecid"} className="card radius-15">
+                                <div key={d.id+"classsecid"} className="card radius-15">
                                     <div className="card-body">
                                         <div style={{ display:'flex', alignItems:'center' }} >
                                             <i style={{ fontStyle:'normal', fontSize:'10px' }}> {d.sectionname} </i> <div style={{ flex:'1' }}></div> 

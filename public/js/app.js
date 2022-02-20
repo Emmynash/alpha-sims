@@ -80881,6 +80881,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_alert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-alert */ "./node_modules/react-alert/dist/esm/react-alert.js");
 /* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -81035,7 +81037,8 @@ function SchoolSetUp() {
 
   var _useState53 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     name: '',
-    maxmarks: ''
+    maxmarks: '',
+    order: ''
   }),
       _useState54 = _slicedToArray(_useState53, 2),
       assessmentSetUp = _useState54[0],
@@ -81073,6 +81076,14 @@ function SchoolSetUp() {
       _useState60 = _slicedToArray(_useState59, 2),
       classSetup = _useState60[0],
       setClassSetup = _useState60[1];
+
+  var _useState61 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+    sourceId: "",
+    destinationId: ""
+  }),
+      _useState62 = _slicedToArray(_useState61, 2),
+      switchPosition = _useState62[0],
+      setId = _useState62[1];
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     fetchSchoolDetails();
@@ -81354,6 +81365,7 @@ function SchoolSetUp() {
 
   function setUpAssessment() {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/setupassesment", assessmentSetUp, {
+      //update_assessment_position
       headers: {
         "Content-type": "application/json"
       }
@@ -81405,6 +81417,56 @@ function SchoolSetUp() {
       myalert('Unknown error', 'error');
     });
     console.log(classid);
+  }
+
+  function handleOndragEnds(result) {
+    if (!result.destination) return;
+    var items = Array.from(assessment);
+    var sourceAssessmentId = '';
+    var destinationAssessmentId = '';
+
+    for (var index = 0; index < assessment.length; index++) {
+      var element = assessment[index];
+
+      if (index == result.source.index) {
+        sourceAssessmentId = element.id;
+        setId(_objectSpread({}, switchPosition, {
+          sourceId: element.id
+        }));
+        console.log(sourceAssessmentId);
+      }
+
+      if (index == result.destination.index) {
+        destinationAssessmentId = element.id;
+        setId(_objectSpread({}, switchPosition, {
+          destinationId: element.id
+        }));
+        console.log(switchPosition);
+      }
+    }
+
+    var _items$splice = items.splice(result.source.index, 1),
+        _items$splice2 = _slicedToArray(_items$splice, 1),
+        orderedItems = _items$splice2[0];
+
+    items.splice(result.destination.index, 0, orderedItems);
+    setAssessment(items);
+    var data = new FormData();
+    data.append("sourceId", sourceAssessmentId), data.append("destinationId", destinationAssessmentId), axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/setting/update_assessment_position", data, {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }).then(function (response) {
+      console.log(response.data);
+      fetchSchoolDetails(); // if(response.data.code == 200){
+      //     myalert(response.data.response, 'success');
+      // }else{
+      //     myalert(response.data.response, 'error');
+      // }
+    })["catch"](function (e) {
+      console.log(e); // myalert('Unknown error', 'error');
+    });
+    console.log(result);
   }
 
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -81617,36 +81679,67 @@ function SchoolSetUp() {
       value: assessmentSetUp.maxmarks,
       onChange: handleAssessmentSetup,
       className: "form-control form-control-sm"
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-12 col-md-6"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Order"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "number",
+      name: "order",
+      value: assessmentSetUp.order,
+      onChange: handleAssessmentSetup,
+      className: "form-control form-control-sm"
     })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "form-group"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       type: "submit",
       className: "btn btn-sm btn-info badge",
       onClick: setUpAssessment
-    }, "Save")), assessment.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          key: d.id + "asessments",
-          className: "card"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: ""
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          style: {
-            display: 'flex',
-            alignItems: 'center'
-          }
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          style: {
-            fontStyle: 'normal',
-            fontSize: '10px',
-            padding: '5px'
-          }
-        }, " ", d.name, " (", d.maxmark, ")"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          style: {
-            flex: '1'
-          }
-        }))))
+    }, "Save")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "alert alert-info"
+    }, "Drag and drop to order assessment"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["DragDropContext"], {
+      onDragEnd: handleOndragEnds
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Droppable"], {
+      droppableId: "assessments"
+    }, function (provided) {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+          className: "assessments"
+        }, provided.droppableProps, {
+          ref: provided.innerRef
+        }), assessment.map(function (d, index) {
+          return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Draggable"], {
+              key: d.id + "asessments",
+              draggableId: d.id + "asessments",
+              index: index
+            }, function (provided) {
+              return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+                  className: "card"
+                }, provided.draggableProps, provided.dragHandleProps, {
+                  ref: provided.innerRef
+                }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+                  className: ""
+                }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+                  style: {
+                    display: 'flex',
+                    alignItems: 'center'
+                  }
+                }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+                  style: {
+                    fontStyle: 'normal',
+                    fontSize: '10px',
+                    padding: '5px'
+                  }
+                }, " ", d.name, " (", d.maxmark, ")"), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+                  style: {
+                    flex: '1'
+                  }
+                }))))
+              );
+            })
+          );
+        }), provided.placeholder)
       );
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 col-md-6"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
@@ -81889,7 +81982,7 @@ function SchoolSetUp() {
       className: "btn btn-sm btn-info badge"
     }, "Save"), classsection.length > 0 ? classsection.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          kay: d.id + "classsecid",
+          key: d.id + "classsecid",
           className: "card radius-15"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "card-body"
