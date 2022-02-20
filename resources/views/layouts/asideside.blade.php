@@ -387,7 +387,7 @@
           </a>
         </li>
         @endcan
-        @can('form teacher')
+        {{-- @can('form teacher')
         <li class=" nav-item has-treeview">
           <a id="psyhcomoto" href="#" class="nav-link">
             <i class="nav-icon fas fa-cogs"></i>
@@ -416,7 +416,7 @@
 
           </ul>
         </li>
-        @endcan
+        @endcan --}}
         @endif
 
         @can('manage staff')
