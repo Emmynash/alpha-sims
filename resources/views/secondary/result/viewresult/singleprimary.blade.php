@@ -137,8 +137,8 @@
                             <thead style="text-align: center;">
                                 <tr>
                                     <th style="font-size: 14px;">SUBJECTS</th>
-                                    @foreach ($subCatAss as $item)
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">{{ $item->subname }}</i></th>
+                                    @foreach ($assessment as $item)
+                                        <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}"><i style="margin: 0px; padding: 5px; font-size: 14px;">{{ $item->name }}</i></th>
                                     @endforeach
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
@@ -151,8 +151,10 @@
 
                                     <tr style='font-size: 14px;'>
                                         <td class='' style='font-size: 14px;'>{{ $item->subjectname }}</td>
-                                        @foreach ($item->getAssessments($item->id) as $itemA)
-                                            <td class='text-center' style='font-size: 14px;'><center>{{ $itemA->getSubjectScores($itemA->id) == NULL ? "---":$itemA->getSubjectScores($itemA->id)->score }}</center></td>
+                                        @foreach ($assessment as $itemA)
+                                            @foreach ($itemA->getAssessmentForScore($itemA->id) as $itemB)
+                                                <td class='text-center' style='font-size: 14px;'><center>{{ $itemB->getScore($itemB->id, $classid, $regNo, $item->subjectid, $schoolsession ) == NULL ? "---":$itemB->getScore($itemB->id, $classid, $regNo, $item->subjectid, $schoolsession )->scrores }}</center></td>
+                                            @endforeach
                                         @endforeach
                                         <td class='text-center thdesign' style='font-size: 14px;'><center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->total }}</center></td>
                                         <td class='text-center thdesign' style='font-size: 14px;'><center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":round($item->getAssessmentsTotal($item->id)->average, 1) }}</center></td>

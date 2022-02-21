@@ -521,8 +521,6 @@ function SchoolSetUp() {
         data.append("sourceId", sourceAssessmentId),
         data.append("destinationId", destinationAssessmentId),
 
-        
-
         axios.post("/sec/setting/update_assessment_position", data, {
             headers:{
                 "Content-type": "application/json"

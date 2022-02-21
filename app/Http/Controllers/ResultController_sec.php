@@ -97,15 +97,18 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+
             $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
             $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
 
             $studentClass = Classlist_sec::find($classid);
+
             $computedAverage = ComputedAverages::where(['session'=>$schoolsession, 'regno'=>$regNo, 'term'=>$term])->first();
             
 
-            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'motolistbeha', 'motolistskills', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$studentdetails->studentsection, 'subjecttype'=>2])->pluck('subjectid')->toArray();

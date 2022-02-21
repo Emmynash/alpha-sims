@@ -126,11 +126,13 @@ class ResultAverageProcess{
                                                 'studentregno'=>$getAllStudent[$i]->id,
                                                 'session'=>$schoolsession,
                                                 'subjectname'=> $classSubjects[$j]->subjectname,
+                                                'subjectid'=>$classSubjects[$j]->id
                                                 ],[
                                                 'subjectname'=> $classSubjects[$j]->subjectname,
                                                 'term'=>$term,
                                                 'studentregno'=>$getAllStudent[$i]->id,
-                                                'session'=>$schoolsession
+                                                'session'=>$schoolsession,
+                                                'subjectid'=>$classSubjects[$j]->id
                                             ]
                                         );
                                         
