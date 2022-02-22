@@ -8,6 +8,7 @@ function GenerateResult() {
 
     const [getReadyResults, setgetReadyResults] = useState([])
     const [isLoading, setisLoading] = useState(false)
+    const alert = useAlert()
 
     useEffect(() => {
         getReadyResult()
@@ -15,6 +16,19 @@ function GenerateResult() {
             // cleanup
         };
     }, []);
+
+    function myalert(msg, type) {
+        alert.show(msg, {
+            timeout: 2000, // custom timeout just for this one alert
+            type: type,
+            onOpen: () => {
+              console.log('hey')
+            }, // callback that will be executed after this alert open
+            onClose: () => {
+              console.log('closed')
+            } // callback that will be executed after this alert is removed
+          })
+    }
 
     function getReadyResult() {
         setisLoading(true)
@@ -43,9 +57,16 @@ function GenerateResult() {
             setisLoading(false)
             getReadyResult()
 
+            if(response.status == 200){
+                myalert('Success', 'success')
+            }else{
+                myalert('failed', 'error')
+            }
+
         }).catch(e=>{
             console.log(e)
             setisLoading(false)
+            myalert('failed', 'error')
 
         })
     }

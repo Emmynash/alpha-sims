@@ -214,19 +214,23 @@ class ResultController_sec extends Controller
         try {
            $resultAverage = $resultAverageProcess->processResultAverage($request);
 
-            // if ($resultAverage == "success") {
+        //    return $resultAverage;
 
-                return $resultAverage;
+
+            if ($resultAverage == "success") {
+                
+
+                // return response()->json(['response'=>$resultAverage], 200);
                 
                 $process_class_average = $processClassAverage->processresult($request);
     
-                return $process_class_average;
-            // }else{
-            //     return $resultAverage;
-            // }
+                return response()->json(['response'=>''], 200);
+            }else{
+                return response()->json(['response'=>''], 403);
+            }
         } catch (\Throwable $th) {
             //throw $th;
-            return $th;
+            return response()->json(['response'=>$th], 400);
         }
 
     }
