@@ -74,13 +74,15 @@ class ResultAverageProcess{
                                         $createSubjectData = ResultSubjectsModel::updateOrCreate([
                                             'term'=>$term,
                                             'studentregno'=>$getAllStudent[$i]->id,
-                                            'session'=>$schoolsession
+                                            'session'=>$schoolsession,
+                                            'subjectid'=>$classSubjects[$j]->subjectid
                                         ],
                                         [
                                             'subjectname'=> $classSubjects[$j]->subjectname,
                                             'term'=>$term,
                                             'studentregno'=>$getAllStudent[$i]->id,
-                                            'session'=>$schoolsession
+                                            'session'=>$schoolsession,
+                                            'subjectid'=>$classSubjects[$j]->subjectid
                                         ]);
                     
                                         $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->get();
@@ -134,13 +136,13 @@ class ResultAverageProcess{
                                                 'studentregno'=>$getAllStudent[$i]->id,
                                                 'session'=>$schoolsession,
                                                 'subjectname'=> $classSubjects[$j]->subjectname,
-                                                'subjectid'=>$classSubjects[$j]->id
+                                                'subjectid'=>$classSubjects[$j]->subjectid
                                                 ],[
                                                 'subjectname'=> $classSubjects[$j]->subjectname,
                                                 'term'=>$term,
                                                 'studentregno'=>$getAllStudent[$i]->id,
                                                 'session'=>$schoolsession,
-                                                'subjectid'=>$classSubjects[$j]->id
+                                                'subjectid'=>$classSubjects[$j]->subjectid
                                             ]
                                         );
 
