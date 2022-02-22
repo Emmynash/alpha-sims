@@ -320,10 +320,11 @@ class AddstudentmakrsController_secs extends Controller
                 $getGrade = Addgrades_sec::where('schoolid', Auth::user()->schoolid)->get();
                 $gradeFinal = '';
                 for ($i=0; $i < count($getGrade); $i++) { 
-                    if ($getSubjecttoal >= (int)$getGrade[$i]->marksfrom && $getSubjecttoal <= (int)$getGrade[$i]->marksto) {
+                    if ( $getGrade[$i]->marksfrom <=$getSubjecttoal && $getSubjecttoal <= $getGrade[$i]->marksto) {
                         $gradeFinal = $getGrade[$i]->gpaname;
                     }
                 }
+
                 //add values to record table
                 $addTotalMarks = AssessmentTableTotal::updateOrcreate(
                     ['regno'=>$request->student_id, 'schoolid'=>Auth::user()->schoolid, 'classid'=>$request->class_id, 'subjectid'=>$request->subjectid,
