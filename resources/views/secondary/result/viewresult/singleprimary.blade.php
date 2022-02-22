@@ -35,7 +35,7 @@
 
     <div id="printJS-form">
 
-        <div class="" style="margin-top: 0px;" id="printnotready">
+        <div class="" style="margin-top: 20px;" id="printnotready">
             <div class="" class="" style="width: 794px; margin: 0 auto;">
                 <div class="print-container" style="width: 794px; margin: 0;">
                     <div style="display: flex;">
@@ -52,7 +52,7 @@
                                 <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schooladdress}}, {{$addschool->mobilenumber}}</i>
                                 <i style="font-size: 15px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;"></i>
                                 <div>
-                                    <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Junior Secondary School Termly Report</i>
+                                    <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Termly Report Sheet</i>
                                 </div>
                             </div>
                         </div>
