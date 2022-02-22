@@ -192,10 +192,6 @@ class ResultAverageProcess{
                                         }
                                     }
 
-                                  
-
-
-
                                 }
 
                             }
@@ -204,19 +200,35 @@ class ResultAverageProcess{
                             $assessmentTableTotalsSum = AssessmentTableTotal::where(['regno'=>$getAllStudent[$i]->id, 'term'=>$term, 'session'=>$schoolsession, 'sectionid'=>$section])->sum('totals');
                             $assessmentTableTotals = AssessmentTableTotal::where(['regno'=>$getAllStudent[$i]->id, 'term'=>$term, 'session'=>$schoolsession, 'sectionid'=>$section])->get();
 
-                            
+                            if(count($assessmentTableTotals) > 0){
 
-                            $createAverage = ComputedAverages::updateOrcreate([
-                                'session'=>$schoolsession,
-                                'regno'=>$getAllStudent[$i]->id,
-                                'term'=>$term
-                            ],[
-                                'examstotal'=>$assessmentTableTotalsSum,
-                                'studentaverage'=>$assessmentTableTotalsSum/count($assessmentTableTotals),
-                                'session'=>$schoolsession,
-                                'regno'=>$getAllStudent[$i]->id,
-                                'term'=>$term
-                            ]);
+                                $createAverage = ComputedAverages::updateOrcreate([
+                                    'session'=>$schoolsession,
+                                    'regno'=>$getAllStudent[$i]->id,
+                                    'term'=>$term
+                                ],[
+                                    'examstotal'=>$assessmentTableTotalsSum,
+                                    'studentaverage'=>$assessmentTableTotalsSum/count($assessmentTableTotals),
+                                    'session'=>$schoolsession,
+                                    'regno'=>$getAllStudent[$i]->id,
+                                    'term'=>$term
+                                ]);
+
+                            }else{
+                                $createAverage = ComputedAverages::updateOrcreate([
+                                    'session'=>$schoolsession,
+                                    'regno'=>$getAllStudent[$i]->id,
+                                    'term'=>$term
+                                ],[
+                                    'examstotal'=>$assessmentTableTotalsSum,
+                                    'studentaverage'=>'0',
+                                    'session'=>$schoolsession,
+                                    'regno'=>$getAllStudent[$i]->id,
+                                    'term'=>$term
+                                ]);
+                            }
+
+                            
 
                             
 
