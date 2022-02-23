@@ -8,5 +8,4 @@ use Illuminate\Database\Eloquent\Model;
 class AddMoto_sec extends Model
 {
     use HasFactory;
-    protected $guarded = []; //
 }
