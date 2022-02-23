@@ -127,8 +127,7 @@ class MotoController_sec extends Controller
     
                 $getMotoList = AddMoto_sec::where(['schoolid'=> Auth::user()->schoolid, 'student_id'=>$getuserid, 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->pluck('moto_id')->toArray();
     
-                try {
-                    for ($i=0; $i < count($request->input()); $i++) { 
+                for ($i=0; $i < count($request->input()); $i++) { 
                     
                         if (!in_array($request[$i]['moto_id'], $getMotoList)) {
                             
@@ -149,10 +148,6 @@ class MotoController_sec extends Controller
                                 "term"=>$getschoolData->term]);
                         }
 
-                }
-                } catch (\Throwable $th) {
-                    //throw $th;
-                    return response()->json(['response'=>$th]);
                 }
     
                 return response()->json(['response'=>"success"]);
