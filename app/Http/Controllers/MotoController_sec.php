@@ -132,14 +132,7 @@ class MotoController_sec extends Controller
                         if (!in_array($request[$i]['moto_id'], $getMotoList)) {
                             
 
-                            $addmoto = AddMoto_sec::updateOrCreate(
-                                [
-                                "moto_id"=>$request[$i]['moto_id'], 
-                                "student_id"=>$request[$i]['userId'],
-                                "schoolid"=>Auth::user()->schoolid,
-                                "session"=>$getschoolData->schoolsession,
-                                "term"=>$getschoolData->term
-                                ],
+                            $addmoto = AddMoto_sec::Create(
                                 ["moto_id"=>$request[$i]['moto_id'], 
                                 "moto_score"=>$request[$i]['valueSelected'],
                                 "student_id"=>$request[$i]['userId'],
