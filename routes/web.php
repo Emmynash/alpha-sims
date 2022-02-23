@@ -337,7 +337,7 @@ Route::middleware(['tenant'])->group(function () {
 
             //phycomoto secondary
             Route::get('/student_moto', 'MotoController_sec@index', 'roles')->name('student_moto');
-            Route::get('/setting_moto', 'MotoController_sec@settingsmoto')->name('setting_moto')->middleware('can:add moto settings');
+            Route::get('/setting_moto', 'MotoController_sec@settingsmoto', 'roles')->name('setting_moto')->middleware('can:add moto settings');
             Route::post('/add_setting_moto', 'MotoController_sec@addSettingsMoto')->name('add_setting_moto');
             Route::POST('/get_students_for_pyco', 'MotoController_sec@get_students_for_psyco')->name('get_students_for_pyco');
             Route::POST('/addmoto_main', 'MotoController_sec@addmotomain', 'roles')->name('addmoto_main');
