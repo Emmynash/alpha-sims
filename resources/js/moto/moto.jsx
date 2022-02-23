@@ -161,7 +161,7 @@ function Moto() {
             <button data-toggle="modal" data-target="#getstudents" className="btn btn-info btn-sm">Get Students</button>
             <hr />
             <div className="alert alert-warning">
-                <i>Note: You can enter Psycomotor multiple times all you need to do is to fill and resubmit.</i>
+                <i>Note: You can enter Psychomotor multiple times all you need to do is to fill and resubmit.</i>
             </div>
             <div className="row">
                 <div className="col-12">
