@@ -69576,10 +69576,7 @@ function Moto() {
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.admission_no), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.firstname, " ", d.middlename, " ", d.lastname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.classname, d.sectionname), takenarray.includes(d.id) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "btn btn-sm badge btn-success",
           "data-toggle": "modal",
-          "data-target": "#addmotomain",
-          onClick: function onClick() {
-            return setUserId(d.id, d.firstname + " " + d.middlename + " " + d.lastname);
-          }
+          "data-target": "#addmotomain"
         }, "Completed")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "btn btn-sm badge btn-info",
           "data-toggle": "modal",
