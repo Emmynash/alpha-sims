@@ -128,6 +128,7 @@ function Moto() {
 
     function submitMoto() { //
         setisLoading(true)
+        console.log(selectedmain)
         axios.post("/sec/moto/add_student_moto", selectedmain, {
             headers:{
                 "Content-type": "application/json"

@@ -69495,6 +69495,7 @@ function Moto() {
   function submitMoto() {
     //
     setisLoading(true);
+    console.log(selectedmain);
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/moto/add_student_moto", selectedmain, {
       headers: {
         "Content-type": "application/json"
