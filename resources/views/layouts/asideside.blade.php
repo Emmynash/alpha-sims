@@ -334,6 +334,16 @@
               </a>
             </li>
             @endcan
+            @can('manage marks')
+            <li class="nav-item has-treeview">
+              <a id="managemarkscroll" href="{{ route('managemarks') }}" class="nav-link">
+                <i class="nav-icon fas fa-check-double"></i>
+                <p>
+                  Mark Manage
+                </p>
+              </a>
+            </li>
+            @endcan
             @can('form teacher')
             <li class="nav-item has-treeview">
               <a id="studentattendanceaside" href="#" class="nav-link">
@@ -413,7 +423,6 @@
               </a>
             </li>
             @endcan
-
           </ul>
         </li>
         @endcan
@@ -502,7 +511,7 @@
           </a>
         </li>
 
-        @can('psychomotor module')
+        <!-- @can('add psychomotor')
         <li class=" nav-item has-treeview">
           <a id="psyhcomoto" href="#" class="nav-link">
             <i class="nav-icon fas fa-cogs"></i>
@@ -528,10 +537,9 @@
               </a>
             </li>
             @endcan
-
           </ul>
         </li>
-        @endcan
+        @endcan -->
 
 
 
@@ -633,6 +641,12 @@
               <a id="schoolsetupaside" href="{{ route('setupschool') }}" class="nav-link">
                 <i class="nav-icon fas fa-university"></i>
                 <p>Set Up Shool</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="commentsetup" href="{{ route('setupcomment') }}" class="nav-link">
+                <i class="far fa-comment-alt nav-icon"></i>
+                <p>Set Up Comments</p>
               </a>
             </li>
             <li class="nav-item">
