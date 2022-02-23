@@ -168,7 +168,7 @@
                     <br>
                     <div style="">
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: {{ $computedAverage == NULL ? "N.A": round($computedAverage->examstotal, 2)}}</i>
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ $computedAverage == NULL ? "N.A": $computedAverage->studentaverage}}</i> 
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ $computedAverage == NULL ? "N.A": round($computedAverage->studentaverage, 2)}}</i> 
                     </div>
                     <center><div class="text-center" style="width: 95%; margin: 10px auto;">
                         @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
