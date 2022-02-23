@@ -157,12 +157,8 @@ class MotoController_sec extends Controller
             }
         } catch (\Throwable $th) {
             //throw $th;
-
             return response()->json(['response'=>$th]);
         }
-
-
-
     }
 
     
