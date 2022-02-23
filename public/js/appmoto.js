@@ -69466,6 +69466,9 @@ function Moto() {
     setselectedmain([]);
     setstudentid(e);
     setstudentname(name);
+    document.getElementById("moto_form").reset(); // for (let index = 0; index < motolist.length; index++) {
+    //     const element = motolist[index];
+    // }
   }
 
   function addMoto(moto_id, valueId, userid) {
@@ -69678,6 +69681,8 @@ function Moto() {
       "aria-hidden": "true"
     }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-body"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      id: "moto_form"
     }, motolist.length > 0 ? motolist.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "row"
@@ -69696,7 +69701,7 @@ function Moto() {
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           type: "radio",
           onClick: function onClick() {
-            return addMoto(d.id, 1, studentid);
+            return addMoto(d.id, 1, studentid, "myoption" + d.id);
           },
           on: true,
           name: "myoption" + d.id,
@@ -69744,7 +69749,7 @@ function Moto() {
           id: ""
         }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null))
       );
-    }) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }) : "")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-footer justify-content-between"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       type: "button",

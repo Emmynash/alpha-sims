@@ -100,6 +100,15 @@ function Moto() {
         setselectedmain([])
         setstudentid(e)
         setstudentname(name)
+
+        document.getElementById("moto_form").reset();
+
+        // for (let index = 0; index < motolist.length; index++) {
+        //     const element = motolist[index];
+
+
+            
+        // }
     }
 
     function addMoto(moto_id, valueId, userid) {
@@ -269,7 +278,7 @@ function Moto() {
                         </button>
                     </div>
                     <div className="modal-body">
-
+                        <form id='moto_form'>
                         {motolist.length > 0 ? motolist.map(d=>(
                             <div>
                                 <div className="row">
@@ -279,7 +288,7 @@ function Moto() {
                                     <div className="col-12 col-md-6">
                                         <div className="row">
                                             <div className="col-2 col-md-2">
-                                                <input type="radio" onClick={()=>addMoto(d.id, 1, studentid)} on name={"myoption"+d.id} value="1" id="" />
+                                                <input type="radio" onClick={()=>addMoto(d.id, 1, studentid, "myoption"+d.id)} on name={"myoption"+d.id} value="1" id="" />
                                             </div>
                                             <div className="col-2 col-md-2">
                                                 <input type="radio" name={"myoption"+d.id} onClick={()=>addMoto(d.id, 2, studentid)} value="2" id="" />
@@ -300,6 +309,7 @@ function Moto() {
                             </div>
                             
                         )):""}
+                        </form>
 
                     </div>
                     <div className="modal-footer justify-content-between">
