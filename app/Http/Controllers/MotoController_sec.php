@@ -132,13 +132,22 @@ class MotoController_sec extends Controller
                         if (!in_array($request[$i]['moto_id'], $getMotoList)) {
                             
 
-                            $addmoto = AddMoto_sec::Create(
-                                ["moto_id"=>$request[$i]['moto_id'], 
-                                "moto_score"=>$request[$i]['valueSelected'],
-                                "student_id"=>$request[$i]['userId'],
-                                "schoolid"=>Auth::user()->schoolid,
-                                "session"=>$getschoolData->schoolsession,
-                                "term"=>$getschoolData->term]);
+                            // $addmoto = AddMoto_sec::Create(
+                            //     ["moto_id"=>$request[$i]['moto_id'], 
+                            //     "moto_score"=>$request[$i]['valueSelected'],
+                            //     "student_id"=>$request[$i]['userId'],
+                            //     "schoolid"=>Auth::user()->schoolid,
+                            //     "session"=>$getschoolData->schoolsession,
+                            //     "term"=>$getschoolData->term]);
+
+                            $addmoto = new AddMoto_sec();
+                            $addmoto->moto_id = $request[$i]['moto_id'];
+                            $addmoto->moto_score = $request[$i]['valueSelected'];
+                            $addmoto->student_id = $request[$i]['userId'];
+                            $addmoto->schoolid = Auth::user()->schoolid;
+                            $addmoto->session = $getschoolData->schoolsession;
+                            $addmoto->term = $getschoolData->term;
+                            $addmoto->save();
                         }
 
                 }
