@@ -325,6 +325,7 @@ Route::middleware(['tenant'])->group(function () {
             Route::POST('/update_assessment_position', 'SchoolsetupSecController@updateAssessmentOrder')->name('update_assessment_position'); 
             Route::POST('/subsetupassesment', 'SchoolsetupSecController@subAssessmentSetUp')->name('subsetupassesment');
             Route::GET('/setupcomment', 'SchoolsetupSecController@setupComment')->name('setupcomment');
+            Route::GET('/admincomment', 'SchoolsetupSecController@adminComment')->name('admincomment');
             Route::POST('/setupnewcomment', 'SchoolsetupSecController@setupNewComment')->name('setupnewcomment');
             Route::POST('/deletecomment', 'SchoolsetupSecController@deletecomment')->name('deletecomment');
 

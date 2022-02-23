@@ -570,12 +570,19 @@
                 <p>Generate</p>
               </a>
             </li>
+
             {{-- <li class="nav-item">
-                  <a href="" class="nav-link">
-                     <i class="fas fa-clipboard-list"></i> 
-                    <p>Search</p>
-                  </a>
-                </li> --}}
+              <a href="" class="nav-link">
+                  <i class="fas fa-clipboard-list nav-icon"></i> 
+                <p>Admin Comment</p>
+              </a>
+            </li> --}}
+            <li class="nav-item">
+              <a id="commentsetup" href="{{ route('setupcomment') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>SetUp Comments</p>
+              </a>
+            </li>
           </ul>
         </li>
         @endcan

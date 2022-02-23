@@ -15,7 +15,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Add Comments</h1>
+            <h1 class="m-0 text-dark">Add Admin Comment</h1>
             {{-- <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Addsubjects"
                 data-content="On this module, you are required to enter all subjects offered by your school according to the classes you have.">Need help?</button> --}}
                     
@@ -35,14 +35,20 @@
     <section class="content">
       <div class="container-fluid" id="">
 
-        <div class="container">
-          <a href="{{ route('admincomment') }}"><button class="btn btn-info btn-sm">Setup Admin Comment</button></a>
-        </div>
-
         <div class="row">
             <div class="col-6 col-md-6">
                 <form action="{{ route('setupnewcomment') }}" method="post">
                     @csrf
+                    <div class="row">
+                        <div class="col-6 col-md-6">
+                            <label for="">marks From</label>
+                            <input class="form-control form-control-sm" type="text" name="" id="">
+                        </div>
+                        <div class="col-6 col-md-6">
+                            <label for="">marks To</label>
+                            <input class="form-control form-control-sm" type="text" name="" id="">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="">Comment(Should be short)</label>
                         <textarea class="form-control form-control-sm" name="comment" id="" cols="30" rows="3" placeholder="type a comment"></textarea>

@@ -281,23 +281,23 @@
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
                             HEAD OF SCHOOL'S COMMENT: 
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
-                            {{-- @if ($resultAverage != NULL)
+                            @if ($computedAverage != NULL)
     
-                                @if($resultAverage->average >= 90 && $resultAverage->average <= 100)
+                                @if($computedAverage->studentaverage >= 90 && $computedAverage->studentaverage <= 100)
                                     An excellent performance.
     
-                                @elseif($resultAverage->average >= 70 && $resultAverage->average <= 89.9)
+                                @elseif($computedAverage->studentaverage >= 70 && $computedAverage->studentaverage <= 89.9)
                                     A good performance, reinforce.
     
-                                @elseif($resultAverage->average >= 50 && $resultAverage->average <= 69.9)
+                                @elseif($computedAverage->studentaverage >= 50 && $computedAverage->studentaverage <= 69.9)
                                     An average performance, reinforce.
     
-                                @elseif($resultAverage->average/$subjects->count() >= 0 && $resultAverage->average/$subjects->count() <= 49.9)
+                                @elseif($computedAverage->studentaverage >= 0 && $computedAverage->studentaverage <= 49.9)
                                     A fairly good performance, advised to repeat.
                                 @endif
     
                                 
-                            @endif --}}
+                            @endif
                             
                             </i>
                         </div>

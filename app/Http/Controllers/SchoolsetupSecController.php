@@ -430,6 +430,14 @@ class SchoolsetupSecController extends Controller
         return view('secondary.comment.commentsetup', compact('schooldetails', 'comments'));
     }
 
+    public function adminComment()
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $comments = CommentTable::where('schoolid', Auth::user()->schoolid)->get();
+
+        return view('secondary.comment.admincomment', compact('schooldetails', 'comments'));
+    }
+
     public function setupNewComment(Request $request)
     {
 
