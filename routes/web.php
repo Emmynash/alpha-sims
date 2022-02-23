@@ -334,7 +334,7 @@ Route::middleware(['tenant'])->group(function () {
         });
 
 
-        Route::group(['prefix' => 'moto', 'middleware' => ['auth']], function () {
+        Route::group(['prefix' => 'moto', 'middleware' => ['auth', 'can:psychomotor module']], function () {
 
             //phycomoto secondary
             Route::get('/student_moto', 'MotoController_sec@index', 'roles')->name('student_moto');
