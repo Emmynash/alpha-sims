@@ -275,7 +275,7 @@
                        
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                            FORM MASTER'S REMARK <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                            FORM MASTER'S REMARK: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $comment->comments ?? "" }}</i>
                         </div>
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">

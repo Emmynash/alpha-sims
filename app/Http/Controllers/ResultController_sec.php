@@ -21,6 +21,7 @@ use App\ResultReadyModel;
 use PDF;
 use App;
 use App\AssesmentModel;
+use App\CommentsModel;
 use App\ComputedAverages;
 use App\ElectiveAdd;
 use App\RecordMarks;
@@ -97,7 +98,7 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
 
             $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
@@ -106,9 +107,11 @@ class ResultController_sec extends Controller
             $studentClass = Classlist_sec::find($classid);
 
             $computedAverage = ComputedAverages::where(['session'=>$schoolsession, 'regno'=>$regNo, 'term'=>$term])->first();
+
+            $comment = CommentsModel::where(['reg_no'=>$regNo, 'session'=>$schoolsession, 'term'=>$term, 'classid'=>$classid])->first();
             
 
-            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage', 'comment'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$studentdetails->studentsection, 'subjecttype'=>2])->pluck('subjectid')->toArray();
