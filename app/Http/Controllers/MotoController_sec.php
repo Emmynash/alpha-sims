@@ -140,14 +140,28 @@ class MotoController_sec extends Controller
                             //     "session"=>$getschoolData->schoolsession,
                             //     "term"=>$getschoolData->term]);
 
-                            $addmoto = new AddMoto_sec();
-                            $addmoto->moto_id = $request[$i]['moto_id'];
-                            $addmoto->moto_score = $request[$i]['valueSelected'];
-                            $addmoto->student_id = $request[$i]['userId'];
-                            $addmoto->schoolid = Auth::user()->schoolid;
-                            $addmoto->session = $getschoolData->schoolsession;
-                            $addmoto->term = $getschoolData->term;
-                            $addmoto->save();
+                            $checkMoto = AddMoto_sec::where(['moto_id'=>$request[$i]['moto_id'], 'student_id'=>$request[$i]['userId'], 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->first();
+
+                            if($checkMoto == null){
+
+                                $addmoto = new AddMoto_sec();
+                                $addmoto->moto_id = $request[$i]['moto_id'];
+                                $addmoto->moto_score = $request[$i]['valueSelected'];
+                                $addmoto->student_id = $request[$i]['userId'];
+                                $addmoto->schoolid = Auth::user()->schoolid;
+                                $addmoto->session = $getschoolData->schoolsession;
+                                $addmoto->term = $getschoolData->term;
+                                $addmoto->save();
+
+                            }else{
+
+                                return response()->json(['response'=>"success", 'data'=>$checkMoto]);
+                                
+                                $checkMoto->moto_score = $request[$i]['valueSelected'];
+                                $checkMoto->save();
+
+                            }
+                            
                         }
 
                 }
