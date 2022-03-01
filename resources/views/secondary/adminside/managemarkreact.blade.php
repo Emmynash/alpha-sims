@@ -46,7 +46,7 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <script src="{{ asset('js/appmarks.js') }}"></script>
+  <script src="{{ asset('js/appmarks.js?v=1') }}"></script>
 
   <script>
       function scrollocation(){
