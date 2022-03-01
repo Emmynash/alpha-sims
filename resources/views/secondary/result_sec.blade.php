@@ -41,7 +41,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <i style="font-size: 10px;">Select Class</i>
-                <select name="selectedclassmarks" id="" class="form-control form-control-sm">
+                <select name="classid" id="" class="form-control form-control-sm">
                   <option value="">Select a class</option>
                   @if (count($classlist_sec) > 0)
                   @foreach ($classlist_sec as $classes)
@@ -53,7 +53,7 @@
               </div>
               <div class="form-group">
                 <i style="font-size: 10px;">Select term</i>
-                <select name="selectedtermmarks" id="selectedtermmarks" class="form-control form-control-sm">
+                <select name="term" id="selectedtermmarks" class="form-control form-control-sm">
                   <option value="">Select a term</option>
                   <option value="1">First term</option>
                   <option value="2">Second term</option>
@@ -64,11 +64,11 @@
             <div class="col-md-6">
               <div class="form-group">
                 <i style="font-size: 10px;">Student reg no.</i>
-                <input type="text" name="studentRegnomarks" value="{{ Auth::user()->role == 'Student' ?  $studentdetails->id :''}}" {{ Auth::user()->role == "Student" ? "Readonly" : ""}} class="form-control form-control-sm">
+                <input type="text" name="student_reg_no" value="{{ Auth::user()->role == 'Student' ?  $studentdetails->id :''}}" {{ Auth::user()->role == "Student" ? "Readonly" : ""}} class="form-control form-control-sm">
               </div>
               <div class="form-group">
                 <i style="font-size: 10px;">Session</i>
-                <input type="text" name="schoolsession" class="form-control form-control-sm">
+                <input type="text" name="session" class="form-control form-control-sm">
               </div>
             </div>
           </div>

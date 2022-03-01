@@ -520,7 +520,7 @@ Route::middleware(['tenant'])->group(function () {
         Route::get('get_school_basic_details', 'AddstudentmakrsController_secs@getSchoolBasicDetails');
         Route::get('/fetch_students_marks/{id}/{sectionid}', 'AddstudentmakrsController_secs@fetchstudentssubject');
         Route::get('fetch_student_sections/{id}', 'AddstudentmakrsController_secs@fetchStudentSections');
-        Route::get('fetchsubassessment/{id}/{studentid}', 'AddstudentmakrsController_secs@fetchsubassessment');
+        Route::get('fetchsubassessment/{studentid}', 'AddstudentmakrsController_secs@fetchsubassessment');
         Route::POST('/fetch_subject_details', 'AddstudentmakrsController_secs@fetchsubjectdetails');
         Route::POST('/fetch_subject_student_details', 'AddstudentmakrsController_secs@getallstudentsandmarks');
         Route::POST('/add_marks_main', 'AddstudentmakrsController_secs@addmarksmiain')->name('add_marks_main');
@@ -576,7 +576,7 @@ Route::middleware(['tenant'])->group(function () {
 
     Route::get('/result_view_sec', ['uses' => 'ResultController_sec@index', 'roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
 
-    Route::Post('/result_print_sec', ['uses' => 'ResultController_sec@viewResult', 'roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
+    Route::Post('/result_print_sec', ['uses' => 'ResultController_sec@viewSingleResult', 'roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
     Route::Post('/result_print_update_sec', ['uses' => 'ResultController_sec@fetchresultdetails', 'roles' => ['Admin', 'Teacher', 'Student']])->middleware('roles');
 
 

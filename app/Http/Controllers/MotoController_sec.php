@@ -129,40 +129,46 @@ class MotoController_sec extends Controller
     
                 for ($i=0; $i < count($request->input()); $i++) { 
                     
-                        if (!in_array($request[$i]['moto_id'], $getMotoList)) {
+                        // if (!in_array($request[$i]['moto_id'], $getMotoList)) {
                             
 
-                            // $addmoto = AddMoto_sec::Create(
-                            //     ["moto_id"=>$request[$i]['moto_id'], 
-                            //     "moto_score"=>$request[$i]['valueSelected'],
-                            //     "student_id"=>$request[$i]['userId'],
-                            //     "schoolid"=>Auth::user()->schoolid,
-                            //     "session"=>$getschoolData->schoolsession,
-                            //     "term"=>$getschoolData->term]);
+                            $addmoto = AddMoto_sec::updateOrCreate(
+                                ["moto_id"=>$request[$i]['moto_id'],
+                                "student_id"=>$request[$i]['userId'],
+                                "schoolid"=>Auth::user()->schoolid,
+                                "session"=>$getschoolData->schoolsession,
+                                "term"=>$getschoolData->term],
 
-                            $checkMoto = AddMoto_sec::where(['moto_id'=>$request[$i]['moto_id'], 'student_id'=>$request[$i]['userId'], 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->first();
+                                ["moto_id"=>$request[$i]['moto_id'], 
+                                "moto_score"=>$request[$i]['valueSelected'],
+                                "student_id"=>$request[$i]['userId'],
+                                "schoolid"=>Auth::user()->schoolid,
+                                "session"=>$getschoolData->schoolsession,
+                                "term"=>$getschoolData->term]);
 
-                            if($checkMoto == null){
+                            // $checkMoto = AddMoto_sec::where(['moto_id'=>$request[$i]['moto_id'], 'student_id'=>$request[$i]['userId'], 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->first();
 
-                                $addmoto = new AddMoto_sec();
-                                $addmoto->moto_id = $request[$i]['moto_id'];
-                                $addmoto->moto_score = $request[$i]['valueSelected'];
-                                $addmoto->student_id = $request[$i]['userId'];
-                                $addmoto->schoolid = Auth::user()->schoolid;
-                                $addmoto->session = $getschoolData->schoolsession;
-                                $addmoto->term = $getschoolData->term;
-                                $addmoto->save();
+                            // if($checkMoto == null){
 
-                            }else{
+                            //     $addmoto = new AddMoto_sec();
+                            //     $addmoto->moto_id = $request[$i]['moto_id'];
+                            //     $addmoto->moto_score = $request[$i]['valueSelected'];
+                            //     $addmoto->student_id = $request[$i]['userId'];
+                            //     $addmoto->schoolid = Auth::user()->schoolid;
+                            //     $addmoto->session = $getschoolData->schoolsession;
+                            //     $addmoto->term = $getschoolData->term;
+                            //     $addmoto->save();
 
-                                return response()->json(['response'=>"success", 'data'=>$checkMoto]);
+                            // }else{
+
+                            //     return response()->json(['response'=>"success", 'data'=>$checkMoto]);
                                 
-                                $checkMoto->moto_score = $request[$i]['valueSelected'];
-                                $checkMoto->save();
+                            //     $checkMoto->moto_score = $request[$i]['valueSelected'];
+                            //     $checkMoto->save();
 
-                            }
+                            // }
                             
-                        }
+                        // }
 
                 }
     
