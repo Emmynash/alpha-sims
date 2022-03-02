@@ -1,10 +1,7 @@
 <?php
 
-use App\Http\Controllers\PromotionController_sec;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Route;
-use Spatie\Multitenancy\Models\Tenant;
 
 /*
 |--------------------------------------------------------------------------

@@ -74,7 +74,7 @@ function Moto() {
         const data = new FormData()
         data.append("selectedclassmoto", selectedclass),
         data.append("selectedsectionmoto", selectedsection),
-        axios.post("/sec/moto/get_students_for_pyco", data, {
+        axios.post("/moto/get_students_for_pyco", data, {
             headers:{
                 "Content-type": "application/json"
             }
@@ -138,7 +138,7 @@ function Moto() {
     function submitMoto() { //
         setisLoading(true)
         console.log(selectedmain)
-        axios.post("/sec/moto/add_student_moto", selectedmain, {
+        axios.post("/moto/add_student_moto", selectedmain, {
             headers:{
                 "Content-type": "application/json"
             }

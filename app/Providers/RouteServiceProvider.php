@@ -44,6 +44,8 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapAssignmentRoutes();
 
+        $this->mapPsychomotorRoutes();
+
         //
     }
 
@@ -95,6 +97,14 @@ class RouteServiceProvider extends ServiceProvider
              ->namespace($this->namespace)
              ->group(base_path('routes/assignment.php'));
 
+    }
+
+    protected function mapPsychomotorRoutes()
+    {
+        Route::prefix('moto')
+             ->middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/psychomotor.php'));
     }
 
 }
