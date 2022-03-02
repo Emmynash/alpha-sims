@@ -504,6 +504,7 @@ Route::middleware(['tenant'])->group(function () {
         Route::POST('/add_marks_main', 'AddstudentmakrsController_secs@addmarksmiain')->name('add_marks_main');
         Route::POST('/marks_process_main', 'AddstudentmakrsController_secs@processPosition');
         Route::POST('/add_student_scores', 'AddstudentmakrsController_secs@addStudentRecord');
+        Route::get('/delete_score/{id}', 'AddstudentmakrsController_secs@deleteStudentScore');
         Route::POST('/get_student_scores', 'AddstudentmakrsController_secs@getScoreRecord');
     });
 

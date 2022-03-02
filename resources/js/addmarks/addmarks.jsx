@@ -382,6 +382,33 @@ function AddMarks() {
 
     }
 
+    function deleteScore(id) {
+
+        setLoadingEnteredRecords(true);
+
+
+        axios.get("/delete_score/"+id, {
+            headers: {
+                "Content-type": "application/json"
+            }
+        }).then(response => {
+            console.log(response.data.code)
+
+            setLoadingEnteredRecords(false);
+
+            if (response.data.code == 200) {
+                getScoreRecord()
+                myalert(response.data.response, 'success')
+            }
+
+        }).catch(e => {
+            console.log(e)
+            seIsLoading(false)
+            // setLoadingEnteredRecords(false);
+        })
+
+    }
+
     // let recordArray = []
 
     const onChangeScores = (fieldId, data, markMax) => {
@@ -713,6 +740,7 @@ function AddMarks() {
                                                 <th>Assessment</th>
                                                 <th>Sub-Assessment</th>
                                                 <th>Marks</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -721,7 +749,8 @@ function AddMarks() {
                                                     <tr key={d.id + 'record'}>
                                                         <td>{d.name}</td>
                                                         <td>{d.subname}</td>
-                                                        <td>{d.scrores}</td>
+                                                        <td>{d.scrores} </td>
+                                                        <td><button className='btn btn-sm btn-danger' onClick={()=>deleteScore(d.id)}>Del</button></td>
                                                     </tr>
                                                 ))
                                             }

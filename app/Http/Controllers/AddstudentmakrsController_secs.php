@@ -552,4 +552,16 @@ class AddstudentmakrsController_secs extends Controller
             return $th;
         }
     }
+
+    public function deleteStudentScore($id)
+    {
+        try {
+            $deleteScore = RecordMarks::find($id);
+            $deleteScore->delete();
+            return response()->json(['response' => "Process was successful", 'code' => 200], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response' => $th, 'code' => 400], 400);
+        }
+    }
 }
