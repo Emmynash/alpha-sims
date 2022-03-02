@@ -125,9 +125,9 @@ class MotoController_sec extends Controller
     
                 $getuserid = $request[0]["userId"];
     
-                // $getMotoList = AddMoto_sec::where(['schoolid'=> Auth::user()->schoolid, 'student_id'=>$getuserid, 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->pluck('moto_id')->toArray();
+                $getMotoList = AddMoto_sec::where(['schoolid'=> Auth::user()->schoolid, 'student_id'=>$getuserid, 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->pluck('moto_id')->toArray();
 
-                // AddMoto_sec::where(['schoolid'=> Auth::user()->schoolid, 'student_id'=>$getuserid, 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->delete();
+                AddMoto_sec::where(['schoolid'=> Auth::user()->schoolid, 'student_id'=>$getuserid, 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->delete();
     
                 for ($i=0; $i < count($request->input()); $i++) { 
                     
@@ -135,12 +135,12 @@ class MotoController_sec extends Controller
                             
 
                             try {
-                                $addmoto = AddMoto_sec::updateOrCreate(
-                                    ["moto_id"=>$request[$i]['moto_id'],
-                                    "student_id"=>$request[$i]['userId'],
-                                    "schoolid"=>Auth::user()->schoolid,
-                                    "session"=>$getschoolData->schoolsession,
-                                    "term"=>$getschoolData->term],
+                                $addmoto = AddMoto_sec::Create(
+                                    // ["moto_id"=>$request[$i]['moto_id'],
+                                    // "student_id"=>$request[$i]['userId'],
+                                    // "schoolid"=>Auth::user()->schoolid,
+                                    // "session"=>$getschoolData->schoolsession,
+                                    // "term"=>$getschoolData->term],
     
                                     ["moto_id"=>$request[$i]['moto_id'], 
                                     "moto_score"=>$request[$i]['valueSelected'],
