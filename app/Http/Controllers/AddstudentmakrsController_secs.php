@@ -258,7 +258,7 @@ class AddstudentmakrsController_secs extends Controller
         return response()->json(['classlist' => $classlist, 'subjects' => $subjects, 'schoolsection' => $schoolsection, 'schooldetails' => $schooldetails, 'assessment' => $assessment]);
     }
 
-    public function fetchsubassessment($studentid)
+    public function fetchsubassessment($studentid, $subjectid)
     {
         try {
 
@@ -274,7 +274,12 @@ class AddstudentmakrsController_secs extends Controller
 
                 $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-                $subAssessment = SubAssesmentModel::where(['status' => 1, 'catid' => $assessment[$i]->id])->get();
+                $subAssessment = SubAssesmentModel::leftJoin('record_marks', function($leftJoin) use ($studentid, $schooldetails, $subjectid){
+                    $leftJoin->on('record_marks.subassessment_id','=','sub_assesment_models.id')
+                             ->where(['record_marks.student_id'=>$studentid, 'record_marks.term'=>$schooldetails->term, 'record_marks.session'=>$schooldetails->schoolsession, 'record_marks.subjectid'=>$subjectid]);
+                })
+                                ->select('sub_assesment_models.*', 'record_marks.scrores')
+                                ->where(['status' => 1, 'catid' => $assessment[$i]->id])->get();
 
                 $age = array("assessment" => $assessment[$i], "subassessment" => $subAssessment);
 

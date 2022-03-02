@@ -293,12 +293,14 @@ function AddMarks() {
 
     function getSubAssessmentCat(student_id) {
 
+        document.getElementById("scores_form").reset();
+
         setfetchingSubassessment(true)
 
         setStudentId(student_id)
         setRecordArray([])
 
-        axios.get('/fetchsubassessment/' + student_id).then(response => {
+        axios.get('/fetchsubassessment/' + student_id + '/' + selectedsubject).then(response => {
 
             console.log(response.data)
 
@@ -323,6 +325,10 @@ function AddMarks() {
     }
 
     function addStudentScore() {
+
+        if (recordArray.length < 1) {
+            return
+        }
 
         axios.post("/add_student_scores", recordArray, {
             headers: {
@@ -385,10 +391,10 @@ function AddMarks() {
         let studentRecord = {
             "subAssId": fieldId,
             "score": data,
-            "classId":selectedClass,
-            "subjectId":selectedsubject,
-            "studentId":studentId,
-            "sectionId":selectedsection
+            "classId": selectedClass,
+            "subjectId": selectedsubject,
+            "studentId": studentId,
+            "sectionId": selectedsection
 
         }
 
@@ -401,21 +407,34 @@ function AddMarks() {
 
                 recordArray.splice(index, 1);
 
-                // recordArray.push(studentRecord)
+            }
 
+            if (element.score == '') {
+                recordArray.splice(index, 1);
             }
 
         }
 
-        // if(studentRecord.score > markMax){
-        //     myalert("error", 'error')
-        // }else{
-            recordArray.push(studentRecord)
-            setRecordArray(recordArray)
-            console.log(recordArray)
+        console.log(markMax)
+
+        // if(parseInt(studentRecord.score) <= parseInt(markMax)){
+            if (studentRecord.score != '') {
+                recordArray.push(studentRecord)
+                setRecordArray(recordArray)
+                console.log(recordArray)
+            }
         // }
 
         
+
+        // if (studentRecord.score > markMax) {
+        //     myalert("error", 'error')
+        // } else {
+            
+
+        // }
+
+
     }
 
 
@@ -570,34 +589,39 @@ function AddMarks() {
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h4 className="modal-title">Select score type</h4>
+                                <h4 className="modal-title">Enter student marks</h4>
                                 <button onClick={closeModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
                             </div>
                             <div className="modal-body">
+                                <form id='scores_form'>
+                                    <div className="row">
 
-                                <div className="row">
-                                    {
-                                        subassessment.map(d => (
-                                            <div key={d.assessment.id + "subassessment"} className="col-12 col-md-12">
-                                                <div>
-                                                    <div className="card" onClick={() => getSubAssessmentCat(d.id)}>
-                                                        <i style={{ fontStyle: 'normal', fontSize: '13px', padding: '5px' }}>{d.assessment.name}({d.assessment.maxmark})</i>
+                                        {
+                                            subassessment.map(d => (
+                                                <div key={d.assessment.id + "subassessment"} className="col-12 col-md-12">
+                                                    <div>
+                                                        <div className="card" onClick={() => getSubAssessmentCat(d.id)}>
+                                                            <i style={{ fontStyle: 'normal', fontSize: '13px', padding: '5px' }}>{d.assessment.name}({d.assessment.maxmark})</i>
+                                                        </div>
+
+                                                        {
+                                                            d.subassessment.map((ass) =>
+                                                                <div key={ass.id + "subass"} className='form-group'>
+                                                                    <input className='form-control form-control-sm' type='number' step=".01" onChange={(e) => onChangeScores(ass.id, e.target.value, ass.maxmark)} name={ass.subname} placeholder={ass.scrores ?? ass.subname} max={ass.maxmarks} />
+                                                                </div>)
+                                                        }
+
+
                                                     </div>
-                                                    {
-                                                        d.subassessment.map((ass) =>
-                                                            <div key={ass.id + "subass"} className='form-group'>
-                                                                <input className='form-control form-control-sm' onChange={(e) => onChangeScores(ass.id, e.target.value, ass.maxmark)} name={ass.subname} placeholder={ass.subname} max={ass.maxmarks}/>
-                                                            </div>)
-                                                    }
-
                                                 </div>
-                                            </div>
 
-                                        ))
-                                    }
-                                </div>
+                                            ))
+                                        }
+
+                                    </div>
+                                </form>
 
                             </div>
                             <div className="modal-footer justify-content-between">
@@ -693,7 +717,7 @@ function AddMarks() {
                                         </thead>
                                         <tbody>
                                             {
-                                                loadingRecords ? <p>Loading...</p> : recordentered.map(d => (
+                                                loadingRecords ? <tr><td>Loading...</td></tr> : recordentered.map(d => (
                                                     <tr key={d.id + 'record'}>
                                                         <td>{d.name}</td>
                                                         <td>{d.subname}</td>

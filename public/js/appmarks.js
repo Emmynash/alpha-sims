@@ -69558,10 +69558,11 @@ function AddMarks() {
   }
 
   function getSubAssessmentCat(student_id) {
+    document.getElementById("scores_form").reset();
     setfetchingSubassessment(true);
     setStudentId(student_id);
     setRecordArray([]);
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetchsubassessment/' + student_id).then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/fetchsubassessment/' + student_id + '/' + selectedsubject).then(function (response) {
       console.log(response.data);
       setfetchingSubassessment(false);
       setSchoolSubAssessments(response.data.subassessment);
@@ -69576,6 +69577,10 @@ function AddMarks() {
   }
 
   function addStudentScore() {
+    if (recordArray.length < 1) {
+      return;
+    }
+
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/add_student_scores", recordArray, {
       headers: {
         "Content-type": "application/json"
@@ -69636,16 +69641,26 @@ function AddMarks() {
       console.log(element);
 
       if (element.subAssId == fieldId) {
-        recordArray.splice(index, 1); // recordArray.push(studentRecord)
+        recordArray.splice(index, 1);
       }
-    } // if(studentRecord.score > markMax){
+
+      if (element.score == '') {
+        recordArray.splice(index, 1);
+      }
+    }
+
+    console.log(markMax); // if(parseInt(studentRecord.score) <= parseInt(markMax)){
+
+    if (studentRecord.score != '') {
+      recordArray.push(studentRecord);
+      setRecordArray(recordArray);
+      console.log(recordArray);
+    } // }
+    // if (studentRecord.score > markMax) {
     //     myalert("error", 'error')
-    // }else{
+    // } else {
+    // }
 
-
-    recordArray.push(studentRecord);
-    setRecordArray(recordArray);
-    console.log(recordArray); // }
   };
 
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -69862,7 +69877,7 @@ function AddMarks() {
       className: "modal-header"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
       className: "modal-title"
-    }, "Select score type"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, "Enter student marks"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: closeModal,
       type: "button",
       className: "close",
@@ -69872,6 +69887,8 @@ function AddMarks() {
       "aria-hidden": "true"
     }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-body"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      id: "scores_form"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, subassessment.map(function (d) {
@@ -69890,22 +69907,26 @@ function AddMarks() {
             padding: '5px'
           }
         }, d.assessment.name, "(", d.assessment.maxmark, ")")), d.subassessment.map(function (ass) {
+          var _ass$scrores;
+
           return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
               key: ass.id + "subass",
               className: "form-group"
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
               className: "form-control form-control-sm",
+              type: "number",
+              step: ".01",
               onChange: function onChange(e) {
                 return onChangeScores(ass.id, e.target.value, ass.maxmark);
               },
               name: ass.subname,
-              placeholder: ass.subname,
+              placeholder: (_ass$scrores = ass.scrores) !== null && _ass$scrores !== void 0 ? _ass$scrores : ass.subname,
               max: ass.maxmarks
             }))
           );
         })))
       );
-    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-footer justify-content-between"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: closeModal,
@@ -70012,7 +70033,7 @@ function AddMarks() {
       className: "card-body table-responsive p-0"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "table table-hover text-nowrap"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Assessment"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Sub-Assessment"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Marks"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, loadingRecords ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Loading...") : recordentered.map(function (d) {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Assessment"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Sub-Assessment"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Marks"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, loadingRecords ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Loading...")) : recordentered.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: d.id + 'record'
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.subname), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, d.scrores))
