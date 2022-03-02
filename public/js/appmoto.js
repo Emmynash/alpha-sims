@@ -69687,7 +69687,9 @@ function Moto() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
       id: "moto_form"
     }, motolist.length > 0 ? motolist.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: d.id + "motoListMain"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "row"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "col-12 col-md-6"
@@ -69706,7 +69708,6 @@ function Moto() {
           onClick: function onClick() {
             return addMoto(d.id, 1, studentid, "myoption" + d.id);
           },
-          on: true,
           name: "myoption" + d.id,
           value: "1",
           id: ""
