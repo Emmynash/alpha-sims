@@ -113,7 +113,7 @@ class MotoController_sec extends Controller
         return view('features.psycomotor.addmoto', compact('addmoto', 'student'));
     }
 
-    public function addmotomain(Request $request){
+    public function addmotoMain(Request $request){
 
         // return $request->input();
 
