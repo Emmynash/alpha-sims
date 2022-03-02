@@ -47,7 +47,7 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <script src="{{ asset('js/appmoto.js?v=4') }}"></script>
+  <script src="{{ asset('js/appmoto.js?v=6') }}"></script>
 
   <script>
     function scrollocation(){

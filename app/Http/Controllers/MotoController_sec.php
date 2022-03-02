@@ -19,7 +19,7 @@ class MotoController_sec extends Controller
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
         
-        return view('secondary.psycomotor.motoreact', compact('schooldetails'));
+        return view('features.psycomotor.motoreact', compact('schooldetails'));
     }
 
     public function settingsmoto()
@@ -29,7 +29,7 @@ class MotoController_sec extends Controller
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.psycomotor.settings', compact('addmoto', 'schooldetails'));
+        return view('features.psycomotor.settings', compact('addmoto', 'schooldetails'));
     }
 
     public function addSettingsMoto(Request $request)
@@ -110,7 +110,7 @@ class MotoController_sec extends Controller
         $addmoto = MotoList::where('schoolid', Auth::user()->schoolid)->get();
         $student = Addstudent_sec::where('usernamesystem', $id)->first();
         
-        return view('secondary.psycomotor.addmoto', compact('addmoto', 'student'));
+        return view('features.psycomotor.addmoto', compact('addmoto', 'student'));
     }
 
     public function addmotomain(Request $request){

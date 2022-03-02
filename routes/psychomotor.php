@@ -33,11 +33,11 @@ Route::middleware(['tenant'])->group(function () {
         Route::get('/moto', 'MotoController_sec@index')->name('moto');
         Route::get('/motosettings', 'PysoController@motosettings')->name('motosettings');
         Route::POST('/fetchstudentdata', 'PysoController@fetchStudentData')->name('fetchstudentdata');
-        Route::POST('/addmoto', ['uses' => 'PysoController@addmoto', 'roles' => ['Admin', 'Teacher']])->middleware('roles');
-        Route::get('/addmotopage', ['uses' => 'PysoController@addmotopage', 'roles' => ['Admin', 'Teacher']])->middleware('roles');
-        Route::POST('/addmotopri', 'PysoController@addMotoPri')->name('addmotopri');
+        // Route::POST('/addmoto', ['uses' => 'PysoController@addmoto', 'roles' => ['Admin', 'Teacher']])->middleware('roles');
+        // Route::get('/addmotopage', ['uses' => 'PysoController@addmotopage', 'roles' => ['Admin', 'Teacher']])->middleware('roles');
+        // Route::POST('/addmotopri', 'PysoController@addMotoPri')->name('addmotopri');
         Route::get('/addmotomain/{id}', 'PysoController@addmotomain')->name('addmotomain');
-        Route::POST('/addmoto_post/{id}', 'PysoController@addmotoPost')->name('addmoto_post');
+        // Route::POST('/addmoto_post/{id}', 'PysoController@addmotoPost')->name('addmoto_post');
     });
 
 });
