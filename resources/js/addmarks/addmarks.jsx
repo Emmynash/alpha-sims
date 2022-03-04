@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useAlert } from 'react-alert'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+import uuid from 'react-uuid'
+
 
 
 function AddMarks() {
@@ -47,6 +53,12 @@ function AddMarks() {
         assesment_id: '',
         subassessment_id: ''
     })
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [addMarksError, setAddMarksError] = useState([])
 
 
     useEffect(() => {
@@ -293,12 +305,13 @@ function AddMarks() {
 
     function getSubAssessmentCat(student_id) {
 
-        document.getElementById("scores_form").reset();
+
 
         setfetchingSubassessment(true)
 
         setStudentId(student_id)
         setRecordArray([])
+
 
         axios.get('/fetchsubassessment/' + student_id + '/' + selectedsubject).then(response => {
 
@@ -307,6 +320,10 @@ function AddMarks() {
             setfetchingSubassessment(false)
 
             setSchoolSubAssessments(response.data.subassessment)
+
+            handleShow()
+
+            document.getElementById("scores_form").reset();
 
         }).catch(e => {
             console.log(e)
@@ -340,6 +357,21 @@ function AddMarks() {
 
             if (response.data.code == 409) {
                 myalert(response.data.response, 'error')
+            } else if (response.data.code == 400) {
+                setAddMarksError(response.data.response)
+
+                toast.error("dedede", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+
+                // myalert(response.data.response, 'error')
+
             } else if (response.data.code == 200) {
                 myalert(response.data.response, 'success')
             }
@@ -387,7 +419,7 @@ function AddMarks() {
         setLoadingEnteredRecords(true);
 
 
-        axios.get("/delete_score/"+id, {
+        axios.get("/delete_score/" + id, {
             headers: {
                 "Content-type": "application/json"
             }
@@ -413,8 +445,6 @@ function AddMarks() {
 
     const onChangeScores = (fieldId, data, markMax) => {
 
-
-
         let studentRecord = {
             "subAssId": fieldId,
             "score": data,
@@ -422,7 +452,6 @@ function AddMarks() {
             "subjectId": selectedsubject,
             "studentId": studentId,
             "sectionId": selectedsection
-
         }
 
         for (let index = 0; index < recordArray.length; index++) {
@@ -439,28 +468,31 @@ function AddMarks() {
             if (element.score == '') {
                 recordArray.splice(index, 1);
             }
-
         }
 
         console.log(markMax)
 
         // if(parseInt(studentRecord.score) <= parseInt(markMax)){
-            if (studentRecord.score != '') {
-                recordArray.push(studentRecord)
-                setRecordArray(recordArray)
-                console.log(recordArray)
+        if (studentRecord.score != '') {
+            recordArray.push(studentRecord)
+            setRecordArray(recordArray)
+            console.log(recordArray)
+        }
+
+    }
+
+    const removePoints = (score) => {
+
+        if (score != null) {
+            const scoreArray = score.split(".");
+            if (parseInt(scoreArray[1]) > 0) {
+                return score;
+            } else {
+                return scoreArray[0];
             }
-        // }
-
-        
-
-        // if (studentRecord.score > markMax) {
-        //     myalert("error", 'error')
-        // } else {
-            
-
-        // }
-
+        } else {
+            return ""
+        }
 
     }
 
@@ -475,6 +507,7 @@ function AddMarks() {
                     <div className="spinner-border"></div>
                 </div>
             </div> : ""}
+            <ToastContainer />
             <div className="card">
                 <div className="row" style={{ margin: '10px' }}>
                     <div className="col-12 col-md-4">
@@ -591,11 +624,11 @@ function AddMarks() {
                                             <td>{student.ca1 == 0 ? "---":student.ca1}</td>
                                             <td>{student.ca2 == 0 ? "---":student.ca2}</td>
                                             <td>{student.ca3 == 0 ? "---":student.ca3}</td> */}
-                                                <td>{student.totals}</td>
+                                                <td>{removePoints(student.totals)}</td>
                                                 <td>{student.position}</td>
                                                 <td>{student.grade}</td>
                                                 <td>
-                                                    <button onClick={() => getSubAssessmentCat(student.id)} style={{ marginRight: '5px' }} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button>
+                                                    <button onClick={() => getSubAssessmentCat(student.id)} style={{ marginRight: '5px' }} className="btn btn-sm btn-info"><i className="fas fa-plus"></i></button>
 
                                                     <button onClick={() => getScoreRecord(student.id)} className="btn btn-sm btn-warning" data-toggle="modal" data-target="#view_single_student_result"><i className="fas fa-eye"></i></button>
                                                 </td>
@@ -613,7 +646,7 @@ function AddMarks() {
                 </div>
 
                 <div className="modal fade" id="add_student_marks" data-backdrop="false">
-                    <div className="modal-dialog modal-lg">
+                    {/* <div className="modal-dialog modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h4 className="modal-title">Enter student marks</h4>
@@ -622,33 +655,7 @@ function AddMarks() {
                                 </button>
                             </div>
                             <div className="modal-body">
-                                <form id='scores_form'>
-                                    <div className="row">
-
-                                        {
-                                            subassessment.map(d => (
-                                                <div key={d.assessment.id + "subassessment"} className="col-12 col-md-12">
-                                                    <div>
-                                                        <div className="card" onClick={() => getSubAssessmentCat(d.id)}>
-                                                            <i style={{ fontStyle: 'normal', fontSize: '13px', padding: '5px' }}>{d.assessment.name}({d.assessment.maxmark})</i>
-                                                        </div>
-
-                                                        {
-                                                            d.subassessment.map((ass) =>
-                                                                <div key={ass.id + "subass"} className='form-group'>
-                                                                    <input className='form-control form-control-sm' type='number' step=".01" onChange={(e) => onChangeScores(ass.id, e.target.value, ass.maxmark)} name={ass.subname} placeholder={ass.scrores ?? ass.subname} max={ass.maxmarks} />
-                                                                </div>)
-                                                        }
-
-
-                                                    </div>
-                                                </div>
-
-                                            ))
-                                        }
-
-                                    </div>
-                                </form>
+                                
 
                             </div>
                             <div className="modal-footer justify-content-between">
@@ -656,7 +663,7 @@ function AddMarks() {
                                 <button onClick={addStudentScore} type="button" className="btn btn-default" data-dismiss="modal">Save</button>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
 
@@ -750,7 +757,7 @@ function AddMarks() {
                                                         <td>{d.name}</td>
                                                         <td>{d.subname}</td>
                                                         <td>{d.scrores} </td>
-                                                        <td><button className='btn btn-sm btn-danger' onClick={()=>deleteScore(d.id)}>Del</button></td>
+                                                        <td><button className='btn btn-sm btn-danger' onClick={() => deleteScore(d.id)}>Del</button></td>
                                                     </tr>
                                                 ))
                                             }
@@ -766,6 +773,58 @@ function AddMarks() {
                         </div>
                     </div>
                 </div>
+
+                <Modal show={show} onHide={handleClose} animation={false}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add Scores</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {
+                            addMarksError.map((d) =>
+                                <div key={uuid()} style={{ backgroundColor: '#FFBBBB', margin: '5px' }}>
+                                    <i style={{ color: 'white', fontStyle: 'normal', fontSize: '13px', padding: '5px' }}>{d}</i>
+                                </div>)
+                        }
+
+
+                        <form id='scores_form'>
+                            <div className="row">
+
+                                {
+                                    subassessment.map(d => (
+                                        <div key={d.assessment.id + "subassessment"} className="col-12 col-md-12">
+                                            <div>
+                                                <div className="card" onClick={() => getSubAssessmentCat(d.id)}>
+                                                    <i style={{ fontStyle: 'normal', fontSize: '13px', padding: '5px' }}>{d.assessment.name}({d.assessment.maxmark})</i>
+                                                </div>
+
+                                                {
+                                                    d.subassessment.map((ass) =>
+                                                        <div key={ass.id + "subass"} className='form-group'>
+                                                            <input className='form-control form-control-sm' type='number' step=".01" onChange={(e) => onChangeScores(ass.id, e.target.value, ass.maxmark)} name={ass.subname} placeholder={ass.scrores ?? ass.subname} max={ass.maxmarks} />
+                                                        </div>)
+                                                }
+
+
+                                            </div>
+                                        </div>
+
+                                    ))
+                                }
+
+                            </div>
+                        </form>
+
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="danger" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="success" onClick={addStudentScore}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
 
 
             </div>

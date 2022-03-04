@@ -21,6 +21,9 @@ function AddMarksTeachers() {
     const [fetchingSubassessment, setfetchingSubassessment] = useState(false);
     const [subassessment, setSchoolSubAssessments] = useState([])
 
+    const [studentId, setStudentId] = useState('')
+    const [recordArray, setRecordArray] = useState([])
+
     const [schoolsection, setschoolsection] = useState([])
     const [schoolschool, setschoolsession] = useState('')
     const [schoolterm, setschoolterm] = useState(0)
@@ -149,36 +152,6 @@ function AddMarksTeachers() {
         setca3score(0)
     }
 
-    function addStudentMarks() {
-        seIsLoading(true)
-        const data = new FormData()
-        data.append("classidmain", selectedClass)
-        data.append("currentsessionform", schoolschool)
-        data.append("currentterm", schoolterm)
-        data.append('studentregno', studentId)
-        data.append('subjectid', selectedsubject)
-        data.append("examsmarksentered", examsscore)
-        data.append("ca1marksentered", ca1score)
-        data.append("ca2marksentered", ca2score)
-        data.append('ca3marksentered', ca3score)
-        data.append('markidstudent', markid)
-        data.append('studentsection', selectedsection)
-        axios.post("/add_marks_main", data, {
-            headers: {
-                "Content-type": "application/json"
-            }
-        }).then(response => {
-            console.log(response)
-            // setStudentList(response.data.studentlist)
-            seIsLoading(false)
-            getStudentForMarks(selectedScoreObject)
-
-
-        }).catch(e => {
-            console.log(e)
-            seIsLoading(false)
-        })
-    }
 
     function fetchSchoolDetails() {
         seIsLoading(true)
@@ -248,16 +221,16 @@ function AddMarksTeachers() {
         });
     }
 
-    function getSubAssessmentCat(catid) {
+    function getSubAssessmentCat(student_id) {
+
+        document.getElementById("scores_form").reset();
 
         setfetchingSubassessment(true)
 
-        setAssessmentRecord({
-            ...assessmentRecord,
-            ['assesment_id']: catid,
-        });
+        setStudentId(student_id)
+        setRecordArray([])
 
-        axios.get('/fetchsubassessment/' + catid + '/' + assessmentRecord.student_id).then(response => {
+        axios.get('/fetchsubassessment/' + student_id + '/' + selectedsubject).then(response => {
 
             console.log(response.data)
 
@@ -283,7 +256,7 @@ function AddMarksTeachers() {
 
     function addStudentScore() {
 
-        axios.post("/add_student_scores", assessmentRecord, {
+        axios.post("/add_student_scores", recordArray, {
             headers: {
                 "Content-type": "application/json"
             }
@@ -335,6 +308,59 @@ function AddMarksTeachers() {
 
     }
 
+    const onChangeScores = (fieldId, data, markMax) => {
+
+        let studentRecord = {
+            "subAssId": fieldId,
+            "score": data,
+            "classId": selectedClass,
+            "subjectId": selectedsubject,
+            "studentId": studentId,
+            "sectionId": selectedsection
+        }
+
+        for (let index = 0; index < recordArray.length; index++) {
+            const element = recordArray[index];
+
+            console.log(element)
+
+            if (element.subAssId == fieldId) {
+
+                recordArray.splice(index, 1);
+
+            }
+
+            if (element.score == '') {
+                recordArray.splice(index, 1);
+            }
+        }
+
+        console.log(markMax)
+
+        // if(parseInt(studentRecord.score) <= parseInt(markMax)){
+        if (studentRecord.score != '') {
+            recordArray.push(studentRecord)
+            setRecordArray(recordArray)
+            console.log(recordArray)
+        }
+        // }
+    }
+
+    const removePoints = (score) => {
+
+        if (score != null) {
+            const scoreArray = score.split(".");
+            if (parseInt(scoreArray[1]) > 0) {
+                return score;
+            } else {
+                return scoreArray[0];
+            }
+        } else {
+            return ""
+        }
+
+    }
+
     return (
         <div>
 
@@ -358,9 +384,9 @@ function AddMarksTeachers() {
                             <i style={{ fontStyle: 'normal', fontSize: '14px', padding: '5px' }}>{d.subjectname}</i>
                             <i style={{ fontStyle: 'normal', fontSize: '14px', padding: '5px' }}>{d.classname}{d.sectionname}</i>
                         </div>
-                    <div className="card-footer">
-                        <button className="btn btn-sm btn-info" onClick={() => getStudentForMarks(d)} data-toggle="modal" data-target="#modal-addmarks">Click to add Scores</button>
-                    </div>
+                        <div className="card-footer">
+                            <button className="btn btn-sm btn-info" onClick={() => getStudentForMarks(d)} data-toggle="modal" data-target="#modal-addmarks">Click to add Scores</button>
+                        </div>
                     </div>
 
                 ))
@@ -403,7 +429,7 @@ function AddMarksTeachers() {
                                             <tr key={d.id + "subjectsstudents"}>
                                                 <td>{capitalize(d.firstname + " " + d.middlename + " " + d.lastname)}</td>
                                                 <td>{d.admission_no}</td>
-                                                <td>{d.totals}</td>
+                                                <td>{removePoints(d.totals)}</td>
                                                 <td>{d.position}</td>
                                                 <td>{d.grade}</td>
                                                 <td><button onClick={() => addStudentMarksModal(d.id)} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button></td>
@@ -475,10 +501,10 @@ function AddMarksTeachers() {
                                                 <tr key={d.id + "subjectsstudentss"}>
                                                     <td>{capitalize(d.firstname + " " + d.middlename + " " + d.lastname)}</td>
                                                     <td>{d.admission_no}</td>
-                                                    <td>{d.totals}</td>
+                                                    <td>{removePoints(d.totals)}</td>
                                                     <td>{d.position}</td>
                                                     <td>{d.grade}</td>
-                                                    <td><button onClick={() => addStudentMarksModal(d.id)} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button> <button onClick={() => getScoreRecord(d.id)} className="btn btn-sm btn-warning" data-toggle="modal" data-target="#view_single_student_result"><i className="fas fa-eye"></i></button></td>
+                                                    <td><button onClick={() => getSubAssessmentCat(d.id)} className="btn btn-sm btn-info" data-toggle="modal" data-target="#add_student_marks"><i className="fas fa-plus"></i></button> <button onClick={() => getScoreRecord(d.id)} className="btn btn-sm btn-warning" data-toggle="modal" data-target="#view_single_student_result"><i className="fas fa-eye"></i></button></td>
                                                 </tr>
                                             ))
                                         }
@@ -506,69 +532,52 @@ function AddMarksTeachers() {
 
 
             <div className="modal fade" id="add_student_marks" data-backdrop="false">
-                <div className="modal-dialog">
+                <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title">Enter Student Scores</h4>
+                            <h4 className="modal-title">Enter student marks</h4>
                             <button onClick={closeModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div className="modal-body">
-                            <div className="row">
-                                {
-                                    assessment.map(d => (
-                                        <div key={d.id + "subassessment"} className="col-12 col-md-12">
-                                            <div className="card" onClick={() => getSubAssessmentCat(d.id)} data-toggle="modal" data-target="#add_student_marks_sub">
-                                                <i style={{ fontStyle: 'normal', fontSize: '13px', padding: '5px' }}>{d.name}({d.maxmark})</i>
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                        <div className="modal-footer justify-content-between">
-                            <button onClick={closeModal} type="button" className="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                            {/* <button onClick={addStudentMarks} type="button" className="btn btn-info btn-sm">Save changes</button> */}
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            <form id='scores_form'>
+                                <div className="row">
 
-            <div className="modal fade" id="add_student_marks_sub" data-backdrop="false">
-                <div className="modal-dialog modal-sm">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">Enter Student Scores</h4>
-                            <button onClick={closeModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-
-                            {
-                                fetchingSubassessment ? <p>Loading...</p> : <div className="row">
                                     {
                                         subassessment.map(d => (
-                                            <div key={d.id + "subassessment2"} className="col-12 col-md-12">
-                                                <div className="card" data-toggle="modal" onClick={() => addmarksModal(d.id)} data-target="#add_student_marks_sub_main">
-                                                    <i style={{ fontStyle: 'normal', fontSize: '13px', padding: '5px' }}>{d.subname}({d.maxmarks})</i>
+                                            <div key={d.assessment.id + "subassessment"} className="col-12 col-md-12">
+                                                <div>
+                                                    <div className="card" onClick={() => getSubAssessmentCat(d.id)}>
+                                                        <i style={{ fontStyle: 'normal', fontSize: '13px', padding: '5px' }}>{d.assessment.name}({d.assessment.maxmark})</i>
+                                                    </div>
+
+                                                    {
+                                                        d.subassessment.map((ass) =>
+                                                            <div key={ass.id + "subass"} className='form-group'>
+                                                                <input className='form-control form-control-sm' type='number' step=".01" onChange={(e) => onChangeScores(ass.id, e.target.value, ass.maxmark)} name={ass.subname} placeholder={ass.scrores ?? ass.subname} max={ass.maxmarks} />
+                                                            </div>)
+                                                    }
+
+
                                                 </div>
                                             </div>
+
                                         ))
                                     }
+
                                 </div>
-                            }
-
-
+                            </form>
 
                         </div>
                         <div className="modal-footer justify-content-between">
                             <button onClick={closeModal} type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                            <button onClick={addStudentScore} type="button" className="btn btn-default" data-dismiss="modal">Save</button>
                         </div>
                     </div>
                 </div>
             </div>
+
 
 
             <div className="modal fade" id="add_student_marks_sub_main" data-backdrop="false">

@@ -86059,67 +86059,77 @@ function AddMarksTeachers() {
       subassessment = _useState22[0],
       setSchoolSubAssessments = _useState22[1];
 
-  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(''),
       _useState24 = _slicedToArray(_useState23, 2),
-      schoolsection = _useState24[0],
-      setschoolsection = _useState24[1];
+      studentId = _useState24[0],
+      setStudentId = _useState24[1];
 
-  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(''),
+  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState26 = _slicedToArray(_useState25, 2),
-      schoolschool = _useState26[0],
-      setschoolsession = _useState26[1];
+      recordArray = _useState26[0],
+      setRecordArray = _useState26[1];
 
-  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
+  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState28 = _slicedToArray(_useState27, 2),
-      schoolterm = _useState28[0],
-      setschoolterm = _useState28[1];
+      schoolsection = _useState28[0],
+      setschoolsection = _useState28[1];
 
   var _useState29 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(''),
       _useState30 = _slicedToArray(_useState29, 2),
-      selectedClass = _useState30[0],
-      setSelectedClass = _useState30[1];
+      schoolschool = _useState30[0],
+      setschoolsession = _useState30[1];
 
-  var _useState31 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(''),
+  var _useState31 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
       _useState32 = _slicedToArray(_useState31, 2),
-      selectedsubject = _useState32[0],
-      setselectedsubject = _useState32[1];
+      schoolterm = _useState32[0],
+      setschoolterm = _useState32[1];
 
   var _useState33 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(''),
       _useState34 = _slicedToArray(_useState33, 2),
-      selectedsection = _useState34[0],
-      setselectedsection = _useState34[1];
+      selectedClass = _useState34[0],
+      setSelectedClass = _useState34[1];
 
-  var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
+  var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(''),
       _useState36 = _slicedToArray(_useState35, 2),
-      selectedScoreObject = _useState36[0],
-      setselectedScoreObject = _useState36[1];
+      selectedsubject = _useState36[0],
+      setselectedsubject = _useState36[1];
 
-  var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+  var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(''),
       _useState38 = _slicedToArray(_useState37, 2),
-      filteredUsers = _useState38[0],
-      setFilteredUsers = _useState38[1];
+      selectedsection = _useState38[0],
+      setselectedsection = _useState38[1];
 
-  var _useState39 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(""),
+  var _useState39 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
       _useState40 = _slicedToArray(_useState39, 2),
-      search = _useState40[0],
-      setSearch = _useState40[1];
+      selectedScoreObject = _useState40[0],
+      setselectedScoreObject = _useState40[1];
 
-  var _useState41 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(''),
+  var _useState41 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState42 = _slicedToArray(_useState41, 2),
-      enteringfor = _useState42[0],
-      setenteringfor = _useState42[1];
+      filteredUsers = _useState42[0],
+      setFilteredUsers = _useState42[1];
 
-  var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(true),
+  var _useState43 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(""),
       _useState44 = _slicedToArray(_useState43, 2),
-      loadingRecords = _useState44[0],
-      setLoadingEnteredRecords = _useState44[1];
+      search = _useState44[0],
+      setSearch = _useState44[1];
 
-  var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+  var _useState45 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(''),
       _useState46 = _slicedToArray(_useState45, 2),
-      recordentered = _useState46[0],
-      setRecordEntered = _useState46[1];
+      enteringfor = _useState46[0],
+      setenteringfor = _useState46[1];
 
-  var _useState47 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
+  var _useState47 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(true),
+      _useState48 = _slicedToArray(_useState47, 2),
+      loadingRecords = _useState48[0],
+      setLoadingEnteredRecords = _useState48[1];
+
+  var _useState49 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+      _useState50 = _slicedToArray(_useState49, 2),
+      recordentered = _useState50[0],
+      setRecordEntered = _useState50[1];
+
+  var _useState51 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({
     student_id: '',
     scrores: '',
     subjectid: '',
@@ -86128,9 +86138,9 @@ function AddMarksTeachers() {
     assesment_id: '',
     subassessment_id: ''
   }),
-      _useState48 = _slicedToArray(_useState47, 2),
-      assessmentRecord = _useState48[0],
-      setAssessmentRecord = _useState48[1];
+      _useState52 = _slicedToArray(_useState51, 2),
+      assessmentRecord = _useState52[0],
+      setAssessmentRecord = _useState52[1];
 
   var handleClose = function handleClose() {
     return setShow(false);
@@ -86218,35 +86228,6 @@ function AddMarksTeachers() {
     setca3score(0);
   }
 
-  function addStudentMarks() {
-    seIsLoading(true);
-    var data = new FormData();
-    data.append("classidmain", selectedClass);
-    data.append("currentsessionform", schoolschool);
-    data.append("currentterm", schoolterm);
-    data.append('studentregno', studentId);
-    data.append('subjectid', selectedsubject);
-    data.append("examsmarksentered", examsscore);
-    data.append("ca1marksentered", ca1score);
-    data.append("ca2marksentered", ca2score);
-    data.append('ca3marksentered', ca3score);
-    data.append('markidstudent', markid);
-    data.append('studentsection', selectedsection);
-    axios.post("/add_marks_main", data, {
-      headers: {
-        "Content-type": "application/json"
-      }
-    }).then(function (response) {
-      console.log(response); // setStudentList(response.data.studentlist)
-
-      seIsLoading(false);
-      getStudentForMarks(selectedScoreObject);
-    })["catch"](function (e) {
-      console.log(e);
-      seIsLoading(false);
-    });
-  }
-
   function fetchSchoolDetails() {
     seIsLoading(true);
     axios.get('/get_school_basic_details').then(function (response) {
@@ -86298,10 +86279,12 @@ function AddMarksTeachers() {
     setAssessmentRecord(_objectSpread({}, assessmentRecord, _defineProperty({}, 'student_id', studentId)));
   }
 
-  function getSubAssessmentCat(catid) {
+  function getSubAssessmentCat(student_id) {
+    document.getElementById("scores_form").reset();
     setfetchingSubassessment(true);
-    setAssessmentRecord(_objectSpread({}, assessmentRecord, _defineProperty({}, 'assesment_id', catid)));
-    axios.get('/fetchsubassessment/' + catid + '/' + assessmentRecord.student_id).then(function (response) {
+    setStudentId(student_id);
+    setRecordArray([]);
+    axios.get('/fetchsubassessment/' + student_id + '/' + selectedsubject).then(function (response) {
       console.log(response.data);
       setfetchingSubassessment(false);
       setSchoolSubAssessments(response.data.subassessment);
@@ -86316,7 +86299,7 @@ function AddMarksTeachers() {
   }
 
   function addStudentScore() {
-    axios.post("/add_student_scores", assessmentRecord, {
+    axios.post("/add_student_scores", recordArray, {
       headers: {
         "Content-type": "application/json"
       }
@@ -86359,6 +86342,53 @@ function AddMarksTeachers() {
       setLoadingEnteredRecords(false);
     });
   }
+
+  var onChangeScores = function onChangeScores(fieldId, data, markMax) {
+    var studentRecord = {
+      "subAssId": fieldId,
+      "score": data,
+      "classId": selectedClass,
+      "subjectId": selectedsubject,
+      "studentId": studentId,
+      "sectionId": selectedsection
+    };
+
+    for (var index = 0; index < recordArray.length; index++) {
+      var element = recordArray[index];
+      console.log(element);
+
+      if (element.subAssId == fieldId) {
+        recordArray.splice(index, 1);
+      }
+
+      if (element.score == '') {
+        recordArray.splice(index, 1);
+      }
+    }
+
+    console.log(markMax); // if(parseInt(studentRecord.score) <= parseInt(markMax)){
+
+    if (studentRecord.score != '') {
+      recordArray.push(studentRecord);
+      setRecordArray(recordArray);
+      console.log(recordArray);
+    } // }
+
+  };
+
+  var removePoints = function removePoints(score) {
+    if (score != null) {
+      var scoreArray = score.split(".");
+
+      if (parseInt(scoreArray[1]) > 0) {
+        return score;
+      } else {
+        return scoreArray[0];
+      }
+    } else {
+      return "";
+    }
+  };
 
   return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       style: {
@@ -86443,7 +86473,7 @@ function AddMarksTeachers() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Admission No"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Total"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Position"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Grade"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, filteredUsers.map(function (d) {
       return d != null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
         key: d.id + "subjectsstudents"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, capitalize(d.firstname + " " + d.middlename + " " + d.lastname)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.admission_no), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.totals), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.position), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.grade), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, capitalize(d.firstname + " " + d.middlename + " " + d.lastname)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.admission_no), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, removePoints(d.totals)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.position), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.grade), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
         onClick: function onClick() {
           return addStudentMarksModal(d.id);
         },
@@ -86502,9 +86532,9 @@ function AddMarksTeachers() {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Admission No"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Total"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Position"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Grade"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, filteredUsers.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
           key: d.id + "subjectsstudentss"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, capitalize(d.firstname + " " + d.middlename + " " + d.lastname)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.admission_no), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.totals), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.position), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.grade), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, capitalize(d.firstname + " " + d.middlename + " " + d.lastname)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.admission_no), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, removePoints(d.totals)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.position), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, d.grade), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
           onClick: function onClick() {
-            return addStudentMarksModal(d.id);
+            return getSubAssessmentCat(d.id);
           },
           className: "btn btn-sm btn-info",
           "data-toggle": "modal",
@@ -86533,14 +86563,14 @@ function AddMarksTeachers() {
       id: "add_student_marks",
       "data-backdrop": "false"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "modal-dialog"
+      className: "modal-dialog modal-lg"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "modal-content"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "modal-header"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h4", {
       className: "modal-title"
-    }, "Enter Student Scores"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+    }, "Enter student marks"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
       onClick: closeModal,
       type: "button",
       className: "close",
@@ -86550,85 +86580,58 @@ function AddMarksTeachers() {
       "aria-hidden": "true"
     }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "modal-body"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("form", {
+      id: "scores_form"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "row"
-    }, assessment.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-          key: d.id + "subassessment",
-          className: "col-12 col-md-12"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-          className: "card",
-          onClick: function onClick() {
-            return getSubAssessmentCat(d.id);
-          },
-          "data-toggle": "modal",
-          "data-target": "#add_student_marks_sub"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
-          style: {
-            fontStyle: 'normal',
-            fontSize: '13px',
-            padding: '5px'
-          }
-        }, d.name, "(", d.maxmark, ")")))
-      );
-    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "modal-footer justify-content-between"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-      onClick: closeModal,
-      type: "button",
-      className: "btn btn-default btn-sm",
-      "data-dismiss": "modal"
-    }, "Close"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "modal fade",
-      id: "add_student_marks_sub",
-      "data-backdrop": "false"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "modal-dialog modal-sm"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "modal-content"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "modal-header"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h4", {
-      className: "modal-title"
-    }, "Enter Student Scores"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-      onClick: closeModal,
-      type: "button",
-      className: "close",
-      "data-dismiss": "modal",
-      "aria-label": "Close"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
-      "aria-hidden": "true"
-    }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-      className: "modal-body"
-    }, fetchingSubassessment ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, "Loading...") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "row"
     }, subassessment.map(function (d) {
       return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-          key: d.id + "subassessment2",
+          key: d.assessment.id + "subassessment",
           className: "col-12 col-md-12"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
           className: "card",
-          "data-toggle": "modal",
           onClick: function onClick() {
-            return addmarksModal(d.id);
-          },
-          "data-target": "#add_student_marks_sub_main"
+            return getSubAssessmentCat(d.id);
+          }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
           style: {
             fontStyle: 'normal',
             fontSize: '13px',
             padding: '5px'
           }
-        }, d.subname, "(", d.maxmarks, ")")))
+        }, d.assessment.name, "(", d.assessment.maxmark, ")")), d.subassessment.map(function (ass) {
+          var _ass$scrores;
+
+          return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+              key: ass.id + "subass",
+              className: "form-group"
+            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+              className: "form-control form-control-sm",
+              type: "number",
+              step: ".01",
+              onChange: function onChange(e) {
+                return onChangeScores(ass.id, e.target.value, ass.maxmark);
+              },
+              name: ass.subname,
+              placeholder: (_ass$scrores = ass.scrores) !== null && _ass$scrores !== void 0 ? _ass$scrores : ass.subname,
+              max: ass.maxmarks
+            }))
+          );
+        })))
       );
-    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "modal-footer justify-content-between"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
       onClick: closeModal,
       type: "button",
       className: "btn btn-default",
       "data-dismiss": "modal"
-    }, "Close"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    }, "Close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+      onClick: addStudentScore,
+      type: "button",
+      className: "btn btn-default",
+      "data-dismiss": "modal"
+    }, "Save"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "modal fade",
       id: "add_student_marks_sub_main",
       "data-backdrop": "false"
