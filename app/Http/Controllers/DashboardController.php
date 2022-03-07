@@ -21,22 +21,22 @@ class DashboardController extends Controller
         $id = Auth::user()->schoolid;
         $userschool = Addpost::where('id', $id)->first();
 
-        if ($userschool->schooltype == "Primary") {
-            $classList = User::where('id', $id)->get();
-            $addHouses = User::where('id', $id)->get();
-            $addSection = User::where('id', $id)->get();
-            $addClub = User::where('id', $id)->get();
-            // $message = Message::where(['schoolid'=> Auth::user()->schoolid, 'senderid'=>Auth::user()->id])->get();
+        // if ($userschool->schooltype == "Primary") {
+        //     $classList = User::where('id', $id)->get();
+        //     $addHouses = User::where('id', $id)->get();
+        //     $addSection = User::where('id', $id)->get();
+        //     $addClub = User::where('id', $id)->get();
+        //     // $message = Message::where(['schoolid'=> Auth::user()->schoolid, 'senderid'=>Auth::user()->id])->get();
 
-            $studentDetails = array(
-                'userschool' => $userschool,
-                'classList' => $classList,
-                'addHouses' => $addHouses,
-                'addSection' => $addSection,
-                'addClub' => $addClub,
-            );
-            return view('pages.addschool', compact('userschool'));
-        }
+        //     $studentDetails = array(
+        //         'userschool' => $userschool,
+        //         'classList' => $classList,
+        //         'addHouses' => $addHouses,
+        //         'addSection' => $addSection,
+        //         'addClub' => $addClub,
+        //     );
+        //     return view('pages.addschool', compact('userschool'));
+        // }
         return view('secondary.setupschool.addschool_sec', compact('userschool'));
     }
 
@@ -150,6 +150,44 @@ class DashboardController extends Controller
             }
         } catch (\Throwable $th) {
             return back()->with('error', "Process failed");
+        }
+    }
+
+    public function updateSchoolDetails(Request $request, $id)
+    {
+        $rules = [
+            'schoolname' => 'required',
+            'schoolemail' => 'required',
+            'mobilenumber' => 'required',
+            'schoolwebsite' => 'required',
+            'dateestablished' => 'required',
+            'schooladdress' => 'required',
+            'schoolstate' => 'required'
+        ];
+    
+        $customMessages = [
+            'required' => 'The :attribute field can not be blank.'
+        ];
+
+        $this->validate($request, $rules, $customMessages);
+
+        try {
+
+            $updateschool = Addpost::find($id);
+            $updateschool->schoolname = $request->input('schoolname');
+            $updateschool->schoolemail = $request->input('schoolemail');
+            $updateschool->schoolstate = $request->input('schoolstate');
+            $updateschool->mobilenumber = $request->input('mobilenumber');
+            $updateschool->schoolwebsite = $request->input('schoolwebsite');
+            $updateschool->dateestablished = $request->input('dateestablished');
+            $updateschool->schooladdress = $request->input('schooladdress');
+            $updateschool->save();
+
+            return back()->with('success', 'School updated successfully');
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->with('error', 'School update failed');
         }
     }
 }

@@ -158,6 +158,7 @@ Route::middleware(['tenant'])->group(function () {
     Route::get('/addschool', "DashboardController@addschool")->middleware('auth')->middleware('verified');
     Route::POST('/shoolreg', 'DashboardController@store')->middleware('auth')->name('shoolreg');
     Route::POST('/updatelogosig', 'DashboardController@updatelogosig')->middleware('auth')->name('updatelogosig');
+    Route::POST('/updateschooldetails/{id}', 'DashboardController@updateSchoolDetails')->middleware('auth')->name('updateschooldetails');
     Route::POST('/contactform', 'DashboardController@contactform')->name('contactform');
 
 
