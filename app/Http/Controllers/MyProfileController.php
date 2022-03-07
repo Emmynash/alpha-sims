@@ -46,7 +46,8 @@ class MyProfileController extends Controller
 
         $validatedData = $request->validate([
             'firstname' => 'required',
-            'lastname' => 'required'
+            'lastname' => 'required',
+            'gender' => 'required'
         ]);
 
         try {
@@ -54,6 +55,7 @@ class MyProfileController extends Controller
             $updateProfile->firstname = $request->firstname;
             $updateProfile->lastname = $request->lastname;
             $updateProfile->middlename = $request->middlename ?? "";
+            $updateProfile->gender = $request->gender;
             $updateProfile->save();
 
             return back()->with('success', 'Profile updated');
