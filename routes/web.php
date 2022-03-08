@@ -316,7 +316,7 @@ Route::middleware(['tenant'])->group(function () {
             Route::POST('/setupassesment', 'SchoolsetupSecController@setUpAssesment')->name('setupassesment');
             Route::POST('/update_assessment_position', 'SchoolsetupSecController@updateAssessmentOrder')->name('update_assessment_position'); 
             Route::POST('/subsetupassesment', 'SchoolsetupSecController@subAssessmentSetUp')->name('subsetupassesment');
-            Route::GET('/setupcomment', 'SchoolsetupSecController@setupComment')->name('setupcomment');
+            Route::GET('/setupcomment', 'SchoolsetupSecController@setupComment')->name('setupcomment')->middleware('can:setup comment');
             Route::GET('/admincomment', 'SchoolsetupSecController@adminComment')->name('admincomment');
             Route::POST('/setupnewcomment', 'SchoolsetupSecController@setupNewComment')->name('setupnewcomment');
             Route::POST('/deletecomment', 'SchoolsetupSecController@deletecomment')->name('deletecomment');
@@ -328,12 +328,12 @@ Route::middleware(['tenant'])->group(function () {
 
 
         Route::group(['prefix' => 'result', 'middleware' => ['auth', 'can:result module']], function () {
-            Route::get('/result_by_class', 'ResultController_sec@result_by_class',)->name('result_by_class');
+            Route::get('/result_by_class', 'ResultController_sec@result_by_class',)->name('result_by_class')->middleware('can:view result');
             Route::post('/result_view_sec_pdf', 'ResultController_sec@loadHtmlDoc')->name('result_view_sec_pdf');
             Route::POST('/view_by_class', 'ResultController_sec@view_by_class')->name('view_by_class');
             Route::Post('/result_print_single_sec', 'ResultController_sec@viewSingleResult')->name('result_print_single_sec');
-            Route::get('/result_by_class', 'ResultController_sec@result_by_class')->name('result_by_class');
-            Route::get('/generate_result', 'ResultController_sec@generateResult')->name('generate_result');
+            // Route::get('/result_by_class', 'ResultController_sec@result_by_class')->name('result_by_class');           
+            Route::get('/generate_result', 'ResultController_sec@generateResult')->name('generate_result')->middleware('can:generate student result');
             Route::get('/get_result_ready_section', 'ResultController_sec@get_result_ready_section');
             Route::post('/generate_result_main', 'ResultController_sec@generateResultMain')->name('generate_result_main');
             Route::get('/print_entrire_class_result', 'ResultController_sec@printEntrireClassResult')->name('print_entrire_class_result');
