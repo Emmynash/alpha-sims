@@ -328,7 +328,7 @@ Route::middleware(['tenant'])->group(function () {
 
 
         Route::group(['prefix' => 'result', 'middleware' => ['auth', 'can:result module']], function () {
-            Route::get('/result_by_class', 'ResultController_sec@result_by_class',)->name('result_by_class')->middleware('can:view result');
+            Route::get('/result_by_class', 'ResultController_sec@result_by_class',)->name('result_by_class')->middleware('can:view student result');
             Route::post('/result_view_sec_pdf', 'ResultController_sec@loadHtmlDoc')->name('result_view_sec_pdf');
             Route::POST('/view_by_class', 'ResultController_sec@view_by_class')->name('view_by_class');
             Route::Post('/result_print_single_sec', 'ResultController_sec@viewSingleResult')->name('result_print_single_sec');
