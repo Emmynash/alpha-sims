@@ -69440,7 +69440,7 @@ function ViewStudentPri() {
   function getStudentList() {
     setisLoading(true);
     var data = new FormData();
-    data.append("selectedclassmoto", selectedclass), data.append("selectedsectionmoto", selectedsection), axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/moto/get_students_for_pyco", data, {
+    data.append("selectedclassmoto", selectedclass), data.append("selectedsectionmoto", selectedsection), axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/moto/get_students_for_pyco", data, {
       headers: {
         "Content-type": "application/json"
       }
