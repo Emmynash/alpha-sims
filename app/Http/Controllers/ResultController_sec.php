@@ -32,7 +32,8 @@ use Svg\Tag\Rect;
 
 class ResultController_sec extends Controller
 {
-    public function index(){
+    public function index()
+    {
 
         $classlist_sec = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
         $studentdetails = Addstudent_sec::where('usernamesystem', Auth::user()->id)->first();
@@ -40,13 +41,14 @@ class ResultController_sec extends Controller
         return view('secondary.result_sec', compact('schooldetails', 'classlist_sec', 'studentdetails'));
     }
 
-    public function viewResult(Request $request){
+    public function viewResult(Request $request)
+    {
 
         $validatedData = $request->validate([
             'selectedclassmarks' => 'required',
             'selectedtermmarks' => 'required',
             'studentRegnomarks' => 'required',
-            'schoolsession'=>'required'
+            'schoolsession' => 'required'
         ]);
 
         $studentclass = $request->input('selectedclassmarks');
@@ -58,11 +60,11 @@ class ResultController_sec extends Controller
         $request->session()->put('term', $term);
         $request->session()->put('studentregno', $studentregno);
         $request->session()->put('schoolsession', $schoolsession);
-        
+
         $addpost = Addpost::where('id', Auth::user()->schoolid)->get();
 
         $allDetails = array(
-            'addpost'=>$addpost
+            'addpost' => $addpost
         );
 
         return view('secondary.result_view_sec')->with('allDetails', $allDetails);
@@ -76,10 +78,10 @@ class ResultController_sec extends Controller
             'classid' => 'required',
             'term' => 'required',
             'student_reg_no' => 'required',
-            'session'=>'required'
+            'session' => 'required'
         ]);
 
-        
+
 
 
         try {
@@ -87,35 +89,40 @@ class ResultController_sec extends Controller
             $term = $request->input('term');
             $regNo = $request->input('student_reg_no');
             $schoolsession = $request->input('session');
-    
+
             $checkclasstype = Classlist_sec::find($classid);
-    
+
             $studentdetails = Addstudent_sec::find($regNo);
-    
+
             $addschool = Addpost::find(Auth::user()->schoolid);
 
-            $resultMain = ResultSubjectsModel::where(['result_subjects_models.term'=>$term, 'result_subjects_models.studentregno'=>$regNo, 'result_subjects_models.session'=>$schoolsession])->get();
+            $resultMain = ResultSubjectsModel::where(['result_subjects_models.term' => $term, 'result_subjects_models.studentregno' => $regNo, 'result_subjects_models.session' => $schoolsession])->get();
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
+            $subAssessmentExams = SubAssesmentModel::where(['schoolid' => Auth::user()->schoolid, 'ca_tag' => 'exam'])->get();
 
-            $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+            $subAssessmentTest = SubAssesmentModel::where(['schoolid' => Auth::user()->schoolid, 'ca_tag' => 'test'])->get();
 
-            $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
+            $subAssessmentAss = SubAssesmentModel::where(['schoolid' => Auth::user()->schoolid, 'ca_tag' => 'ass'])->get();
+
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+
+            $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+
+            $motolistskills = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'skills'])->get();
 
             $studentClass = Classlist_sec::find($classid);
 
-            $computedAverage = ComputedAverages::where(['session'=>$schoolsession, 'regno'=>$regNo, 'term'=>$term])->first();
+            $computedAverage = ComputedAverages::where(['session' => $schoolsession, 'regno' => $regNo, 'term' => $term])->first();
 
-            $comment = CommentsModel::where(['reg_no'=>$regNo, 'session'=>$schoolsession, 'term'=>$term, 'classid'=>$classid])->first();
-            
 
-            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage', 'comment'));
+            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage', 'subAssessmentExams', 'subAssessmentTest', 'subAssessmentAss'));
 
             //get subject list
-            $getSubjectList = CLassSubjects::where(['classid'=> $classid, 'sectionid'=>$studentdetails->studentsection, 'subjecttype'=>2])->pluck('subjectid')->toArray();
-            $getStudentElective = ElectiveAdd::where(['regno'=>$regNo, 'classid'=>$classid, 'sectionid'=>$studentdetails->studentsection])->pluck('subjectid')->toArray(); // get all student's elective subjects
+            $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();
+            $getStudentElective = ElectiveAdd::where(['regno' => $regNo, 'classid' => $classid, 'sectionid' => $studentdetails->studentsection])->pluck('subjectid')->toArray(); // get all student's elective subjects
 
 
             $subject = array();
@@ -123,15 +130,15 @@ class ResultController_sec extends Controller
             $subjectSum  = array_merge($getSubjectList, $getStudentElective);
 
 
-            for ($i=0; $i < count($subjectSum); $i++) { 
+            for ($i = 0; $i < count($subjectSum); $i++) {
 
-              $addmarksCheck = Addsubject_sec::find($subjectSum[$i]);
+                $addmarksCheck = Addsubject_sec::find($subjectSum[$i]);
 
                 // if (count($addmarksCheck) > 0) {
 
                 //     if ((int)$addmarksCheck[0]->totalmarks > 0) {
                 //         $getSingleSubject = Addsubject_sec::find($subjectSum[$i]);
-                        
+
                 //     }
                 // }
                 array_push($subject, $addmarksCheck);
@@ -139,41 +146,36 @@ class ResultController_sec extends Controller
 
             $subjects = collect($subject);
 
-            $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+            $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
-            $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
-    
-            $resultAverage = ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();
+            $motolistskills = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'skills'])->get();
 
-    
+            $resultAverage = ResultAverage::where(["regno" => $regNo, "schoolid" => Auth::user()->schoolid, "classid" => $classid, "term" => $term, "session" => $schoolsession])->first();
+
+
             $studentClass = Classlist_sec::find($classid);
 
             if ($addschool->schooltype == "Primary") {
-                
+
                 return view('secondary.result.viewresult.singleprimary', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
+            } else {
 
-            }else{
 
-                
 
                 if ($checkclasstype->classtype == 1) {
 
                     $assessments = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
-    
+
                     return view('secondary.result.viewresult.singlejunior', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass', 'assessments'));
                 } else {
                     return view('secondary.result.viewresult.singleresult', compact('studentdetails', 'addschool', 'schoolsession', 'term', 'subjects', 'motolistbeha', 'motolistskills', 'resultAverage', 'studentClass'));
                 }
-
             }
-    
-
         } catch (\Throwable $th) {
             //throw $th;
 
             return $th;
         }
-
     }
 
     public function result_by_class()
@@ -189,18 +191,18 @@ class ResultController_sec extends Controller
         $section = $request->section;
         $session = $request->session;
 
-        $entirestudent = Addstudent_sec::where(['classid'=>$request->classid, "studentsection"=>$request->section, "schoolsession"=>$request->session])->get();
+        $entirestudent = Addstudent_sec::where(['classid' => $request->classid, "studentsection" => $request->section, "schoolsession" => $request->session])->get();
 
         return view('secondary.result.viewentireclass', compact('entirestudent', 'term', 'section', 'session'));
     }
 
     public function generateResult()
     {
-       $classlist = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
+        $classlist = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
 
-       $schoolDetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
-        $checkRecord = ResultAverage::where(['session'=>$schoolDetails->schoolsession, 'term'=>$schoolDetails->term, 'schoolid'=>Auth::user()->schoolid])->pluck('classid')->toArray();
+        $checkRecord = ResultAverage::where(['session' => $schoolDetails->schoolsession, 'term' => $schoolDetails->term, 'schoolid' => Auth::user()->schoolid])->pluck('classid')->toArray();
 
         // return view('secondary.adminside.result.generateresult', compact('classlist', 'checkRecord'));
 
@@ -215,27 +217,26 @@ class ResultController_sec extends Controller
         //--------------------------------------------------------------------------------
 
         try {
-           $resultAverage = $resultAverageProcess->processResultAverage($request);
+            $resultAverage = $resultAverageProcess->processResultAverage($request);
 
-        //    return $resultAverage;
+            //    return $resultAverage;
 
 
             if ($resultAverage == "success") {
-                
+
 
                 // return response()->json(['response'=>$resultAverage], 200);
-                
+
                 $process_class_average = $processClassAverage->processresult($request);
-    
-                return response()->json(['response'=>''], 200);
-            }else{
-                return response()->json(['response'=>''], 403);
+
+                return response()->json(['response' => ''], 200);
+            } else {
+                return response()->json(['response' => ''], 403);
             }
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['response'=>$th], 400);
+            return response()->json(['response' => $th], 400);
         }
-
     }
 
     public function get_result_ready_section()
@@ -244,13 +245,12 @@ class ResultController_sec extends Controller
 
             $term = Addpost::find(Auth::user()->schoolid);
 
-            $getReadyResults = ResultReadyModel::join('classlist_secs', 'classlist_secs.id','=','result_ready_models.classid')
-                            ->join('addsection_secs', 'addsection_secs.id','=','result_ready_models.sectionid')
-                            ->where(['result_ready_models.schoolid'=> Auth::user()->schoolid, 'result_ready_models.term'=>$term->term])
-                            ->select('result_ready_models.*', 'classlist_secs.classname', 'classlist_secs.id as classid', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')->get();
+            $getReadyResults = ResultReadyModel::join('classlist_secs', 'classlist_secs.id', '=', 'result_ready_models.classid')
+                ->join('addsection_secs', 'addsection_secs.id', '=', 'result_ready_models.sectionid')
+                ->where(['result_ready_models.schoolid' => Auth::user()->schoolid, 'result_ready_models.term' => $term->term])
+                ->select('result_ready_models.*', 'classlist_secs.classname', 'classlist_secs.id as classid', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid')->get();
 
             return response()->json(['getReadyResults' => $getReadyResults]);
-
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['getReadyResults' => $th]);
@@ -260,9 +260,9 @@ class ResultController_sec extends Controller
     public function loadHtmlDoc(Request $request)
     {
 
-        $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+        $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
-        $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
+        $motolistskills = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'skills'])->get();
 
         $addschool = Addpost::find(Auth::user()->schoolid);
 
@@ -275,7 +275,7 @@ class ResultController_sec extends Controller
 
         // $pdfOptions = new Options();
         // $pdfOptions->set('defaultFont', 'Arial');
-  
+
         // $dompdf = new Dompdf($pdfOptions);
 
         // // Retrieve the HTML generated in our twig file
@@ -284,7 +284,7 @@ class ResultController_sec extends Controller
         // ]);
 
         // $dompdf->loadHtml($html);
-        
+
         // // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
         // $dompdf->setPaper('A4', 'portrait');
 
@@ -296,7 +296,7 @@ class ResultController_sec extends Controller
         //     "Attachment" => false
         // ]);
 
-        
+
 
     }
 
@@ -316,34 +316,26 @@ class ResultController_sec extends Controller
         $classtype = Classlist_sec::find($classid)->classtype;
 
         //get studentlist for same class and section
-        $studentList = Addstudent_sec::where(['classid'=>$request->classid, 'studentsection'=>$request->section, 'schoolsession'=>$request->session])->pluck('id')->toArray();
+        $studentList = Addstudent_sec::where(['classid' => $request->classid, 'studentsection' => $request->section, 'schoolsession' => $request->session])->pluck('id')->toArray();
 
         // return $studentList;
-        $studentInClass = Addstudent_sec::where(['classid'=> $classid, 'studentsection'=>$section])->get();
+        $studentInClass = Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->get();
 
-        $motolistbeha = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+        $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
-        $motolistskills = MotoList::where(['schoolid'=> Auth::user()->schoolid, 'category' => 'skills'])->get();
+        $motolistskills = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'skills'])->get();
 
-        $resultAverage = ResultAverage::where(["regno"=>$regNo, "schoolid"=>Auth::user()->schoolid, "classid"=>$classid, "term"=>$term, "session"=>$schoolsession])->first();
+        $resultAverage = ResultAverage::where(["regno" => $regNo, "schoolid" => Auth::user()->schoolid, "classid" => $classid, "term" => $term, "session" => $schoolsession])->first();
 
         if ($addschool->schooltype == "Primary") {
             return view('secondary.result.viewresult.resultlistpri', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool', 'term', 'schoolsession', 'classid', 'section', 'classtype'));
-        }else{
+        } else {
 
             if ($classtype == "1") {
                 return view('secondary.result.viewresult.resulttest', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool', 'term', 'schoolsession', 'classid', 'section', 'classtype'));
-            }else{
+            } else {
                 return view('secondary.result.viewresult.resultseniorsec', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool', 'term', 'schoolsession', 'classid', 'section', 'classtype'));
             }
-
-            
         }
-
-        
     }
-
-
-
-
 }

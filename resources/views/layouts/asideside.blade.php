@@ -252,60 +252,62 @@
 
                   {{-- ------------------------------------------------------------------------------- --}}
 
-                  @can('add students')
-                      <li class="nav-item has-treeview">
-                          <a id="studentsmain" href="#" class="nav-link">
-                              <i class="nav-icon fas fa-user-graduate"></i>
-                              <p>
-                                  Student
-                                  <i class="right fas fa-angle-left"></i>
-                              </p>
-                          </a>
-                          <ul class="nav nav-treeview"
-                              style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
-                              @can('student attendance')
-                                  <li class="nav-item has-treeview">
-                                      <a id="studentattendanceaside" href="#" class="nav-link">
-                                          <i class="nav-icon fas fa-clock"></i>
-                                          <p>
-                                              Student Attendance
-                                              <i class="right fas fa-angle-left"></i>
-                                          </p>
-                                      </a>
-                                      <ul class="nav nav-treeview"
-                                          style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
-                                          <li class="nav-item">
-                                              <a id="addstudentattendanceaside" href="{{ route('studentattendance') }}"
-                                                  class="nav-link">
-                                                  <i class="nav-icon fas fa-plus"></i>
-                                                  <p>Add</p>
-                                              </a>
-                                          </li>
-                                          <li class="nav-item">
-                                              <a id="viewstudentattendance" href="{{ route('viewallstudents') }}"
-                                                  class="nav-link">
-                                                  <i class="nav-icon fas fa-clipboard-list"></i>
-                                                  <p>View</p>
-                                              </a>
-                                          </li>
-                                      </ul>
-                                  </li>
-                              @endcan
-                              <li class="nav-item">
-                                  <a id="studentsmainadd" href="{{ route('addstudent') }}" class="nav-link">
-                                      <i class="nav-icon fas fa-plus"></i>
-                                      <p>Add New</p>
-                                  </a>
-                              </li>
-                              <li class="nav-item">
-                                  <a id="viewstudentaside" href="{{ route('viewstudent') }}" class="nav-link">
-                                      <i class="nav-icon fas fa-clipboard-list"></i>
-                                      <p>Student list</p>
-                                  </a>
-                              </li>
-                          </ul>
-                      </li>
-                  @endcan
+        @can('add students')
+        <li class="nav-item has-treeview">
+          <a id="studentsmain" href="#" class="nav-link">
+            <i class="nav-icon fas fa-user-graduate"></i>
+            <p>
+              Student
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
+            @can('student attendance')
+            <li class="nav-item has-treeview">
+              <a id="studentattendanceaside" href="#" class="nav-link">
+                <i class="nav-icon fas fa-clock"></i>
+                <p>
+                  Student Attendance
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview" style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
+                <li class="nav-item">
+                  <a id="addstudentattendanceaside" href="{{ route('studentattendance') }}" class="nav-link">
+                    <i class="nav-icon fas fa-plus"></i>
+                    <p>Add</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a id="viewstudentattendance" href="{{ route('viewallstudents') }}" class="nav-link">
+                    <i class="nav-icon fas fa-clipboard-list"></i>
+                    <p>View</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a id="studentsmainview" href="{{ route('reasign_class') }}" class="nav-link">
+                    <i class="fa fa-tasks nav-icon"></i>
+                    <p>Reassign Class</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            @endcan
+            <li class="nav-item">
+              <a id="studentsmainadd" href="{{ route('addstudent') }}" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="viewstudentaside" href="{{ route('viewstudent') }}" class="nav-link">
+                <i class="nav-icon fas fa-clipboard-list"></i>
+                <p>Student list</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        @endcan
 
                   @if (Auth::user()->hasRole('Teacher'))
                       {{-- <li class="nav-item has-treeview">
@@ -316,68 +318,80 @@
         </p>
         </a>
         </li> --}}
+        <li class="nav-item">
+          <a id="markmanageoption" href="{{ route('teacher_sec_remark') }}" class="nav-link">
+            <i class="far fa-comment-alt nav-icon"></i>
+            <p>
+              Result Remark
+            </p>
+          </a>
+        </li>
+        <li class="nav-item has-treeview">
+          <a id="viewmarks" href="#" class="nav-link">
+            <i class="nav-icon fas fa-check-double"></i>
+            <p>
+              Mark Manage
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
+            <li class="nav-item">
+              <a id="viewmarksadd" href="/managemarks" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Add New</p>
+              </a>
+            </li>
 
-                      <li class="nav-item">
-                          <a id="markmanageoption" href="{{ route('teacher_sec_remark') }}" class="nav-link">
-                              <i class="far fa-comment-alt nav-icon"></i>
-                              <p>
-                                  Result Remark
-                              </p>
-                          </a>
-                      </li>
-                      @can('form teacher')
-                          <li class="nav-item has-treeview">
-                              <a id="formmasteroption" href="#" class="nav-link">
-                                  <i class="nav-icon fas fa-user-tie"></i>
-                                  <p>
-                                      Form Master
-                                      <i class="right fas fa-angle-left"></i>
-                                  </p>
-                              </a>
-                              <ul class="nav nav-treeview"
-                                  style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
-                                  @can('form teacher')
-                                      <li class="nav-item">
-                                          <a id="formmasteroption" href="{{ route('form_teacher_multiple') }}"
-                                              class="nav-link">
-                                              <i class="fas fa-school nav-icon"></i>
-                                              <p>
-                                                  Manage Classes
-                                              </p>
-                                          </a>
-                                      </li>
-                                  @endcan
-                                  @can('form teacher')
-                                      <li class="nav-item has-treeview">
-                                          <a id="studentattendanceaside" href="#" class="nav-link">
-                                              <i class="nav-icon fas fa-clock"></i>
-                                              <p>
-                                                  Student Attendance
-                                                  <i class="right fas fa-angle-left"></i>
-                                              </p>
-                                          </a>
-                                          <ul class="nav nav-treeview"
-                                              style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
-                                              <li class="nav-item">
-                                                  <a id="addstudentattendanceaside" href="{{ route('studentattendance') }}"
-                                                      class="nav-link">
-                                                      <i class="nav-icon fas fa-plus"></i>
-                                                      <p>Add</p>
-                                                  </a>
-                                              </li>
-                                              <li class="nav-item">
-                                                  <a id="viewstudentattendance" href="{{ route('viewallstudents') }}"
-                                                      class="nav-link">
-                                                      <i class="nav-icon fas fa-clipboard-list"></i>
-                                                      <p>View</p>
-                                                  </a>
-                                              </li>
-                                          </ul>
-                                      </li>
-                                  @endcan
-                              </ul>
-                          </li>
-                      @endcan
+          </ul>
+        </li>
+        @can('form teacher')
+        <li class="nav-item has-treeview">
+          <a id="formmasteroption" href="#" class="nav-link">
+            <i class="nav-icon fas fa-user-tie"></i>
+            <p>
+              Form Master
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
+            @can('form teacher')
+            <li class="nav-item">
+              <a id="formmasteroption" href="{{ route('form_teacher_multiple') }}" class="nav-link">
+                <i class="fas fa-school nav-icon"></i>
+                <p>
+                  Manage Classes
+                </p>
+              </a>
+            </li>
+            @endcan
+            @can('form teacher')
+            <li class="nav-item has-treeview">
+              <a id="studentattendanceaside" href="#" class="nav-link">
+                <i class="nav-icon fas fa-clock"></i>
+                <p>
+                  Student Attendance
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview" style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
+                <li class="nav-item">
+                  <a id="addstudentattendanceaside" href="{{ route('studentattendance') }}" class="nav-link">
+                    <i class="nav-icon fas fa-plus"></i>
+                    <p>Add</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a id="viewstudentattendance" href="{{ route('viewallstudents') }}" class="nav-link">
+                    <i class="nav-icon fas fa-clipboard-list"></i>
+                    <p>View</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            @endcan
+          </ul>
+        </li>
+        @endcan
 
                       @can('form teacher')
                           <li class="nav-item">
@@ -412,8 +426,8 @@
           </a>
 
         </li>
-        @endcan --}}
-                      {{-- @can('form teacher')
+        @endcan
+        @can('form teacher')
         <li class=" nav-item has-treeview">
           <a id="psyhcomoto" href="#" class="nav-link">
             <i class="nav-icon fas fa-cogs"></i>
@@ -441,8 +455,8 @@
             @endcan
           </ul>
         </li>
-        @endcan --}}
-                  @endif
+        @endcan
+        @endif
 
                   @can('manage staff')
                       <li class="nav-item has-treeview">
@@ -619,14 +633,15 @@
                 <p>Admin Comment</p>
               </a>
             </li> --}}
-                              @can('setup comment')
-                                  <li class="nav-item">
-                                      <a id="commentsetup" href="{{ route('setupcomment') }}" class="nav-link">
-                                          <i class="far fa-circle nav-icon"></i>
-                                          <p>SetUp Comments</p>
-                                      </a>
-                                  </li>
-                              @endcan
+            <li class="nav-item">
+              <a id="commentsetup" href="{{ route('setupcomment') }}" class="nav-link">
+                <i class="far fa-comment-alt nav-icon"></i>
+                <p>SetUp Comments</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        @endcan
 
                           </ul>
                       </li>
@@ -658,56 +673,56 @@
               </a>
             </li> --}}
 
-                  @can('settings')
-                      <li class="nav-item has-treeview">
-                          <a id="settingsaside" href="#" class="nav-link">
-                              <i class="nav-icon fas fa-wrench"></i>
-                              <p>
-                                  Settings
-                                  <i class="right fas fa-angle-left"></i>
-                              </p>
-                          </a>
-                          <ul class="nav nav-treeview"
-                              style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
-                              <li class="nav-item">
-                                  <a id="gradesaside" href="{{ route('grades_sec') }}" class="nav-link">
-                                      <i class="nav-icon fas fa-graduation-cap"></i>
-                                      <p>Grade</p>
-                                  </a>
-                              </li>
-                              <li class="nav-item">
-                                  <a id="usersaside" href="{{ route('allusers_sec') }}" class="nav-link">
-                                      <i class="nav-icon fas fa-users"></i>
-                                      <p>Users</p>
-                                  </a>
-                              </li>
-                              <li class="nav-item">
-                                  <a id="schoolsetupaside" href="{{ route('setupschool') }}" class="nav-link">
-                                      <i class="nav-icon fas fa-university"></i>
-                                      <p>Set Up Shool</p>
-                                  </a>
-                              </li>
-                              <li class="nav-item">
-                                  <a id="schoolsetupaside" href="{{ route('payment_details') }}" class="nav-link">
-                                      <i class="nav-icon fas fa-credit-card"></i>
-                                      <p>Payment Details</p>
-                                  </a>
-                              </li>
-                              <li class="nav-item">
-                                  <a id="institutionaside" href="/addschool" class="nav-link">
-                                      <i class="nav-icon fa fa-building"></i>
-                                      <p>Institute</p>
-                                  </a>
-                              </li>
-                              <li class="nav-item">
-                                  <a id="institutionaside" href="/sub_index" class="nav-link">
-                                      <i class="nav-icon fas fa-rocket"></i>
-                                      <p>Subscription</p>
-                                  </a>
-                              </li>
-                          </ul>
-                      </li>
-                  @endcan
+
+        @can('settings')
+        <li class="nav-item has-treeview">
+          <a id="settingsaside" href="#" class="nav-link">
+            <i class="nav-icon fas fa-wrench"></i>
+            <p>
+              Settings
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
+            <li class="nav-item">
+              <a id="gradesaside" href="{{ route('grades_sec') }}" class="nav-link">
+                <i class="nav-icon fas fa-graduation-cap"></i>
+                <p>Grade</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="usersaside" href="{{ route('allusers_sec') }}" class="nav-link">
+                <i class="nav-icon fas fa-users"></i>
+                <p>Users</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="schoolsetupaside" href="{{ route('setupschool') }}" class="nav-link">
+                <i class="nav-icon fas fa-university"></i>
+                <p>Set up Shool</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="schoolsetupaside" href="{{ route('payment_details') }}" class="nav-link">
+                <i class="nav-icon fas fa-credit-card"></i>
+                <p>Payment Details</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="institutionaside" href="/addschool" class="nav-link">
+                <i class="nav-icon fa fa-building"></i>
+                <p>Institute</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="institutionaside" href="/sub_index" class="nav-link">
+                <i class="nav-icon fas fa-rocket"></i>
+                <p>Subscription</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        @endcan
 
 
 

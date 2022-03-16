@@ -20,7 +20,7 @@ class MotoController_sec extends Controller
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('features.psycomotor.motoreact', compact('schooldetails'));
+        return view('secondary.psycomotor.motoreact', compact('schooldetails'));
     }
 
     public function settingsmoto()
@@ -109,10 +109,10 @@ class MotoController_sec extends Controller
         $addmoto = MotoList::where('schoolid', Auth::user()->schoolid)->get();
         $student = Addstudent_sec::where('usernamesystem', $id)->first();
 
-        return view('features.psycomotor.addmoto', compact('addmoto', 'student'));
+        return view('secondary.psycomotor.addmoto', compact('addmoto', 'student'));
     }
 
-    public function addmotoMain(Request $request)
+    public function addmotomain(Request $request)
     {
 
         // return $request->input();
@@ -127,65 +127,29 @@ class MotoController_sec extends Controller
 
                 $getMotoList = AddMoto_sec::where(['schoolid' => Auth::user()->schoolid, 'student_id' => $getuserid, 'session' => $getschoolData->schoolsession, 'term' => $getschoolData->term])->pluck('moto_id')->toArray();
 
-
-                AddMoto_sec::where(['schoolid' => Auth::user()->schoolid, 'student_id' => $getuserid, 'session' => $getschoolData->schoolsession, 'term' => $getschoolData->term])->delete();
-
                 for ($i = 0; $i < count($request->input()); $i++) {
 
-                    // if (!in_array($request[$i]['moto_id'], $getMotoList)) {
+                    if (!in_array($request[$i]['moto_id'], $getMotoList)) {
 
 
-                    try {
-                        // $addmoto = AddMoto_sec::Create(
-                        // ["moto_id"=>$request[$i]['moto_id'],
-                        // "student_id"=>$request[$i]['userId'],
-                        // "schoolid"=>Auth::user()->schoolid,
-                        // "session"=>$getschoolData->schoolsession,
-                        // "term"=>$getschoolData->term],
-
-                        // ["moto_id"=>$request[$i]['moto_id'], 
-                        // "moto_score"=>$request[$i]['valueSelected'],
-                        // "student_id"=>$request[$i]['userId'],
-                        // "schoolid"=>Auth::user()->schoolid,
-                        // "session"=>$getschoolData->schoolsession,
-                        // "term"=>$getschoolData->term]);
-                        $addmoto = new AddMoto_sec();
-                        $addmoto->moto_id = $request[$i]['moto_id'];
-                        $addmoto->moto_score = $request[$i]['valueSelected'];
-                        $addmoto->student_id = $request[$i]['userId'];
-                        $addmoto->schoolid = Auth::user()->schoolid;
-                        $addmoto->session = $getschoolData->schoolsession;
-                        $addmoto->term = $getschoolData->term;
-                        $addmoto->save();
-                    } catch (\Throwable $th) {
-                        //throw $th;
-                        return response()->json(['response' => $th]);
+                        $addmoto = AddMoto_sec::updateOrCreate(
+                            [
+                                "moto_id" => $request[$i]['moto_id'],
+                                "student_id" => $request[$i]['userId'],
+                                "schoolid" => Auth::user()->schoolid,
+                                "session" => $getschoolData->schoolsession,
+                                "term" => $getschoolData->term
+                            ],
+                            [
+                                "moto_id" => $request[$i]['moto_id'],
+                                "moto_score" => $request[$i]['valueSelected'],
+                                "student_id" => $request[$i]['userId'],
+                                "schoolid" => Auth::user()->schoolid,
+                                "session" => $getschoolData->schoolsession,
+                                "term" => $getschoolData->term
+                            ]
+                        );
                     }
-
-                    // $checkMoto = AddMoto_sec::where(['moto_id'=>$request[$i]['moto_id'], 'student_id'=>$request[$i]['userId'], 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->first();
-
-                    // if($checkMoto == null){
-
-                    //     $addmoto = new AddMoto_sec();
-                    //     $addmoto->moto_id = $request[$i]['moto_id'];
-                    //     $addmoto->moto_score = $request[$i]['valueSelected'];
-                    //     $addmoto->student_id = $request[$i]['userId'];
-                    //     $addmoto->schoolid = Auth::user()->schoolid;
-                    //     $addmoto->session = $getschoolData->schoolsession;
-                    //     $addmoto->term = $getschoolData->term;
-                    //     $addmoto->save();
-
-                    // }else{
-
-                    //     return response()->json(['response'=>"success", 'data'=>$checkMoto]);
-
-                    //     $checkMoto->moto_score = $request[$i]['valueSelected'];
-                    //     $checkMoto->save();
-
-                    // }
-
-                    // }
-
                 }
 
                 return response()->json(['response' => "success"]);

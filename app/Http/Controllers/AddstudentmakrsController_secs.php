@@ -261,31 +261,10 @@ class AddstudentmakrsController_secs extends Controller
     public function fetchsubassessment($studentid, $subjectid)
     {
         try {
-            // $subassessment = SubAssesmentModel::where(['status'=>1, 'catid'=>$id])->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+            $subassessment = SubAssesmentModel::where(['status' => 1, 'catid' => $id])->get();
 
-
-            //array of subject and data
-            $arrayOfStudentSubjectAndData = array();
-
-            for ($i = 0; $i < count($assessment); $i++) {
-
-                $schooldetails = Addpost::find(Auth::user()->schoolid);
-
-                $subAssessment = SubAssesmentModel::leftJoin('record_marks', function ($leftJoin) use ($studentid, $schooldetails, $subjectid) {
-                    $leftJoin->on('record_marks.subassessment_id', '=', 'sub_assesment_models.id')
-                        ->where(['record_marks.student_id' => $studentid, 'record_marks.term' => $schooldetails->term, 'record_marks.session' => $schooldetails->schoolsession, 'record_marks.subjectid' => $subjectid]);
-                })
-                    ->select('sub_assesment_models.*', 'record_marks.scrores')
-                    ->where(['status' => 1, 'catid' => $assessment[$i]->id])->get();
-
-                $age = array("assessment" => $assessment[$i], "subassessment" => $subAssessment);
-
-                array_push($arrayOfStudentSubjectAndData, $age);
-            }
-
-            return response()->json(['subassessment' => $arrayOfStudentSubjectAndData]);
+            return response()->json(['subassessment' => $subassessment]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['msg' => $th]);
@@ -571,18 +550,6 @@ class AddstudentmakrsController_secs extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return $th;
-        }
-    }
-
-    public function deleteStudentScore($id)
-    {
-        try {
-            $deleteScore = RecordMarks::find($id);
-            $deleteScore->delete();
-            return response()->json(['response' => "Process was successful", 'code' => 200], 200);
-        } catch (\Throwable $th) {
-            //throw $th;
-            return response()->json(['response' => $th, 'code' => 400], 400);
         }
     }
 }
