@@ -31,7 +31,7 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-
+        @include('layouts.message')
 
         <div class="card" style="border-top: 2px solid #0B887C;">
           <form action="{{ route('submitgrades_sec') }}" method="POST">
@@ -44,10 +44,12 @@
                       <i style="font-size: 10px;">Grade Type</i>
                       <select name="type" class="form-control form-control-sm" id="">
                         <option value="">Select a school type</option>
-                        <option value="0">Primary School</option>
+                        
                         @if ($schooldetails->schooltype == "Secondary")
                         <option value="1">Junior Secondary</option>
                         <option value="2">Senior Secondary</option>
+                        @else
+                        <option value="0">Primary School</option>
                         @endif
 
                       </select>
