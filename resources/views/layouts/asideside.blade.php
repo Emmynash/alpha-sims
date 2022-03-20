@@ -394,7 +394,7 @@
 
         </li>
         @endcan --}}
-        {{-- @can('form teacher')
+        @can('form teacher')
         <li class=" nav-item has-treeview">
           <a id="psyhcomoto" href="#" class="nav-link">
             <i class="nav-icon fas fa-cogs"></i>
@@ -407,23 +407,23 @@
             @can('add psychomotor')
             <li class="nav-item">
               <a id="psyhcomotoadd" href="{{ route('student_moto') }}" class="nav-link">
-        <i class="nav-icon fas fa-plus"></i>
-        <p>add</p>
-        </a>
-        </li>
-        @endcan
-        @can('add moto settings')
-        <li class="nav-item">
-          <a id="psyhcomotosettings" href="{{ route('setting_moto') }}" class="nav-link">
-            <i class=" nav-icon fas fa-cog"></i>
-            <p>set psychomotor</p>
-          </a>
-        </li>
-        @endcan
+                <i class="nav-icon fas fa-plus"></i>
+                <p>add</p>
+              </a>
+            </li>
+            @endcan
+            @can('add moto settings')
+            <li class="nav-item">
+              <a id="psyhcomotosettings" href="{{ route('setting_moto') }}" class="nav-link">
+                <i class=" nav-icon fas fa-cog"></i>
+                <p>set psychomotor</p>
+              </a>
+            </li>
+            @endcan
 
-        </ul>
+          </ul>
         </li>
-        @endcan --}}
+        @endcan
         @endif
 
         @can('manage staff')
