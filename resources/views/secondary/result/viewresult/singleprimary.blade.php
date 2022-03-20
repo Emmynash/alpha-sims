@@ -114,7 +114,7 @@
                                             </i></td>
                                     </tr>
                                     <tr>
-                                        <td><i style="font-size: 14px; font-style: normal;">Addmission No:</i></td>
+                                        <td><i style="font-size: 14px; font-style: normal;">Admission No:</i></td>
                                         <td><i id="regno" style="font-size: 14px; font-style: normal; font-weight: bold;">{{ $studentdetails->admission_no }}</i></td>
                                     </tr>
                                     <tr>
@@ -141,13 +141,13 @@
                                     <th style="font-size: 14px;">SUBJECTS</th>
                                     @foreach ($assessment as $item)
                                     @if( $item->name === "Assignment" && $item->getAssessment($item->id) <= 1) <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}"><i style="margin: 0px; padding: 5px; font-size: 14px;">Ass</i></th>
-                                        @endif
-                                        <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}"><i style="margin: 0px; padding: 5px; font-size: 14px;">{{$item->name}}</i></th>
-                                        @endforeach
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
+                                    @endif
+                                    <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}"><i style="margin: 0px; padding: 5px; font-size: 14px;">{{$item->name}}</i></th>
+                                    @endforeach
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
                                 </tr>
                             </thead>
                             <tbody id="resultprinttable">
@@ -171,9 +171,6 @@
                                     </td>
                                     @endforeach
                                     @endforeach
-                                    <td class='text-center thdesign' style='font-size: 14px;'>
-                                        <center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->total }}</center>
-                                    </td>
                                     <td class='text-center thdesign' style='font-size: 14px;'>
                                         <center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->total }}</center>
                                     </td>
