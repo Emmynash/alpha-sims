@@ -567,7 +567,7 @@
 
 
 
-                  @can('result module')
+                  {{-- @can('result module') --}}
                       <li class="nav-item has-treeview">
                           <a id="resultaside" href="#" class="nav-link">
                               <i class="nav-icon fas fa-list-alt"></i>
@@ -629,7 +629,7 @@
 
                           </ul>
                       </li>
-                  @endcan
+                  {{-- @endcan --}}
 
                   @can('student promotion')
                       <li class="nav-item has-treeview">
