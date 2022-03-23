@@ -553,7 +553,7 @@
           <ul class="nav nav-treeview" style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
 
             @can('manage marks')
-            <li class="nav-item has-treeview">
+            <li class="nav-item">
               <a id="managemarkscroll" href="{{ route('managemarks') }}" class="nav-link">
                 <i class="nav-icon fas fa-check-double"></i>
                 <p>
@@ -563,24 +563,19 @@
             </li>
             @endcan
 
-            @can('view student result')
             <li class="nav-item">
               <a id="resultmaingenscroll" href="{{ route('result_by_class') }}" class="nav-link">
                 <i class="far fa-eye nav-icon"></i>
                 <p>Result By Class</p>
               </a>
             </li>
-            @endcan
 
-            @can('generate student result')
             <li class="nav-item">
               <a id="resultmaingenscrollgenerate" href="{{ route('generate_result') }}" class="nav-link">
                 <i class="fa fa-print nav-icon"></i>
                 <p>Generate</p>
               </a>
             </li>
-            @endcan
-
             {{-- <li class="nav-item">
               <a href="" class="nav-link">
                   <i class="fas fa-clipboard-list nav-icon"></i> 
@@ -588,14 +583,12 @@
               </a>
             </li> --}}
 
-            @can('setup comment')
             <li class="nav-item">
               <a id="commentsetup" href="{{ route('setupcomment') }}" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="far fa-comment-alt nav-icon"></i>
                 <p>SetUp Comments</p>
               </a>
             </li>
-            @endcan
 
           </ul>
         </li>
