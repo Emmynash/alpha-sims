@@ -12,15 +12,23 @@
     <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 
+    <style>
+        @media print {
+            #btnPrintback,
+            #btnPrint {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 
-    <div class="card" style="height: 50px; display: flex; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; border-radius: 0px; z-index: 999;">
-        <div style="display: flex; flex-direction: row; padding: 10px;">
-            {{-- <a href="/result_view_sec"><button class="btn btn-sm btn-danger" id="btnPrintback" style="margin-right: 10px;">Back</button></a> --}}
-            <button class="btn btn-sm btn-success" id="btnPrint">Print Result</button>
+    <div class="card" style="height: 35px; display: flex; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; border-radius: 0px; z-index: 999;">
+        <div  style="display: flex; flex-direction: row;">
+            <a href="/sec/result/result_by_class"><button class="btn btn-sm btn-danger" id="btnPrintback" style="margin-right: 10px;">Back</button></a>
+            <button class="btn btn-sm btn-success" id="btnPrint" onclick="window.print();return false">Print Result</button>
         </div>
     </div>
 
@@ -111,7 +119,8 @@
                                                 @else
                                                 <i style="font-style: normal;">NAN</i>
                                                 @endif
-                                            </i></td>
+                                            </i>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Admission No:</i></td>
@@ -140,14 +149,28 @@
                                 <tr>
                                     <th style="font-size: 14px;">SUBJECTS</th>
                                     @foreach ($assessment as $item)
-                                    @if( $item->name === "Assignment" && $item->getAssessment($item->id) <= 1) <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}"><i style="margin: 0px; padding: 5px; font-size: 14px;">Ass</i></th>
-                                    @endif
-                                    <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}"><i style="margin: 0px; padding: 5px; font-size: 14px;">{{$item->name}}</i></th>
-                                    @endforeach
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
+                                    @if( $item->name === "Assignment" && $item->getAssessment($item->id) <= 1) <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
+                                        <i style="margin: 0px; padding: 5px; font-size: 14px;">Ass</i>
+                                        </th>
+                                        @endif
+                                        @if(str_word_count($item->name) > 1)
+                                        <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
+                                            <i style="margin: 0px; padding: 5px; font-size: 14px;">
+                                                {{explode(' ', $item->name)[0] }}
+                                                </br>
+                                                {{explode(' ', $item->name)[1]}}
+                                            </i>
+                                        </th>
+                                        @elseif(str_word_count($item->name) == 1)
+                                        <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
+                                            <i style="margin: 0px; padding: 5px; font-size: 14px;">{{$item->name}}</i>
+                                        </th>
+                                        @endif
+                                        @endforeach
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
                                 </tr>
                             </thead>
                             <tbody id="resultprinttable">
@@ -188,8 +211,8 @@
                     </div>
                     <br>
                     <div style="">
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: {{ $computedAverage == NULL ? "N.A": round($computedAverage->examstotal, 2)}}</i>
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ $computedAverage == NULL ? "N.A": round($computedAverage->studentaverage, 2)}}</i>
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Grand Total: {{ $computedAverage == NULL ? "N.A": round($computedAverage->examstotal, 2)}}</i>
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Class Average: {{ $computedAverage == NULL ? "N.A": round($computedAverage->studentaverage, 2)}}</i>
                     </div>
                     <center>
                         <div class="text-center" style="width: 95%; margin: 10px auto;">
