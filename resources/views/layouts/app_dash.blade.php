@@ -536,68 +536,68 @@
 //                                         moto
 //-----------------------------------------------------------------------------------
 
-        $(function() {
-            $('#psycomotoquerybtn').click(function(e) {
-                e.preventDefault();
-                $("#psycomotoquery").submit();
+        // $(function() {
+        //     $('#psycomotoquerybtn').click(function(e) {
+        //         e.preventDefault();
+        //         $("#psycomotoquery").submit();
 
-                $("#psycomotoqueryform").find("tr:gt(0)").remove();
-                $.ajax({
-                url: '{{ route('fetchstudentdata') }}',
-                type: 'post',
-                dataType: 'json',
-                data: $('form#psycomotoquery').serialize(),
-                success: function(data) {
-                  console.log(data)
+        //         $("#psycomotoqueryform").find("tr:gt(0)").remove();
+        //         $.ajax({
+        //         url: '{{ route('fetchstudentdata') }}',
+        //         type: 'post',
+        //         dataType: 'json',
+        //         data: $('form#psycomotoquery').serialize(),
+        //         success: function(data) {
+        //           console.log(data)
 
-                      if (data.length > 0) {
+        //               if (data.length > 0) {
 
-                        for (let index = 0; index < data[0].length; index++) {
-                          var mainName = data[0][index]['firstname'] +" "+ data[0][index]['middlename'] +" "+ data[0][index]['lastname']
+        //                 for (let index = 0; index < data[0].length; index++) {
+        //                   var mainName = data[0][index]['firstname'] +" "+ data[0][index]['middlename'] +" "+ data[0][index]['lastname']
 
-                        const element = data[0][index];
-                        var tablee = document.getElementById('psycomotoqueryform');
-                        var row = tablee.insertRow(1);
-                        var cell1 = row.insertCell(0);
-                        var cell2 = row.insertCell(1);
-                        var cell3 = row.insertCell(2);
-                        var cell4 = row.insertCell(3);
-                        var cell5 = row.insertCell(4);
-                        cell1.innerHTML = data[0][index]['id'];
-                        cell2.innerHTML = data[0][index]['renumberschoolnew'];
-                        cell3.innerHTML = mainName
-                        cell4.innerHTML = data[0][index]['classnamee'];
+        //                 const element = data[0][index];
+        //                 var tablee = document.getElementById('psycomotoqueryform');
+        //                 var row = tablee.insertRow(1);
+        //                 var cell1 = row.insertCell(0);
+        //                 var cell2 = row.insertCell(1);
+        //                 var cell3 = row.insertCell(2);
+        //                 var cell4 = row.insertCell(3);
+        //                 var cell5 = row.insertCell(4);
+        //                 cell1.innerHTML = data[0][index]['id'];
+        //                 cell2.innerHTML = data[0][index]['renumberschoolnew'];
+        //                 cell3.innerHTML = mainName
+        //                 cell4.innerHTML = data[0][index]['classnamee'];
                         
-                        var motocheck = data[1]
+        //                 var motocheck = data[1]
 
-                        var elementMain = data[0][index]['id']
+        //                 var elementMain = data[0][index]['id']
 
-                        var n = motocheck.includes(elementMain.toString());
+        //                 var n = motocheck.includes(elementMain.toString());
 
-                        var layer_id = $(this).data('id');
-                        var url = '{{ route("addmotomain", ":id") }}';
-                        url = url.replace(':id', data[0][index]['usernamesystem'] );
+        //                 var layer_id = $(this).data('id');
+        //                 var url = '{{ route("addmotomain", ":id") }}';
+        //                 url = url.replace(':id', data[0][index]['usernamesystem'] );
 
-                        if (n) {
-                          cell5.innerHTML = '<button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>'
-                        }else{
-                          cell5.innerHTML = '<a target="_blank" href=\"'+url+'\"><button class="btn btn-sm btn-success" data-toggle="modal" data-target="#motomodal"><i class="fas fa-plus-square"></i></button></a>'
-                        }
+        //                 if (n) {
+        //                   cell5.innerHTML = '<button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>'
+        //                 }else{
+        //                   cell5.innerHTML = '<a target="_blank" href=\"'+url+'\"><button class="btn btn-sm btn-success" data-toggle="modal" data-target="#motomodal"><i class="fas fa-plus-square"></i></button></a>'
+        //                 }
 
 
                         
-                        }
+        //                 }
 
-                      } else{
+        //               } else{
                         
-                      }
-                    },
-                    error:function(errors){
-                      console.log(errors)
-                    }
-                });
-            });
-        });
+        //               }
+        //             },
+        //             error:function(errors){
+        //               console.log(errors)
+        //             }
+        //         });
+        //     });
+        // });
 
         $(function() {
             $('#mainbtnmoto').click(function(e) {

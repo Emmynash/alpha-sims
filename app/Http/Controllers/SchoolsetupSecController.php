@@ -323,7 +323,7 @@ class SchoolsetupSecController extends Controller
 
         $clubs = Addclub_sec::where("schoolid", Auth::user()->schoolid)->get();
 
-        $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->get();
+        $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->orderBy('order', 'asc')->get();
 
         $subasscategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')
                          ->where('sub_assesment_models.schoolid', Auth::user()->schoolid)
@@ -350,7 +350,7 @@ class SchoolsetupSecController extends Controller
                 
                 $addAssessmentCat = AssesmentModel::updateOrCreate(
                     ['name'=>$request->name],
-                    ['name'=>$request->name, 'maxmark'=>$request->maxmarks, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
+                    ['name'=>$request->name, 'maxmark'=>$request->maxmarks, 'order'=>$request->order, 'schoolid'=>Auth::user()->schoolid, 'status'=>true]
                 );
 
                 return response()->json(['response'=>'success', 'code'=>200], 200);
@@ -363,6 +363,37 @@ class SchoolsetupSecController extends Controller
             return response()->json(['response'=>'error'], 402);
         }
 
+    }
+
+    public function updateAssessmentOrder(Request $request)
+    {
+        try {
+            $sourceId = $request->sourceId;
+
+            $destinationId = $request->destinationId;
+
+            $source = '';
+            $destination = '';
+
+            $getSourceAssessment = AssesmentModel::find($sourceId);
+            $source = $getSourceAssessment->order;
+
+            $getDestinationAssessment = AssesmentModel::find($destinationId);
+            $destination = $getDestinationAssessment->order;
+
+            $getSourceAssessment->order = $destination;
+            $getSourceAssessment->save();
+
+            $getDestinationAssessment->order = $source;
+            $getDestinationAssessment->save();
+
+            return response()->json(['response'=>'success']);
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+
+
+        }
     }
 
     public function subAssessmentSetUp(Request $request)
@@ -397,6 +428,14 @@ class SchoolsetupSecController extends Controller
         $comments = CommentTable::where('schoolid', Auth::user()->schoolid)->get();
 
         return view('secondary.comment.commentsetup', compact('schooldetails', 'comments'));
+    }
+
+    public function adminComment()
+    {
+        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $comments = CommentTable::where('schoolid', Auth::user()->schoolid)->get();
+
+        return view('secondary.comment.admincomment', compact('schooldetails', 'comments'));
     }
 
     public function setupNewComment(Request $request)

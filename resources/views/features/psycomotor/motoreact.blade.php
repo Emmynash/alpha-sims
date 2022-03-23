@@ -15,7 +15,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">psychomotor</h1>
+            <h1 class="m-0 text-dark">Psychomotor</h1>
             <button type="button" class="btn btn-sm btn-info" data-toggle="popover-hover" title="Psychomotor"
                 data-content="On this module, you are required to fill out phychomoto for all students in each class. this is required for result generation">Need help?</button>
           </div><!-- /.col -->
@@ -47,7 +47,7 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <script src="{{ asset('js/appmoto.js?v=1') }}"></script>
+  <script src="{{ asset('js/appmoto.js?v=8') }}"></script>
 
   <script>
     function scrollocation(){

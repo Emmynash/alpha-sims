@@ -1,8 +1,8 @@
-@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
+@extends($schoolDetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@if ($schooldetails->schooltype == "Primary")
+@if ($schoolDetails->schooltype == "Primary")
 @include('layouts.asideside') 
 @else
   @include('layouts.aside_sec')
@@ -75,10 +75,10 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @if ($schooldetails->getMoneyRequests->count() > 0)
-                    @php $count = method_exists($schooldetails->getMoneyRequests, 'links') ? 1 : 0; @endphp
-                      @foreach ($schooldetails->getMoneyRequests as $item)
-                      @php $count = method_exists($schooldetails->getMoneyRequests, 'links') ? ($schooldetails->getMoneyRequests ->currentpage()-1) * $schooldetails->getMoneyRequests ->perpage() + $loop->index + 1 : $count + 1; @endphp
+                    @if ($schoolDetails->getMoneyRequests->count() > 0)
+                    @php $count = method_exists($schoolDetails->getMoneyRequests, 'links') ? 1 : 0; @endphp
+                      @foreach ($schoolDetails->getMoneyRequests as $item)
+                      @php $count = method_exists($schoolDetails->getMoneyRequests, 'links') ? ($schoolDetails->getMoneyRequests ->currentpage()-1) * $schoolDetails->getMoneyRequests ->perpage() + $loop->index + 1 : $count + 1; @endphp
                         <tr style="{{ $item->status == "Unattended" ? 'background-color: #E1DCDC;':'' }} {{ $item->status == "accept" ? 'background-color: #56DC83;':'' }} {{ $item->status == "declined" ? 'background-color: #EEA0A8;':'' }} {{ $item->status == "inreview" ? 'background-color: #EEEB87;':'' }}">
                           <td>{{$count}}</td>
                           <td>{{$item->amountrequesting}}</td>

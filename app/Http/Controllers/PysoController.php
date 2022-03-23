@@ -71,13 +71,13 @@ class PysoController extends Controller
         return view('pages.moto.motosettings', compact('motosettings'));
     }
 
-    public function addmotomain($id)
-    {
-        $motosettings = MotoListPri::where('schoolid', Auth::user()->schoolid)->get();
-        $getStudentDetails = User::find($id);
+    // public function addmotomain($id)
+    // {
+    //     $motosettings = MotoListPri::where('schoolid', Auth::user()->schoolid)->get();
+    //     $getStudentDetails = User::find($id);
 
-        return view('pages.moto.addmoto', compact('motosettings', 'getStudentDetails'));
-    }
+    //     return view('pages.moto.addmoto', compact('motosettings', 'getStudentDetails'));
+    // }
 
     public function addmotoPost(Request $request, $id)
     {

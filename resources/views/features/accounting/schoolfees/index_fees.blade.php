@@ -1,8 +1,8 @@
-@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
+@extends($schoolDetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@if ($schooldetails->schooltype == "Primary")
+@if ($schoolDetails->schooltype == "Primary")
   @include('layouts.asideside')
 @else
   @include('layouts.aside_sec')
@@ -73,16 +73,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                        @if ($schooldetails->getPaymentCategory->count() < 1)
+                        @if ($schoolDetails->getPaymentCategory->count() < 1)
                         <tr>
                             <td></td>
                             <td><center>No Record</center></td>
                             <td></td>
                         </tr>
                         @else
-                        @php $count = method_exists($schooldetails->getPaymentCategory, 'links') ? 1 : 0; @endphp
-                            @foreach ($schooldetails->getPaymentCategory as $item)
-                            @php $count = method_exists($schooldetails->getPaymentCategory, 'links') ? ($schooldetails->getPaymentCategory ->currentpage()-1) * $schooldetails->getPaymentCategory ->perpage() + $loop->index + 1 : $count + 1; @endphp
+                        @php $count = method_exists($schoolDetails->getPaymentCategory, 'links') ? 1 : 0; @endphp
+                            @foreach ($schoolDetails->getPaymentCategory as $item)
+                            @php $count = method_exists($schoolDetails->getPaymentCategory, 'links') ? ($schoolDetails->getPaymentCategory ->currentpage()-1) * $schoolDetails->getPaymentCategory ->perpage() + $loop->index + 1 : $count + 1; @endphp
                                 <tr>
                                     <td>{{ $count }}</td>
                                     <td>{{ $item->categoryname }}</td>
@@ -195,7 +195,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                          @if ($schooldetails->getAmountCategory->count() < 1)
+                          @if ($schoolDetails->getAmountCategory->count() < 1)
                           <tr>
                               <td></td>
                               <td><center>No Record</center></td>
@@ -203,13 +203,13 @@
                               
                           </tr>
                           @else
-                          @php $count = method_exists($schooldetails->getAmountCategory, 'links') ? 1 : 0; @endphp
-                              @foreach ($schooldetails->getAmountCategory as $item)
-                              @php $count = method_exists($schooldetails->getAmountCategory, 'links') ? ($schooldetails->getAmountCategory ->currentpage()-1) * $schooldetails->getAmountCategory ->perpage() + $loop->index + 1 : $count + 1; @endphp
+                          @php $count = method_exists($schoolDetails->getAmountCategory, 'links') ? 1 : 0; @endphp
+                              @foreach ($schoolDetails->getAmountCategory as $item)
+                              @php $count = method_exists($schoolDetails->getAmountCategory, 'links') ? ($schoolDetails->getAmountCategory ->currentpage()-1) * $schoolDetails->getAmountCategory ->perpage() + $loop->index + 1 : $count + 1; @endphp
                                   <tr>
                                       <td>{{ $count }}</td>
-                                      <td>{{ $schooldetails->getCategoryName($item->payment_category_id)->categoryname }}</td>
-                                      <td>{{ $schooldetails->getClassName($item->class_id)->classname }}</td>
+                                      <td>{{ $schoolDetails->getCategoryName($item->payment_category_id)->categoryname }}</td>
+                                      <td>{{ $schoolDetails->getClassName($item->class_id)->classname }}</td>
                                       <td>{{ $item->amount }}</td>
                                       <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editamountrecord{{ $item->id }}"><i class="fas fa-edit"></i></button> 
                                         {{-- <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#editclassname"><i class="fas fa-trash"></i></button> --}}
@@ -233,7 +233,7 @@
                                                           <label for="">Payment Category <i style="font-size: 9px; font-style: normal;">eg.PTA fees</i></label>
                                                           <select name="paymentcategoryform" id="" class="form-control form-control-sm">
                                                               <option value="">Select a category</option>
-                                                              @foreach ($schooldetails->getPaymentCategory as $itemcat)
+                                                              @foreach ($schoolDetails->getPaymentCategory as $itemcat)
                                                                   <option value="{{ $itemcat->id }}" {{ $itemcat->id == $item->payment_category_id ? "selected":"" }}>{{ $itemcat->categoryname }}</option>
                                                               @endforeach
                                                           </select>
@@ -242,7 +242,7 @@
                                                           <label for="">Select a Class</label>
                                                           <select name="classSelected" id="" class="form-control form-control-sm">
                                                               <option value="">Select a class</option>
-                                                              @foreach ($schooldetails->getClassList($schooldetails->id) as $itemselect)
+                                                              @foreach ($schoolDetails->getClassList($schoolDetails->id) as $itemselect)
                                                                   <option value="{{ $itemselect->id }}" {{ $itemselect->id == $item->class_id ? "selected":"" }}>{{ $itemselect->classname }}</option>
                                                               @endforeach
                                                           </select>
@@ -334,7 +334,7 @@
                             <label for="">Payment Category <i style="font-size: 9px; font-style: normal;">eg.PTA fees</i></label>
                             <select name="paymentcategoryform" id="" class="form-control form-control-sm">
                                 <option value="">Select a category</option>
-                                @foreach ($schooldetails->getPaymentCategory as $item)
+                                @foreach ($schoolDetails->getPaymentCategory as $item)
                                     <option value="{{ $item->id }}">{{ $item->categoryname }}</option>
                                 @endforeach
                             </select>
@@ -343,7 +343,7 @@
                             <label for="">Select a Class</label>
                             <select name="classSelected" id="" class="form-control form-control-sm">
                                 <option value="">Select a class</option>
-                                @foreach ($schooldetails->getClassList($schooldetails->id) as $item)
+                                @foreach ($schoolDetails->getClassList($schoolDetails->id) as $item)
                                     <option value="{{ $item->id }}">{{ $item->classname }}</option>
                                 @endforeach
                             </select>

@@ -46,10 +46,10 @@
                     <div class="card">
                         <i style="padding: 10px; font-style: normal;">Assignment List</i>
                     </div>
-                    {{-- <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#postassignment">
-                        Post Assignment
-                    </button> --}}
                     <hr>
+                    @if ($submissions->count() < 1)
+                        <p>No submission has been made yet</p>
+                    @endif
                     @foreach ($submissions as $item)
 
                             <!-- Main content -->
@@ -73,7 +73,6 @@
                                       
                                       <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status: {{ $item->status == null || $item->status == 0 ? "Not Assessed":"Assessed" }}</p>
                                       <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Student name: {{ $item->firstname }} {{ $item->lastname }}</p>
-<<<<<<< HEAD
                                       <hr>
                                       <p style="margin: 0px; padding-left: 10px; font-size: 13px;"><i style="font-weight: bold; font-style:normal;">Comment: </i> {{ $item->comment }}</p>
                                       <p style="margin: 0px; padding-left: 10px; font-size: 13px;"><i style="font-weight: bold; font-style:normal;">Score: </i>{{ $item->score }}</p>
@@ -86,10 +85,6 @@
                                             
                                           @endif
                                         
-=======
-                                      @if(!Auth::user()->hasRole('Student'))
-                                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#assignmentremark{{ $item->id }}">Remark</button>
->>>>>>> 7f9bf77ed5080c1ca9fd4feed93ed96160c8a25b
                                       @endif
                                       
                                     </div>
@@ -119,18 +114,12 @@
                                           <textarea class="form-control form-control-sm" name="comment" id="" cols="30" rows="5" placeholder="comment"></textarea>
                                       </div>
                                       <div class="form-group">
-<<<<<<< HEAD
                                         @if ($item->assessment_cat != "0")
                                             <input type="number" name="score" class="form-control form-control-sm" id="" placeholder="enter score(optional)">
                                         @endif
                                       </div>
                                       <input type="hidden" name="submissionid" id="" value={{ $item->id }}>
                                       <input type="hidden" name="assignment_id" id="" value={{ $item->assignment_id }}>
-=======
-                                          <input type="number" name="score" class="form-control form-control-sm" id="" placeholder="enter score(optional)">
-                                      </div>
-                                      <input type="hidden" name="submissionid" id="" value={{ $item->id }}>
->>>>>>> 7f9bf77ed5080c1ca9fd4feed93ed96160c8a25b
                                     </form>
                                   </div>
 

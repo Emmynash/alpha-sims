@@ -52,9 +52,9 @@
                 To
                 <address>
                   <strong>{{ app('currentTenant')->name }}</strong><br>
-                  {{ $schooldetails->address }}
-                  Phone: {{ $schooldetails->phone }}<br>
-                  Email: {{ $schooldetails->email }}
+                  {{ $schoolDetails->address }}
+                  Phone: {{ $schoolDetails->phone }}<br>
+                  Email: {{ $schoolDetails->email }}
                 </address>
               </div>
               <!-- /.col -->

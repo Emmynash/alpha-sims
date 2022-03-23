@@ -5,31 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Addpost;
 use App\User;
-use App\Classlist;
 use App\Classlist_sec;
-use App\Addhouses;
-use App\Addsection;
-use App\AddClub;
 use App\Addstudent;
-use App\Addsubject;
-use App\Addteachers;
-use App\Addgrades;
 use App\Addteachers_sec;
 use App\Addstudent_sec;
 use App\Addsubject_sec;
 use App\CalenderModel;
 use App\Services\Imageupload;
 use App\TeacherSubjects;
-use App\TeacherSubjectPris;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class HomeController extends Controller
 {
+    
     /**
      * Create a new controller instance.
      *
@@ -48,268 +38,99 @@ class HomeController extends Controller
     public function index()
     {
 
-        Log::info('This is some useful information.');
-
         
-        if (Auth::user()->role == "SuperAdmin") {
+        if (Auth::user()->role == "SuperAdmin") { // check if the user is a super admin
+            // return "dsdsd"; 
             return redirect('/superadmin');
         }
 
-        $id = Auth::user()->schoolid;
+// ------------------------check if user school exist or has been approved----------
+        $userSchool = Addpost::find(Auth::user()->schoolid);
+        if ($userSchool == null) {
+            return view('home')->with("userschool", $userSchool);
+        }elseif($userSchool->status == "Pending"){
+            return view('home')->with("userschool", $userSchool);
+        }
+// ----------------------------------------------------------------------------------
+        $user = User::find(Auth::user()->id);
 
-        $userschool = Addpost::where('id', $id)->get();
-
-        if (count($userschool) < 1) {
-
-            return view('home')->with("userschool", $userschool);
-        }elseif($userschool[0]['status'] == "Pending"){
-            // return $userschool;
-            return view('home')->with("userschool", $userschool);
+        if ($user->hasRole('HeadOfSchool')) {
+            return $this->headOfSchoolAccount();
+        }
+        if ($user->hasRole('Teacher')) {
+            return $this->teachersAccount();
         }
 
-        if ($userschool[0]['schooltype'] == "Primary") {
-                $classList = Classlist_sec::where('schoolid', $id)->get();
-                $addHouses = User::where('id', $id)->get();
-                $addSection = User::where('id', $id)->get();
-                $addClub = User::where('id', $id)->get();
-                $addteachers = Addteachers_sec::where(['schoolid' => $id])->get();
-                $addsubject = Addsubject_sec::where('schoolid', $id)->get();
-                $addgrades = Addgrades::where('schoolid', $id)->get();
-                // $message = Message::where(['schoolid'=> Auth::user()->schoolid, 'senderid'=>Auth::user()->id])->get();
-                
-                $datemain = Carbon::now();
-                $attDate = $datemain->toDateString();
-
-                $dateExplode = explode("-", $attDate);
-                $monthdateOnly = $dateExplode[0]."-".$dateExplode[1];
-                // return $monthdateOnly;
-                
-
-                $user = User::find(Auth::user()->id);
-                $user->hasRole('Teacher');
-            
-            if ($user->hasRole('Teacher')) {
-
-                $schoolid = Auth::user()->schoolid;
-
-               $formTeacher = Addteachers_sec::join('classlist_secs', 'classlist_secs.id','=','addteachers_secs.formteacher')->select('addteachers_secs.*', 'classlist_secs.classname')->where('systemid', Auth::user()->id)->first();
-
-                $getTeacherDetails = Addteachers_sec::join('addposts', 'addposts.id','=','addteachers_secs.schoolid')
-                                    ->where(['addteachers_secs.schoolid'=>$schoolid, 'addteachers_secs.systemid'=>Auth::user()->id])
-                                    ->select('addteachers_secs.*', 'addposts.schoolname')->first();
-                
-                $getTeacherId = Addteachers_sec::where('systemid', Auth::user()->id)->first();
-                $subjectTeacherOffer = TeacherSubjects::join('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id')
-                                        ->select('teacher_subjects.*', 'addsection_secs.sectionname')
-                                        ->where('user_id', Auth::user()->id)->get();
-                
-                $schooldetails = Addpost::find(Auth::user()->schoolid);
-
-                return view('secondary.teachers.teacher_dash',compact('getTeacherDetails', 'formTeacher', 'subjectTeacherOffer', 'schooldetails'));
-            }
-
-            $user = User::find(Auth::user()->id);
-            $user->hasRole('Student');
         if ($user->hasRole('Student')) {
-            $schoolid = Auth::user()->schoolid;
-          $addstudentsec = Addstudent_sec::leftjoin('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-                            ->join('addposts', 'addposts.id','=','addstudent_secs.schoolid')
-                            ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection') 
-                            ->where(['addstudent_secs.usernamesystem'=> Auth::user()->id, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
-                            ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addposts.schoolname')->first();
-            $addsubjects = Addsubject_sec::where('classid', $addstudentsec->classid)->get();
-            $schooldetails = Addpost::find(Auth::user()->schoolid);
-            return view('secondary.student.student_dash', compact('addstudentsec', 'addsubjects', 'schooldetails'));
+            return $this->studentAccount();
         }
-                $user = User::find(Auth::user()->id);
-                $user->hasRole('Bursar');
-                
-                if ($user->hasRole('Bursar')) {
 
-                   $getSchool = User::join('addposts', 'addposts.id','=','users.schoolid')
-                                ->where('users.id', Auth::user()->id)
-                                ->select('users.*', 'addposts.schoolname')->first();
+        if ($user->hasRole('Bursar')) {
+            return $this->bursarAccount();  
+        }
 
-                    return view('pages.accounting.bursar', compact('getSchool'));
-                    
-                }
+        if ($user->hasRole('Librarian')) {
 
-                $user = User::find(Auth::user()->id);
-                $user->hasRole('Supervisor');
-
-                if($user->hasRole('Supervisor')){
-                    
-                   
-                    
-                    return view('pages.supervisor_dash');
-                    
-                }
-                $user = User::find(Auth::user()->id);
-                $user->hasRole('Admin');
-
-                if($user->hasRole('Admin')){
-                    
-                    $addstudent = Addstudent::where('schoolid', $id)->get();
+            $addbook = DB::table('addbooks')->where('schoolid', Auth::user()->schoolid)->sum('quantity');
+            $available = DB::table('addbooks')->where('schoolid', Auth::user()->schoolid)->sum('available');
+            $borrowed = DB::table('addbooks')->where('schoolid', Auth::user()->schoolid)->sum('borrowed');
+            $librarians = User::where(['schoolid'=>Auth::user()->schoolid, 'role'=>'Librarian'])->get();
             
-                        $studentDetails = array(
-                            'userschool' => $userschool,
-                            'classList' => $classList,
-                            'addHouses' => $addHouses,
-                            'addSection' => $addSection,
-                            'addClub' => $addClub,
-                            'addStudent' => $addstudent,
-                            'addteachers' => $addteachers,
-                            'addsubject' => $addsubject,
-                            'addgrades' => $addgrades
-                        );
-                    
-                    return view('pages.index_dash')->with('studentDetails', $studentDetails);
-                    
-                }
+            // Addbook::where('schoolid', Auth::user()->schoolid)->get();
 
-                $user = User::find(Auth::user()->id);
-                
-                if ($user->hasRole('HeadOfSchool')) {
-                    
-                    $addstudent = Addstudent_sec::where('schoolid', $id)->get();
-            
-                        $studentDetails = array(
-                            'userschool' => $userschool,
-                            'classList' => $classList,
-                            'addHouses' => $addHouses,
-                            'addSection' => $addSection,
-                            'addClub' => $addClub,
-                            'addStudent' => $addstudent,
-                            'addteachers' => $addteachers,
-                            'addsubject' => $addsubject,
-                            'addgrades' => $addgrades
-                        );
-                    
-                    return view('pages.index_dash')->with('studentDetails', $studentDetails);
-                }
+            $alldetails = array(
+                'addbook'=>$addbook,
+                'available'=>$available,
+                'borrowed'=>$borrowed,
+                'librarians'=>$librarians
+            );
 
-                $user = User::find(Auth::user()->id);
-                $user->hasanyRole(Role::all());
+            // return $alldetails['librarians'];
 
-                if (!$user->hasanyRole(Role::all())) {
-                    return view('pages.noroleacount.noroledash');
-                }
+            return view('secondary.library_dash')->with('alldetails', $alldetails);
+        }
 
+        if($user->hasRole('Admin')){
+            $addstudent = Addstudent::where('schoolid', Auth::user()->schoolid)->get();
+            return view('pages.index_dash', compact('userSchool', 'classList', 'addHouses', 'addSection', 'addClub', 'addstudent', 'addteachers', 'addsubject', 'addgrades'));
+        }
+        
+    }
 
+    public function uploadProfilePix(Imageupload $imageUpload, Request $request){
+        $rules = [
+            'image' => 'image|max:2048|mimes:jpeg,png,jpg|required',
+            'key' => 'required',
+        ];
+    
+        $customMessages = [
+            'required' => 'The :attribute field can not be blank.',
+            'mimes' => 'file must be an image(jpeg, png, jpg)',
+            'max' => 'file must not be greater than 2mb'
+        ];
+    
+        $this->validate($request, $rules, $customMessages);
 
-
-
-                
-        }elseif($userschool[0]['schooltype'] == "Secondary"){
-
-            
-                $user = User::find(Auth::user()->id);
-                $user->hasRole('Student');
-
-            if ($user->hasRole('Student')) {
-                $schoolid = Auth::user()->schoolid;
-
-               $addstudentsec = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
-                                ->join('addposts', 'addposts.id','=','addstudent_secs.schoolid')
-                                ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection') 
-                                ->where(['addstudent_secs.usernamesystem'=> Auth::user()->id, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
-                                ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addposts.schoolname')->first();
-
-                
-
-
-                // $idf = $addstudentsec->toJson();
-                // $studentsDetailsMain = json_decode($idf, true)[0];
-                $classid = $addstudentsec->classid;
-
-                $addsubjects = Addsubject_sec::where('classid', $classid)->get();
-
-
-                $datemain = Carbon::now();
-                $attDate = $datemain->toDateString();
-
-                $dateExplode = explode("-", $attDate);
-                $monthdateOnly = $dateExplode[0]."-".$dateExplode[1];
-
-                $studentAttendance = DB::table('student_ats')
-                                    ->join('addstudent_secs', 'addstudent_secs.id','=','student_ats.regnumber')
-                                    ->select('student_ats.*', 'addstudent_secs.id as adnum')
-                                    ->where(['student_ats.schoolid' => Auth::user()->schoolid, 'student_ats.systemid' => Auth::user()->id, 'student_ats.monthtoday'=>$monthdateOnly])->get();
-                
-                $idf = $studentAttendance->toJson();
-                $studentAttendancemain = json_decode($idf, true);
-
-                // return $studentAttendance;
-
-                $todayMonth = '';
-                $monthcount = '';
-                $daysarray = array();
-
-                if (count($studentAttendance) > 0) {
-                    $monthlyDate = $studentAttendancemain[0]['monthtoday'];
-
-                    $monthlyMain = explode('-', $monthlyDate);
-
-                    $mainValue = $monthlyMain[1];
-
-                    $jan = array("month" => "01", "days" => "31");
-                    $feb = array("month" => "02", "days" => "29");
-                    $mar = array("month" => "03", "days" => "31");
-                    $april = array("month" => "04", "days" => "30");
-                    $may = array("month" => "05", "days" => "31");
-                    $june = array("month" => "06", "days" => "30");
-                    $july = array("month" => "07", "days" => "31");
-                    $august = array("month" => "08", "days" => "31");
-                    $sept = array("month" => "09", "days" => "30");
-                    $october = array("month" => "10", "days" => "31");
-                    $nov = array("month" => "11", "days" => "30");
-                    $dec = array("month" => "12", "days" => "31");
-
-                    $month = array($jan,$feb,$mar,$april,$may,$june,$july,$august,$sept,$october,$nov,$dec);
-
-                    // return $month;
-
-
-
-                    for ($i=0; $i < count($month); $i++) { 
-                        $monthMain = $month[$i]["month"];
-                        // echo $monthMain;
-                        if ($monthMain == $mainValue) {
-                            $todayMonth = $monthMain;
-                            $monthcount = $month[$i]["days"];
-                        } 
-                    }
-
-                    
-
-                    for ($i=0; $i < count($studentAttendancemain); $i++) { 
-
-                        $datetoday = $studentAttendancemain[$i]['datetoday'];
-
-                        $datetodayexplode = explode('-', $datetoday);
-
-                        $attendanceRegNum = $datetodayexplode[2];
-                        array_push($daysarray, $attendanceRegNum);
-                        // echo $datetoday;
-                    }
-
-                }
-
-                $mainStudentDetails = array(
-                    'studentsDetailsMain'=> $addstudentsec,
-                    'addsubjects' => $addsubjects,
-                    'todayMonth' => $todayMonth,
-                    'monthcount' => $monthcount,
-                    'daysarray' => $daysarray
-                );
-
-                return view('secondary.student.student_dash')->with('mainStudentDetails', $mainStudentDetails);
+        try {
+            $uploadRes = $imageUpload->imageUpload($request);
+            if ($uploadRes == "Success") {
+                return back()->with('success', "Process was successful");
+            } else {
+                return back()->with('error', "Process failed");
             }
+        } catch (\Throwable $th) {
+            return back()->with('error', "Process failed");
+        }
 
-                $user = User::find(Auth::user()->id);
-                $user->hasRole('Teacher');
-            
-            if ($user->hasRole('Teacher')) {
+    }
+    
+
+    public function teachersAccount()//redirects to teachers account for primary schools
+    {
+        try {
+
+            $userSchool = Addpost::find(Auth::user()->schoolid);
+            if ($userSchool->schooltype == "Secondary") {
 
                 $schoolid = Auth::user()->schoolid;
 
@@ -333,7 +154,7 @@ class HomeController extends Controller
                 if ($getFormClass->count() <1) {
                     $allocatedSubject = [];
                 }else{
-                    if ($getFormClass[0]['subject'] == "") {//ewrkejkwjekwjekwjekwjekwe
+                    if ($getFormClass[0]['subject'] == "") {
                         $allocatedSubject = [];
                     }else{
                         $allocatedSubject = $getFormClass[0]['teachclass'];
@@ -367,134 +188,136 @@ class HomeController extends Controller
                 $schooldetails = Addpost::find(Auth::user()->schoolid);
 
                 return view('secondary.teachers.teacher_dash',compact('getTeacherDetails', 'formTeacher', 'subjectTeacherOffer', 'schooldetails'));
-            }
 
-                $user = User::find(Auth::user()->id);
-                $user->hasRole('Librarian');
-            
-            if ($user->hasRole('Librarian')) {
+            }else{
 
-                $addbook = DB::table('addbooks')->where('schoolid', Auth::user()->schoolid)->sum('quantity');
-                $available = DB::table('addbooks')->where('schoolid', Auth::user()->schoolid)->sum('available');
-                $borrowed = DB::table('addbooks')->where('schoolid', Auth::user()->schoolid)->sum('borrowed');
-                $librarians = User::where(['schoolid'=>Auth::user()->schoolid, 'role'=>'Librarian'])->get();
+                $formTeacher = Addteachers_sec::join('classlist_secs', 'classlist_secs.id','=','addteachers_secs.formteacher')->select('addteachers_secs.*', 'classlist_secs.classname')->where('systemid', Auth::user()->id)->first();
+
+                $getTeacherDetails = Addteachers_sec::join('addposts', 'addposts.id','=','addteachers_secs.schoolid')
+                                    ->where(['addteachers_secs.schoolid'=>Auth::user()->schoolid, 'addteachers_secs.systemid'=>Auth::user()->id])
+                                    ->select('addteachers_secs.*', 'addposts.schoolname')->first();
                 
-                // Addbook::where('schoolid', Auth::user()->schoolid)->get();
-
-                $alldetails = array(
-                    'addbook'=>$addbook,
-                    'available'=>$available,
-                    'borrowed'=>$borrowed,
-                    'librarians'=>$librarians
-                );
-
-                // return $alldetails['librarians'];
-
-                return view('secondary.library_dash')->with('alldetails', $alldetails);
-            }
-
-                $user = User::find(Auth::user()->id);
-                $user->hasRole('Bursar');
-
-            if ($user->hasRole('Bursar')) {
+                $getTeacherId = Addteachers_sec::where('systemid', Auth::user()->id)->first();
+                $subjectTeacherOffer = TeacherSubjects::join('addsection_secs', 'addsection_secs.id','=','teacher_subjects.section_id')
+                                        ->select('teacher_subjects.*', 'addsection_secs.sectionname')
+                                        ->where('user_id', Auth::user()->id)->get();
                 
-
-                return view('secondary.accounting.dashboard');
+                $schooldetails = Addpost::find(Auth::user()->schoolid);
+    
+                return view('secondary.teachers.teacher_dash',compact('getTeacherDetails', 'formTeacher', 'subjectTeacherOffer', 'schooldetails'));
 
             }
-
-            $addteachers_secs = Addteachers_sec::where('schoolid', Auth::user()->schoolid)->get();
-            $addstudent_secs = Addstudent_sec::where('schoolid', Auth::user()->schoolid)->get();
-            $addsubject_secs_main = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->pluck('subjectname')->toArray();
-            $addsubject_secs = array_unique($addsubject_secs_main);
-            $classlist_sec = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
-            $events = CalenderModel::orderBy('created_at', 'DESC')->get();
-
-            $detailsArray = array(
-                "addteachers_secs"=>$addteachers_secs,
-                "addstudent_secs"=>$addstudent_secs,
-                "addsubject_secs"=>$addsubject_secs,
-                "classlist_sec"=>$classlist_sec
-            );
-
             
-            
-            return view('secondary.index_sec', compact('events'))->with('detailsArray', $detailsArray);
+        } catch (\Throwable $th) {
+            //throw $th;
         }
-
-
-        
     }
 
-    public function uploadProfilePix(Imageupload $imageUpload, Request $request){
-        $rules = [
-            'image' => 'image|max:2048|mimes:jpeg,png,jpg|required',
-            'key' => 'required',
-        ];
-    
-        $customMessages = [
-            'required' => 'The :attribute field can not be blank.',
-            'mimes' => 'file must be an image(jpeg, png, jpg)',
-            'max' => 'file must not be greater than 2mb'
-        ];
-    
-        $this->validate($request, $rules, $customMessages);
-
+    public function studentAccount() // redirects to student account primary school
+    {
         try {
-            $uploadRes = $imageUpload->imageUpload($request);
-            if ($uploadRes == "Success") {
-                return back()->with('success', "Process was successful");
-            } else {
-                return back()->with('error', "Process failed");
+            $userSchool = Addpost::find(Auth::user()->schoolid);
+            if ($userSchool == "Primary") {
+                $schoolid = Auth::user()->schoolid;
+                $addstudentsec = Addstudent_sec::leftjoin('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                                  ->join('addposts', 'addposts.id','=','addstudent_secs.schoolid')
+                                  ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection') 
+                                  ->where(['addstudent_secs.usernamesystem'=> Auth::user()->id, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
+                                  ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addposts.schoolname')->first();
+                  $addsubjects = Addsubject_sec::where('classid', $addstudentsec->classid)->get();
+                  $schooldetails = Addpost::find(Auth::user()->schoolid);
+    
+                  return view('secondary.student.student_dash', compact('addstudentsec', 'addsubjects', 'schooldetails'));
+            }else{
+                $schoolid = Auth::user()->schoolid;
+
+                $addstudentsec = Addstudent_sec::join('classlist_secs', 'classlist_secs.id','=','addstudent_secs.classid')
+                                 ->join('addposts', 'addposts.id','=','addstudent_secs.schoolid')
+                                 ->join('addsection_secs', 'addsection_secs.id','=','addstudent_secs.studentsection') 
+                                 ->where(['addstudent_secs.usernamesystem'=> Auth::user()->id, 'addstudent_secs.schoolid'=>Auth::user()->schoolid])
+                                 ->select('addstudent_secs.*', 'classlist_secs.classname', 'addsection_secs.sectionname', 'addposts.schoolname')->first();
+ 
+                 
+                 $classid = $addstudentsec->classid;
+                 $addsubjects = Addsubject_sec::where('classid', $classid)->get();
+                 $datemain = Carbon::now();
+                 $attDate = $datemain->toDateString();
+
+                 $schooldetails = Addpost::find(Auth::user()->schoolid);
+
+ 
+                 $mainStudentDetails = array(
+                     'studentsDetailsMain'=> $addstudentsec,
+                     'addsubjects' => $addsubjects
+                 );
+ 
+                 return view('secondary.student.student_dash', compact('schooldetails', 'addstudentsec', 'addsubjects'))->with('mainStudentDetails', $mainStudentDetails);
+            }
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+        }
+    }
+
+    public function bursarAccount() // redirects to bursar account
+    {
+        try {
+            
+            $userSchool = Addpost::find(Auth::user()->schoolid);
+            if($userSchool->schooltype == "Secondary"){
+                
+                    return view('secondary.accounting.dashboard');
+                
+            }else{
+
+                $getSchool = User::join('addposts', 'addposts.id','=','users.schoolid')
+            ->where('users.id', Auth::user()->id)
+            ->select('users.*', 'addposts.schoolname')->first();
+
+            return view('pages.accounting.bursar', compact('getSchool'));
+
             }
         } catch (\Throwable $th) {
-            return back()->with('error', "Process failed");
+            //throw $th;
         }
-
     }
+
+    public function headOfSchoolAccount()
+    {
+        try {
+            $userSchool = Addpost::find(Auth::user()->schoolid);
+            if ($userSchool->schooltype == "Secondary") {
+                $addteachers_secs = Addteachers_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $addstudent_secs = Addstudent_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $addsubject_secs_main = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->pluck('subjectname')->toArray();
+                $addsubject_secs = array_unique($addsubject_secs_main);
+                $classlist_sec = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $events = CalenderModel::orderBy('created_at', 'DESC')->get();
     
-    public function uploadProfilePixwithout(Request $request){
-        $validatedData = $request->validate([
-            'profilepix' => 'image|max:200|mimes:jpeg,png,jpg|required'
-        ]);
+                $detailsArray = array(
+                    "addteachers_secs"=>$addteachers_secs,
+                    "addstudent_secs"=>$addstudent_secs,
+                    "addsubject_secs"=>$addsubject_secs,
+                    "classlist_sec"=>$classlist_sec
+                );
+                return view('secondary.index_sec', compact('events'))->with('detailsArray', $detailsArray);
+            }else{
+                $addstudent = Addstudent_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $addteachers = Addteachers_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $addstudent = Addstudent_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $addsubject_secs_main = Addsubject_sec::where('schoolid', Auth::user()->schoolid)->pluck('subjectname')->toArray();
+                $addsubject = array_unique($addsubject_secs_main);
+                $classList = Classlist_sec::where('schoolid', Auth::user()->schoolid)->get();
+                $events = CalenderModel::orderBy('created_at', 'DESC')->get();
+                return view('pages.index_dash', compact('userSchool', 'classList', 'addstudent', 'addteachers', 'addsubject'));
+            }
 
-        $realImage = $request->file('profilepix');
-        $imageSize = getimagesize( $realImage);
-        $widthOfImage = $imageSize[0];
-        $heightOfImage = $imageSize[1];
+        } catch (\Throwable $th) {
+            //throw $th;
 
-        if($widthOfImage != $heightOfImage){
-            return back()->with('error', 'invalid image dimension');
+            return $th;
         }
-
-        if ($request->hasFile('profilepix')) {
-
-            //get file name with extension
-            $profilepixExt = $request->file('profilepix')->getClientOriginalName();
-
-            //get just file names
-            $fileNameProfile = pathinfo($profilepixExt, PATHINFO_FILENAME);
-
-            //get just extensions
-            $extensionProfilepix = $request->file('profilepix')->getClientOriginalExtension();
-
-            //file name to store
-            $profileFinal = $fileNameProfile."_".time().$extensionProfilepix;
-
-            //upload image
-            $pathProfile = $request->file('profilepix')->storeAs('public/schimages', $profileFinal);
-
-        }
-
-        $uploadProfileImage = User::find(Auth::user()->id);
-        $uploadProfileImage->profileimg =$request->profilepix !=null ? $profileFinal : "https://gravatar.com/avatar/?s=200&d=retro";
-        $uploadProfileImage->save();
-
-        $addstudent= User::where('id', Auth::user()->id)->get();
-
-
-        return response()->json(['success'=>$addstudent[0]['profileimg']]);
-
     }
 
 

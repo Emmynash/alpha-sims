@@ -69440,7 +69440,7 @@ function Moto() {
   function getStudentList() {
     setisLoading(true);
     var data = new FormData();
-    data.append("selectedclassmoto", selectedclass), data.append("selectedsectionmoto", selectedsection), axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/moto/get_students_for_pyco", data, {
+    data.append("selectedclassmoto", selectedclass), data.append("selectedsectionmoto", selectedsection), axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/moto/get_students_for_pyco", data, {
       headers: {
         "Content-type": "application/json"
       }
@@ -69466,6 +69466,9 @@ function Moto() {
     setselectedmain([]);
     setstudentid(e);
     setstudentname(name);
+    document.getElementById("moto_form").reset(); // for (let index = 0; index < motolist.length; index++) {
+    //     const element = motolist[index];
+    // }
   }
 
   function addMoto(moto_id, valueId, userid) {
@@ -69495,7 +69498,8 @@ function Moto() {
   function submitMoto() {
     //
     setisLoading(true);
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/sec/moto/add_student_moto", selectedmain, {
+    console.log(selectedmain);
+    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/moto/add_student_moto", selectedmain, {
       headers: {
         "Content-type": "application/json"
       }
@@ -69680,8 +69684,12 @@ function Moto() {
       "aria-hidden": "true"
     }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-body"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      id: "moto_form"
     }, motolist.length > 0 ? motolist.map(function (d) {
-      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: d.id + "motoListMain"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "row"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "col-12 col-md-6"
@@ -69698,9 +69706,8 @@ function Moto() {
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           type: "radio",
           onClick: function onClick() {
-            return addMoto(d.id, 1, studentid);
+            return addMoto(d.id, 1, studentid, "myoption" + d.id);
           },
-          on: true,
           name: "myoption" + d.id,
           value: "1",
           id: ""
@@ -69746,7 +69753,7 @@ function Moto() {
           id: ""
         }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null))
       );
-    }) : ""), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }) : "")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "modal-footer justify-content-between"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       type: "button",

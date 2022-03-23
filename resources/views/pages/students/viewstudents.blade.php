@@ -60,6 +60,6 @@
 
 <!-- ./wrapper -->
 
-<script src="{{ asset('js/appviewstudentpri.js') }}"></script>
+<script src="{{ asset('js/appviewstudentpri.js?v=1') }}"></script>
     
 @endsection

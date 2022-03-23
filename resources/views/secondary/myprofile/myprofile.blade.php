@@ -86,6 +86,28 @@
                   </div>
                 </div>
               </div>
+              <div class="row" style="margin: 10px;">
+                <div class="col-12 col-md-4">
+                  <div class="form-group">
+                    {{-- <input type="text" class="form-control form-control-sm" name="gender" placeholder="gender"> --}}
+                    <select name="gender" id="" class="form-control form-control-sm" value={{ Auth::user()->gender }}>
+                      <option value="">Select gender</option>
+                      <option value="Male" {{ Auth::user()->gender == "Male" ? "selected":"" }}>Male</option>
+                      <option value="Female" {{ Auth::user()->gender == "Female" ? "selected":""}}>Female</option>
+                    </select>
+                  </div>
+                </div>
+                {{-- <div class="col-12 col-md-4">
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-sm" name="middlename" value="{{ Auth::user()->middlename }}" placeholder="middlename">
+                  </div>
+                </div>
+                <div class="col-12 col-md-4">
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-sm" name="lastname" value="{{ Auth::user()->lastname }}" placeholder="lastname">
+                  </div>
+                </div> --}}
+              </div>
               {{-- <div style="margin: 10px;">
                         <textarea name="" class="form-control form-control-sm" id="" cols="30" rows="5" placeholder="Address"></textarea>
                     </div>

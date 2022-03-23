@@ -278,9 +278,9 @@ class PagesController extends Controller
             
         }else{
             if ($request->type == "2") {
-                $validatedData = $request->validate([
-                    'point' => 'required',
-                ]);
+                // $validatedData = $request->validate([
+                //     'point' => 'required',
+                // ]);
     
                 $addgrades_sec = Addgrades_sec::where(['schoolid'=>Auth::user()->schoolid, 'type'=>2, 'gpaname'=>$request->grademain])->get();
     

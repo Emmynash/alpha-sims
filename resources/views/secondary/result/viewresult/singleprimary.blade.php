@@ -35,7 +35,7 @@
 
     <div id="printJS-form">
 
-        <div class="" style="margin-top: 0px;" id="printnotready">
+        <div class="" style="margin-top: 20px;" id="printnotready">
             <div class="" class="" style="width: 794px; margin: 0 auto;">
                 <div class="print-container" style="width: 794px; margin: 0;">
                     <div style="display: flex;">
@@ -47,12 +47,12 @@
                             
                         </div>
                         <div style="width: 75%; height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                            <div style="width: 75%; height: 100px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                                <i style="font-size: 30px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schoolname}}</i>
+                            <div style="width: 75%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                                <center><i style="font-size: 25px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">DEPADUA LEARNING ACADEMY</i></center>
                                 <i style="font-size: 12px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">{{$addschool->schooladdress}}, {{$addschool->mobilenumber}}</i>
                                 <i style="font-size: 15px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;"></i>
                                 <div>
-                                    <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Junior Secondary School Termly Report</i>
+                                    <i style="font-size: 20px; font-style: normal; font-family: Times New Roman, Times, serif; font-weight: bold;">Termly Report Sheet</i>
                                 </div>
                             </div>
                         </div>
@@ -137,8 +137,8 @@
                             <thead style="text-align: center;">
                                 <tr>
                                     <th style="font-size: 14px;">SUBJECTS</th>
-                                    @foreach ($subCatAss as $item)
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">{{ $item->subname }}</i></th>
+                                    @foreach ($assessment as $item)
+                                        <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}"><i style="margin: 0px; padding: 5px; font-size: 14px;">{{ $item->name }}</i></th>
                                     @endforeach
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
@@ -151,8 +151,10 @@
 
                                     <tr style='font-size: 14px;'>
                                         <td class='' style='font-size: 14px;'>{{ $item->subjectname }}</td>
-                                        @foreach ($item->getAssessments($item->id) as $itemA)
-                                            <td class='text-center' style='font-size: 14px;'><center>{{ $itemA->getSubjectScores($itemA->id) == NULL ? "---":$itemA->getSubjectScores($itemA->id)->score }}</center></td>
+                                        @foreach ($assessment as $itemA)
+                                            @foreach ($itemA->getAssessmentForScore($itemA->id) as $itemB)
+                                                <td class='text-center' style='font-size: 14px;'><center>{{ $itemB->getScore($itemB->id, $classid, $regNo, $item->subjectid, $schoolsession ) == NULL ? "---":$itemB->getScore($itemB->id, $classid, $regNo, $item->subjectid, $schoolsession )->scrores }}</center></td>
+                                            @endforeach
                                         @endforeach
                                         <td class='text-center thdesign' style='font-size: 14px;'><center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->total }}</center></td>
                                         <td class='text-center thdesign' style='font-size: 14px;'><center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":round($item->getAssessmentsTotal($item->id)->average, 1) }}</center></td>
@@ -165,8 +167,8 @@
                     </div>
                     <br>
                     <div style="">
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: {{ $computedAverage == NULL ? "N.A": $computedAverage->examstotal}}</i>
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ $computedAverage == NULL ? "N.A": $computedAverage->studentaverage}}</i> 
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Exam Total: {{ $computedAverage == NULL ? "N.A": round($computedAverage->examstotal, 2)}}</i>
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student Average: {{ $computedAverage == NULL ? "N.A": round($computedAverage->studentaverage, 2)}}</i> 
                     </div>
                     <center><div class="text-center" style="width: 95%; margin: 10px auto;">
                         @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
@@ -273,29 +275,29 @@
                        
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                            FORM MASTER'S REMARK <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                            FORM MASTER'S REMARK: <i style="font-style: normal;" id="honourorpricesremarkmain">{{ $comment->comments ?? "" }}</i>
                         </div>
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
                             HEAD OF SCHOOL'S COMMENT: 
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
-                            {{-- @if ($resultAverage != NULL)
+                            @if ($computedAverage != NULL)
     
-                                @if($resultAverage->average >= 90 && $resultAverage->average <= 100)
+                                @if($computedAverage->studentaverage >= 90 && $computedAverage->studentaverage <= 100)
                                     An excellent performance.
     
-                                @elseif($resultAverage->average >= 70 && $resultAverage->average <= 89.9)
+                                @elseif($computedAverage->studentaverage >= 70 && $computedAverage->studentaverage <= 89.9)
                                     A good performance, reinforce.
     
-                                @elseif($resultAverage->average >= 50 && $resultAverage->average <= 69.9)
+                                @elseif($computedAverage->studentaverage >= 50 && $computedAverage->studentaverage <= 69.9)
                                     An average performance, reinforce.
     
-                                @elseif($resultAverage->average/$subjects->count() >= 0 && $resultAverage->average/$subjects->count() <= 49.9)
+                                @elseif($computedAverage->studentaverage >= 0 && $computedAverage->studentaverage <= 49.9)
                                     A fairly good performance, advised to repeat.
                                 @endif
     
                                 
-                            @endif --}}
+                            @endif
                             
                             </i>
                         </div>

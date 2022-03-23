@@ -1,10 +1,12 @@
-@extends('layouts.app_dash')
+@extends($userschool->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-
-  <!-- Main Sidebar Container -->
+@if ($userschool->schooltype == "Primary")
+@include('layouts.asideside') 
+@else
   @include('layouts.aside_sec')
+@endif
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -80,7 +82,8 @@
                         <td>{{$userschool->periodto}}</td>
                         <td><span class="tag tag-success">{{$userschool->status}}</span></td>
                         <td>
-                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#updateschooldata"><i class="far fa-eye"></i></button>
+                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#updateschooldata"><i class="fa-solid fa-images"></i></button>
+                            <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#updateschooldataText"><i class="far fa-edit"></i></button>
                         </td>
                       </tr>
 
@@ -91,6 +94,119 @@
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
+          </div>
+        </div>
+
+        <div class="modal" id="updateschooldataText">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Update School Record</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+
+              <!-- Modal body -->
+              <div class="modal-body">
+                <p style="font-weight: bold;">{{$userschool->schoolname}}</p>
+                <div class="row">
+                  <div class="col-12 col-6">
+                    
+                    <form action="{{ route('updateschooldetails', $userschool->id) }}" method="post" enctype="multipart/form-data"> 
+                     @csrf                     
+                      <div class="form-group">
+                        <label for="">School Name</label>
+                        <input type="text" name="schoolname" class="form-control" value="{{ $userschool->schoolname }}">
+                        <small class="text-danger">{{ $errors->first('schoolname') }}</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="">School Mobile Number</label>
+                        <input type="text" name="mobilenumber" class="form-control" value="{{ $userschool->mobilenumber }}">
+                        <small class="text-danger">{{ $errors->first('mobilenumber') }}</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="">School Website</label>
+                        <input type="text" name="schoolwebsite" class="form-control" value="{{ $userschool->schoolwebsite }}">
+                        <small class="text-danger">{{ $errors->first('schoolwebsite') }}</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Date established</label>
+                        <input type="text" name="dateestablished" class="form-control" value="{{ $userschool->dateestablished }}">
+                        <small class="text-danger">{{ $errors->first('dateestablished') }}</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="">School address</label>
+                        <input type="text" name="schooladdress" class="form-control" value="{{ $userschool->schooladdress }}">
+                        <small class="text-danger">{{ $errors->first('schooladdress') }}</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="">School email</label>
+                        <input type="text" name="schoolemail" class="form-control" value="{{ $userschool->schoolemail }}">
+                        <small class="text-danger">{{ $errors->first('schoolemail') }}</small>
+                      </div>
+                      <div class="form-group">
+                        {{-- <input type="text" name="mobilenumber" class="form-control @error('mobilenumber') is-invalid @enderror" value="{{old('mobilenumber')}}" placeholder="School Location"> --}}
+                        <select name="schoolstate" id="schoolstate" class="form-control" value="{{ $userschool->schoolstate }}">
+                            <option value="">Select State</option>
+                            <option value="Abia">Abuja FCT</option>
+                            <option value="Abia">Abia</option>
+                            <option value="Adamawa">Adamawa</option>
+                            <option value="AkwaIbom">AkwaIbom</option>
+                            <option value="Anambra">Anambra</option>
+                            <option value="Bauchi">Bauchi</option>
+                            <option value="Bayelsa">Bayelsa</option>
+                            <option value="Benue">Benue</option>
+                            <option value="Borno">Borno</option>
+                            <option value="Cross River">Cross River</option>
+                            <option value="Delta">Delta</option>
+                            <option value="Ebonyi">Ebonyi</option>
+                            <option value="Edo">Edo</option>
+                            <option value="Ekiti">Ekiti</option>
+                            <option value="Enugu">Enugu</option>
+                            <option value="FCT">FCT</option>
+                            <option value="Gombe">Gombe</option>
+                            <option value="Imo">Imo</option>
+                            <option value="Jigawa">Jigawa</option>
+                            <option value="Kaduna">Kaduna</option>
+                            <option value="Kano">Kano</option>
+                            <option value="Katsina">Katsina</option>
+                            <option value="Kebbi">Kebbi</option>
+                            <option value="Kogi">Kogi</option>
+                            <option value="Kwara">Kwara</option>
+                            <option value="Lagos">Lagos</option>
+                            <option value="Nasarawa">Nasarawa</option>
+                            <option value="Niger">Niger</option>
+                            <option value="Ogun">Ogun</option>
+                            <option value="Ondo">Ondo</option>
+                            <option value="Osun">Osun</option>
+                            <option value="Oyo">Oyo</option>
+                            <option value="Plateau">Plateau</option>
+                            <option value="Rivers">Rivers</option>
+                            <option value="Sokoto">Sokoto</option>
+                            <option value="Taraba">Taraba</option>
+                            <option value="Yobe">Yobe</option>
+                            <option value="Zamfara">Zamafara</option>
+                        </select>
+                        <small class="text-danger">{{ $errors->first('schoolstate') }}</small>
+                    </div>
+                      
+                      <button type="submit" class="btn btn-sm btn-info">Save</button>
+                    </form>
+
+                  </div>
+                  <div class="col-12 col-6">
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-sm" data-dismiss="modal">Close</button>
+              </div>
+
+            </div>
           </div>
         </div>
         

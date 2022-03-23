@@ -18,7 +18,6 @@ use App\TransactionRecord;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use App\AmountBalTableTotal;
 use App\FeesInvoiceItems;
 use App\PaymentRecord;
@@ -40,21 +39,18 @@ class AccountController extends Controller
 
     public function index()
     {
-        return view('secondary.accounting.index');
+        return view('features.accounting.index');
     }
 
     public function account_dash()
     {
-
-        return view('secondary.accounting.dashboard');
+        return view('features.accounting.dashboard');
     }
 
     public function index_fees()
     {
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
-
-        return view('secondary.accounting.schoolfees.index_fees', compact('schooldetails'));
-        
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
+        return view('features.accounting.schoolfees.index_fees', compact('schoolDetails'));
     }
 
     public function addPaymentCategory(Request $request)
@@ -70,10 +66,10 @@ class AccountController extends Controller
         }
 
         //add record to database
-        $addcategory = new PaymentCategory();
-        $addcategory->categoryname =$request->paymentcategoryform;
-        $addcategory->school_id = Auth::user()->schoolid;
-        $addcategory->save();
+        $addCategory = new PaymentCategory();
+        $addCategory->categoryname =$request->paymentcategoryform;
+        $addCategory->school_id = Auth::user()->schoolid;
+        $addCategory->save();
 
         return back()->with('success', 'Category added successfully');
     }
@@ -91,14 +87,14 @@ class AccountController extends Controller
         }
 
         //add update to database
-        $addcategory = PaymentCategory::find($id);
-        $addcategory->categoryname =$request->paymentcategoryform;
-        $addcategory->save();
+        $addCategory = PaymentCategory::find($id);
+        $addCategory->categoryname =$request->paymentcategoryform;
+        $addCategory->save();
 
         return back()->with('success', 'Category added successfully');
     }
 
-    public function addcategoryamount(Request $request)
+    public function addCategoryAmount(Request $request)
     {
         $validatedData = $request->validate([
             'paymentcategoryform' => 'required',
@@ -112,12 +108,12 @@ class AccountController extends Controller
             return back()->with('error', 'Amount already added');
         }
 
-        $addamount = new AmountTable();
-        $addamount->payment_category_id = $request->paymentcategoryform;
-        $addamount->class_id = $request->classSelected;
-        $addamount->amount = $request->amount;
-        $addamount->school_id = Auth::user()->schoolid;
-        $addamount->save();
+        $addAmount = new AmountTable();
+        $addAmount->payment_category_id = $request->paymentcategoryform;
+        $addAmount->class_id = $request->classSelected;
+        $addAmount->amount = $request->amount;
+        $addAmount->school_id = Auth::user()->schoolid;
+        $addAmount->save();
 
         return back()->with('success', 'Category added successfully');
         
@@ -125,8 +121,8 @@ class AccountController extends Controller
 
     public function deletePaymentCategory($id)
     {
-        $deletecat = PaymentCategory::find($id);
-        $deletecat->delete();
+        $deleteCat = PaymentCategory::find($id);
+        $deleteCat->delete();
 
         $deleteAmount = AmountTable::where('payment_category_id', $id)->first();
         if ($deleteAmount != null) {
@@ -155,24 +151,22 @@ class AccountController extends Controller
     public function summary()
     {
 
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
         $transactionHistory = TransactionRecord::where('school_id', Auth::user()->schoolid)->orderBy('created_at', 'desc')->paginate(10);
 
         $sumTotalExpenditure = RequestModelAccount::where(['schoolid'=> Auth::user()->schoolid, 'status'=>'accept'])->sum('amountrequesting');
 
-        $sumTotalExpenditureTerm = RequestModelAccount::where(['schoolid'=> Auth::user()->schoolid, 'status'=>'accept', 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->sum('amountrequesting');
+        $sumTotalExpenditureTerm = RequestModelAccount::where(['schoolid'=> Auth::user()->schoolid, 'status'=>'accept', 'term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession])->sum('amountrequesting');
 
-        
-
-        return view('secondary.accounting.summary', compact('schooldetails', 'transactionHistory', 'sumTotalExpenditure', 'sumTotalExpenditureTerm'));
+        return view('features.accounting.summary', compact('schoolDetails', 'transactionHistory', 'sumTotalExpenditure', 'sumTotalExpenditureTerm'));
     }
 
     public function invoices()
     {
         // $feeInvoices = FeesInvoice::where('schoolid', Auth::user()->schoolid)->get();
 
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
         $feeInvoices = FeesInvoice::join('addstudent_secs', 'addstudent_secs.id','=','fees_invoices.system_id')
                     ->leftjoin('classlist_secs', 'classlist_secs.id','=','fees_invoices.classid')
@@ -183,13 +177,13 @@ class AccountController extends Controller
 
         $getSettledInvoices = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1])->get();
 
-        $getSettledInvoicesThisTerm = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->get();
+        $getSettledInvoicesThisTerm = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>1, 'term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession])->get();
 
         $getPendingInvoices = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>0])->get();
 
-        $getPendingInvoicesThisTerm = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>0, 'term'=>$schooldetails->term, 'session'=>$schooldetails->schoolsession])->get();
+        $getPendingInvoicesThisTerm = FeesInvoice::where(['schoolid'=> Auth::user()->schoolid, 'status'=>0, 'term'=>$schoolDetails->term, 'session'=>$schoolDetails->schoolsession])->get();
 
-        return view('secondary.accounting.inoivces', compact('feeInvoices', 'getSettledInvoices', 'getPendingInvoices', 'getSettledInvoicesThisTerm', 'getPendingInvoicesThisTerm', 'schooldetails'));
+        return view('features.accounting.inoivces', compact('feeInvoices', 'getSettledInvoices', 'getPendingInvoices', 'getSettledInvoicesThisTerm', 'getPendingInvoicesThisTerm', 'schoolDetails'));
     }
 
     public function viewinvoices($id)
@@ -210,40 +204,40 @@ class AccountController extends Controller
         }
         
 
-        return view('secondary.accounting.viewinvoice', compact('schooldetails', 'getInvoiceItems', 'getInvoice', 'discount'));
+        return view('features.accounting.viewinvoice', compact('schooldetails', 'getInvoiceItems', 'getInvoice', 'discount'));
     }
 
-    public function printinvoice($id)
+    public function printInvoice($id)
     {
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
         $getInvoice = FeesInvoice::join('users', 'users.id','=','fees_invoices.system_id')->where('fees_invoices.id', $id)->select('fees_invoices.*', 'users.firstname', 'users.lastname', 'users.phonenumber', 'users.email')->first();
         $getInvoiceItems = FeesInvoiceItems::where('invoice_id', $id)->get();
 
-        return view('secondary.accounting.invoiceprint', compact('schooldetails', 'getInvoiceItems', 'getInvoice'));
+        return view('features.accounting.invoiceprint', compact('schoolDetails', 'getInvoiceItems', 'getInvoice'));
     }
 
     public function invoicePaymentHistory($id)
     {
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
         $paymentRecord = PaymentRecord::where('invoice_number', $id)->get();
 
-        return view('secondary.accounting.invoicepaymenthistory', compact('schooldetails', 'paymentRecord'));
+        return view('features.accounting.invoicepaymenthistory', compact('schoolDetails', 'paymentRecord'));
     }
 
     public function orderRequest()
     {
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.accounting.request', compact('schooldetails'));
+        return view('features.accounting.request', compact('schoolDetails'));
     }
 
     public function feecollection()
     {
-        $schooldetails = Addpost::find(Auth::user()->schoolid);
+        $schoolDetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.accounting.feecollectionreact', compact('schooldetails'));
+        return view('features.accounting.feecollectionreact', compact('schoolDetails'));
     }
 
     public function confirmMoneyReceived(FeePayment $feePayment, Request $request)
@@ -260,7 +254,7 @@ class AccountController extends Controller
         }
     }
 
-    public function fetchstudentdataforfee(Request $request)
+    public function fetchStudentDataForFee(Request $request)
     {
         $validatedData = $request->validate([
             'identity' => 'required',
@@ -294,14 +288,11 @@ class AccountController extends Controller
                 return response()->json(['data'=>"record no"]);
             }
     
-    
-    
            $feesummary = AmountTable::where("amount_tables.class_id", $getStudentData->classid)
                         ->join('payment_categories', 'payment_categories.id','=','amount_tables.payment_category_id')
                         ->select('amount_tables.*', 'payment_categories.categoryname')->get();
     
             $totalfees = AmountTable::where("amount_tables.class_id", $getStudentData->classid)->sum('amount');
-    
     
             $paymentRecord = PaymentRecord::where(['regno'=> $getStudentData->id, 'term'=>$schooldetails->term])->get();
 
@@ -351,7 +342,6 @@ class AccountController extends Controller
         
                     $addTransactionRecord = $feePayment->addTransactionHistory($request, "Fees Part Payment");
 
-
                     return response()->json(['response'=>'Payment was successful', 'code'=>200], 200);
                 }else if($addPaymentRecord == "Payment already"){
                     return response()->json(['response'=>'Payment already done', 'code'=>200], 200);
@@ -361,8 +351,6 @@ class AccountController extends Controller
                     return response()->json(['response'=>'over charge', 'code'=>401], 200);
                 }
     
-
-                
                 return response()->json(['data'=>'success']);
             }else{
                 return response()->json(['response'=>'unknown error contact admin', 'code' => 401]);
@@ -415,7 +403,7 @@ class AccountController extends Controller
 
         $itemforInventory = InvoicesInventory::where('id', $latestInvoiceCheck)->first();
 
-        return view('secondary.accounting.inventory.index', compact('schooldetails', 'itemforInventory'));
+        return view('features.accounting.inventory.index', compact('schooldetails', 'itemforInventory'));
     }
 
     public function inventory_add_item(Request $request)
@@ -463,10 +451,6 @@ class AccountController extends Controller
     
             return back()->with("success", "Item added successfully");
         }
-
-
-
-        
     }
 
     public function item_finish_notification(Request $request)
@@ -742,7 +726,7 @@ class AccountController extends Controller
             }
 
 
-            return view('secondary.accounting.unpaidfees', compact('unpaidArray', 'schooldetails'));
+            return view('features.accounting.unpaidfees', compact('unpaidArray', 'schooldetails'));
         }else{
            $allStudent = Addstudent::join('users', 'users.id','=','addstudents.usernamesystem')
                     ->join('classlists', 'classlists.id','=','addstudents.classid')
@@ -763,7 +747,7 @@ class AccountController extends Controller
             }
 
 
-            return view('secondary.accounting.unpaidfees', compact('unpaidArray', 'schooldetails'));
+            return view('features.accounting.unpaidfees', compact('unpaidArray', 'schooldetails'));
         }
 
 
@@ -788,7 +772,7 @@ class AccountController extends Controller
     public function student_dicount()
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
-        return view('secondary.accounting.studentdiscount', compact('schooldetails'));
+        return view('features.accounting.studentdiscount', compact('schooldetails'));
     }
 
     public function addStudentDiscount(Request $request)

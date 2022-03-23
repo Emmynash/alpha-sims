@@ -35,6 +35,10 @@
     <section class="content">
       <div class="container-fluid" id="">
 
+        <div class="container">
+          <a href="{{ route('admincomment') }}"><button class="btn btn-info btn-sm">Setup Admin Comment</button></a>
+        </div>
+
         <div class="row">
             <div class="col-6 col-md-6">
                 <form action="{{ route('setupnewcomment') }}" method="post">

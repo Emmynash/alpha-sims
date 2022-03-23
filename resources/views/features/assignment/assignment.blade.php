@@ -1,8 +1,8 @@
-@extends($schooldetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
+@extends($schoolDetails->schooltype == "Primary" ? 'layouts.app_dash' : 'layouts.app_sec')
 
 @section('content')
 
-@if ($schooldetails->schooltype == "Primary")
+@if ($schoolDetails->schooltype == "Primary")
 @include('layouts.asideside') 
 @else
   @include('layouts.aside_sec')
@@ -67,11 +67,11 @@
                                 <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Class/Section: <i style="font-style: normal; font-weight: bold;">{{ $item->classname }}</i><i style="font-style: normal; font-weight: bold;">{{ $item->sectionname }}</i></p>
                                 <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Assignment Category: <i style="font-style: normal; font-weight: bold;">{{  strtoupper($item->assessment_cat) }}</i></p>
                                 <p style="margin: 0px; padding-left: 10px; font-size: 13px;">File: <a href="{{ $item->filelink }}" download="assignment"><i class="fas fa-file-download"></i> Download</a></p>
-                                <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status:</p>
+                                {{-- <p style="margin: 0px; padding-left: 10px; font-size: 13px;">Status:</p> --}}
                               </div>
                               <div style="margin: 10px;">
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#submitassignment{{ $item->id }}">Submit Assignment</button>
-                                <a href="{{ route('view_submission_student', ['subjectid'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid]) }}"><button class="btn btn-info btn-sm">View Submissions</button></a>
+                                <a href="{{ route('view_submission_student', ['subjectid'=>$item->subjectid,'classid'=>$item->classid, 'sectionid'=>$item->sectionid, 'assignment_id'=> $item->id]) }}"><button class="btn btn-info btn-sm">View Submissions</button></a>
                               </div>
                             </div><!-- /.card-body -->
                           </div>
@@ -93,6 +93,11 @@
 
                             <!-- Modal body -->
                             <div class="modal-body">
+                              @if (strtotime($item->submissiondate) - strtotime(date("Y-m-d")) < 0)
+                                  <div class="alert alert-info">
+                                      The submission date has passed
+                                  </div>
+                              @else
                               <form action="{{ route('assignment_submit') }}" method="post" enctype="multipart/form-data" id="submitAssignment{{ $item->id }}">
                                 @csrf
                                 <div class="form-group">
@@ -110,11 +115,18 @@
                                   <input type="file" name="filelink" class="form-control form-control-sm">
                                 </div>
                               </form>
+                              @endif
+                              
                             </div>
 
                             <!-- Modal footer -->
                             <div class="modal-footer">
+                              @if (strtotime($item->submissiondate) - strtotime(date("Y-m-d")) < 0)
+                              <button type="button" data-dismiss="modal" class="btn btn-danger btn-sm">Close</button>
+                              @else
                               <button type="submit" form="submitAssignment{{ $item->id }}" class="btn btn-success btn-sm">Submit</button>
+                              @endif
+                              
                             </div>
 
                           </div>

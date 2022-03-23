@@ -74,7 +74,7 @@ function ViewStudentPri() {
         const data = new FormData()
         data.append("selectedclassmoto", selectedclass),
         data.append("selectedsectionmoto", selectedsection),
-        axios.post("/sec/moto/get_students_for_pyco", data, {
+        axios.post("/moto/get_students_for_pyco", data, {
             headers:{
                 "Content-type": "application/json"
             }

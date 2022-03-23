@@ -14,4 +14,18 @@ class AssesmentModel extends Model
     {
         return $this->hasMany(SubAssesmentModel::class, 'catid', 'id');
     }
+
+    public function getAssessment($assessmentId)
+    {
+        $subAssessment = SubAssesmentModel::where('catid', $assessmentId)->get();
+
+        return count($subAssessment);
+    }
+
+    public function getAssessmentForScore($assessmentId)
+    {
+        $subAssessment = SubAssesmentModel::where('catid', $assessmentId)->get();
+
+        return $subAssessment;
+    }
 }

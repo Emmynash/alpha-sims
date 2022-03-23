@@ -141,7 +141,7 @@
                 <div id="menu1" class="container tab-pane"><br>
                     <h3>Add School</h3>
 
-                    @if (count($userschool) < 1) <div class="alert alert-info alert-block">
+                    @if ($userschool == null) <div class="alert alert-info alert-block">
                         <button type="button" class="close" data-dismiss="alert">×</button>
                         <strong>Do not submit this form if you are not a School Admin or representing a School. Every submission will be verify. Also, Passport upload is required for school verification.</strong>
                 </div>
@@ -269,7 +269,7 @@
                         contact you within 24 hours concerning the status of your school. Thank you.
                     </strong>
                 </div>
-                <i style="font-style: normal;">Application ID: {{$userschool[0]['id']}}</i>
+                <i style="font-style: normal;">Application ID: {{$userschool->id}}</i>
 
                 @endif
 

@@ -39,12 +39,16 @@ class ResultAverageProcess{
             $term = $schooldata->term;
             $schoolsession = $schooldata->schoolsession;
 
+            
+
             DB::beginTransaction();
 
             try {
                 
                     //get all students in the class
                     $getAllStudent = Addstudent_sec::where(['classid'=>$classid, 'studentsection'=>$section])->get();
+
+                    
 
                     $testarray = array();
 
@@ -55,7 +59,7 @@ class ResultAverageProcess{
                             //get subjects
                            $classSubjects = CLassSubjects::join('addsubject_secs', 'addsubject_secs.id','=','c_lass_subjects.subjectid')->where(['c_lass_subjects.classid'=>$classid, 'c_lass_subjects.sectionid'=>$section])->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
 
-                            
+                           
 
                             for ($j=0; $j < $classSubjects->count(); $j++) { 
 
@@ -70,13 +74,15 @@ class ResultAverageProcess{
                                         $createSubjectData = ResultSubjectsModel::updateOrCreate([
                                             'term'=>$term,
                                             'studentregno'=>$getAllStudent[$i]->id,
-                                            'session'=>$schoolsession
+                                            'session'=>$schoolsession,
+                                            'subjectid'=>$classSubjects[$j]->subjectid
                                         ],
                                         [
                                             'subjectname'=> $classSubjects[$j]->subjectname,
                                             'term'=>$term,
                                             'studentregno'=>$getAllStudent[$i]->id,
-                                            'session'=>$schoolsession
+                                            'session'=>$schoolsession,
+                                            'subjectid'=>$classSubjects[$j]->subjectid
                                         ]);
                     
                                         $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->get();
@@ -116,7 +122,11 @@ class ResultAverageProcess{
 
                                     }
 
+                                    
+
                                 }else{
+
+                                    
 
                                 
                                     try {
@@ -126,13 +136,17 @@ class ResultAverageProcess{
                                                 'studentregno'=>$getAllStudent[$i]->id,
                                                 'session'=>$schoolsession,
                                                 'subjectname'=> $classSubjects[$j]->subjectname,
+                                                'subjectid'=>$classSubjects[$j]->subjectid
                                                 ],[
                                                 'subjectname'=> $classSubjects[$j]->subjectname,
                                                 'term'=>$term,
                                                 'studentregno'=>$getAllStudent[$i]->id,
-                                                'session'=>$schoolsession
+                                                'session'=>$schoolsession,
+                                                'subjectid'=>$classSubjects[$j]->subjectid
                                             ]
                                         );
+
+                                        
                                         
                                         
                                     } catch (\Throwable $th) {
@@ -141,6 +155,8 @@ class ResultAverageProcess{
                                     }
                 
                                     $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->get();
+
+                                    
                 
                                     for ($k=0; $k < $getSubCategory->count(); $k++) { 
                                         $getSubjectTotalMark = AssessmentTableTotal::where(['regno'=>$getAllStudent[$i]->id, 'subjectid'=>$classSubjects[$j]->subjectid, 'term'=>$term, 'session'=>$schoolsession, 'classid'=>$classid])->first();
@@ -178,8 +194,6 @@ class ResultAverageProcess{
                                         }
                                     }
 
-
-
                                 }
 
                             }
@@ -188,33 +202,59 @@ class ResultAverageProcess{
                             $assessmentTableTotalsSum = AssessmentTableTotal::where(['regno'=>$getAllStudent[$i]->id, 'term'=>$term, 'session'=>$schoolsession, 'sectionid'=>$section])->sum('totals');
                             $assessmentTableTotals = AssessmentTableTotal::where(['regno'=>$getAllStudent[$i]->id, 'term'=>$term, 'session'=>$schoolsession, 'sectionid'=>$section])->get();
 
-                            $createAverage = ComputedAverages::updateOrcreate([
-                                'session'=>$schoolsession,
-                                'regno'=>$getAllStudent[$i]->id,
-                                'term'=>$term
-                            ],[
-                                'examstotal'=>$assessmentTableTotalsSum,
-                                'studentaverage'=>$assessmentTableTotalsSum/count($assessmentTableTotals),
-                                'session'=>$schoolsession,
-                                'regno'=>$getAllStudent[$i]->id,
-                                'term'=>$term
-                            ]);
+                            if(count($assessmentTableTotals) > 0){
+
+                                $createAverage = ComputedAverages::updateOrcreate([
+                                    'session'=>$schoolsession,
+                                    'regno'=>$getAllStudent[$i]->id,
+                                    'term'=>$term
+                                ],[
+                                    'examstotal'=>$assessmentTableTotalsSum,
+                                    'studentaverage'=>$assessmentTableTotalsSum/count($assessmentTableTotals),
+                                    'session'=>$schoolsession,
+                                    'regno'=>$getAllStudent[$i]->id,
+                                    'term'=>$term
+                                ]);
+
+                            }else{
+                                $createAverage = ComputedAverages::updateOrcreate([
+                                    'session'=>$schoolsession,
+                                    'regno'=>$getAllStudent[$i]->id,
+                                    'term'=>$term
+                                ],[
+                                    'examstotal'=>$assessmentTableTotalsSum,
+                                    'studentaverage'=>'0',
+                                    'session'=>$schoolsession,
+                                    'regno'=>$getAllStudent[$i]->id,
+                                    'term'=>$term
+                                ]);
+                            }
+
+                            
+
+                            
 
                         }
 
+                        
+
                     }
 
+                    // return $createAverage;
+
                 DB::commit();
+
+                
+
+                return "success";
                 // all good
             } catch (\Exception $e) {
                 DB::rollback();
                 // something went wrong
-                return $e;
+                // return $e;
+
+                return 'error';
             }
-
-            
-
-            return $testarray;
        
 
     }
