@@ -71356,7 +71356,7 @@ function StudentDiscount() {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/app_discount.js */"./resources/js/app_discount.js");
+module.exports = __webpack_require__(/*! /Users/Akita/Workspace/Blue Algorithm/alpha-sims/resources/js/app_discount.js */"./resources/js/app_discount.js");
 
 
 /***/ })

@@ -70501,7 +70501,7 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/appelective.js */"./resources/js/appelective.js");
+module.exports = __webpack_require__(/*! /Users/Akita/Workspace/Blue Algorithm/alpha-sims/resources/js/appelective.js */"./resources/js/appelective.js");
 
 
 /***/ })

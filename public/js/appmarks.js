@@ -75839,6 +75839,7 @@ function AddMarks() {
   }
 
   function getSubAssessmentCat(student_id) {
+    console.log('student-id', student_id);
     setfetchingSubassessment(true);
     setStudentId(student_id);
     setRecordArray([]);
@@ -75985,7 +75986,7 @@ function AddMarks() {
     }
   };
 
-  return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, console.log("check sub ass", subassessment), isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
         zIndex: '1000',
         position: 'absolute',
@@ -76500,7 +76501,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/appmarks.js */"./resources/js/appmarks.js");
+module.exports = __webpack_require__(/*! /Users/Akita/Workspace/Blue Algorithm/alpha-sims/resources/js/appmarks.js */"./resources/js/appmarks.js");
 
 
 /***/ })
