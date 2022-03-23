@@ -16,6 +16,11 @@
             <div class="spinner-border" style="width: 20px; height: 20px;"></div>
           </div>
           <div>
+            {{-- <button id="button" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; border: none; background: transparent; outline: none; color: white;"><i class="fas fa-camera"></i></button>
+            <form id="pixupdatelater" action="javascript:console.log('submited')" method="POST">
+              @csrf
+              <input id="profilepix" name="profilepix" type="file" style="visibility: hidden; position: absolute;"/>
+            </form> --}}
             <button id="button" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0; border: none; background: transparent; outline: none; color: white;"></button>
             <form id="pixupdatelater" action="javascript:console.log('submited')" method="POST">
               @csrf
@@ -380,16 +385,18 @@
           </a>
         </li>
 
+        @if (Auth::user()->schooltype === 'secondary')
         @can('access library')
         <li class="nav-item has-treeview">
           <a href="{{ route('school_library') }}" class="nav-link">
-            <i class="fa fa-shelves nav-icon"></i>
+            <i class="fa fa-book nav-icon"></i>
             <p>
               Visit Library
             </p>
           </a>
         </li>
         @endcan
+        @endif
 
         @if (Auth::user()->hasRole('Teacher'))
         {{-- <li class="nav-item has-treeview">
@@ -673,6 +680,8 @@
         </li>
         @endcan
 
+
+        @if (Auth::user()->schooltype === 'secondary')
         @can('accommodation')
         <li class="nav-item has-treeview">
           <a id="managestaffaside" href="{{ route('dom_index') }}" class="nav-link">
@@ -683,6 +692,7 @@
           </a>
         </li>
         @endcan
+        @endif
 
         @can('psychomotor module')
         <li class=" nav-item has-treeview">
