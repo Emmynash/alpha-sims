@@ -100,8 +100,8 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
-            // orderBy('order', 'ASC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid);
+            // ->orderBy('order', 'ASC')->get();
             $subAssessmentExams = SubAssesmentModel::where(['schoolid' => Auth::user()->schoolid, 'ca_tag' => 'exam'])->get();
 
             $subAssessmentTest = SubAssesmentModel::where(['schoolid' => Auth::user()->schoolid, 'ca_tag' => 'test'])->get();
@@ -118,8 +118,17 @@ class ResultController_sec extends Controller
 
             $computedAverage = ComputedAverages::where(['session' => $schoolsession, 'regno' => $regNo, 'term' => $term])->first();
 
+            $getClassGrandTotal = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->sum('examstotal');
 
-            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage', 'subAssessmentExams', 'subAssessmentTest', 'subAssessmentAss'));
+            $getClassRecord = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->get();
+            
+            $recordCount = count($getClassRecord) * count($resultMain);
+
+            $classAverage = $getClassGrandTotal /  $recordCount;
+
+
+
+            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'getClassRecord', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage', 'subAssessmentExams', 'subAssessmentTest', 'subAssessmentAss'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();
@@ -222,17 +231,16 @@ class ResultController_sec extends Controller
 
             //    return $resultAverage;
 
-
             if ($resultAverage == "success") {
 
 
-                // return response()->json(['response'=>$resultAverage], 200);
+                return response()->json(['response'=>$resultAverage], 200);
 
-                $process_class_average = $processClassAverage->processresult($request);
+                // $process_class_average = $processClassAverage->processresult($request);
 
-                return response()->json(['response' => ''], 200);
+                // return response()->json(['response' => ''], 200);
             } else {
-                return response()->json(['response' => ''], 403);
+                return response()->json(['response' => ''], 500);
             }
         } catch (\Throwable $th) {
             //throw $th;
