@@ -140,7 +140,7 @@
                                     <i style="font-size: 12px; font-style: normal;">{{$teachersubjects->getSubjectName->subjectcode}}</i>
                                 </div>
                                 <div>
-                                    <i style="font-size: 12px; font-style: normal;">{{$teachersubjects->getClassName->classname}}{{ $teachersubjects->sectionname }}</i>
+                                    {{-- <i style="font-size: 12px; font-style: normal;">{{$teachersubjects->getClassName->classname}}{{ $teachersubjects->sectionname }}</i> --}}
                                 </div>
                                 {{-- <div>
                                     <i style="font-size: 12px; font-style: normal;">Class Count: {{$teachersubjects->getClassCount($teachersubjects->classid)}}</i>
