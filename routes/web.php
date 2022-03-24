@@ -247,6 +247,7 @@ Route::middleware(['tenant'])->group(function () {
     Route::POST('/add_roles_and_permission', ['uses' => 'SuperController@addRolesAndPermission', 'roles' => ['SuperAdmin']])->middleware('roles')->name('add_roles_and_permission');
     Route::POST('/revoke_permission_role', ['uses' => 'SuperController@revokePermissionFromRole', 'roles' => ['SuperAdmin']])->middleware('roles')->name('revoke_permission_role');
     Route::POST('/add_permission', ['uses' => 'SuperController@addMorePermissions', 'roles' => ['SuperAdmin']])->middleware('roles')->name('add_permission');
+    Route::POST('/delete_permission', ['uses' => 'SuperController@deletePermission', 'roles' => ['SuperAdmin']])->middleware('roles')->name('delete_permission');
     Route::POST('/add_roles', ['uses' => 'SuperController@addMoresRoles', 'roles' => ['SuperAdmin']])->middleware('roles')->name('add_roles');
     Route::get('/rolesmanage', ['uses' => 'SuperController@rolesmanage', 'roles' => ['SuperAdmin']])->middleware('roles');
     Route::POST('/activateschool', ['uses' => 'SuperController@activateschool', 'roles' => ['SuperAdmin']])->middleware('roles');
@@ -344,7 +345,8 @@ Route::middleware(['tenant'])->group(function () {
             Route::POST('/view_by_class', 'ResultController_sec@view_by_class')->name('view_by_class');
             Route::Post('/result_print_single_sec', 'ResultController_sec@viewSingleResult')->name('result_print_single_sec');
             // Route::get('/result_by_class', 'ResultController_sec@result_by_class')->name('result_by_class');           
-            Route::get('/generate_result', 'ResultController_sec@generateResult')->name('generate_result')->middleware('can:generate student result');
+            Route::get('/generate_result', 'ResultController_sec@generateResult')->name('generate_result');
+            // ->middleware('can:generate student result');
             Route::get('/get_result_ready_section', 'ResultController_sec@get_result_ready_section');
             Route::post('/generate_result_main', 'ResultController_sec@generateResultMain')->name('generate_result_main');
             Route::get('/print_entrire_class_result', 'ResultController_sec@printEntrireClassResult')->name('print_entrire_class_result');
