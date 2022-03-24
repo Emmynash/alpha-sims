@@ -495,6 +495,18 @@ class SuperController extends Controller
         return back();
     }
 
+    public function deletePermission(Request $request)
+    {
+        $validatedData = $request->validate([
+            'permission' => 'required'
+        ]);
+
+        $permission = Permission::findById($request->permission);
+        $permission->delete();
+
+        return back();
+    }
+
     public function roleList()
     {
         $role = Role::with('permissions')->get();
