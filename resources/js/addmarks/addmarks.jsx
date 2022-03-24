@@ -342,6 +342,7 @@ function AddMarks() {
     }
 
     function addStudentScore() {
+        console.log('add student');
 
         if (recordArray.length < 1) {
             return
@@ -379,7 +380,7 @@ function AddMarks() {
         }).catch(error => {
             console.log(error)
         })
-
+        return  window.location.reload(false)
     }
 
     function getScoreRecord(userid) {
