@@ -75839,7 +75839,6 @@ function AddMarks() {
   }
 
   function getSubAssessmentCat(student_id) {
-    console.log('student-id', student_id);
     setfetchingSubassessment(true);
     setStudentId(student_id);
     setRecordArray([]);
@@ -75860,6 +75859,8 @@ function AddMarks() {
   }
 
   function addStudentScore() {
+    console.log('add student');
+
     if (recordArray.length < 1) {
       return;
     }
@@ -75890,6 +75891,7 @@ function AddMarks() {
     })["catch"](function (error) {
       console.log(error);
     });
+    return window.location.reload(false);
   }
 
   function getScoreRecord(userid) {
@@ -75986,7 +75988,7 @@ function AddMarks() {
     }
   };
 
-  return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, console.log("check sub ass", subassessment), isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: {
         zIndex: '1000',
         position: 'absolute',
