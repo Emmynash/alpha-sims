@@ -19,4 +19,8 @@ class ResultSubjectsModel extends Model
     {
         return AssessmentResultModel::where(['space_id'=>$space_id])->first();
     }
+    public function getStudentRecord($subjectid, $schoolsession, $regNo){
+
+        return AssessmentTableTotal::where(['subjectid'=> $subjectid, 'session' => $schoolsession, 'regno' => $regNo])->first();
+    }
 }
