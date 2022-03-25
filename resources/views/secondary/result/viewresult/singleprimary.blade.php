@@ -245,11 +245,11 @@
 
                     <center>
                         <div style="width: 95%; margin: 3px auto;">
-                            <i style="font-size: 13px; font-style: normal;">Acquired = <b>5</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Reinforce = <b>4</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Under Acquirement = <b>3</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Non Acquired = <b>2</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Difficult to Acquire = <b>1</b></i>
+                            <i style="font-size: 13px; font-style: normal;">Very Good = <b>5</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Good = <b>4</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Average = <b>3</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Fair = <b>2</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Poor = <b>1</b></i>
                         </div>
                     </center>
 
