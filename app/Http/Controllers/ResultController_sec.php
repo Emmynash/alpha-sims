@@ -102,11 +102,6 @@ class ResultController_sec extends Controller
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid);
             // ->orderBy('order', 'ASC')->get();
-            $subAssessmentExams = SubAssesmentModel::where(['schoolid' => Auth::user()->schoolid, 'ca_tag' => 'exam'])->get();
-
-            $subAssessmentTest = SubAssesmentModel::where(['schoolid' => Auth::user()->schoolid, 'ca_tag' => 'test'])->get();
-
-            $subAssessmentAss = SubAssesmentModel::where(['schoolid' => Auth::user()->schoolid, 'ca_tag' => 'ass'])->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
@@ -128,7 +123,7 @@ class ResultController_sec extends Controller
 
 
 
-            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'getClassRecord', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage', 'subAssessmentExams', 'subAssessmentTest', 'subAssessmentAss'));
+            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'getClassRecord', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();
