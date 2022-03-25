@@ -316,6 +316,7 @@
         </p>
         </a>
         </li> --}}
+
                       <li class="nav-item">
                           <a id="markmanageoption" href="{{ route('teacher_sec_remark') }}" class="nav-link">
                               <i class="far fa-comment-alt nav-icon"></i>
@@ -409,6 +410,7 @@
             <i class="nav-icon fas fa-clipboard-list"></i>
             <p>Mark Manage</p>
           </a>
+
         </li>
         @endcan --}}
                       {{-- @can('form teacher')
@@ -437,7 +439,6 @@
               </a>
             </li>
             @endcan
-
           </ul>
         </li>
         @endcan --}}
@@ -657,7 +658,6 @@
               </a>
             </li> --}}
 
-
                   @can('settings')
                       <li class="nav-item has-treeview">
                           <a id="settingsaside" href="#" class="nav-link">
@@ -708,7 +708,6 @@
                           </ul>
                       </li>
                   @endcan
-
 
 
 

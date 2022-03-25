@@ -261,7 +261,6 @@ class AddstudentmakrsController_secs extends Controller
     public function fetchsubassessment($studentid, $subjectid)
     {
         try {
-
             // $subassessment = SubAssesmentModel::where(['status'=>1, 'catid'=>$id])->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();

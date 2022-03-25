@@ -326,6 +326,17 @@ Route::middleware(['tenant'])->group(function () {
             Route::POST('/allusers_sec_fetch', 'AllUsersController@fetchuser_sec')->name('allusers_sec_fetch');
         });
 
+        Route::group(['prefix' => 'moto', 'middleware' => ['auth', 'can:add psychomotor']], function () {
+
+            //phycomoto secondary
+            Route::get('/student_moto', 'MotoController_sec@index', 'roles')->name('student_moto');
+            Route::get('/setting_moto', 'MotoController_sec@settingsmoto', 'roles')->name('setting_moto')->middleware('can:add moto settings');
+            Route::post('/add_setting_moto', 'MotoController_sec@addSettingsMoto')->name('add_setting_moto');
+            Route::POST('/get_students_for_pyco', 'MotoController_sec@get_students_for_psyco')->name('get_students_for_pyco');
+            Route::POST('/addmoto_main', 'MotoController_sec@addmotomain', 'roles')->name('addmoto_main');
+            Route::get('/view_student/{id}', 'MotoController_sec@addFunNowMain')->name('view_student');
+            Route::POST('/add_student_moto', 'MotoController_sec@addmotomain')->name('add_student_moto');
+        });
 
         Route::group(['prefix' => 'result', 'middleware' => ['auth', 'can:result module']], function () {
             Route::get('/result_by_class', 'ResultController_sec@result_by_class',)->name('result_by_class')->middleware('can:view student result');
