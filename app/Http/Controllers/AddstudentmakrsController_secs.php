@@ -136,8 +136,7 @@ class AddstudentmakrsController_secs extends Controller
                         $join->where(['assessment_table_totals.subjectid' => $subjectbyclassid, 'assessment_table_totals.term' => $schoolterm]);
                     })
                     ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname', 'assessment_table_totals.totals', 'assessment_table_totals.grade', 'assessment_table_totals.id as markid', 'assessment_table_totals.position')
-                    ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])
-                    ->orderBy('assessment_table_totals.position', 'asc')->get();
+                    ->where(['addstudent_secs.classid' => $classId, 'addstudent_secs.schoolsession' => $session, 'addstudent_secs.studentsection' => $studentsection])->get();
 
                 $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->pluck('id')->toArray();
 
