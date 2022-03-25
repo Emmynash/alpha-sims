@@ -169,9 +169,9 @@
                                         @endif
                                         @endforeach
                                         <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Subject </br> Average</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
                                         <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
-                                        <!-- <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th> -->
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
                                 </tr>
                             </thead>
                             <tbody id="resultprinttable">
@@ -206,12 +206,12 @@
                                     <td class='text-center thdesign' style='font-size: 14px;'>
                                         <center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->grade }}</center>
                                     </td>
-                                    <!-- <td class='text-center thdesign' style='font-size: 14px;'>
-                                        <center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->position }}</center>
-                                    </td> -->
+                                    <td class='text-center thdesign' style='font-size: 14px;'>
+                                        <center>{{ $item->getStudentRecord($item->subjectid, $schoolsession, $regNo) == NULL ? "---":$item->getStudentRecord($item->subjectid, $schoolsession, $regNo)->position }}</center>
+                                    </td>
                                 <tr>
 
-                                @endforeach
+                                    @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -226,31 +226,33 @@
                         <div class="text-center" style="width: 95%; margin: 10px auto;">
                             @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                             @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
-                            <i style="font-size: 10px; font-style: normal;">{{ $item->gpaname }} = ({{ $item->marksfrom }}-{{ $item->marksto }})</i>
+                            <i style="font-size: 13px; font-style: normal;">{{ $item->gpaname }} = ({{ $item->marksfrom }}-{{ $item->marksto }}),</i>
                             @endforeach
                             @endif
                         </div>
                     </center>
-                    <center>
-                        <div style="width: 95%; margin: 3px auto;">
-                            @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
-                            @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
-                            <i style="font-size: 10px; font-style: normal;">({{ $item->marksfrom }}-{{ $item->marksto }}) = {{ $item->point }}</i>
-                            @endforeach
-                            @endif
-                        </div>
-                    </center>
-                    <div style="width: 95%; margin: 3px auto;">
+                    <!-- <div style="width: 95%; margin: 3px auto;">
                         @if ($addschool->getGradeDetails($addschool->id, $studentClass->classtype)->count() > 0)
                         @foreach ($addschool->getGradeDetails($addschool->id, $studentClass->classtype) as $item)
                         <i style="font-size: 10px; font-style: normal;">{{ $item->gpaname }} = {{ $item->remark }}</i>
                         @endforeach
                         @endif
-                    </div>
+                    </div> -->
                     <div style="display: flex; align-items: center; justify-content: center;">
                         <i style="text-decoration: underline; font-style: normal; font-weight: bold;">RATINGS</i>
                     </div>
                     <br>
+
+                    <center>
+                        <div style="width: 95%; margin: 3px auto;">
+                            <i style="font-size: 13px; font-style: normal;">Acquired = <b>5</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Reinforce = <b>4</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Under Acquirement = <b>3</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Non Acquired = <b>2</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Difficult to Acquire = <b>1</b></i>
+                        </div>
+                    </center>
+
                     <div>
 
                         <div>
