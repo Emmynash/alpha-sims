@@ -110,7 +110,7 @@ class Addpost extends Model
 
     public function getGradeDetails($schoolid, $classtype)
     {
-        $grades = Addgrades_sec::where(['schoolid'=>$schoolid, 'type'=>$classtype])->get();
+        $grades = AddgradesSec::where(['schoolid'=>$schoolid, 'type'=>$classtype])->get();
 
         return $grades;
     }
