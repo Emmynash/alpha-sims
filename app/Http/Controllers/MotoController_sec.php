@@ -127,6 +127,7 @@ class MotoController_sec extends Controller
 
                 $getMotoList = AddMoto_sec::where(['schoolid' => Auth::user()->schoolid, 'student_id' => $getuserid, 'session' => $getschoolData->schoolsession, 'term' => $getschoolData->term])->pluck('moto_id')->toArray();
 
+
                 AddMoto_sec::where(['schoolid' => Auth::user()->schoolid, 'student_id' => $getuserid, 'session' => $getschoolData->schoolsession, 'term' => $getschoolData->term])->delete();
 
                 for ($i = 0; $i < count($request->input()); $i++) {
