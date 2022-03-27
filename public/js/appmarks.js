@@ -75859,6 +75859,8 @@ function AddMarks() {
   }
 
   function addStudentScore() {
+    console.log('add student');
+
     if (recordArray.length < 1) {
       return;
     }
@@ -75889,6 +75891,7 @@ function AddMarks() {
     })["catch"](function (error) {
       console.log(error);
     });
+    return window.location.reload(false);
   }
 
   function getScoreRecord(userid) {
@@ -76500,7 +76503,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/macbookpro/Sites/alpha-sims-react/resources/js/appmarks.js */"./resources/js/appmarks.js");
+module.exports = __webpack_require__(/*! /Users/Akita/Workspace/Blue Algorithm/alpha-sims/resources/js/appmarks.js */"./resources/js/appmarks.js");
 
 
 /***/ })

@@ -133,6 +133,21 @@
                         <button class="btn btn-primary btn-sm">Add</button>
                       </div>
                     </form>
+                    <form action="{{ route('delete_permission') }}" method="post">
+                      @csrf
+                      <div class="form-group">
+                        <label for="">Remove Permission</label>
+                        <select class="form-control" name="permission" style="width: 100%;">
+                          <option value="">Select a permission</option>
+                          @foreach ($permission as $item)
+                          <option value="{{ $item->id }}">{{ $item->name }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                      </div>
+                    </form>
 
                   </div>
 
@@ -199,13 +214,13 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
+  <!-- <footer class="main-footer">
     <strong>Copyright &copy; 2019-2022 <a href="https://www.bluealgorithmtechnologies.com/">Blue Algorithm technologies.</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 2.0
     </div>
-  </footer>
+  </footer> -->
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">

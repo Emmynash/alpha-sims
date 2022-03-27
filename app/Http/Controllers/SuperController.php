@@ -254,7 +254,7 @@ class SuperController extends Controller
                     return back()->with('error', 'Operation aborted. User already allocated school');
                 }else{
                     if ($checkId[0]['role'] == "SuperAdmin") {
-                        return back()->with('error', 'You have to revoke role before reasigning...');
+                        return back()->with('error', 'You have to revoke role before reassigning...');
                     }else{
                         $asignrole = User::find($id);
                         $asignrole->role = "SuperAdmin";
@@ -491,6 +491,18 @@ class SuperController extends Controller
         $role = Role::findById($request->rolename);
         
         $role->revokePermissionTo($request->permissions);
+
+        return back();
+    }
+
+    public function deletePermission(Request $request)
+    {
+        $validatedData = $request->validate([
+            'permission' => 'required'
+        ]);
+
+        $permission = Permission::findById($request->permission);
+        $permission->delete();
 
         return back();
     }

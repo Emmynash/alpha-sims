@@ -261,6 +261,7 @@ class AddstudentmakrsController_secs extends Controller
     public function fetchsubassessment($studentid, $subjectid)
     {
         try {
+
             // $subassessment = SubAssesmentModel::where(['status'=>1, 'catid'=>$id])->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
@@ -308,7 +309,7 @@ class AddstudentmakrsController_secs extends Controller
                     $assessments = SubAssesmentModel::find($subjectWithMarks[$i]['subAssId']);
 
                     if ((int)$subjectWithMarks[$i]['score'] > (int)$assessments->maxmarks) {
-                        array_push($errorArray, "value entered for ".$assessments->subname." is above the required");
+                        array_push($errorArray, "value entered for " . $assessments->subname . " is above the required");
                     }
                 }
 
