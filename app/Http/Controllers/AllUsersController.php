@@ -45,7 +45,7 @@ class AllUsersController extends Controller
         return view('pages.allusers')->with('studentDetails', $studentDetails);
     }
 
-    public function index_sec(){
+    public function index_sec(){ 
         $id = Auth::user()->schoolid;
 
         $allusers = User::where('schoolid', $id)->paginate(10);
@@ -98,7 +98,6 @@ class AllUsersController extends Controller
 
 
         }
-
 
             return response()->json(['allusers' => $usersListMain]);
         } catch (\Throwable $th) {
