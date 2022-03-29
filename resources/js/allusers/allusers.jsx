@@ -108,13 +108,13 @@ function AllUsers() {
         ];
 
 
-        // useEffect(() => {
-        //   setFilteredUsers(
-        //     datamain.filter((users) =>
-        //     users.name.toLowerCase().includes(search.toLowerCase())
-        //     )
-        //   );
-        // }, [search, datamain]);
+        useEffect(() => {
+          setFilteredUsers(
+            datamain.filter((users) =>
+            users.name.toLowerCase().includes(search.toLowerCase())
+            )
+          );
+        }, [search, datamain]);
 
 
       function fetch_all_student() {
