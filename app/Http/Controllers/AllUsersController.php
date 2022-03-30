@@ -73,7 +73,9 @@ class AllUsersController extends Controller
 
            $addmisNo = '';
 
-           if ($role[0] == "Student") {
+           if($role != null){
+
+            if ($role[0] == "Student") {
                 // echo $user->id.",";
                 $student = Addstudent_sec::where('usernamesystem', $user->id)->first();
                 if ($student != null) {
@@ -95,6 +97,10 @@ class AllUsersController extends Controller
             );
 
             array_push($usersListMain, $newObject);
+
+           }
+
+
 
 
         }
