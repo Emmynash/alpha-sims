@@ -73,6 +73,8 @@ class AllUsersController extends Controller
 
            $addmisNo = '';
 
+           dump($role);
+
            if ($role[0] == "Student") {
                 // echo $user->id.",";
                 $student = Addstudent_sec::where('usernamesystem', $user->id)->first();
