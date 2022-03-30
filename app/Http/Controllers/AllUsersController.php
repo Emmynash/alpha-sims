@@ -73,7 +73,7 @@ class AllUsersController extends Controller
 
            $addmisNo = '';
 
-           if($role != null){
+           if(count($role) > 0){
 
             if ($role[0] == "Student") {
                 // echo $user->id.",";
