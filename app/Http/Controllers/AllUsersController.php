@@ -18,8 +18,8 @@ use App\Http\Middleware\Roles;
 use Redirect;
 use Carbon\Carbon;
 use App\Studentattendance;
-use DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AllUsersController extends Controller
 {
@@ -45,7 +45,7 @@ class AllUsersController extends Controller
         return view('pages.allusers')->with('studentDetails', $studentDetails);
     }
 
-    public function index_sec(){
+    public function index_sec(){ 
         $id = Auth::user()->schoolid;
 
         $allusers = User::where('schoolid', $id)->paginate(10);
@@ -104,7 +104,6 @@ class AllUsersController extends Controller
 
 
         }
-
 
             return response()->json(['allusers' => $usersListMain]);
         } catch (\Throwable $th) {

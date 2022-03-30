@@ -313,58 +313,6 @@
         </li>
         @endcan
 
-        @can('take teachers attendance')
-        <li class="nav-item has-treeview">
-          <a id="attendancemain" href="#" class="nav-link">
-            <i class="fas fa-id-card nav-icon"></i>
-            <p>
-              Teachers Attendance
-              <i class="fas fa-angle-left right"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a id="attendancemain_add" href="/teacher_add_attendance" class="nav-link">
-                <i class="far fa-plus-square nav-icon"></i>
-                <p>Add</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-eye nav-icon"></i>
-                <p>View</p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        @endcan
-
-        @can('student attendance')
-        <li class="nav-item has-treeview">
-          <a id="studentatt_sec" href="#" class="nav-link">
-            <i class="fas fa-id-card nav-icon"></i>
-            <p>
-              Student Attendance
-              <i class="fas fa-angle-left right"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a id="studentatt_sec_add" href="student_attendance_sec" class="nav-link">
-                <i class="far fa-plus-square nav-icon"></i>
-                <p>Add</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a id="studentatt_sec_view" href="/view_all_at_route_sec" class="nav-link">
-                <i class="far fa-eye nav-icon"></i>
-                <p>View</p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        @endcan
-
         @can('elearning')
         <li class="nav-item has-treeview">
           <a href="{{ route('elearning') }}" class="nav-link">
