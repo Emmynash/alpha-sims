@@ -18,8 +18,8 @@ use App\Http\Middleware\Roles;
 use Redirect;
 use Carbon\Carbon;
 use App\Studentattendance;
-use DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AllUsersController extends Controller
 {
@@ -73,9 +73,9 @@ class AllUsersController extends Controller
 
            $addmisNo = '';
 
-           dump($role);
+           if($role != null){
 
-           if ($role[0] == "Student") {
+            if ($role[0] == "Student") {
                 // echo $user->id.",";
                 $student = Addstudent_sec::where('usernamesystem', $user->id)->first();
                 if ($student != null) {
@@ -97,6 +97,10 @@ class AllUsersController extends Controller
             );
 
             array_push($usersListMain, $newObject);
+
+           }
+
+
 
 
         }
