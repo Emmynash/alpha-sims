@@ -29,6 +29,7 @@ function AddMarks() {
     const [assessment, setSchoolAssessments] = useState([])
     const [subassessment, setSchoolSubAssessments] = useState([])
     const [fetchingSubassessment, setfetchingSubassessment] = useState(false);
+    const [marksUpdated, setMarksUpdated] = useState(false);
 
     const [examsscore, setexamsscore] = useState(0)
     const [ca1score, setca1score] = useState(0)
@@ -62,8 +63,11 @@ function AddMarks() {
 
 
     useEffect(() => {
+        if (!marksUpdated) {
 
-        fetchSchoolDetails()
+        fetchSchoolDetails();
+            
+        }
 
         return () => {
             // cleanup
@@ -237,9 +241,11 @@ function AddMarks() {
             console.log(response.data)
             seIsLoading(false)
             if (response.data.response == "feilds") {
-                myalert('All fields required', 'error')
+                myalert('All fields are required', 'error')
             } else {
-                myalert('success', 'success')
+                if (marksUpdated) {
+                    myalert('success', 'success')
+                }
                 setStudentList(response.data.studentlist)
                 setStudentListFiltered(response.data.studentlist)
             }
@@ -373,6 +379,7 @@ function AddMarks() {
                 // myalert(response.data.response, 'error')
 
             } else if (response.data.code == 200) {
+                setMarksUpdated(true)
                 myalert(response.data.response, 'success')
             }
 
@@ -496,6 +503,16 @@ function AddMarks() {
 
     }
 
+    useEffect(() => {
+        if (marksUpdated) {
+            fetchAllStudentInClass();
+        }
+        setMarksUpdated(false);
+
+        return () => {
+            // cleanup
+        };
+    }, [marksUpdated]);
 
     return (
         <div>
@@ -579,7 +596,6 @@ function AddMarks() {
             </div>
 
             {studentlist.length > 0 ? <div>
-                <button onClick={fetchAllStudentInClass} className="btn btn-info btn-sm">Click to refresh Student List</button>
                 <div className="row">
                     <div className="col-12">
                         <div className="card">
