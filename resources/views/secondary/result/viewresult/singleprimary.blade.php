@@ -183,6 +183,7 @@
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
+                                    <th class='' style='font-size: 14px;'></th>
                                 </tr>
 
 
@@ -333,7 +334,7 @@
 
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                            FORM MASTER'S REMARK <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                            FORM MASTER'S/MISTRESS REMARK: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
                         </div>
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
