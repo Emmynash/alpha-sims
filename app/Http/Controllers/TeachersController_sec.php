@@ -95,13 +95,17 @@ class TeachersController_sec extends Controller
                             ->join('classlist_secs','classlist_secs.id','=','form_teachers.class_id')
                             ->where('form_teachers.school_id', Auth::user()->schoolid)
                             ->select('form_teachers.*', 'classlist_secs.classname', 'classlist_secs.id as classid', 'addsection_secs.sectionname', 'addsection_secs.id as sectionid', 'users.firstname', 'users.middlename', 'users.lastname')->get();
+            $assignedSubjects = FormTeachers::join('classlist_secs', 'classlist_secs.id', '=', 'form_teachers.class_id')
+            ->join('addsection_secs', 'addsection_secs.id', '=', 'form_teachers.form_id')
+            ->where('teacher_id', Auth::user()->id)
+                ->select('form_teachers.*', 'classlist_secs.classname', 'addsection_secs.sectionname')->get();
 
             $houses = Addhouse_sec::where('schoolid', Auth::user()->schoolid)->get();
 
             $clubs = Addclub_sec::where('schoolid', Auth::user()->schoolid)->get();
     
     
-            return response()->json(['classesAll'=>$classesAll, 'addsection_sec'=>$addsection_sec, 'addsubject_sec'=>$addsubject_sec, 'getAllTeachersWithSubject'=>$getAllTeachersWithSubject, 'getFormMasters'=>$getFormMasters, 'houses'=>$houses, 'clubs'=>$clubs, 'getAllTeachers'=>$getAllTeachers]);
+            return response()->json(['assignedSubjects'=>$assignedSubjects, 'classesAll'=>$classesAll, 'addsection_sec'=>$addsection_sec, 'addsubject_sec'=>$addsubject_sec, 'getAllTeachersWithSubject'=>$getAllTeachersWithSubject, 'getFormMasters'=>$getFormMasters, 'houses'=>$houses, 'clubs'=>$clubs, 'getAllTeachers'=>$getAllTeachers]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['response'=>$th]);
@@ -606,7 +610,7 @@ class TeachersController_sec extends Controller
         }
     }
 
-    public function viewClassFormMaster($classid, $sectionid)
+    public function viewClassFormMaster($classid, $sectionid) 
     {
 
         $formClass = FormTeachers::where(['teacher_id'=> Auth::user()->id, 'form_id'=>$sectionid, 'class_id'=>$classid])->first();
@@ -757,6 +761,13 @@ class TeachersController_sec extends Controller
 
         try {
             $schooldata = Addpost::find(Auth::user()->schoolid);
+            $getStudentComment = CommentsModel::where(['classid' => $request->classid, 'session' => $schooldata->schoolsession, 'reg_no' => $request->regno])->first();
+
+            if($getStudentComment){
+                $updateComment = CommentsModel::find($request->reg_no);
+                $updateComment->comments = $request->comment;
+                $updateComment->save();
+            }
 
             $addStudentComment = CommentsModel::updateOrCreate(
                 ['session' => $schooldata->schoolsession, 'reg_no' => $request->reg_no, 'section_id' => $request->section_id, 'classid' => $request->classid],
