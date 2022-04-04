@@ -20,7 +20,7 @@ class MotoController_sec extends Controller
 
         $schooldetails = Addpost::find(Auth::user()->schoolid);
 
-        return view('secondary.psycomotor.motoreact', compact('schooldetails'));
+        return view('features.psycomotor.motoreact', compact('schooldetails'));
     }
 
     public function settingsmoto()
@@ -64,7 +64,7 @@ class MotoController_sec extends Controller
         $addmoto->schoolid = (int)Auth::user()->schoolid;
         $addmoto->save();
 
-        return back()->with('success', 'process was successfull...');
+        return back()->with('success', 'process was successful...');
     }
 
     public function get_students_for_psyco(Request $request)
