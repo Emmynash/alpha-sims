@@ -64,7 +64,7 @@ class MotoController_sec extends Controller
         $addmoto->schoolid = (int)Auth::user()->schoolid;
         $addmoto->save();
 
-        return back()->with('success', 'process was successfull...');
+        return back()->with('success', 'process was successful...');
     }
 
     public function get_students_for_psyco(Request $request)

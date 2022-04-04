@@ -312,6 +312,24 @@
             </p>
           </a>
         </li>
+        <li class="nav-item has-treeview">
+          <a id="viewmarks" href="#" class="nav-link">
+            <i class="nav-icon fas fa-check-double"></i>
+            <p>
+              Mark Manage
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
+            <li class="nav-item">
+              <a id="viewmarksadd" href="{{ route('managemarks') }}" class="nav-link">
+                <i class="nav-icon fas fa-plus"></i>
+                <p>Add New</p>
+              </a>
+            </li>
+
+          </ul>
+        </li>
         @can('form teacher')
         <li class="nav-item has-treeview">
           <a id="formmasteroption" href="#" class="nav-link">
@@ -394,36 +412,6 @@
 
         </li>
         @endcan --}}
-        @can('form teacher')
-        <li class=" nav-item has-treeview">
-          <a id="psyhcomoto" href="#" class="nav-link">
-            <i class="nav-icon fas fa-cogs"></i>
-            <p>
-              Psychomotor
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview" style=" color: #90ada7; padding-left: 10px !important;  border-bottom: 1px solid #585858;  font-size: 14px;">
-            @can('add psychomotor')
-            <li class="nav-item">
-              <a id="psyhcomotoadd" href="{{ route('student_moto') }}" class="nav-link">
-                <i class="nav-icon fas fa-plus"></i>
-                <p>add</p>
-              </a>
-            </li>
-            @endcan
-            @can('add moto settings')
-            <li class="nav-item">
-              <a id="psyhcomotosettings" href="{{ route('setting_moto') }}" class="nav-link">
-                <i class=" nav-icon fas fa-cog"></i>
-                <p>set psychomotor</p>
-              </a>
-            </li>
-            @endcan
-
-          </ul>
-        </li>
-        @endcan
         @endif
 
         @can('manage staff')

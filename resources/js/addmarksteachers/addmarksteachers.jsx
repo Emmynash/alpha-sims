@@ -23,6 +23,8 @@ function AddMarksTeachers() {
 
     const [studentId, setStudentId] = useState('')
     const [recordArray, setRecordArray] = useState([])
+    const [marksUpdated, setMarksUpdated] = useState(false);
+    
 
     const [schoolsection, setschoolsection] = useState([])
     const [schoolschool, setschoolsession] = useState('')
@@ -49,11 +51,20 @@ function AddMarksTeachers() {
     const handleClose = () => setShow(false);
 
     useEffect(() => {
-        fetchSchoolDetails()
+        if (!marksUpdated) {
+
+            fetchSchoolDetails();
+            
+        } else {
+            fetchAllStudentInClass(selectedScoreObject);
+        }
+        setMarksUpdated(false);
+
         return () => {
             // cleanup
         };
-    }, []);
+    }, [marksUpdated, selectedScoreObject]);
+
 
     useEffect(() => {
         setFilteredUsers(
@@ -115,7 +126,7 @@ function AddMarksTeachers() {
         }).then(response => {
             console.log(response)
             // seIsLoading(false)
-            if (response.data.response == "feilds") {
+            if (response.data.response == "felids") {
                 // myalert('All fields required', 'error')
             } else {
                 // myalert('success', 'success')
@@ -169,7 +180,7 @@ function AddMarksTeachers() {
             fetchTeachersSubject()
 
         }).catch(e => {
-            console.log("dsdsdsdsdsd " + e);
+            console.log("error fetching " + e);
             seIsLoading(false)
         });
 
@@ -217,7 +228,7 @@ function AddMarksTeachers() {
     function addStudentMarksModal(studentId) {
         setAssessmentRecord({
             ...assessmentRecord,
-            ['student_id']: studentId,
+            ['student_id']: studentId, 
         });
     }
 
@@ -267,6 +278,7 @@ function AddMarksTeachers() {
             if (response.data.code == 409) {
                 myalert(response.data.response, 'error')
             } else if (response.data.code == 200) {
+                setMarksUpdated(true)
                 myalert(response.data.response, 'success')
             }
 

@@ -10,6 +10,7 @@ use App\Addmark_sec;
 use App\Addpost;
 use App\Addgrades_sec;
 use Validator;
+use Carbon\Carbon;
 use App\ResultAverage;
 use App\Addstudent_sec;
 use App\PromotionAverage_sec;
@@ -177,7 +178,7 @@ class ResultAverageProcess
 
 
 
-                                $getScore = RecordMarks::where(['subassessment_id' => $getSubCategory[$k]->id, 'term' => $term, 'student_id' => $getAllStudent[$i]->id, 'session' => $schoolsession, 'subjectid'=>$classSubjects[$j]->subjectid])->first();
+                                $getScore = RecordMarks::where(['subassessment_id' => $getSubCategory[$k]->id, 'term' => $term, 'student_id' => $getAllStudent[$i]->id, 'session' => $schoolsession, 'subjectid' => $classSubjects[$j]->subjectid])->first();
 
                                 if ($getScore != null) {
 
@@ -192,49 +193,50 @@ class ResultAverageProcess
                         }
                     }
 
-                    
+
                     //process result averages
                     try {
-                        $assessmentTableTotalsSum = AssessmentTableTotal::where(['regno'=>$getAllStudent[$i]->id, 'term'=>$term, 'session'=>$schoolsession, 'sectionid'=>$section])->sum('totals');
-                    $assessmentTableTotals = AssessmentTableTotal::where(['regno'=>$getAllStudent[$i]->id, 'term'=>$term, 'session'=>$schoolsession, 'sectionid'=>$section])->get();
+                        $assessmentTableTotalsSum = AssessmentTableTotal::where(['regno' => $getAllStudent[$i]->id, 'term' => $term, 'session' => $schoolsession, 'sectionid' => $section])->sum('totals');
+                        $assessmentTableTotals = AssessmentTableTotal::where(['regno' => $getAllStudent[$i]->id, 'term' => $term, 'session' => $schoolsession, 'sectionid' => $section])->get();
 
-                    if(count($assessmentTableTotals) > 0){
+                        if (count($assessmentTableTotals) > 0) {
 
-                        $createAverage = ComputedAverages::updateOrcreate([
-                            'session'=>$schoolsession,
-                            'regno'=>$getAllStudent[$i]->id,
-                            'term'=>$term
-                        ],[
-                            'examstotal'=>$assessmentTableTotalsSum,
-                            'studentaverage'=>$assessmentTableTotalsSum/count($assessmentTableTotals),
-                            'session'=>$schoolsession,
-                            'regno'=>$getAllStudent[$i]->id,
-                            'term'=>$term
-                        ]);
-
-
-
-                    }else{
-                        $createAverage = ComputedAverages::updateOrcreate([
-                            'session'=>$schoolsession,
-                            'regno'=>$getAllStudent[$i]->id,
-                            'term'=>$term
-                        ],[
-                            'examstotal'=>$assessmentTableTotalsSum,
-                            'studentaverage'=>'0',
-                            'session'=>$schoolsession,
-                            'regno'=>$getAllStudent[$i]->id,
-                            'term'=>$term
-                        ]);
-
-                    }
+                            $createAverage = ComputedAverages::updateOrcreate([
+                                'session' => $schoolsession,
+                                'regno' => $getAllStudent[$i]->id,
+                                'term' => $term
+                            ], [
+                                'examstotal' => $assessmentTableTotalsSum,
+                                'studentaverage' => $assessmentTableTotalsSum / count($assessmentTableTotals),
+                                'session' => $schoolsession,
+                                'regno' => $getAllStudent[$i]->id,
+                                'term' => $term
+                            ]);
+                        } else {
+                            $createAverage = ComputedAverages::updateOrcreate([
+                                'session' => $schoolsession,
+                                'regno' => $getAllStudent[$i]->id,
+                                'term' => $term
+                            ], [
+                                'examstotal' => $assessmentTableTotalsSum,
+                                'studentaverage' => '0',
+                                'session' => $schoolsession,
+                                'regno' => $getAllStudent[$i]->id,
+                                'term' => $term
+                            ]);
+                            // return $createAverage;
+                            //change status of result ready model 
+                            $resultReady = ResultReadyModel::find($request->notif_id);
+                            $resultReady->status = 1;
+                            $resultReady->updated_at = Carbon::now()->toDateTimeString();
+                            $resultReady->save();
+                        }
                     } catch (\Throwable $th) {
                         return "here";
                     }
-
                 }
             }
-            
+
 
             DB::commit();
 

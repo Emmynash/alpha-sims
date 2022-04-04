@@ -75,21 +75,17 @@ class AllUsersController extends Controller
 
            if(count($role) > 0){
 
-            if ($role[0] == "Student") {
+           if ($role[0] == "Student") {
                 // echo $user->id.",";
                 $student = Addstudent_sec::where('usernamesystem', $user->id)->first();
                 if ($student != null) {
                     $addmisNo = $student->admission_no;
-                }
-                
-               
+                }   
            }
-
-            
 
             $newObject = array(
                 "name" => $allusers[$i]['firstname']." ".$allusers[$i]['middlename']." ".$allusers[$i]['lastname'],
-                "role" => $role,
+                "role" => $role[0],
                 "id" => $allusers[$i]['id'],
                 "phonenumber" => $allusers[$i]['phonenumber'],
                 "email" => $allusers[$i]['email'],
@@ -104,7 +100,6 @@ class AllUsersController extends Controller
 
 
         }
-
             return response()->json(['allusers' => $usersListMain]);
         } catch (\Throwable $th) {
             //throw $th;
