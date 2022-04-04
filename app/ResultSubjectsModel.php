@@ -23,4 +23,9 @@ class ResultSubjectsModel extends Model
 
         return AssessmentTableTotal::where(['subjectid'=> $subjectid, 'session' => $schoolsession, 'regno' => $regNo])->first();
     }
+
+    public function getSubjectScores($assessment_id)
+    {
+        return AssessmentScoreResultModel::where('assessment_id', $assessment_id)->first();
+    }
 }

@@ -20,7 +20,11 @@ use App\Repository\Result\ResultAverageProcess;
 use App\ResultReadyModel;
 use PDF;
 use App;
+use App\Addsection_sec;
 use App\AssesmentModel;
+use App\AssessmentResultModel;
+use App\AssessmentScoreResultModel;
+use App\Classlist;
 use App\CommentsModel;
 use App\ComputedAverages;
 use App\ElectiveAdd;
@@ -116,7 +120,7 @@ class ResultController_sec extends Controller
             $getClassGrandTotal = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->sum('examstotal');
 
             $getClassRecord = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->get();
-            
+
             $recordCount = count($getClassRecord) * count($resultMain);
 
             $classAverage = $getClassGrandTotal /  $recordCount;
@@ -229,13 +233,13 @@ class ResultController_sec extends Controller
             if ($resultAverage == "success") {
 
 
-                return response()->json(['response'=>$resultAverage], 200);
+                return response()->json(['response' => $resultAverage], 200);
 
                 // $process_class_average = $processClassAverage->processresult($request);
 
                 // return response()->json(['response' => ''], 200);
             } else {
-                return response()->json(['response' => ''], 500);
+                return response()->json(['response' => $resultAverage], 500);
             }
         } catch (\Throwable $th) {
             //throw $th;
@@ -264,18 +268,295 @@ class ResultController_sec extends Controller
     public function loadHtmlDoc(Request $request)
     {
 
-        $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
+        // $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
-        $motolistskills = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'skills'])->get();
+        // $motolistskills = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'skills'])->get();
+
+        $classid = $request->input('classid');
+        $term = $request->input('term');
+        $regNo = $request->input('student_reg_no');
+        $schoolsession = $request->input('session');
+        $section = $request->input('section');
 
         $addschool = Addpost::find(Auth::user()->schoolid);
+        $getClass = Classlist_sec::find($classid);
+        $getSection = Addsection_sec::find($section);
 
-        return view('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
+        // return view('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
+        $resultMain = ResultSubjectsModel::where(['result_subjects_models.term' => $term, 'result_subjects_models.studentregno' => $regNo, 'result_subjects_models.session' => $schoolsession])->get();
 
+        $getClassGrandTotal = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->sum('regno');
+
+        $getStudentsArray = Addstudent_sec::where(['classid'=>$classid, 'studentsection'=>$section])->pluck('id');
+
+        $scoresGrandTotal = DB::table('computed_averages')
+                    ->whereIn('regno', $getStudentsArray)
+                    ->sum('examstotal');
+        $classAverage = $scoresGrandTotal /  count($getStudentsArray);
+
+        $getStudents = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
+                       ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
+                       ->where(['classid'=>$classid, 'studentsection'=>$section])->get();
+
+        $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+
+        $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+        // ->orderBy('order', 'ASC')->get();
+        $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
+
+        $nextTermBegins = '';
+        if($addschool->term == 1){
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">'.$addschool->secondtermstarts.'</i>';
+        }elseif($addschool->term == 2){
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">'.$addschool->thirdtermstarts.'</i>';
+        }elseif($addschool->term == 3){
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">'.$addschool->firsttermstarts.'</i>';
+        }else{
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
+        }
+
+        $nextTermEnds = '';
+        if($addschool->term == 1){
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">'.$addschool->secondtermends.'</i>';
+        }elseif($addschool->term == 2){
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">'.$addschool->thirdtermends.'</i>';
+        }elseif($addschool->term == 3){
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">'.$addschool->firsttermends.'</i>';
+        }else{
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
+        }
+
+        $assessmentHeadCompiled = array();
+        for ($i=0; $i < count($assessment); $i++) { 
+            $assementHead = '<th colspan='.$this->getSubAssessmentCount($assessment[$i]->id).'>'.$assessment[$i]->name.'</th>';
+            array_push($assessmentHeadCompiled, $assementHead);
+        }
+
+        
+
+        $printOutArray = array();
+
+        for ($i=0; $i < count($getStudents); $i++) { 
+
+            $motolistbeha = MotoList::leftjoin('add_moto_secs', 'add_moto_secs.moto_id','=','moto_lists.id')
+                            ->select("moto_lists.*", 'add_moto_secs.moto_score')
+                            ->where(['moto_lists.schoolid' => Auth::user()->schoolid, 'moto_lists.category' => 'behaviour', 'add_moto_secs.student_id'=>$getStudents[$i]->id, 'add_moto_secs.session'=>$schoolsession, 'add_moto_secs.term'=>$term])->get();
+
+            $motolistSkill = MotoList::leftjoin('add_moto_secs', 'add_moto_secs.moto_id','=','moto_lists.id')
+                            ->select("moto_lists.*", 'add_moto_secs.moto_score')
+                            ->where(['moto_lists.schoolid' => Auth::user()->schoolid, 'moto_lists.category' => 'skills', 'add_moto_secs.student_id'=>$getStudents[$i]->id, 'add_moto_secs.session'=>$schoolsession, 'add_moto_secs.term'=>$term])->get();
+
+        
+
+
+        $motoBe = array();
+
+        foreach ($motolistbeha as $key => $value) {
+            $motob = '
+                <tr>
+                    <td style="font-size: 14px;">'.$value->name.'</td>
+                    <td style="font-size: 14px;">'.$value->moto_score.'</td>
+                </tr>
+            ';
+
+            array_push($motoBe, $motob);
+        }
+
+        $motoSkill = array();
+
+        foreach ($motolistSkill as $key => $value) {
+            $motob = '
+                <tr>
+                    <td style="font-size: 14px;">'.$value->name.'</td>
+                    <td style="font-size: 14px;">'.$value->moto_score.'</td>
+                </tr>
+            ';
+
+            array_push($motoSkill, $motob);
+        }
+
+            $printPdf = 
+        '<style type="text/css" media="screen">
+        .outer {margin:0 auto}
+        .outer > * {
+          display:inline-block;
+          vertical-align:middle;
+        }
+        .one {width:29%;}
+        .two {width:70%;}
+
+        .studentDetails {margin:0 auto}
+        .studentDetails > * {
+          display:inline-block;
+          vertical-align:middle;
+        }
+
+        .studentDetailsone {width:49.5%;}
+        .studentDetailstwo {width:49.5%;}
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .remark > * {
+            display:inline-block;
+            vertical-align:middle;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+        
+        </style>
+        <div class="page-break">
+        <div class="outer">
+        <div class="one">
+          <center><img src='.$addschool->schoolLogo.' width="100px" height="100px"></center>
+        </div>
+        <div class="two">
+            <center><p style="margin: 0; font-size: 30px;">'.$addschool->schoolname.'</p></center>
+            <center><p style="margin: 0;">'.$addschool->schooladdress.', '.$addschool->schooladdress.'</p></center>
+            <center><p style="margin: 0;">Termly Report Sheet</p></center>
+        </div>
+        </div>
+        <br>
+        <div class="studentDetails">
+            <div class="studentDetailsone">
+                <table style="width: 100%;">
+                    <tr>
+                        <td>Name of Student</td>
+                        <td>'.$getStudents[$i]->firstname." ".$getStudents[$i]->middlename." ".$getStudents[$i]->lastname.'</td>
+                    </tr>
+                    <tr>
+                        <td>Class</td>
+                        <td>'.$getClass->classname.$getSection->sectionname.'</td>
+                    </tr>
+                    <tr>
+                        <td>Next term resumes</td>
+                        <td>'.$nextTermBegins.'</td>
+                    </tr>
+                    <tr>
+                        <td>Sex</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="studentDetailstwo" style="">
+                <table style="width: 100%;">
+                    <tr>
+                        <td>Term</td>
+                        <td>Name of Student</td>
+                    </tr>
+                    <tr>
+                        <td>Admission No:</td>
+                        <td>'.$getStudents[$i]->admission_no.'</td>
+                    </tr>
+                    <tr>
+                        <td>No in Class</td>
+                        <td>'.count($getStudents).'</td>
+                    </tr>
+                    <tr>
+                        <td>Session</td>
+                        <td>'.$schoolsession.'</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <p style="text-align: center;">ACADEMIC RECORDS</p>
+        <div>
+            <table style="width: 100%;">
+                <tr>
+                    <th>Subjects</th>
+                    '
+                    .implode(" ",$assessmentHeadCompiled).
+                    '
+                    <th>Total</th>
+                    <th>Average</th>
+                    <th>Grade</th>
+                    <th>Pos</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    '.implode(" ",$this->getSubAssessment()).' 
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                '.implode(" ",$this->getSubjectScores($term, $getStudents[$i]->id, $schoolsession)).'
+            </table>
+        </div>
+        <br>
+        <div style="width: 100%;">
+            <i style="font-style:normal; padding: 10px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
+            <i style="font-style:normal; padding: 10px;">Student/Pupil Average: '.$this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section).'</i>
+            <i style="font-style:normal; padding: 10px;">Class Average: '.$classAverage.'</i>
+            <i style="font-style:normal; padding: 10px;">Position: Nill</i>
+        </div>
+        <br>
+        <p style="text-align: center;">RATINGS</p>
+        <div class="studentDetails">
+            <div class="studentDetailsone">
+                <table style="width: 100%;">
+                    <tr>
+                        <th style="font-size: 14px;">BEHAVIOUR AND ACTIVITIES</th>
+                        <th style="font-size: 14px;">Marks(1-5)</th>
+                    </tr>
+                    
+                    '.implode(" ",$motoBe).'
+                </table>
+            </div>
+            <div class="studentDetailstwo">
+                <table style="width: 100%;">
+                    <tr>
+                        <th style="font-size: 14px;">SKILLS</th>
+                        <th style="font-size: 14px;">Marks(1-5)</th>
+                    </tr>
+                    '.implode(" ",$motoSkill).'
+                </table>
+            </div>
+        </div>
+        <br>
+        <div style="width: 100%; margin-bottom: 10px;">
+            <p style="padding: 0px; margin: 0;">FORM MASTER\'S REMARK: </p>
+            <div style="height: 1px; width: 100%; background-color: black;"></div>
+        </div>
+        <div style="width: 100%; margin-bottom: 15px;">
+            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: </p>
+            <div style="height: 1px; width: 100%; background-color: black;"></div>
+        </div>
+        <div style="width: 100%; margin-bottom: 10px;">
+            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S SIGNATURE: <img src='.$addschool->schoolprincipalsignature.' height="50px"></p>
+            <div style="height: 1px; width: 100%; background-color: black;"></div>
+        </div>
+        <div class="remark" style="width: 100%; margin-bottom: 10px;">
+            <div style="width: 49.5%;">
+                <p style="padding: 0px; margin: 0;">NEXT TERM BEGINS: '.$nextTermBegins.'</p>
+                <div style="height: 1px; width: 100%; background-color: black;"></div>
+            </div>
+            <div style="width: 49.5%;">
+                <p style="padding: 0px; margin: 0;">NEXT TERM ENDS: '.$nextTermEnds.'</p>
+                <div style="height: 1px; width: 100%; background-color: black;"></div>
+            </div>
+        </div>
+        </div>';
+
+        array_push($printOutArray, $printPdf);
+            
+        }
+
+        $printOutArray;
+
+        implode(" ",$printOutArray);
 
         $pdf = App::make('dompdf.wrapper');
-        $pdf->loadView('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
+        $pdf->loadHTML(implode(" ",$printOutArray));
         return $pdf->stream();
+
+        // $pdf = App::make('dompdf.wrapper');
+        // $pdf->loadView('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
+        // return $pdf->stream();
 
         // $pdfOptions = new Options();
         // $pdfOptions->set('defaultFont', 'Arial');
@@ -315,6 +596,8 @@ class ResultController_sec extends Controller
         $schoolsession = $request->input('session');
         $section = $request->input('section');
 
+        return $this->loadHtmlDoc($request);
+
         $addschool = Addpost::find(Auth::user()->schoolid);
 
         $classtype = Classlist_sec::find($classid)->classtype;
@@ -341,5 +624,88 @@ class ResultController_sec extends Controller
                 return view('secondary.result.viewresult.resultseniorsec', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool', 'term', 'schoolsession', 'classid', 'section', 'classtype'));
             }
         }
+    }
+
+    public function getSubjectScores($term, $regNo, $session)
+    {
+        $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
+        $resultList = array();
+        for ($i=0; $i < count($resultsSubject); $i++) { 
+            
+
+            $resultView = 
+            '<tr><td>'.$resultsSubject[$i]->subjectname.'</td>
+            '.
+            implode(" ",$this->subAssessmentRow($resultsSubject[$i]->id))
+            .'
+            <td><center>'.$resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->total.'</center></td>
+            <td><center>'.$resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->average.'</center></td>
+            <td><center>'.$resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->grade.'</center></td>
+            <td><center>'.$resultsSubject[$i]->getStudentRecord($resultsSubject[$i]->subjectid, $session, $regNo)->position.'</center></td></tr>';
+            array_push($resultList, $resultView);
+        }
+        return $resultList;
+    }
+
+    public function getSubAssessment()
+    {
+        $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
+        $subAssessment = array();
+        for ($i=0; $i < count($assessment); $i++) { 
+            $subAss = SubAssesmentModel::where('catid', $assessment[$i]->id)->get();
+            for ($k=0; $k < count($subAss); $k++) { 
+                $subValue = '<th>'.$subAss[$k]->maxmarks.'</th>';
+                array_push($subAssessment, $subValue);
+            }
+        }
+        return $subAssessment;
+    }
+
+    public function getSubAssessmentCount($id)
+    {
+        $subAssessment = SubAssesmentModel::where('catid', $id)->get();
+        return count($subAssessment);
+    }
+
+    public function getScoreEntriesBySpaceId($space_id)
+    {
+        $scores = AssessmentResultModel::where('space_id', $space_id)->orderBy('id', 'DESC')->get();
+        return $scores;
+    }
+
+    public function getScoremain($assessment_id)
+    {
+        $mainScore = AssessmentScoreResultModel::where('assessment_id', $assessment_id)->first();
+        return $mainScore;
+    }
+
+    public function getGrandTotal($term, $regno, $session)
+    {
+        $grandTotal = RecordMarks::where(['term'=>$term, 'student_id'=>$regno, 'session'=>$session])->sum('scrores');
+        return $grandTotal;
+    }
+
+    public function getStudentAverage($term, $regno, $session, $classid, $section)
+    {
+        $getAverage = ComputedAverages::where(['term'=>$term, 'session'=>$session, 'regno'=>$regno])->first();
+        return $getAverage->studentaverage;
+    }
+
+    public function getClassAverage($term, $session, $classid, $section)
+    {
+        $getAverage = ComputedAverages::where(['term'=>$term, 'session'=>$session])->first();
+        return $getAverage->studentaverage;
+    }
+
+    public function subAssessmentRow($space_id)
+    {
+        $subAssessment = $this->getScoreEntriesBySpaceId($space_id);
+        $subAssessmentScore = array();
+        for ($k=0; $k < count($subAssessment); $k++) { 
+            $mainScore = $this->getScoremain($subAssessment[$k]->id);
+            $subAssScore = '<td><center>'.$mainScore->score.'</center></td>';
+            array_push($subAssessmentScore, $subAssScore);
+        }
+        return $subAssessmentScore;
     }
 }

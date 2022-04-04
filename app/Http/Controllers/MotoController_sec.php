@@ -120,45 +120,41 @@ class MotoController_sec extends Controller
         try {
 
             $getschoolData = Addpost::find(Auth::user()->schoolid);
-
-            if (count($request->input()) > 0) {
-
+    
+            if (count($request->input()) > 0 ) {
+    
                 $getuserid = $request[0]["userId"];
+    
+                $getMotoList = AddMoto_sec::where(['schoolid'=> Auth::user()->schoolid, 'student_id'=>$getuserid, 'session'=>$getschoolData->schoolsession, 'term'=>$getschoolData->term])->pluck('moto_id')->toArray();
 
-                $getMotoList = AddMoto_sec::where(['schoolid' => Auth::user()->schoolid, 'student_id' => $getuserid, 'session' => $getschoolData->schoolsession, 'term' => $getschoolData->term])->pluck('moto_id')->toArray();
+                AddMoto_sec::where(['schoolid' => Auth::user()->schoolid, 'student_id' => $getuserid, 'session' => $getschoolData->schoolsession, 'term' => $getschoolData->term])->delete();
+    
+                for ($i=0; $i < count($request->input()); $i++) { 
+                    
+                        // if (!in_array($request[$i]['moto_id'], $getMotoList)) {
+                            
+                            $addmoto = new AddMoto_sec();
+                            $addmoto->moto_id = $request[$i]['moto_id'];
+                            $addmoto->moto_score = $request[$i]['valueSelected'];
+                            $addmoto->student_id = $request[$i]['userId'];
+                            $addmoto->schoolid = Auth::user()->schoolid;
+                            $addmoto->session = $getschoolData->schoolsession;
+                            $addmoto->term = $getschoolData->term;
+                            $addmoto->save();
 
-                for ($i = 0; $i < count($request->input()); $i++) {
+                        // }
 
-                    if (!in_array($request[$i]['moto_id'], $getMotoList)) {
-
-
-                        $addmoto = AddMoto_sec::updateOrCreate(
-                            [
-                                "moto_id" => $request[$i]['moto_id'],
-                                "student_id" => $request[$i]['userId'],
-                                "schoolid" => Auth::user()->schoolid,
-                                "session" => $getschoolData->schoolsession,
-                                "term" => $getschoolData->term
-                            ],
-                            [
-                                "moto_id" => $request[$i]['moto_id'],
-                                "moto_score" => $request[$i]['valueSelected'],
-                                "student_id" => $request[$i]['userId'],
-                                "schoolid" => Auth::user()->schoolid,
-                                "session" => $getschoolData->schoolsession,
-                                "term" => $getschoolData->term
-                            ]
-                        );
-                    }
                 }
-
-                return response()->json(['response' => "success"]);
-            } else {
-                return response()->json(['response' => "error"]);
+    
+                return response()->json(['response'=>"success"]);
+    
+            }else{
+                return response()->json(['response'=>"error"]);
             }
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['response' => $th]);
+
+            return response()->json(['response'=>$th]);
         }
     }
 }

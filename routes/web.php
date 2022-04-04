@@ -341,7 +341,7 @@ Route::middleware(['tenant'])->group(function () {
 
         Route::group(['prefix' => 'result', 'middleware' => ['auth', 'can:result module']], function () {
             Route::get('/result_by_class', 'ResultController_sec@result_by_class',)->name('result_by_class')->middleware('can:view student result');
-            Route::post('/result_view_sec_pdf', 'ResultController_sec@loadHtmlDoc')->name('result_view_sec_pdf');
+            Route::get('/result_view_sec_pdf', 'ResultController_sec@loadHtmlDoc')->name('result_view_sec_pdf');
             Route::POST('/view_by_class', 'ResultController_sec@view_by_class')->name('view_by_class');
             Route::Post('/result_print_single_sec', 'ResultController_sec@viewSingleResult')->name('result_print_single_sec');
             // Route::get('/result_by_class', 'ResultController_sec@result_by_class')->name('result_by_class');           
@@ -349,7 +349,7 @@ Route::middleware(['tenant'])->group(function () {
             // ->middleware('can:generate student result');
             Route::get('/get_result_ready_section', 'ResultController_sec@get_result_ready_section');
             Route::post('/generate_result_main', 'ResultController_sec@generateResultMain')->name('generate_result_main');
-            Route::get('/print_entrire_class_result', 'ResultController_sec@printEntrireClassResult')->name('print_entrire_class_result');
+            Route::get('/print_entrire_class_result', 'ResultController_sec@loadHtmlDoc')->name('print_entrire_class_result');
         });
 
         Route::group(['prefix' => 'teacher', 'middleware' => ['auth', 'role:Teacher']], function () {

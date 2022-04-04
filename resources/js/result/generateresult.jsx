@@ -55,7 +55,7 @@ function GenerateResult() {
             }
         }).then(response=>{
             console.log(response)
-            window.location.reload();
+            // window.location.reload();
             setisLoading(false)
 
             if (response.status == 200) {
