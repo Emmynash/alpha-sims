@@ -34,7 +34,7 @@ function Moto() {
             console.log(response);
             // console.log(setJ)
             setisLoading(false)
-            setAllClasses(response.data.classesAll)
+            setAllClasses(response.data.assignedSubjects)
             setSection_sec(response.data.addsection_sec)
 
 
@@ -135,7 +135,8 @@ function Moto() {
 
     }
 
-    function submitMoto() { //
+    function submitMoto(e) { //
+        e.preventDefault(); 
         setisLoading(true)
         console.log(selectedmain)
         axios.post("/moto/add_student_moto", selectedmain, {
@@ -149,7 +150,7 @@ function Moto() {
                 myalert("Success", "success")
                 getStudentList()
             } else {
-                myalert("Ensure all feilds are filled", "error")
+                myalert("Ensure all felids are filled", "error")
             }
 
         }).catch(e => {
