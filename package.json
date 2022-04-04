@@ -33,6 +33,7 @@
         "@fullcalendar/timegrid": "^5.10.1",
         "@react-pdf/renderer": "^2.1.1",
         "mdbreact": "^4.27.0",
+        "moment": "^2.29.2",
         "multiselect-react-dropdown": "^2.0.21",
         "naija-state-local-government": "^1.1.2",
         "print-js": "^1.6.0",
