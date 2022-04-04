@@ -334,7 +334,10 @@
 
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                            FORM MASTER'S/MISTRESS REMARK: <i style="font-style: normal;" id="honourorpricesremarkmain"></i>
+                            FORM MASTER'S/MISTRESS REMARK: 
+                            <i style="font-style: normal;" id="honourorpricesremarkmain">
+                            {{ $addschool->getStudentComment($item->id, $classid, $term, $schoolsession) == null ? "":$addschool->getStudentComment($item->id, $classid, $term, $schoolsession)->comments }}
+                        </i>
                         </div>
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
