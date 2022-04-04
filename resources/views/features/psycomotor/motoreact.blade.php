@@ -47,12 +47,12 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <script src="{{ asset('js/appmoto.js?v=8') }}"></script>
+  <script src="{{ asset('js/appmoto.js?v=9') }}"></script>
 
   <script>
     function scrollocation(){
       document.getElementById('psyhcomoto').className = "nav-link active"
     }
-</script>
+  </script>
     
 @endsection
