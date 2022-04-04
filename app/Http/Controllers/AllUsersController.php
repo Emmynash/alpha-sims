@@ -75,7 +75,6 @@ class AllUsersController extends Controller
 
            if(count($role) > 0){
 
-            if ($role[0] == "Student") {
            if ($role[0] == "Student") {
                 // echo $user->id.",";
                 $student = Addstudent_sec::where('usernamesystem', $user->id)->first();
