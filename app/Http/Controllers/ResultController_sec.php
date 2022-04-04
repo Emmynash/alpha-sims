@@ -670,31 +670,53 @@ class ResultController_sec extends Controller
     public function getScoreEntriesBySpaceId($space_id)
     {
         $scores = AssessmentResultModel::where('space_id', $space_id)->orderBy('id', 'DESC')->get();
-        return $scores;
+
+        if($scores == null){
+            return 0;
+        }else{
+            return $scores;
+        }
     }
 
     public function getScoremain($assessment_id)
     {
         $mainScore = AssessmentScoreResultModel::where('assessment_id', $assessment_id)->first();
-        return $mainScore;
+        if($mainScore == null){
+            return 0;
+        }else{
+            return $mainScore;
+        }
     }
 
     public function getGrandTotal($term, $regno, $session)
     {
         $grandTotal = RecordMarks::where(['term'=>$term, 'student_id'=>$regno, 'session'=>$session])->sum('scrores');
-        return $grandTotal;
+        if($grandTotal == null){
+            return 0;
+        }else{
+            return $grandTotal;
+        }
     }
 
     public function getStudentAverage($term, $regno, $session, $classid, $section)
     {
         $getAverage = ComputedAverages::where(['term'=>$term, 'session'=>$session, 'regno'=>$regno])->first();
-        return $getAverage->studentaverage;
+        if($getAverage == null){
+            return 0;
+        }else{
+            return $getAverage->studentaverage;
+        }
     }
 
     public function getClassAverage($term, $session, $classid, $section)
     {
         $getAverage = ComputedAverages::where(['term'=>$term, 'session'=>$session])->first();
-        return $getAverage->studentaverage;
+        if($getAverage == null){
+            return 0;
+        }else{
+            return $getAverage->studentaverage;
+        }
+        
     }
 
     public function subAssessmentRow($space_id)
