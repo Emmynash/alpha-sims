@@ -10,6 +10,7 @@ use App\Addmark_sec;
 use App\Addpost;
 use App\Addgrades_sec;
 use Validator;
+use Carbon\Carbon;
 use App\ResultAverage;
 use App\Addstudent_sec;
 use App\PromotionAverage_sec;
@@ -240,7 +241,13 @@ class ResultAverageProcess{
 
                     }
 
-                    // return $createAverage;
+            // return $createAverage;
+            //change status of result ready model 
+            $resultReady = ResultReadyModel::find($request->notif_id);
+            $resultReady->status = 1;
+            $resultReady->updated_at = Carbon::now()->toDateTimeString();
+            $resultReady->save();
+                
 
                 DB::commit();
 
@@ -364,7 +371,7 @@ class ResultAverageProcess{
         
                 //change status of result ready model 
                 $resultReady = ResultReadyModel::find($request->notif_id);
-                $resultReady->status = 1;
+                $resultReady->status = 1; 
                 $resultReady->save();
                 
                 if ($term == "3") {
