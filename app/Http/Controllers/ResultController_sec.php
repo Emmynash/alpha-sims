@@ -277,6 +277,7 @@ class ResultController_sec extends Controller
         $regNo = $request->input('student_reg_no');
         $schoolsession = $request->input('session');
         $section = $request->input('section');
+        DB::beginTransaction();
 
         $addschool = Addpost::find(Auth::user()->schoolid);
         $getClass = Classlist_sec::find($classid);
