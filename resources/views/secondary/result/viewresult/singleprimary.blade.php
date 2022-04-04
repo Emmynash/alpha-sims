@@ -354,7 +354,8 @@
                     <br>
                     <div style="display: flex;">
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
-                            NEXT TERM BEGINS: <i style="font-style: normal;" id="honourorpricesremarkmain">
+                            NEXT TERM BEGINS: 
+                                <i style="font-style: normal;" id="honourorpricesremarkmain">
                                 @if ($term == 1)
                                 <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermstarts }}</i>
                                 @elseif ($term == 2)
@@ -367,7 +368,8 @@
                             </i>
                         </div>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
-                            NEXT TERM ENDS: <i style="font-style: normal;" id="honourorpricesremarkmain">
+                            NEXT TERM ENDS: 
+                                <i style="font-style: normal;" id="honourorpricesremarkmain">
                                 @if ($term == 1)
                                 <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermends }}</i>
                                 @elseif ($term == 2)
