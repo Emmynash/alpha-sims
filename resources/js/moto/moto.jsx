@@ -34,7 +34,7 @@ function Moto() {
             console.log(response);
             // console.log(setJ)
             setisLoading(false)
-            setAllClasses(response.data.assignedSubjects)
+            setAllClasses(response.data.formTeacherClasses)
             setSection_sec(response.data.addsection_sec)
 
 
