@@ -225,17 +225,19 @@ class ResultAverageProcess
                                 'term' => $term
                             ]);
                             // return $createAverage;
-                            //change status of result ready model 
-                            $resultReady = ResultReadyModel::find($request->notif_id);
-                            $resultReady->status = 1;
-                            $resultReady->updated_at = Carbon::now()->toDateTimeString();
-                            $resultReady->save();
                         }
                     } catch (\Throwable $th) {
                         return "here";
                     }
                 }
             }
+
+
+            //change status of result ready model 
+            $resultReady = ResultReadyModel::find($request->notif_id);
+            $resultReady->status = 1;
+            $resultReady->updated_at = Carbon::now()->toDateTimeString();
+            $resultReady->save();
 
 
             DB::commit();
