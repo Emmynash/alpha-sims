@@ -685,7 +685,7 @@ class ResultController_sec extends Controller
         if($mainScore == null){
             return 0;
         }else{
-            
+
             return $mainScore;
         }
     }
@@ -706,7 +706,7 @@ class ResultController_sec extends Controller
         if($getAverage == null){
             return 0;
         }else{
-            return round($getAverage->studentaverage, 2);
+            return $getAverage->studentaverage;
         }
     }
 
@@ -716,7 +716,7 @@ class ResultController_sec extends Controller
         if($getAverage == null){
             return 0;
         }else{
-            return round($getAverage->studentaverage, 2);
+            return $getAverage->studentaverage;
         }
         
     }
@@ -727,7 +727,7 @@ class ResultController_sec extends Controller
         $subAssessmentScore = array();
         for ($k=0; $k < count($subAssessment); $k++) { 
             $mainScore = $this->getScoremain($subAssessment[$k]->id);
-            $subAssScore = '<td><center>'.$mainScore->score.'</center></td>';
+            $subAssScore = '<td><center>'.round($mainScore->score, 2).'</center></td>';
             array_push($subAssessmentScore, $subAssScore);
         }
         return $subAssessmentScore;
