@@ -492,7 +492,7 @@ class ResultController_sec extends Controller
         <div style="width: 100%;">
             <i style="font-style:normal; padding: 10px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
             <i style="font-style:normal; padding: 10px;">Student/Pupil Average: '.$this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section).'</i>
-            <i style="font-style:normal; padding: 10px;">Class Average: '.$classAverage.'</i>
+            <i style="font-style:normal; padding: 10px;">Class Average: '.round($classAverage, 2).'</i>
             <i style="font-style:normal; padding: 10px;">Position: Nill</i>
         </div>
         <br>
