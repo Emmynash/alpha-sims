@@ -727,7 +727,13 @@ class ResultController_sec extends Controller
         $subAssessmentScore = array();
         for ($k=0; $k < count($subAssessment); $k++) { 
             $mainScore = $this->getScoremain($subAssessment[$k]->id);
-            $subAssScore = '<td><center>'.$mainScore == 0 ? "0": $mainScore->score.'</center></td>';
+            $value = 0;
+            if($mainScore == 0){
+                $value = 0;
+            }else{
+                $mainScore->score;
+            }
+            $subAssScore = '<td><center>'.$value.'</center></td>';
             array_push($subAssessmentScore, $subAssScore);
         }
         return $subAssessmentScore;
