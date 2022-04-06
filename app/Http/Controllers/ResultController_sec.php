@@ -639,8 +639,8 @@ class ResultController_sec extends Controller
             '.
             implode(" ",$this->subAssessmentRow($resultsSubject[$i]->id))
             .'
-            <td><center>'.$resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->total.'</center></td>
-            <td><center>'.$resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->average.'</center></td>
+            <td><center>'.round($resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->total, 2).'</center></td>
+            <td><center>'.round($resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id, 2)->average).'</center></td>
             <td><center>'.$resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->grade.'</center></td>
             <td><center>'.$resultsSubject[$i]->getStudentRecord($resultsSubject[$i]->subjectid, $session, $regNo)->position.'</center></td></tr>';
             array_push($resultList, $resultView);
@@ -726,7 +726,7 @@ class ResultController_sec extends Controller
         $subAssessmentScore = array();
         for ($k=0; $k < count($subAssessment); $k++) { 
             $mainScore = $this->getScoremain($subAssessment[$k]->id);
-            $subAssScore = '<td><center>'.$mainScore->score.'</center></td>';
+            $subAssScore = '<td><center>'.round($mainScore->score, 2).'</center></td>';
             array_push($subAssessmentScore, $subAssScore);
         }
         return $subAssessmentScore;
