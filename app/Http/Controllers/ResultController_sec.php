@@ -28,6 +28,7 @@ use App\Classlist;
 use App\CommentsModel;
 use App\ComputedAverages;
 use App\ElectiveAdd;
+use App\Models\HeadOfchoolComment;
 use App\RecordMarks;
 use App\ResultSubjectsModel;
 use App\SubAssesmentModel;
@@ -347,6 +348,15 @@ class ResultController_sec extends Controller
                             ->select("moto_lists.*", 'add_moto_secs.moto_score')
                             ->where(['moto_lists.schoolid' => Auth::user()->schoolid, 'moto_lists.category' => 'skills', 'add_moto_secs.student_id'=>$getStudents[$i]->id, 'add_moto_secs.session'=>$schoolsession, 'add_moto_secs.term'=>$term])->get();
 
+            $formTeacherComment = $addschool->getStudentComment($getStudents[$i]->id, $classid, $term, $schoolsession);
+
+            $commentMain = '';
+            if($formTeacherComment != null){
+                $commentMain = $formTeacherComment->comments;
+            }else{
+                $commentMain = "Nill";
+            }
+
         
 
 
@@ -520,11 +530,11 @@ class ResultController_sec extends Controller
         </div>
         <br>
         <div style="width: 100%; margin-bottom: 10px;">
-            <p style="padding: 0px; margin: 0;">FORM MASTER\'S REMARK: </p>
+            <p style="padding: 0px; margin: 0;">FORM MASTER\'S REMARK: '.$commentMain.'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 15px;">
-            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: </p>
+            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)).'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 10px;">
@@ -738,5 +748,20 @@ class ResultController_sec extends Controller
             array_push($subAssessmentScore, $subAssScore);
         }
         return $subAssessmentScore;
+    }
+
+    public function getHeadOfSchoolComment($average)
+    {
+        $comments = HeadOfchoolComment::all();
+        $selectedComment = 'Nill';
+        for ($i=0; $i < count($comments); $i++) { 
+            
+            if ($average >= (int)$comments[$i]->marksTo && $average <= (int)$comments[$i]->marksFrom ) {
+                $selectedComment = $comments[$i]->comment;
+            }
+
+        }
+
+        return $selectedComment;
     }
 }

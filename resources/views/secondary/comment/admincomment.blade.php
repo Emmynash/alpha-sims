@@ -34,24 +34,27 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid" id="">
-
+        @include('layouts.message')
         <div class="row">
             <div class="col-6 col-md-6">
-                <form action="{{ route('setupnewcomment') }}" method="post">
+                <form action="{{ route('addheadcomment') }}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-6 col-md-6">
                             <label for="">marks From</label>
-                            <input class="form-control form-control-sm" type="text" name="" id="">
+                            <input class="form-control form-control-sm" type="text" name="marksFrom" id="">
+                            <small class="text-danger">{{ $errors->first('marksFrom') }}</small>
                         </div>
                         <div class="col-6 col-md-6">
                             <label for="">marks To</label>
-                            <input class="form-control form-control-sm" type="text" name="" id="">
+                            <input class="form-control form-control-sm" type="text" name="marksTo" id="">
+                            <small class="text-danger">{{ $errors->first('marksTo') }}</small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="">Comment(Should be short)</label>
                         <textarea class="form-control form-control-sm" name="comment" id="" cols="30" rows="3" placeholder="type a comment"></textarea>
+                        <small class="text-danger">{{ $errors->first('comment') }}</small>
                         <br>
                         <button class="btn btn-sm btn-info">Save</button>
                     </div>
@@ -71,7 +74,12 @@
                         </form>
                         <button form="deletecomment{{ $item->id }}" class="btn btn-sm btn-danger" style="margin: 5px;"><i class="fas fa-trash"></i></button>
                     </div>
-                    <div class="" style="padding: 5px;">
+                    <div class="" style="padding: 0 0 0 5px;">
+                      <i style="font-style: normal; font-size: 10px; font-weight: bold;">Range:</i>
+                      <i style="font-style: normal; font-size: 10px;">{{ $item->marksFrom }} -</i>
+                      <i style="font-style: normal; font-size: 10px;">{{ $item->marksTo }}</i>
+                  </div>
+                    <div class="" style="padding: 0 0 5px 5px;">
                         <i style="font-style: normal; font-size: 10px;">{{ $item->comment }}</i>
                     </div>
                 </div>
