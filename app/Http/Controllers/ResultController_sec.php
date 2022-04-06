@@ -695,7 +695,7 @@ class ResultController_sec extends Controller
         if($grandTotal == null){
             return 0;
         }else{
-            return $grandTotal;
+            return round($grandTotal, 2);
         }
     }
 
@@ -705,7 +705,7 @@ class ResultController_sec extends Controller
         if($getAverage == null){
             return 0;
         }else{
-            return $getAverage->studentaverage;
+            return round($getAverage->studentaverage, 2);
         }
     }
 
@@ -715,7 +715,7 @@ class ResultController_sec extends Controller
         if($getAverage == null){
             return 0;
         }else{
-            return $getAverage->studentaverage;
+            return round($getAverage->studentaverage, 2);
         }
         
     }
