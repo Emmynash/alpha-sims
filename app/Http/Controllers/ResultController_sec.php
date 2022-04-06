@@ -685,7 +685,7 @@ class ResultController_sec extends Controller
         if($mainScore == null){
             return 0;
         }else{
-            
+
             return $mainScore;
         }
     }
@@ -706,7 +706,7 @@ class ResultController_sec extends Controller
         if($getAverage == null){
             return 0;
         }else{
-            return round($getAverage->studentaverage, 2);
+            return $getAverage->studentaverage;
         }
     }
 
@@ -716,7 +716,7 @@ class ResultController_sec extends Controller
         if($getAverage == null){
             return 0;
         }else{
-            return round($getAverage->studentaverage, 2);
+            return $getAverage->studentaverage;
         }
         
     }
