@@ -312,7 +312,7 @@
             </p>
           </a>
         </li>
-        <li class="nav-item has-treeview">
+        <!-- <li class="nav-item has-treeview">
           <a id="viewmarks" href="#" class="nav-link">
             <i class="nav-icon fas fa-check-double"></i>
             <p>
@@ -329,7 +329,7 @@
             </li>
 
           </ul>
-        </li>
+        </li> -->
         @can('form teacher')
         <li class="nav-item has-treeview">
           <a id="formmasteroption" href="#" class="nav-link">
@@ -558,6 +558,7 @@
               </a>
             </li>
 
+            @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('HeadOfSchool'))
             <li class="nav-item">
               <a id="resultmaingenscrollgenerate" href="{{ route('generate_result') }}" class="nav-link">
                 <i class="fa fa-print nav-icon"></i>
@@ -577,6 +578,7 @@
                 <p>SetUp Comments</p>
               </a>
             </li>
+            @endif
 
           </ul>
         </li>
