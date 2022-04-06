@@ -682,12 +682,13 @@ class ResultController_sec extends Controller
     public function getScoremain($assessment_id)
     {
         $mainScore = AssessmentScoreResultModel::where('assessment_id', $assessment_id)->first();
-        if($mainScore == null){
-            return 0;
-        }else{
+        // if($mainScore == null){
+        //     return 0;
+        // }else{
 
-            return $mainScore;
-        }
+        //     return $mainScore;
+        // }
+        return $mainScore;
     }
 
     public function getGrandTotal($term, $regno, $session)
@@ -727,12 +728,12 @@ class ResultController_sec extends Controller
         $subAssessmentScore = array();
         for ($k=0; $k < count($subAssessment); $k++) { 
             $mainScore = $this->getScoremain($subAssessment[$k]->id);
-            $value = 0;
-            if($mainScore == 0){
-                $value = 0;
-            }else{
-                $value = $mainScore->score;
-            }
+            $value = $mainScore == NULL ? 0:$mainScore->score;
+            // if($mainScore == 0){
+            //     $value = 0;
+            // }else{
+            //     $value = $mainScore->score;
+            // }
             $subAssScore = '<td><center>'.$value.'</center></td>';
             array_push($subAssessmentScore, $subAssScore);
         }
