@@ -87,11 +87,11 @@
                                         <td><i style="font-size: 14px; font-style: normal;">Next Term Resumes:</i></td>
                                         <td>
                                             @if ($term == 1)
-                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermstarts }}</i>
-                                            @elseif ($term == 2)
-                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermstarts }}</i>
-                                            @elseif ($term == 3)
                                             <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
+                                            @elseif ($term == 2)
+                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermbegins }}</i>
+                                            @elseif ($term == 3)
+                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermbegins }}</i>
                                             @else
                                             <i style="font-style: normal; font-weight: bold;">NAN</i>
                                             @endif
@@ -334,10 +334,10 @@
 
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
-                            FORM MASTER'S/MISTRESS REMARK: 
+                            FORM TEACHER'S REMARK:
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
-                            {{ $addschool->getStudentComment($item->id, $classid, $term, $schoolsession) == null ? "":$addschool->getStudentComment($item->id, $classid, $term, $schoolsession)->comments }}
-                        </i>
+                                {{ $addschool->getStudentComment($regNo, $classid, $term, $schoolsession) == null ? "":$addschool->getStudentComment($regNo, $classid, $term, $schoolsession)->comments }}
+                            </i>
                         </div>
                         <br>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 95%; margin: 0 auto; border-bottom: 1px solid black;">
@@ -358,28 +358,28 @@
                     <br>
                     <div style="display: flex;">
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
-                            NEXT TERM BEGINS: 
-                                <i style="font-style: normal;" id="honourorpricesremarkmain">
+                            NEXT TERM BEGINS:
+                            <i style="font-style: normal;" id="honourorpricesremarkmain">
                                 @if ($term == 1)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermstarts }}</i>
-                                @elseif ($term == 2)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermstarts }}</i>
-                                @elseif ($term == 3)
                                 <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
+                                @elseif ($term == 2)
+                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermbegins }}</i>
+                                @elseif ($term == 3)
+                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermbegins }}</i>
                                 @else
                                 <i style="font-style: normal; font-weight: bold;">NAN</i>
                                 @endif
                             </i>
                         </div>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
-                            NEXT TERM ENDS: 
-                                <i style="font-style: normal;" id="honourorpricesremarkmain">
+                            NEXT TERM ENDS:
+                            <i style="font-style: normal;" id="honourorpricesremarkmain">
                                 @if ($term == 1)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermends }}</i>
-                                @elseif ($term == 2)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermends }}</i>
-                                @elseif ($term == 3)
                                 <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermends }}</i>
+                                @elseif ($term == 2)
+                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermends }}</i>
+                                @elseif ($term == 3)
+                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermends }}</i>
                                 @else
                                 <i style="font-style: normal; font-weight: bold;">NAN</i>
                                 @endif
