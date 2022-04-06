@@ -562,7 +562,7 @@ class ResultController_sec extends Controller
         implode(" ",$printOutArray);
 
         $pdf = App::make('dompdf.wrapper');
-        $pdf->loadHTML(implode(" ",$printOutArray));
+        $pdf->loadHTML(implode(" ",$printOutArray))->setPaper('a4', 'portrait');
         return $pdf->stream();
 
         // $pdf = App::make('dompdf.wrapper');
