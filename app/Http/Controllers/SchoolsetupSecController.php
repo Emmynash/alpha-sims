@@ -14,6 +14,7 @@ use App\Addstudent;
 use App\AssesmentModel;
 use App\CommentsModel;
 use App\CommentTable;
+use App\Models\HeadOfchoolComment;
 use App\Repository\Schoolsetup\SchoolSetup as SchoolsetupSchoolSetup;
 use App\SubAssesmentModel;
 use App\SubHistory;
@@ -433,9 +434,62 @@ class SchoolsetupSecController extends Controller
     public function adminComment()
     {
         $schooldetails = Addpost::find(Auth::user()->schoolid);
-        $comments = CommentTable::where('schoolid', Auth::user()->schoolid)->get();
+        $comments = HeadOfchoolComment::all();
 
         return view('secondary.comment.admincomment', compact('schooldetails', 'comments'));
+    }
+
+    public function addHeadComment(Request $request)
+    {
+
+        $rules = [
+            'marksFrom' => 'required',
+            'marksTo' => 'required',
+            'comment' => 'required'
+        ];
+    
+        $customMessages = [
+            'required' => 'The :attribute field can not be blank.'
+        ];
+
+        $this->validate($request, $rules, $customMessages);
+
+        try {
+            
+            $checkMarksFrom = HeadOfchoolComment::where(['marksFrom'=>$request->marksFrom])->get();
+            if(count($checkMarksFrom) > 0){
+                return back()->with('error', 'marks already added');
+            }
+
+            $checkMarksTo = HeadOfchoolComment::where(['marksTo'=>$request->marksTo])->get();
+            if(count($checkMarksTo) > 0){
+                return back()->with('error', 'marks already added');
+            }
+            $checkMarksTo1 = HeadOfchoolComment::where(['marksTo'=>$request->marksFrom])->get();
+            if(count($checkMarksTo1) > 0){
+                return back()->with('error', 'marks already added');
+            }
+            $checkMarksFrom2 = HeadOfchoolComment::where(['marksFrom'=>$request->marksTo])->get();
+            if(count($checkMarksFrom2) > 0){
+                return back()->with('error', 'marks already added');
+            }
+
+            if($request->marksTo >= $request->marksFrom){
+                return back()->with('error', 'marks from must be greater than marks to');
+            }
+            
+
+            $addComment = new HeadOfchoolComment();
+            $addComment->marksFrom = $request->marksFrom;
+            $addComment->marksTo = $request->marksTo;
+            $addComment->comment = $request->comment;
+            $addComment->save();
+
+            return back()->with('success', 'Comment added successfully');
+            
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Server error');
+        }
     }
 
     public function setupNewComment(Request $request)
