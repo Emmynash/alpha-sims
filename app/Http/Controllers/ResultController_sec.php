@@ -685,6 +685,7 @@ class ResultController_sec extends Controller
         if($mainScore == null){
             return 0;
         }else{
+            
             return $mainScore;
         }
     }
