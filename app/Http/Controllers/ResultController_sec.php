@@ -105,8 +105,7 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid);
-            // ->orderBy('order', 'ASC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
@@ -119,6 +118,7 @@ class ResultController_sec extends Controller
             $computedAverage = ComputedAverages::where(['session' => $schoolsession, 'regno' => $regNo, 'term' => $term])->first();
 
             $getClassGrandTotal = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->sum('examstotal');
+
 
             $getClassRecord = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->get();
 
@@ -302,8 +302,7 @@ class ResultController_sec extends Controller
 
         $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-        $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
-        // ->orderBy('order', 'ASC')->get();
+        $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
         $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
 
         $nextTermBegins = '';
@@ -502,11 +501,20 @@ class ResultController_sec extends Controller
         <div style="width: 100%;">
             <i style="font-style:normal; padding: 10px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
             <i style="font-style:normal; padding: 10px;">Student/Pupil Average: '.$this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section).'</i>
-            <i style="font-style:normal; padding: 10px;">Class Average: '.round($classAverage, 2).'</i>
+            <i style="font-style:normal; padding: 10px;">Class Average: '.round($classAverage, 2). '</i>
             <i style="font-style:normal; padding: 10px;">Position: Nill</i>
         </div>
         <br>
         <p style="text-align: center;">RATINGS</p>
+        <center>
+            <div style="width: 95%; margin: 3px auto;">
+                <i style="font-size: 13px; font-style: normal;">Very Good = <b>5</b>,</i>
+                <i style="font-size: 13px; font-style: normal;">Good = <b>4</b>,</i>
+                <i style="font-size: 13px; font-style: normal;">Average = <b>3</b>,</i>
+                <i style="font-size: 13px; font-style: normal;">Fair = <b>2</b>,</i>
+                <i style="font-size: 13px; font-style: normal;">Poor = <b>1</b></i>
+            </div>
+        </center>
         <div class="studentDetails">
             <div class="studentDetailsone">
                 <table style="width: 100%;">
