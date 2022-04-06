@@ -87,11 +87,11 @@
                                         <td><i style="font-size: 14px; font-style: normal;">Next Term Resumes:</i></td>
                                         <td>
                                             @if ($term == 1)
-                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
-                                            @elseif ($term == 2)
                                             <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermbegins }}</i>
-                                            @elseif ($term == 3)
+                                            @elseif ($term == 2)
                                             <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermbegins }}</i>
+                                            @elseif ($term == 3)
+                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
                                             @else
                                             <i style="font-style: normal; font-weight: bold;">NAN</i>
                                             @endif
@@ -361,11 +361,11 @@
                             NEXT TERM BEGINS:
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
                                 @if ($term == 1)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
-                                @elseif ($term == 2)
                                 <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermbegins }}</i>
-                                @elseif ($term == 3)
+                                @elseif ($term == 2)
                                 <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermbegins }}</i>
+                                @elseif ($term == 3)
+                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
                                 @else
                                 <i style="font-style: normal; font-weight: bold;">NAN</i>
                                 @endif
@@ -375,11 +375,11 @@
                             NEXT TERM ENDS:
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
                                 @if ($term == 1)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermends }}</i>
-                                @elseif ($term == 2)
                                 <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermends }}</i>
-                                @elseif ($term == 3)
+                                @elseif ($term == 2)
                                 <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermends }}</i>
+                                @elseif ($term == 3)
+                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermends }}</i>
                                 @else
                                 <i style="font-style: normal; font-weight: bold;">NAN</i>
                                 @endif
