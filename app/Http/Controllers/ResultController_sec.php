@@ -731,7 +731,7 @@ class ResultController_sec extends Controller
             if($mainScore == 0){
                 $value = 0;
             }else{
-                $mainScore->score;
+                $value = $mainScore->score;
             }
             $subAssScore = '<td><center>'.$value.'</center></td>';
             array_push($subAssessmentScore, $subAssScore);
