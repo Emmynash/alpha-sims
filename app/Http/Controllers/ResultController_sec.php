@@ -105,9 +105,11 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+            // ->orderBy('order', 'ASC')->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+            // ->orderBy('order', 'DESC')->get();
 
             $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
@@ -327,11 +329,15 @@ class ResultController_sec extends Controller
 
         $getStudentsArray = Addstudent_sec::where(['classid'=>$classid, 'studentsection'=>$section])->pluck('id');
 
+
+
+        $getSubjectLists = $addschool->getSubjectList($regNo, $schoolsession, $classid, $section, $term);
+
         $scoresGrandTotal = DB::table('computed_averages')
                     ->whereIn('regno', $getStudentsArray)
                     ->sum('examstotal');
         $recordCount = count($getStudentsArray) * count($resultMain);
-        dump(count($resultMain));
+        dump(count($getSubjectLists));
         $classAverage = $scoresGrandTotal /  $recordCount;
 
         $getStudents = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
