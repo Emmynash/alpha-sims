@@ -50,9 +50,9 @@ function SchoolSetUp() {
         session:'',
         firsttermstarts:'',
         firsttermends:'',
-        secondtermstarts:'',
+        secondtermbegins:'',
         secondtermends:'',
-        thirdtermstarts:'',
+        thirdtermbegins:'',
         thirdtermends:''
     })
 
@@ -98,9 +98,9 @@ function SchoolSetUp() {
                 ...sessiondata, session:response.data.schoolDetails.schoolsession,
                 firsttermstarts:response.data.schoolDetails.firsttermstarts,
                 firsttermends:response.data.schoolDetails.firsttermends,
-                secondtermstarts:response.data.schoolDetails.secondtermstarts,
+                secondtermbegins:response.data.schoolDetails.secondtermbegins,
                 secondtermends:response.data.schoolDetails.secondtermends,
-                thirdtermstarts:response.data.schoolDetails.thirdtermstarts,
+                thirdtermbegins:response.data.schoolDetails.thirdtermbegins,
                 thirdtermends:response.data.schoolDetails.thirdtermends
             })
 
@@ -168,10 +168,9 @@ function SchoolSetUp() {
     }
 
     function handleChange(evt) {
-        const value = evt.target.value;
         setsessiondata({
             ...sessiondata,
-          [evt.target.name]: value
+          [evt.target.name]: evt.target.value
         });
     }
 
@@ -222,7 +221,7 @@ function SchoolSetUp() {
 
     function updateSchoolSession() { //
 
-
+ 
         if (schoolsessioninput !="") {
             
             // if ( schooldetails.schoolsession != schoolsessioninput) {
@@ -579,7 +578,7 @@ function SchoolSetUp() {
                                 <div className="col-12 col-md-6">
                                     <div className="form-group" style={{ margin:'5px' }}>
                                         <i style={{ fontStyle:'normal', fontSize:'10px' }}>2nd term begins</i>
-                                        <input type="date" onChange={handleChange} value={sessiondata.secondtermstarts} name="secondtermstarts" id="" className="form-control form-control-sm" />
+                                        <input type="date" onChange={handleChange} value={sessiondata.secondtermbegins} name="secondtermbegins" id="" className="form-control form-control-sm" />
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-6">
@@ -594,7 +593,7 @@ function SchoolSetUp() {
                                 <div className="col-12 col-md-6">
                                     <div className="form-group" style={{ margin:'5px' }}>
                                         <i style={{ fontStyle:'normal', fontSize:'10px' }}>3rd term begins</i>
-                                        <input type="date" onChange={handleChange} value={sessiondata.thirdtermstarts} name="thirdtermstarts" id="" className="form-control form-control-sm" />
+                                        <input type="date" onChange={handleChange} value={sessiondata.thirdtermbegins} name="thirdtermbegins" id="" className="form-control form-control-sm" />
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-6">
@@ -624,7 +623,7 @@ function SchoolSetUp() {
 
                 <hr/>
                     <div>
-                        <p style={{ paddingLeft:'10px' }}>SetUp Continous Assessment(e.g Exams, CA1, CA2 etc)</p>
+                        <p style={{ paddingLeft:'10px' }}>Set Up Continuous Assessment (e.g Exams, First Ass, First Test)</p>
                         <div className="row" style={{ margin:'10px' }}>
                             <div className="col-12 col-md-6">
                                 <div className="row">
@@ -651,7 +650,7 @@ function SchoolSetUp() {
                                     <button type="submit" className="btn btn-sm btn-info badge" onClick={setUpAssessment}>Save</button>
                                 </div>
                                 <div className='alert alert-info'>
-                                    Drag and drop to order assessment
+                                    Drag and drop to re-order assessments appearance
                                 </div>  
                                 <DragDropContext onDragEnd={handleOndragEnds}>
                                 <Droppable droppableId='assessments'>
@@ -684,7 +683,7 @@ function SchoolSetUp() {
                             </div>
                             <div className="col-12 col-md-6">
                                 <div style={{ border:'1px solid black' }}>
-                                    <p style={{ padding:'5px' }}>Continous Assessment Sub-category</p>
+                                    <p style={{ padding:'5px' }}>Continuous Assessment Sub-category</p>
                                     <div className="row" style={{ margin:'5px' }}>
                                         <div className="col-12 col-md-6">
                                             <div className="form-group">
@@ -842,7 +841,7 @@ function SchoolSetUp() {
                 <div className="row" style={{ margin:'10px' }}>
                     <div className="col-12 col-md-6">
                         <div className="form-group">
-                            <input className="form-control form-control-sm" onChange={handleChangeClassArms} value={classArms} placeholder="Arms"/>
+                            <input className="form-control form-control-sm" onChange={handleChangeClassArms} value={classArms} placeholder="Add New Arm "/>
                         </div>
                         <button onClick={addSchoolClassArms} className="btn btn-sm btn-info badge">Save</button>
 
@@ -872,7 +871,7 @@ function SchoolSetUp() {
                         }
                     </div>
                     <div className="col-12 col-md-6">
-                        <input className="form-control form-control-sm" onChange={handleChangeSchoolClubs} value={schoolclubs} placeholder="Enter Club name"/>
+                        <input className="form-control form-control-sm" onChange={handleChangeSchoolClubs} value={schoolclubs} placeholder="Add New Club"/>
                         <button onClick={addSchoolCLubs} className="btn btn-sm btn-info badge">Save</button>
 
                         {
