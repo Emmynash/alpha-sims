@@ -589,7 +589,7 @@ class ResultController_sec extends Controller
                 <p style="padding: 0px; margin: 0;">NEXT TERM BEGINS: '.$nextTermBegins. '</p>
                 <div style="height: 1px; width: 100%; background-color: black;"></div>
             </div>
-            <div style="width: 49.5%; margin-bottom: -2px;">
+            <div style="width: 49.5%; margin-bottom: -10px;">
                 <p style="padding: 0px; margin: 0;">NEXT TERM ENDS: '.$nextTermEnds.'</p>
                 <div style="height: 1px; width: 100%; background-color: black;"></div>
             </div>
