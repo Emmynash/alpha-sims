@@ -572,7 +572,7 @@ class ResultController_sec extends Controller
             </div>
         </div>
         <br>
-        <div style="width: 100%; margin-bottom: 5px; margin-top: -8px;">
+        <div style="width: 100%; margin-bottom: 5px; margin-top: -11px;">
             <p style="padding: 0px; margin: 0;">FORM TEACHER\'S REMARK: '.$commentMain.'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
