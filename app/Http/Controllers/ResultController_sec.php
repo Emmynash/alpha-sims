@@ -107,7 +107,7 @@ class ResultController_sec extends Controller
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DES')->get();
 
             $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
@@ -126,9 +126,44 @@ class ResultController_sec extends Controller
 
             $classAverage = $getClassGrandTotal /  $recordCount;
 
+            $assessmentHeadCompiled = array();
+            for ($i = 0; $i < count($assessment); $i++) {
+                $assementHead = '<th colspan=' . $this->getSubAssessmentCount($assessment[$i]->id) . '>' . $assessment[$i]->name . '</th>';
+                array_push($assessmentHeadCompiled, $assementHead);
+            }
+            $subAssessment = array();
+            for ($i = 0; $i < count($assessment); $i++) {
+                $subAss = SubAssesmentModel::where('catid', $assessment[$i]->id)->get();
+                for ($k = 0; $k < count($subAss); $k++) {
+                    $subValue = '<th>' . $subAss[$k]->maxmarks . '</th>';
+                    array_push($subAssessment, $subValue);
+                }
+            }
+            $nextTermBegins = '';
+            if ($addschool->term == 1) {
+                $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermstarts . '</i>';
+            } elseif ($addschool->term == 2) {
+                $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermstarts . '</i>';
+            } elseif ($addschool->term == 3) {
+                $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->firsttermstarts . '</i>';
+            } else {
+                $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
+            }
+
+            $nextTermEnds = '';
+            if ($addschool->term == 1) {
+                $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermends . '</i>';
+            } elseif ($addschool->term == 2) {
+                $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermends . '</i>';
+            } elseif ($addschool->term == 3) {
+                $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->firsttermends . '</i>';
+            } else {
+                $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
+            }
 
 
-            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'getClassRecord', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+
+            return view('secondary.result.viewresult.singleprimary', compact('nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessment', 'resultMain', 'getClassRecord', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();

@@ -149,7 +149,7 @@
                             <thead style="text-align: center;">
                                 <tr>
                                     <th style="font-size: 14px;">SUBJECTS</th>
-                                    @foreach ($assessment as $item)
+                                    <!-- @foreach ($assessment as $item)
                                     @if( $item->name === "Assignment" && $item->getAssessment($item->id) <= 1) <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
                                         <i style="margin: 0px; padding: 5px; font-size: 14px;">Ass</i>
                                         </th>
@@ -167,19 +167,21 @@
                                             <i style="margin: 0px; padding: 5px; font-size: 14px;">{{$item->name}}</i>
                                         </th>
                                         @endif
-                                        @endforeach
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
-                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
+                                        @endforeach -->
+                                    {{implode(" ",$assessmentHeadCompiled)}}
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
+                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
                                 </tr>
                             </thead>
                             <tbody id="resultprinttable">
                                 <tr style='font-size: 14px;'>
                                     <th style='font-size: 14px; text-align:center; font-weight:bold;'></th>
-                                    @foreach ($subCatAss as $ass)
+                                    <!-- @foreach ($subCatAss as $ass)
                                     <th style='font-size: 14px; text-align:center;'>{{$ass->maxmarks}}</th>
-                                    @endforeach
+                                    @endforeach -->
+                                    {{implode(" ",getSubAssessment)}}
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
@@ -360,29 +362,13 @@
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
                             NEXT TERM BEGINS:
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
-                                @if ($term == 1)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermbegins }}</i>
-                                @elseif ($term == 2)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermbegins }}</i>
-                                @elseif ($term == 3)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
-                                @else
-                                <i style="font-style: normal; font-weight: bold;">NAN</i>
-                                @endif
+                                {{$nextTermBegins}}
                             </i>
                         </div>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
                             NEXT TERM ENDS:
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
-                                @if ($term == 1)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermends }}</i>
-                                @elseif ($term == 2)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermends }}</i>
-                                @elseif ($term == 3)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermends }}</i>
-                                @else
-                                <i style="font-style: normal; font-weight: bold;">NAN</i>
-                                @endif
+                                {{$nextTermEnds}}
                             </i>
                         </div>
                     </div>
