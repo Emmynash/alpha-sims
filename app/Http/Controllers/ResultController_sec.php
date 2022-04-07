@@ -339,6 +339,7 @@ class ResultController_sec extends Controller
                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
                        ->where(['classid'=>$classid, 'studentsection'=>$section])->get();
 
+        dump($getClassGrandTotal);
         $recordCount = count($getStudentsArray) * count($this->getSubjectLists($term, $regNo, $schoolsession));
         $classAverage = $scoresGrandTotal /   $recordCount;
 
@@ -690,7 +691,7 @@ class ResultController_sec extends Controller
     {
          $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
          $list = array();
-        array_push($resultList, $resultsSubject);
+        array_push($list, $resultsSubject);
         return  $list;
     }
 
