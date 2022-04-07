@@ -105,8 +105,7 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
-            // ->orderBy('order', 'ASC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
