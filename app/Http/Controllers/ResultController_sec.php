@@ -340,7 +340,7 @@ class ResultController_sec extends Controller
                        ->where(['classid'=>$classid, 'studentsection'=>$section])->get();
 
         $recordCount = count($getStudentsArray) * count($this->getSubjectScores($term, $regNo, $schoolsession));
-        $classAverage = $scoresGrandTotal /   count($getStudentsArray);
+        $classAverage = $scoresGrandTotal /   $recordCount;
 
         $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
@@ -537,14 +537,14 @@ class ResultController_sec extends Controller
                     <th></th>
                     <th></th>
                 </tr>
-                '.dump($resultMain).'
+                '.implode(" ",$this->getSubjectScores($term, $getStudents[$i]->id, $schoolsession)).'
             </table>
         </div>
         <br>
         <div style="width: 100%;">
             <i style="font-style:normal; padding: 8px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
             <i style="font-style:normal; padding: 8px;">Student/Pupil Average: '. round($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section), 2).'</i>
-            <i style="font-style:normal; padding: 8px;">Class Average: '.round($classAverage, 2). '</i>
+            <i style="font-style:normal; padding: 8px;">Class Average: '.round($this->loadHtmlDoc($request)->$classAverage, 2). '</i>
             <i style="font-style:normal; padding: 8px;">Position: Nill</i>
         </div>
         <br>
