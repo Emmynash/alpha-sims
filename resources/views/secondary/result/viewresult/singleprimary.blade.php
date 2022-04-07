@@ -141,7 +141,7 @@
                             <thead style="text-align: center;">
                                 <tr>
                                     <th style="font-size: 14px;">SUBJECTS</th>
-                                    <!-- @foreach ($assessment as $item)
+                                    @foreach ($assessment as $item)
                                     @if( $item->name === "Assignment" && $item->getAssessment($item->id) <= 1) <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
                                         <i style="margin: 0px; padding: 5px; font-size: 14px;">Ass</i>
                                         </th>
@@ -159,7 +159,7 @@
                                             <i style="margin: 0px; padding: 5px; font-size: 14px;">{{$item->name}}</i>
                                         </th>
                                         @endif
-                                        @endforeach -->
+                                        @endforeach
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
