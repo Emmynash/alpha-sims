@@ -181,7 +181,7 @@
                                     <!-- @foreach ($subCatAss as $ass)
                                     <th style='font-size: 14px; text-align:center;'>{{$ass->maxmarks}}</th>
                                     @endforeach -->
-                                    {{implode(" ",getSubAssessment)}}
+                                    {{implode(" ",subAssessment)}}
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
