@@ -537,7 +537,7 @@ class ResultController_sec extends Controller
                     <th></th>
                     <th></th>
                 </tr>
-                '.dump(implode(" ",$this->getSubjectScores($term, $getStudents[$i]->id, $schoolsession))).'
+                '.dump($resultMain).'
             </table>
         </div>
         <br>
