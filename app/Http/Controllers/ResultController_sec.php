@@ -339,6 +339,7 @@ class ResultController_sec extends Controller
                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
                        ->where(['classid'=>$classid, 'studentsection'=>$section])->get();
 
+                       dump($this->viewSingleResult($request)->classAverage);
         $recordCount = count($getStudentsArray) * count($this->getSubjectLists($term, $regNo, $schoolsession));
         $classAverage = $scoresGrandTotal /   $recordCount;
 
