@@ -506,6 +506,15 @@ class ResultController_sec extends Controller
             <i style="font-style:normal; padding: 10px;">Position: Nill</i>
         </div>
         <br>
+        <center>
+            <div style="width: 95%; margin: 3px auto;">
+                <i style="font-size: 13px; font-style: normal;">Very Good = <b>5</b>,</i>
+                <i style="font-size: 13px; font-style: normal;">Good = <b>4</b>,</i>
+                <i style="font-size: 13px; font-style: normal;">Average = <b>3</b>,</i>
+                <i style="font-size: 13px; font-style: normal;">Fair = <b>2</b>,</i>
+                <i style="font-size: 13px; font-style: normal;">Poor = <b>1</b></i>
+            </div>
+        </center>
         <p style="text-align: center;">RATINGS</p>
         <div class="studentDetails">
             <div class="studentDetailsone">
