@@ -500,14 +500,14 @@ class ResultController_sec extends Controller
         </div>
         <br>
         <div style="width: 100%;">
-            <i style="font-style:normal; padding: 10px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
-            <i style="font-style:normal; padding: 10px;">Student/Pupil Average: '.$this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section).'</i>
-            <i style="font-style:normal; padding: 10px;">Class Average: '.round($classAverage, 2). '</i>
-            <i style="font-style:normal; padding: 10px;">Position: Nill</i>
+            <i style="font-style:normal; padding: 8px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
+            <i style="font-style:normal; padding: 8px;">Student/Pupil Average: '.$this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section).'</i>
+            <i style="font-style:normal; padding: 8px;">Class Average: '.round($classAverage, 2). '</i>
+            <i style="font-style:normal; padding: 8px;">Position: Nill</i>
         </div>
         <br>
-        <p style="text-align: center;">RATINGS</p>
-        <div class="studentDetails" style="margin: -10px">
+        <p style="text-align: center; margin-top: -10px">RATINGS</p>
+        <div class="studentDetails" style="margin: -2px">
             <div class="studentDetailsone">
                 <div style="width: 95%; margin: 3px auto;">
                     <i style="font-size: 13px; font-style: normal;">Excellent = <b>5</b>,</i>
@@ -540,7 +540,7 @@ class ResultController_sec extends Controller
             <p style="padding: 0px; margin: 0;">FORM MASTER\'S REMARK: '.$commentMain.'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
-        <div style="width: 100%; margin-bottom: 2px;">
+        <div style="width: 100%; margin-bottom: 10px;">
             <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)).'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
@@ -550,10 +550,10 @@ class ResultController_sec extends Controller
         </div>
         <div class="remark" style="width: 100%; margin-bottom: 10px;">
             <div style="width: 49.5%;">
-                <p style="padding: 0px; margin: 0;">NEXT TERM BEGINS: '.$nextTermBegins.'</p>
+                <p style="padding: 0px; margin: 0;">NEXT TERM BEGINS: '.$nextTermBegins. '</p>
                 <div style="height: 1px; width: 100%; background-color: black;"></div>
             </div>
-            <div style="width: 49.5%;">
+            <div style="width: 49.5%; margin-bottom: -5px;">
                 <p style="padding: 0px; margin: 0;">NEXT TERM ENDS: '.$nextTermEnds.'</p>
                 <div style="height: 1px; width: 100%; background-color: black;"></div>
             </div>
