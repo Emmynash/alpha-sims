@@ -339,8 +339,8 @@ class ResultController_sec extends Controller
                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
                        ->where(['classid'=>$classid, 'studentsection'=>$section])->get();
 
-        $recordCount = count($getStudentsArray) * count($this->getSubjectScores($term, $regNo, $schoolsession));
-        $classAverage = $scoresGrandTotal /   count($getStudentsArray);
+        $recordCount = count($getStudentsArray) * count($this->getSubjectLists($term, $regNo, $schoolsession));
+        $classAverage = $scoresGrandTotal /   $recordCount;
 
         $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
@@ -544,7 +544,7 @@ class ResultController_sec extends Controller
         <div style="width: 100%;">
             <i style="font-style:normal; padding: 8px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
             <i style="font-style:normal; padding: 8px;">Student/Pupil Average: '. round($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section), 2).'</i>
-            <i style="font-style:normal; padding: 8px;">Class Average: '.round($this->loadHtmlDoc($request)->$classAverage, 2). '</i>
+            <i style="font-style:normal; padding: 8px;">Class Average: '.round($classAverage, 2). '</i>
             <i style="font-style:normal; padding: 8px;">Position: Nill</i>
         </div>
         <br>
@@ -688,8 +688,10 @@ class ResultController_sec extends Controller
 
     public function getSubjectLists($term, $regNo, $session)
     {
-        return $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
-     
+         $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
+         $list = array();
+        array_push($resultList, $resultsSubject);
+        return  $list;
     }
 
     public function getSubjectScores($term, $regNo, $session)
