@@ -333,12 +333,14 @@ class ResultController_sec extends Controller
         $scoresGrandTotal = DB::table('computed_averages')
                     ->whereIn('regno', $getStudentsArray)
                     ->sum('examstotal');
-        dump($this->getSubjectLists($term, $regNo, $schoolsession));
-        $classAverage = $scoresGrandTotal /   count($getStudentsArray);
+      
 
         $getStudents = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
                        ->where(['classid'=>$classid, 'studentsection'=>$section])->get();
+
+        $recordCount = count($getStudentsArray) * count($this->getSubjectScores($term, $regNo, $schoolsession));
+        $classAverage = $scoresGrandTotal /   count($getStudentsArray);
 
         $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
