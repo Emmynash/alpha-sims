@@ -105,7 +105,8 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+            // ->orderBy('order', 'ASC')->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
@@ -387,7 +388,7 @@ class ResultController_sec extends Controller
 
             $printPdf = 
         '<style type="text/css" media="screen">
-        .outer {margin:0 auto}
+        .outer {margin:-10 auto}
         .outer > * {
           display:inline-block;
           vertical-align:middle;
@@ -506,17 +507,15 @@ class ResultController_sec extends Controller
         </div>
         <br>
         <p style="text-align: center;">RATINGS</p>
-        <center>
-            <div style="width: 95%; margin: 3px auto;">
-                <i style="font-size: 13px; font-style: normal;">Very Good = <b>5</b>,</i>
-                <i style="font-size: 13px; font-style: normal;">Good = <b>4</b>,</i>
-                <i style="font-size: 13px; font-style: normal;">Average = <b>3</b>,</i>
-                <i style="font-size: 13px; font-style: normal;">Fair = <b>2</b>,</i>
-                <i style="font-size: 13px; font-style: normal;">Poor = <b>1</b></i>
-            </div>
-        </center>
-        <div class="studentDetails">
+        <div class="studentDetails" style="margin: -10px">
             <div class="studentDetailsone">
+                <div style="width: 95%; margin: 3px auto;">
+                    <i style="font-size: 13px; font-style: normal;">Excellent = <b>5</b>,</i>
+                    <i style="font-size: 13px; font-style: normal;">Very good = <b>4</b>,</i>
+                    <i style="font-size: 13px; font-style: normal;">Good = <b>3</b>,</i>
+                    <i style="font-size: 13px; font-style: normal;">Average = <b>2</b>,</i>
+                    <i style="font-size: 13px; font-style: normal;">Fair = <b>1</b></i>
+                </div>
                 <table style="width: 100%;">
                     <tr>
                         <th style="font-size: 14px;">BEHAVIOUR AND ACTIVITIES</th>
@@ -537,15 +536,15 @@ class ResultController_sec extends Controller
             </div>
         </div>
         <br>
-        <div style="width: 100%; margin-bottom: 10px;">
+        <div style="width: 100%; margin-bottom: 5px;">
             <p style="padding: 0px; margin: 0;">FORM MASTER\'S REMARK: '.$commentMain.'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
-        <div style="width: 100%; margin-bottom: 15px;">
+        <div style="width: 100%; margin-bottom: 2px;">
             <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)).'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
-        <div style="width: 100%; margin-bottom: 10px;">
+        <div style="width: 100%; margin-bottom: 2px;">
             <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S SIGNATURE: <img src='.$addschool->schoolprincipalsignature.' height="50px"></p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
