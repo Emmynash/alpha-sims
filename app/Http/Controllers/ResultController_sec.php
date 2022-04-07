@@ -544,7 +544,7 @@ class ResultController_sec extends Controller
             <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)).'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
-        <div style="width: 100%; margin-bottom: 2px;">
+        <div style="width: 100%; margin-bottom: 8px;">
             <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S SIGNATURE: <img src='.$addschool->schoolprincipalsignature.' height="50px"></p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
@@ -553,7 +553,7 @@ class ResultController_sec extends Controller
                 <p style="padding: 0px; margin: 0;">NEXT TERM BEGINS: '.$nextTermBegins. '</p>
                 <div style="height: 1px; width: 100%; background-color: black;"></div>
             </div>
-            <div style="width: 49.5%; margin-bottom: -5px;">
+            <div style="width: 49.5%; margin-bottom: -2px;">
                 <p style="padding: 0px; margin: 0;">NEXT TERM ENDS: '.$nextTermEnds.'</p>
                 <div style="height: 1px; width: 100%; background-color: black;"></div>
             </div>
