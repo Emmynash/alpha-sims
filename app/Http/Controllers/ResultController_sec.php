@@ -21,7 +21,6 @@ use App\ResultReadyModel;
 use PDF;
 use App;
 use App\Addsection_sec;
-use App\SubjectScoreAllocation;
 use App\AssesmentModel;
 use App\AssessmentResultModel;
 use App\AssessmentScoreResultModel;
@@ -35,7 +34,6 @@ use App\ResultSubjectsModel;
 use App\SubAssesmentModel;
 use App\User;
 use Svg\Tag\Rect;
-
 
 class ResultController_sec extends Controller
 {
@@ -107,11 +105,9 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
-            // ->orderBy('order', 'ASC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
-            // ->orderBy('order', 'DESC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
 
             $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
@@ -331,11 +327,10 @@ class ResultController_sec extends Controller
 
         $getStudentsArray = Addstudent_sec::where(['classid'=>$classid, 'studentsection'=>$section])->pluck('id');
 
-
         $scoresGrandTotal = DB::table('computed_averages')
                     ->whereIn('regno', $getStudentsArray)
                     ->sum('examstotal');
-      
+        $classAverage = $scoresGrandTotal /  count($getStudentsArray);
 
         $getStudents = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
@@ -543,7 +538,7 @@ class ResultController_sec extends Controller
         <div style="width: 100%;">
             <i style="font-style:normal; padding: 8px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
             <i style="font-style:normal; padding: 8px;">Student/Pupil Average: '. round($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section), 2).'</i>
-            <i style="font-style:normal; padding: 8px;">Class Average: '.round($this->getClassAverage($term, $schoolsession, $classid, $section, $regNo), 2). '</i>
+            <i style="font-style:normal; padding: 8px;">Class Average: '.round($classAverage, 2). '</i>
             <i style="font-style:normal; padding: 8px;">Position: Nill</i>
         </div>
         <br>
@@ -685,14 +680,6 @@ class ResultController_sec extends Controller
         }
     }
 
-    public function getSubjectLists($term, $regNo, $session)
-    {
-         $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
-         $list = array();
-        array_push($list, $resultsSubject);
-        return  $list;
-    }
-
     public function getSubjectScores($term, $regNo, $session)
     {
         $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
@@ -777,16 +764,13 @@ class ResultController_sec extends Controller
         }
     }
 
-    public function getClassAverage($term, $session, $classid, $section, $regNo)
+    public function getClassAverage($term, $session, $classid, $section)
     {
-        $getStudentsArray = Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->pluck('id');
-        $resultsSubject = SubjectScoreAllocation::where(['term' => $term, 'studentregno' => $regNo, 'session' => $session])->get();
-        $getClassGrandTotal = ComputedAverages::where(['session' => $session, 'term' => $term])->sum('regno');
-        if($resultsSubject == null || []){
+        $getAverage = ComputedAverages::where(['term'=>$term, 'session'=>$session])->first();
+        if($getAverage == null){
             return 0;
         }else{
-            $recordCount = count($getStudentsArray) * count($resultsSubject);
-            return $getClassGrandTotal / $recordCount;
+            return $getAverage->studentaverage;
         }
         
     }
