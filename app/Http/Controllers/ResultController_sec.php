@@ -567,13 +567,13 @@ class ResultController_sec extends Controller
                         <th style="font-size: 14px;">SKILLS</th>
                         <th style="font-size: 14px;">Marks(1-5)</th>
                     </tr>
-                    '.implode(" ",$motoSkill).'
+                    '.implode(" ",$motoSkill). '
                 </table>
             </div>
         </div>
         <br>
-        <div style="width: 100%; margin-bottom: 5px;">
-            <p style="padding: 0px; margin: 0;">FORM MASTER\'S REMARK: '.$commentMain.'</p>
+        <div style="width: 100%; margin-bottom: 5px; margin-top: -8px;">
+            <p style="padding: 0px; margin: 0;">FORM TEACHER\'S REMARK: '.$commentMain.'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 10px;">
