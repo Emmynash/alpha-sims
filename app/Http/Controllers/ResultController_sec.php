@@ -330,14 +330,10 @@ class ResultController_sec extends Controller
         $getStudentsArray = Addstudent_sec::where(['classid'=>$classid, 'studentsection'=>$section])->pluck('id');
 
 
-
-        $getSubjectLists = ResultSubjectsModel::where(['term' => $term, 'studentregno' => $regNo, 'session' => $schoolsession])->get();
-
         $scoresGrandTotal = DB::table('computed_averages')
                     ->whereIn('regno', $getStudentsArray)
                     ->sum('examstotal');
-        $recordCount = count($getStudentsArray) * count($getSubjectLists);
-        dump($getSubjectLists);
+        $recordCount = count($getStudentsArray) * count($this->getSubjectLists($term, $regNo, $schoolsession));
         $classAverage = $scoresGrandTotal /  $recordCount;
 
         $getStudents = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
@@ -686,6 +682,12 @@ class ResultController_sec extends Controller
                 return view('secondary.result.viewresult.resultseniorsec', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool', 'term', 'schoolsession', 'classid', 'section', 'classtype'));
             }
         }
+    }
+
+    public function getSubjectLists($term, $regNo, $session)
+    {
+        return $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
+     
     }
 
     public function getSubjectScores($term, $regNo, $session)
