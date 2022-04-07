@@ -129,7 +129,7 @@
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">No in Class : </i></td>
-                                        <td><i id="studentposition" style="font-size: 14px; font-style: normal; font-weight: bold;">{{count($studentClass->getArmCount($classid))}} </i></td>
+                                        <td><i id="studentposition" style="font-size: 14px; font-style: normal; font-weight: bold;">{{$studentClass->getClassCount($classid)}} </i></td>
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Session:</i></td>
@@ -150,30 +150,29 @@
                                 <tr>
                                     <th style="font-size: 14px;">SUBJECTS</th>
                                     @foreach ($assessment as $item)
-                                    @if( $item->name === "Assignment" && $item->getAssessment($item->id) <= 1) 
-                                    <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
+                                    @if( $item->name === "Assignment" && $item->getAssessment($item->id) <= 1) <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
                                         <i style="margin: 0px; padding: 5px; font-size: 14px;">Ass</i>
-                                    </th>
-                                    @endif
-                                    @if(str_word_count($item->name) > 1)
-                                    <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
-                                        <i style="margin: 0px; padding: 5px; font-size: 14px;">
-                                            {{explode(' ', $item->name)[0] }}
-                                            </br>
-                                            {{explode(' ', $item->name)[1]}}
-                                        </i>
-                                    </th>
-                                    @elseif(str_word_count($item->name) == 1)
-                                    <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
-                                        <i style="margin: 0px; padding: 5px; font-size: 14px;">{{$item->name}}</i>
-                                    </th>
-                                    @endif
-                                    @endforeach
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
-                            </tr>
+                                        </th>
+                                        @endif
+                                        @if(str_word_count($item->name) > 1)
+                                        <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
+                                            <i style="margin: 0px; padding: 5px; font-size: 14px;">
+                                                {{explode(' ', $item->name)[0] }}
+                                                </br>
+                                                {{explode(' ', $item->name)[1]}}
+                                            </i>
+                                        </th>
+                                        @elseif(str_word_count($item->name) == 1)
+                                        <th class="text-center" colspan="{{ $item->getAssessment($item->id) }}">
+                                            <i style="margin: 0px; padding: 5px; font-size: 14px;">{{$item->name}}</i>
+                                        </th>
+                                        @endif
+                                        @endforeach
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
+                                </tr>
                             </thead>
                             <tbody id="resultprinttable">
                                 <tr style='font-size: 14px;'>
@@ -247,11 +246,11 @@
 
                     <center>
                         <div style="width: 95%; margin: 3px auto;">
-                            <i style="font-size: 13px; font-style: normal;">Very Good = <b>5</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Good = <b>4</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Average = <b>3</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Fair = <b>2</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Poor = <b>1</b></i>
+                            <i style="font-size: 13px; font-style: normal;">Excellent = <b>5</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Very good = <b>4</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Good = <b>3</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Average = <b>2</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Fair = <b>1</b></i>
                         </div>
                     </center>
 
