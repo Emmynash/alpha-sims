@@ -86,15 +86,7 @@
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Next Term Resumes:</i></td>
                                         <td>
-                                            @if ($term == 1)
-                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermbegins }}</i>
-                                            @elseif ($term == 2)
-                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermbegins }}</i>
-                                            @elseif ($term == 3)
-                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
-                                            @else
-                                            <i style="font-style: normal; font-weight: bold;">NAN</i>
-                                            @endif
+                                            {{nextTermBegins}}
                                         </td>
                                     </tr>
                                     <tr>
@@ -192,13 +184,14 @@
 
                                 <tr style='font-size: 14px;'>
                                     <td class='' style='font-size: 14px;'>{{ $item->subjectname }}</td>
-                                    @foreach ($assessment as $itemA)
+                                    <!-- @foreach ($assessment as $itemA)
                                     @foreach ($itemA->getAssessmentForScore($itemA->id) as $itemB)
                                     <td class='text-center' style='font-size: 14px;'>
                                         <center>{{ $itemB->getScore($itemB->id, $classid, $regNo, $item->subjectid, $schoolsession ) == NULL ? "---":$itemB->getScore($itemB->id, $classid, $regNo, $item->subjectid, $schoolsession )->scrores }}</center>
                                     </td>
                                     @endforeach
-                                    @endforeach
+                                    @endforeach -->
+                                    {{implode(" ",$subAssessmentMarks)}}
                                     <td class='text-center thdesign' style='font-size: 14px;'>
                                         <center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->total }}</center>
                                     </td>

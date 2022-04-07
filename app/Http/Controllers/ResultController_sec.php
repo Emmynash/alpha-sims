@@ -131,12 +131,12 @@ class ResultController_sec extends Controller
                 $assementHead = '<th colspan=' . $this->getSubAssessmentCount($assessment[$i]->id) . '>' . $assessment[$i]->name . '</th>';
                 array_push($assessmentHeadCompiled, $assementHead);
             }
-            $subAssessment = array();
+            $subAssessmentMarks = array();
             for ($i = 0; $i < count($assessment); $i++) {
                 $subAss = SubAssesmentModel::where('catid', $assessment[$i]->id)->get();
                 for ($k = 0; $k < count($subAss); $k++) {
-                    $subValue = '<th>' . $subAss[$k]->maxmarks . '</th>';
-                    array_push($subAssessment, $subValue);
+                    $subValue = '<td>' . $subAss[$k]->maxmarks . '</td>';
+                    array_push($subAssessmentMarks, $subValue);
                 }
             }
             $nextTermBegins = '';
@@ -163,7 +163,7 @@ class ResultController_sec extends Controller
 
 
 
-            return view('secondary.result.viewresult.singleprimary', compact('nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessment', 'resultMain', 'getClassRecord', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+            return view('secondary.result.viewresult.singleprimary', compact('nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessmentMarks', 'resultMain', 'getClassRecord', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();
@@ -342,24 +342,24 @@ class ResultController_sec extends Controller
 
         $nextTermBegins = '';
         if($addschool->term == 1){
-            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">'.$addschool->secondtermstarts.'</i>';
+            $nextTermBegins = $addschool->secondtermstarts;
         }elseif($addschool->term == 2){
-            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">'.$addschool->thirdtermstarts.'</i>';
+            $nextTermBegins = $addschool->thirdtermstarts;
         }elseif($addschool->term == 3){
-            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">'.$addschool->firsttermstarts.'</i>';
+            $nextTermBegins = $addschool->firsttermstarts;
         }else{
-            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
+            $nextTermBegins = 'NAN';
         }
 
         $nextTermEnds = '';
         if($addschool->term == 1){
-            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">'.$addschool->secondtermends.'</i>';
+            $nextTermEnds = $addschool->secondtermends;
         }elseif($addschool->term == 2){
-            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">'.$addschool->thirdtermends.'</i>';
+            $nextTermEnds = $addschool->thirdtermends;
         }elseif($addschool->term == 3){
-            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">'.$addschool->firsttermends.'</i>';
+            $nextTermEnds = $addschool->firsttermends;
         }else{
-            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
+            $nextTermEnds = 'NAN';
         }
 
         $assessmentHeadCompiled = array();
