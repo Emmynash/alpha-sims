@@ -142,9 +142,9 @@ class ResultController_sec extends Controller
 
             $nextTermBegins = '';
             if ($addschool->term == 1) {
-                $nextTermBegins = $addschool->secondtermstarts;
+                $nextTermBegins = $addschool->secondtermbegins;
             } elseif ($addschool->term == 2) {
-                $nextTermBegins = $addschool->thirdtermstarts;
+                $nextTermBegins = $addschool->thirdtermbegins;
             } elseif ($addschool->term == 3) {
                 $nextTermBegins = $addschool->firsttermstarts;
             } else {
