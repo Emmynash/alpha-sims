@@ -339,7 +339,6 @@ class ResultController_sec extends Controller
                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
                        ->where(['classid'=>$classid, 'studentsection'=>$section])->get();
 
-        dump($this->getSubjectLists($term, $regNo, $schoolsession));
         $recordCount = count($getStudentsArray) * count($this->getSubjectLists($term, $regNo, $schoolsession));
         $classAverage = $scoresGrandTotal /   $recordCount;
 
@@ -545,7 +544,7 @@ class ResultController_sec extends Controller
         <div style="width: 100%;">
             <i style="font-style:normal; padding: 8px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
             <i style="font-style:normal; padding: 8px;">Student/Pupil Average: '. round($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section), 2).'</i>
-            <i style="font-style:normal; padding: 8px;">Class Average: '.round($classAverage, 2). '</i>
+            <i style="font-style:normal; padding: 8px;">Class Average: '.round($this->getClassAverage($term, $schoolsession, $classid, $section, $regNo), 2). '</i>
             <i style="font-style:normal; padding: 8px;">Position: Nill</i>
         </div>
         <br>
@@ -779,13 +778,16 @@ class ResultController_sec extends Controller
         }
     }
 
-    public function getClassAverage($term, $session, $classid, $section)
+    public function getClassAverage($term, $session, $classid, $section, $regNo)
     {
-        $getAverage = ComputedAverages::where(['term'=>$term, 'session'=>$session])->first();
-        if($getAverage == null){
+        $getStudentsArray = Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->pluck('id');
+        $resultsSubject = ResultSubjectsModel::where(['term' => $term, 'studentregno' => $regNo, 'session' => $session])->get();
+        $getClassGrandTotal = ComputedAverages::where(['session' => $session, 'term' => $term])->sum('regno');
+        if($resultsSubject == null){
             return 0;
         }else{
-            return $getAverage->studentaverage;
+            $recordCount = count($getStudentsArray) * count($resultsSubject);
+            return $getClassGrandTotal / $recordCount;
         }
         
     }
