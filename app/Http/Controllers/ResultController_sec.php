@@ -340,7 +340,7 @@ class ResultController_sec extends Controller
                        ->where(['classid'=>$classid, 'studentsection'=>$section])->get();
 
         $recordCount = count($getStudentsArray) * count($this->getSubjectScores($term, $regNo, $schoolsession));
-        $classAverage = $scoresGrandTotal /   $recordCount;
+        $classAverage = $scoresGrandTotal /   count($getStudentsArray);
 
         $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
