@@ -330,7 +330,8 @@ class ResultController_sec extends Controller
         $scoresGrandTotal = DB::table('computed_averages')
                     ->whereIn('regno', $getStudentsArray)
                     ->sum('examstotal');
-        $classAverage = $scoresGrandTotal /  count($getStudentsArray);
+        $recordCount = count($getStudentsArray) * count($resultMain);
+        $classAverage = $scoresGrandTotal /  $recordCount;
 
         $getStudents = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
