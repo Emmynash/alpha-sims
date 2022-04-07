@@ -331,13 +331,13 @@ class ResultController_sec extends Controller
 
 
 
-        // $getSubjectLists = $addschool->getSubjectList($regNo, $schoolsession, $classid, $section, $term);
+        $getSubjectLists = ResultSubjectsModel::where(['term' => $term, 'studentregno' => $regNo, 'session' => $schoolsession])->get();
 
         $scoresGrandTotal = DB::table('computed_averages')
                     ->whereIn('regno', $getStudentsArray)
                     ->sum('examstotal');
-        $recordCount = count($getStudentsArray) * count($this->viewResult->resultMain);
-        dump(count($this->viewResult->resultMain));
+        $recordCount = count($getStudentsArray) * count($getSubjectLists);
+        dump($getSubjectLists);
         $classAverage = $scoresGrandTotal /  $recordCount;
 
         $getStudents = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
