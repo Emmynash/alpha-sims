@@ -86,7 +86,7 @@
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Next Term Resumes:</i></td>
                                         <td>
-                                            {{nextTermBegins}}
+                                            {{$nextTermBegins}}
                                         </td>
                                     </tr>
                                     <tr>
