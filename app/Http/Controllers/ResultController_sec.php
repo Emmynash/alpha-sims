@@ -21,6 +21,7 @@ use App\ResultReadyModel;
 use PDF;
 use App;
 use App\Addsection_sec;
+use App\SubjectScoreAllocation;
 use App\AssesmentModel;
 use App\AssessmentResultModel;
 use App\AssessmentScoreResultModel;
@@ -34,6 +35,7 @@ use App\ResultSubjectsModel;
 use App\SubAssesmentModel;
 use App\User;
 use Svg\Tag\Rect;
+
 
 class ResultController_sec extends Controller
 {
@@ -338,10 +340,6 @@ class ResultController_sec extends Controller
         $getStudents = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
                        ->where(['classid'=>$classid, 'studentsection'=>$section])->get();
-
-                       dump($this->viewSingleResult($request)->classAverage);
-        $recordCount = count($getStudentsArray) * count($this->getSubjectLists($term, $regNo, $schoolsession));
-        $classAverage = $scoresGrandTotal /   $recordCount;
 
         $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
@@ -782,9 +780,9 @@ class ResultController_sec extends Controller
     public function getClassAverage($term, $session, $classid, $section, $regNo)
     {
         $getStudentsArray = Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->pluck('id');
-        $resultsSubject = ResultSubjectsModel::where(['term' => $term, 'studentregno' => $regNo, 'session' => $session])->get();
+        $resultsSubject = SubjectScoreAllocation::where(['term' => $term, 'studentregno' => $regNo, 'session' => $session])->get();
         $getClassGrandTotal = ComputedAverages::where(['session' => $session, 'term' => $term])->sum('regno');
-        if($resultsSubject == null){
+        if($resultsSubject == null || []){
             return 0;
         }else{
             $recordCount = count($getStudentsArray) * count($resultsSubject);
