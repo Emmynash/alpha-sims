@@ -107,7 +107,7 @@ class ResultController_sec extends Controller
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DES')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
 
             $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
