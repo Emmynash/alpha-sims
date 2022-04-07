@@ -160,7 +160,6 @@
                                         </th>
                                         @endif
                                         @endforeach -->
-                                    {{implode(" ",$assessmentHeadCompiled)}}
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
                                     <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
@@ -170,9 +169,9 @@
                             <tbody id="resultprinttable">
                                 <tr style='font-size: 14px;'>
                                     <th style='font-size: 14px; text-align:center; font-weight:bold;'></th>
-                                    <!-- @foreach ($subCatAss as $ass)
+                                    @foreach ($subCatAss as $ass)
                                     <th style='font-size: 14px; text-align:center;'>{{$ass->maxmarks}}</th>
-                                    @endforeach -->
+                                    @endforeach
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
@@ -184,14 +183,13 @@
 
                                 <tr style='font-size: 14px;'>
                                     <td class='' style='font-size: 14px;'>{{ $item->subjectname }}</td>
-                                    <!-- @foreach ($assessment as $itemA)
+                                    @foreach ($assessment as $itemA)
                                     @foreach ($itemA->getAssessmentForScore($itemA->id) as $itemB)
                                     <td class='text-center' style='font-size: 14px;'>
                                         <center>{{ $itemB->getScore($itemB->id, $classid, $regNo, $item->subjectid, $schoolsession ) == NULL ? "---":$itemB->getScore($itemB->id, $classid, $regNo, $item->subjectid, $schoolsession )->scrores }}</center>
                                     </td>
                                     @endforeach
-                                    @endforeach -->
-                                    <td>{{implode(" ",$subAssessmentMarks)}}</td>
+                                    @endforeach
                                     <td class='text-center thdesign' style='font-size: 14px;'>
                                         <center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->total }}</center>
                                     </td>
