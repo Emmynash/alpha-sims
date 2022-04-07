@@ -135,30 +135,31 @@ class ResultController_sec extends Controller
             for ($i = 0; $i < count($assessment); $i++) {
                 $subAss = SubAssesmentModel::where('catid', $assessment[$i]->id)->get();
                 for ($k = 0; $k < count($subAss); $k++) {
-                    $subValue = '<td>' . $subAss[$k]->maxmarks . '</td>';
+                    $subValue = $subAss[$k]->maxmarks;
                     array_push($subAssessmentMarks, $subValue);
                 }
             }
+
             $nextTermBegins = '';
             if ($addschool->term == 1) {
-                $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermstarts . '</i>';
+                $nextTermBegins = $addschool->secondtermstarts;
             } elseif ($addschool->term == 2) {
-                $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermstarts . '</i>';
+                $nextTermBegins = $addschool->thirdtermstarts;
             } elseif ($addschool->term == 3) {
-                $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->firsttermstarts . '</i>';
+                $nextTermBegins = $addschool->firsttermstarts;
             } else {
-                $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
+                $nextTermBegins = 'NAN';
             }
 
             $nextTermEnds = '';
             if ($addschool->term == 1) {
-                $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermends . '</i>';
+                $nextTermEnds = $addschool->secondtermends;
             } elseif ($addschool->term == 2) {
-                $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermends . '</i>';
+                $nextTermEnds = $addschool->thirdtermends;
             } elseif ($addschool->term == 3) {
-                $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->firsttermends . '</i>';
+                $nextTermEnds = $addschool->firsttermends;
             } else {
-                $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
+                $nextTermEnds = 'NAN';
             }
 
 
@@ -341,26 +342,27 @@ class ResultController_sec extends Controller
         $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
 
         $nextTermBegins = '';
-        if($addschool->term == 1){
-            $nextTermBegins = $addschool->secondtermstarts;
-        }elseif($addschool->term == 2){
-            $nextTermBegins = $addschool->thirdtermstarts;
-        }elseif($addschool->term == 3){
-            $nextTermBegins = $addschool->firsttermstarts;
-        }else{
-            $nextTermBegins = 'NAN';
+        if ($addschool->term == 1) {
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermstarts . '</i>';
+        } elseif ($addschool->term == 2) {
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermstarts . '</i>';
+        } elseif ($addschool->term == 3) {
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->firsttermstarts . '</i>';
+        } else {
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
         }
 
         $nextTermEnds = '';
-        if($addschool->term == 1){
-            $nextTermEnds = $addschool->secondtermends;
-        }elseif($addschool->term == 2){
-            $nextTermEnds = $addschool->thirdtermends;
-        }elseif($addschool->term == 3){
-            $nextTermEnds = $addschool->firsttermends;
-        }else{
-            $nextTermEnds = 'NAN';
+        if ($addschool->term == 1) {
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermends . '</i>';
+        } elseif ($addschool->term == 2) {
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermends . '</i>';
+        } elseif ($addschool->term == 3) {
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->firsttermends . '</i>';
+        } else {
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
         }
+
 
         $assessmentHeadCompiled = array();
         for ($i=0; $i < count($assessment); $i++) { 

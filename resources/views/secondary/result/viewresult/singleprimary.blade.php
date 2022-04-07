@@ -191,7 +191,7 @@
                                     </td>
                                     @endforeach
                                     @endforeach -->
-                                    {{implode(" ",$subAssessmentMarks)}}
+                                    <td>{{implode(" ",$subAssessmentMarks)}}</td>
                                     <td class='text-center thdesign' style='font-size: 14px;'>
                                         <center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->total }}</center>
                                     </td>
