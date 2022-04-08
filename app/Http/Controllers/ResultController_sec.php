@@ -163,7 +163,7 @@ class ResultController_sec extends Controller
 
 
 
-            return view('secondary.result.viewresult.singleprimary', compact('scoresGrandTotal', 'recordCount', 'nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessmentMarks', 'resultMain', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+            return view('secondary.result.viewresult.singleprimary', compact('recordCount', 'nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessmentMarks', 'resultMain', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();
