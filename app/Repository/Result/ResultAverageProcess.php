@@ -44,7 +44,7 @@ class ResultAverageProcess
             //get all students in the class
             // $getAllStudent = Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->get();
 
-            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(2, function ($students) use ($classid, $section, $term) {
+            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(5, function ($students) use ($classid, $section, $term) {
 
                 $schoolsession = Addpost::where('id', Auth::user()->schoolid)->first()->schoolsession;
 
