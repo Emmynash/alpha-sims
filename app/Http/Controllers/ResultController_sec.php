@@ -343,9 +343,9 @@ class ResultController_sec extends Controller
 
         $nextTermBegins = '';
         if ($addschool->term == 1) {
-            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermstarts . '</i>';
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermbegins . '</i>';
         } elseif ($addschool->term == 2) {
-            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermstarts . '</i>';
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermbegins . '</i>';
         } elseif ($addschool->term == 3) {
             $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->firsttermstarts . '</i>';
         } else {
