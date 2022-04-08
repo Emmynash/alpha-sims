@@ -684,6 +684,7 @@ class ResultController_sec extends Controller
     {
         $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
         $resultList = array();
+        dump(count($resultsSubject));
         for ($i=0; $i < count($resultsSubject); $i++) { 
             
 
