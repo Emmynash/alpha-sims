@@ -115,7 +115,7 @@
                 </div>
               </div>
             </div>
-            <form action="{{ route('result_sheet_settings') }}" method="post">
+            {{-- <form action="{{ route('result_sheet_settings') }}" method="post">
               @csrf
               <div class="row" style="margin:10px;">
                 <div class="col-12 col-md-6">
@@ -143,17 +143,17 @@
                   Save
                 </button>
               </div>
-            </form>
+            </form> --}}
             
             <div class="row" style="margin:10px;">
-              @foreach ($resultSettings as $item)
+              {{-- @foreach ($resultSettings as $item)
                 <div class="col-12 col-md-3">
                   <div class="card" style="border-radius: 0px; border-left: 10px solid green;">
                     <p style="padding: 0px 0px 0px 5px; margin: 0px;">Header font Sized</p>
                     <p style="padding: 0px 0px 0px 5px; margin: 0px;">12px</p>
                   </div>
                 </div>
-              @endforeach
+              @endforeach --}}
               
             </div>
 
