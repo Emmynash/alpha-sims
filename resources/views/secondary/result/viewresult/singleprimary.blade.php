@@ -77,7 +77,7 @@
                                 <table>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Name of Student:</i></td>
-                                        <td><i id="studentname" style="font-size: 14px; font-style: normal; font-weight: bold; text-transform:uppercase;">{{ $studentdetails->getStudentName->firstname }} {{ $studentdetails->getStudentName->middlename }} {{ $studentdetails->getStudentName->lastname }}</i></td>
+                                        <td><i id="studentname" style="font-size: 14px; font-style: normal; font-weight: bold; text-transform:uppercase;">Name</i></td>
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Class:</i></td>
@@ -212,7 +212,7 @@
                     <div>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Grand Total: {{ $computedAverage == NULL ? "N.A": round($computedAverage->examstotal, 2)}}</i>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student/Pupil Average: {{ $computedAverage == NULL ? "N.A": round($computedAverage->studentaverage, 2)}}</i>
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Class Average: {{ $scoresGrandTotal == NULL ? "N.A": round((count($studentdetails->getStudentsArray($classid, $studentdetails->studentsection)) * count($resultMain)), 2)}}</i>
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Class Average: {{ $scoresGrandTotal == NULL ? "N.A": round(($scoresGrandTotal / (count($studentdetails->getStudentsArray($classid, $studentdetails->studentsection)) * count($resultMain))), 2)}}</i>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Position: Nill</i>
                     </div>
                     <center>
