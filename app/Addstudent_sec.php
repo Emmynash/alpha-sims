@@ -18,11 +18,6 @@ class Addstudent_sec extends Model
         return $this->hasOne('App\Addsection_sec', 'id', 'studentsection');
     }
 
-    public function getStudentsArray($classid, $section)
-    {
-        return Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->pluck('id');
-    }
-
     public function getClassCount($classid, $session, $sectionid)
     {
         return Addstudent_sec::where(['classid'=>$classid, 'schoolsession'=>$session, 'studentsection'=>$sectionid])->get();
@@ -35,5 +30,9 @@ class Addstudent_sec extends Model
         ->select('elective_adds.*', 'addsubject_secs.subjectname', 'addsubject_secs.id as subjectid')->get();
 
         return $electives;
+    }
+    public function getStudentsArray($classid, $section)
+    {
+        return Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->pluck('id');
     }
 }
