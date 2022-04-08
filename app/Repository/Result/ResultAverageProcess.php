@@ -3,18 +3,12 @@
 namespace App\Repository\Result;
 
 use Illuminate\Http\Request;
-use App\Classlist_sec;
-use App\Addsection_sec;
-use App\Addsubject_sec;
 use App\Addmark_sec;
 use App\Addpost;
-use App\Addgrades_sec;
-use Validator;
 use Carbon\Carbon;
 use App\ResultAverage;
 use App\Addstudent_sec;
 use App\PromotionAverage_sec;
-use App\Addteachers_sec;
 use App\AssessmentResultModel;
 use App\AssessmentScoreResultModel;
 use App\AssessmentTableTotal;
@@ -25,7 +19,6 @@ use App\RecordMarks;
 use App\ResultReadyModel;
 use App\ResultSubjectsModel;
 use App\SubAssesmentModel;
-use App\TeacherSubjects;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -383,5 +376,64 @@ class ResultAverageProcess
                 return $th;
             }
         });
+    }
+
+    public function deleteGeneratedResult(Request $request)
+    {
+
+        $classid = $request->classid;
+        $section = $request->section_id;
+        $schooldata = Addpost::where('id', Auth::user()->schoolid)->first();
+        $term = $schooldata->term;
+        $schoolsession = $schooldata->schoolsession;
+
+        //get all students in the class
+        $getAllStudent = Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->get();
+
+        DB::beginTransaction();
+
+        try {
+
+            for ($i = 0; $i < count($getAllStudent); $i++) {
+
+                //get subjects
+                $classSubjects = CLassSubjects::join('addsubject_secs', 'addsubject_secs.id', '=', 'c_lass_subjects.subjectid')->where(['c_lass_subjects.classid' => $classid, 'c_lass_subjects.sectionid' => $section])->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
+
+                for ($j = 0; $j < $classSubjects->count(); $j++) {
+
+                    $getSubjects = ResultSubjectsModel::where(['term' => $term, 'studentregno' => $getAllStudent[$i]->id, 'session' => $schoolsession, 'subjectname' => $classSubjects[$j]->subjectname, 'subjectid' => $classSubjects[$j]->subjectid])->get();
+
+                    for ($k = 0; $k < count($getSubjects); $k++) {
+                        $assessmentResults = AssessmentResultModel::where('space_id', $getSubjects[$k]->id)->get();
+
+                        //delete assessment score
+                        for ($l = 0; $l < count($assessmentResults); $l++) {
+                            $assessmentscoreresult = DB::table('assessment_score_result_models')->where('assessment_id', $assessmentResults[$l]->id)->delete();
+                        }
+
+                        DB::table('assessment_result_models')->where('space_id', $getSubjects[$k]->id)->delete();
+                    }
+
+                    $deleteAllSubjects = DB::table('result_subjects_models')->where(['term' => $term, 'studentregno' => $getAllStudent[$i]->id, 'session' => $schoolsession, 'subjectname' => $classSubjects[$j]->subjectname, 'subjectid' => $classSubjects[$j]->subjectid])->delete();
+                }
+
+                //delete student computed average
+                DB::table('computed_averages')->where(['term' => $term, 'regno' => $getAllStudent[$i]->id, 'session' => $schoolsession])->delete();
+            }
+
+            //change status of result ready model 
+            $resultReady = ResultReadyModel::find($request->notif_id);
+            $resultReady->status = 0;
+            $resultReady->updated_at = Carbon::now()->toDateTimeString();
+            $resultReady->save();
+
+            DB::commit();
+            // all good
+            return 'success';
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+            return $e;
+        }
     }
 }

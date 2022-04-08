@@ -340,8 +340,9 @@ Route::middleware(['tenant'])->group(function () {
             Route::POST('/add_student_moto', 'MotoController_sec@addmotomain')->name('add_student_moto');
         });
 
-        Route::group(['prefix' => 'result', 'middleware' => ['auth', 'can:result module']], function () {
+        Route::group(['prefix' => 'result', 'middleware' => ['auth', 'can:result module']], function () { 
             Route::get('/result_by_class', 'ResultController_sec@result_by_class',)->name('result_by_class')->middleware('can:view student result');
+            Route::post('/result_sheet_settings', 'ResultController_sec@addResultSettings',)->name('result_sheet_settings')->middleware('can:view student result');
             Route::get('/result_view_sec_pdf', 'ResultController_sec@loadHtmlDoc')->name('result_view_sec_pdf');
             Route::POST('/view_by_class', 'ResultController_sec@view_by_class')->name('view_by_class');
             Route::Post('/result_print_single_sec', 'ResultController_sec@viewSingleResult')->name('result_print_single_sec');
@@ -350,6 +351,7 @@ Route::middleware(['tenant'])->group(function () {
             // ->middleware('can:generate student result');
             Route::get('/get_result_ready_section', 'ResultController_sec@get_result_ready_section');
             Route::post('/generate_result_main', 'ResultController_sec@generateResultMain')->name('generate_result_main');
+            Route::post('/delete_generated_result', 'ResultController_sec@deleteGeneratedResult')->name('delete_generated_result');
             Route::get('/print_entrire_class_result', 'ResultController_sec@loadHtmlDoc')->name('print_entrire_class_result');
         });
 

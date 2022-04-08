@@ -106,6 +106,7 @@
                     @endforeach
                     
                 @endif
+                
             </div>
             <div class="row" style="margin: 10px;">
               <div class="col-12 col-md-6">
@@ -113,6 +114,47 @@
                   <i style="font-style: normal; padding: 10px;"><i class="fas fa-paste"></i> Click to print entire class report </i>
                 </div>
               </div>
+            </div>
+            <form action="{{ route('result_sheet_settings') }}" method="post">
+              @csrf
+              <div class="row" style="margin:10px;">
+                <div class="col-12 col-md-6">
+                  <div class="card">
+                    <div style="margin:10px;">
+                      <select name="name" id="" class="form-control form-control-sm">
+                        <option value="">Select a result section</option>
+                        <option value="headerfontsize">header font size</option>
+                        <option value="subjectfontsize">subject font size</option>
+                        <option value="footerfontsize">footer font size</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="card">
+                    <div style="margin:10px;">
+                      <input name="fontSize" type="number" id="" class="form-control form-control-sm" placeholder="Enter font"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group" style="margin: 0px 0px 0px 20px;">
+                <button class="btn btn-sm btn-info">
+                  Save
+                </button>
+              </div>
+            </form>
+            
+            <div class="row" style="margin:10px;">
+              @foreach ($resultSettings as $item)
+                <div class="col-12 col-md-3">
+                  <div class="card" style="border-radius: 0px; border-left: 10px solid green;">
+                    <p style="padding: 0px 0px 0px 5px; margin: 0px;">Header font Sized</p>
+                    <p style="padding: 0px 0px 0px 5px; margin: 0px;">12px</p>
+                  </div>
+                </div>
+              @endforeach
+              
             </div>
 
             <div class="modal fade" id="getresultentireclass">

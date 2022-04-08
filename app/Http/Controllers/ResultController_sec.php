@@ -29,6 +29,7 @@ use App\CommentsModel;
 use App\ComputedAverages;
 use App\ElectiveAdd;
 use App\Models\HeadOfchoolComment;
+use App\Models\ResultSetting;
 use App\RecordMarks;
 use App\ResultSubjectsModel;
 use App\SubAssesmentModel;
@@ -124,7 +125,7 @@ class ResultController_sec extends Controller
 
             $recordCount = count($getClassRecord) * count($resultMain);
 
-            $classAverage = $getClassGrandTotal /  $recordCount;
+            $classAverage = $getClassGrandTotal /  $recordCount; 
 
 
 
@@ -191,8 +192,42 @@ class ResultController_sec extends Controller
     public function result_by_class()
     {
         $school = Addpost::find(Auth::user()->schoolid);
+        $resultSettings = ResultSetting::where('schoolId', Auth::user()->schoolid)->get();
 
-        return view('secondary.result.resultbyclass', compact('school'));
+        return view('secondary.result.resultbyclass', compact('school', 'resultSettings'));
+    }
+
+    public function addResultSettings(Request $request)
+    {
+        $rules = [
+            'name' => 'required',
+            'fontSize' => 'required',
+        ];
+    
+        $customMessages = [
+            'required' => 'The :attribute field can not be blank.'
+        ];
+
+        $this->validate($request, $rules, $customMessages);
+
+        try {
+
+            $addResultSettings = ResultSetting::updateOrCreate(
+                ['slug'=>str_replace(' ', '', $request->name), 'schoolId'=>Auth::user()->schoolid],
+                ['fontSize'=>$request->fontSize."px", 'schoolId' => Auth::user()->schoolid, 'name'=>$request->name, 'slug'=>str_replace(' ', '', $request->name)]);
+
+            // $addResultSettings = new ResultSetting();
+            // $addResultSettings->name = $request->name;
+            // $addResultSettings->fontSize = $request->fontSize."px";
+            // $addResultSettings->schoolId = Auth::user()->schoolid;
+            // $addResultSettings->save();
+
+            return back()->with('success', 'Settings added successfully');
+        } catch (\Throwable $th) {
+            return $th;
+            return back()->with('error', 'Process failed');
+        }
+        
     }
 
     public function view_by_class(Request $request)
@@ -248,6 +283,34 @@ class ResultController_sec extends Controller
         }
     }
 
+    public function deleteGeneratedResult(Request $request, ProcessClassAverage $processClassAverage, ResultAverageProcess $resultAverageProcess)
+    {
+
+
+        try {
+            $resultAverage = $resultAverageProcess->deleteGeneratedResult($request);
+
+            
+
+            //    return $resultAverage;
+            if ($resultAverage == "success") {
+
+
+                return response()->json(['response' => $resultAverage], 200);
+
+                // $process_class_average = $processClassAverage->processresult($request);
+
+                // return response()->json(['response' => ''], 200);
+            } else {
+                return response()->json(['response' => $resultAverage], 500);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['response' => $th], 400);
+        }
+
+    }
+
     public function get_result_ready_section()
     {
         try {
@@ -285,6 +348,7 @@ class ResultController_sec extends Controller
         $getSection = Addsection_sec::find($section);
 
         // return view('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
+       
         $resultMain = ResultSubjectsModel::where(['result_subjects_models.term' => $term, 'result_subjects_models.studentregno' => $regNo, 'result_subjects_models.session' => $schoolsession])->get();
 
         $getClassGrandTotal = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->sum('regno');
@@ -294,7 +358,8 @@ class ResultController_sec extends Controller
         $scoresGrandTotal = DB::table('computed_averages')
                     ->whereIn('regno', $getStudentsArray)
                     ->sum('examstotal');
-        $classAverage = $scoresGrandTotal /  count($getStudentsArray);
+
+        
 
         $getStudents = Addstudent_sec::join('users', 'users.id','=','addstudent_secs.usernamesystem')
                        ->select('addstudent_secs.*', 'users.firstname', 'users.middlename', 'users.lastname')
@@ -339,6 +404,9 @@ class ResultController_sec extends Controller
         $printOutArray = array();
 
         for ($i=0; $i < count($getStudents); $i++) { 
+
+            $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$getStudents[$i]->id, 'session'=>$schoolsession])->get();
+            $classAverage = ($scoresGrandTotal /  count($getStudentsArray))*count($resultsSubject);
 
             $motolistbeha = MotoList::leftjoin('add_moto_secs', 'add_moto_secs.moto_id','=','moto_lists.id')
                             ->select("moto_lists.*", 'add_moto_secs.moto_score')
@@ -417,6 +485,10 @@ class ResultController_sec extends Controller
 
         .page-break {
             page-break-after: always;
+        }
+
+        .fontSizeSubject {
+            font-size: 14px;
         }
         
         </style>
