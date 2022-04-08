@@ -83,7 +83,7 @@ class ResultController_sec extends Controller
             'classid' => 'required',
             'term' => 'required',
             'student_reg_no' => 'required',
-            'session' => 'required'
+            'session' => 'required',
         ]);
 
 
@@ -97,7 +97,7 @@ class ResultController_sec extends Controller
 
             $checkclasstype = Classlist_sec::find($classid);
 
-            $studentdetails = Addstudent_sec::find($regNo);
+            $studentdetails = Addstudent_sec::find($classid);
 
             $addschool = Addpost::find(Auth::user()->schoolid);
 
@@ -105,9 +105,11 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+            // ->orderBy('order', 'ASC')->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+            // ->orderBy('order', 'DESC')->get();
 
             $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
@@ -117,14 +119,15 @@ class ResultController_sec extends Controller
 
             $computedAverage = ComputedAverages::where(['session' => $schoolsession, 'regno' => $regNo, 'term' => $term])->first();
 
-            $getClassGrandTotal = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->sum('examstotal');
+            $getStudentsArray = Addstudent_sec::where(['classid' => $classid,'studentsection' => $studentdetails->studentsection])->pluck('id');
 
+            $scoresGrandTotal = DB::table('computed_averages')
+                                ->whereIn('regno', $getStudentsArray)
+                                ->sum('examstotal');
 
-            $getClassRecord = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->get();
+            $recordCount = count($getStudentsArray) * count($resultMain);
 
-            $recordCount = count($getClassRecord) * count($resultMain);
-
-            $classAverage = $getClassGrandTotal /  $recordCount;
+            $classAverage = $scoresGrandTotal /  $recordCount;
 
             $assessmentHeadCompiled = array();
             for ($i = 0; $i < count($assessment); $i++) {
@@ -164,7 +167,7 @@ class ResultController_sec extends Controller
 
 
 
-            return view('secondary.result.viewresult.singleprimary', compact('nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessmentMarks', 'resultMain', 'getClassRecord', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+            return view('secondary.result.viewresult.singleprimary', compact('scoresGrandTotal', 'recordCount', 'nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessmentMarks', 'resultMain', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();
