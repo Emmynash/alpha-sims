@@ -42,7 +42,7 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <script src="{{ asset('js/appresult.js?v=1') }}"></script>
+  <script src="{{ asset('js/appresult.js?v=2') }}"></script>
 
   <script>
       function scrollocation(){
