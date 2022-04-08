@@ -223,9 +223,10 @@ class ResultController_sec extends Controller
     public function result_by_class()
     {
         $school = Addpost::find(Auth::user()->schoolid);
-        $resultSettings = ResultSetting::where('schoolId', Auth::user()->schoolid)->get();
+        // $resultSettings = ResultSetting::where('schoolId', Auth::user()->schoolid)->get();
 
-        return view('secondary.result.resultbyclass', compact('school', 'resultSettings'));
+        // return view('secondary.result.resultbyclass', compact('school', 'resultSettings'));
+        return view('secondary.result.resultbyclass', compact('school'));
     }
 
     public function addResultSettings(Request $request)
