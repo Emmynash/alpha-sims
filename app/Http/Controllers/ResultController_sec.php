@@ -293,7 +293,7 @@ class ResultController_sec extends Controller
         //                                 process class average
         //--------------------------------------------------------------------------------
 
-        try {
+        // try {
             $resultAverage = $resultAverageProcess->processResultAverage($request);
 
             //    return $resultAverage;
@@ -309,10 +309,10 @@ class ResultController_sec extends Controller
             } else {
                 return response()->json(['response' => $resultAverage], 500);
             }
-        } catch (\Throwable $th) {
-            //throw $th;
-            return response()->json(['response' => $th], 400);
-        }
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        //     return response()->json(['response' => $th], 400);
+        // }
     }
 
     public function deleteGeneratedResult(Request $request, ProcessClassAverage $processClassAverage, ResultAverageProcess $resultAverageProcess)
