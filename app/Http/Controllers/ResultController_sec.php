@@ -120,15 +120,10 @@ class ResultController_sec extends Controller
 
             $computedAverage = ComputedAverages::where(['session' => $schoolsession, 'regno' => $regNo, 'term' => $term])->first();
 
-            $getStudentsArray = Addstudent_sec::where(['classid' => $classid])->pluck('id');
+            // $scoresGrandTotal = DB::table('computed_averages')
+            //                     ->whereIn('regno', $getStudentsArray)
+            //                     ->sum('examstotal');
 
-            $scoresGrandTotal = DB::table('computed_averages')
-                                ->whereIn('regno', $getStudentsArray)
-                                ->sum('examstotal');
-
-            $recordCount = count($getStudentsArray) * count($resultMain);
-
-            $classAverage = $scoresGrandTotal /  $recordCount;
 
             $assessmentHeadCompiled = array();
             for ($i = 0; $i < count($assessment); $i++) {
