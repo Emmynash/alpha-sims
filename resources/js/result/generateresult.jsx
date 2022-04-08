@@ -55,7 +55,36 @@ function GenerateResult() {
             }
         }).then(response=>{
             console.log(response)
-            // window.location.reload();
+            window.location.reload();
+            setisLoading(false)
+
+            if (response.status == 200) {
+                myalert('Success', 'success')
+            }else{
+                myalert('failed', 'error')
+            }
+
+        }).catch(e=>{
+            console.log(e)
+            setisLoading(false)
+            myalert('failed', 'error')
+
+        })
+    }
+
+    function deleteGeneratedResult(classidMain, sectionidMain, notif_id) {
+        setisLoading(true)
+        const data = new FormData()
+        data.append("classid", classidMain)
+        data.append('section_id', sectionidMain)
+        data.append('notif_id', notif_id)
+        axios.post("/sec/result/delete_generated_result", data, {
+            headers:{
+                "Content-type": "application/json"
+            }
+        }).then(response=>{
+            console.log(response)
+            window.location.reload();
             setisLoading(false)
 
             if (response.status == 200) {
@@ -110,6 +139,10 @@ function GenerateResult() {
                                     </i>
                                 </div>
                                 <div className="form-group" style={{ marginRight:'10px' }}>
+                                {
+                                    d.status != 0  ? <button onClick={()=>deleteGeneratedResult(d.classid, d.sectionid, d.id)} style={{ marginRight: '5px' }} className="btn btn-sm btn-danger badge"> Resolve Conflict</button>:""
+                                }
+                                    
                                     <button onClick={()=>generateResultMain(d.classid, d.sectionid, d.id)} className= {d.status != 0 ? "btn btn-sm btn-warning badge":"btn btn-sm btn-success badge"}> {d.status != 0 ? "Regenerate":"Generate"}</button>
                                 </div>
                             </div>
