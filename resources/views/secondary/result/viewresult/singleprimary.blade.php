@@ -77,11 +77,11 @@
                                 <table>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Name of Student:</i></td>
-                                        <td><i id="studentname" style="font-size: 14px; font-style: normal; font-weight: bold; text-transform:uppercase;"></i></td>
+                                        <td><i id="studentname" style="font-size: 14px; font-style: normal; font-weight: bold; text-transform:uppercase;">{{ $studentdetails->getStudentName->firstname }} {{ $studentdetails->getStudentName->middlename }} {{ $studentdetails->getStudentName->lastname }}</i></td>
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Class:</i></td>
-                                        <td><i id="studentclass" style="font-size: 14px; font-style: normal; font-weight: bold;"></i></td>
+                                        <td><i id="studentclass" style="font-size: 14px; font-style: normal; font-weight: bold;">{{ $studentdetails->getClassName->classname }} {{ $studentdetails->getSectionName->sectionname }}</i></td>
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Next Term Resumes:</i></td>
@@ -91,7 +91,7 @@
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Sex:</i></td>
-                                        <td><i id="studentgender" style="font-size: 14px; font-style: normal; font-weight: bold;"></i></td>
+                                        <td><i id="studentgender" style="font-size: 14px; font-style: normal; font-weight: bold;">{{ $studentdetails->gender }}</i></td>
                                     </tr>
                                 </table>
                             </div>
@@ -117,7 +117,7 @@
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Admission No:</i></td>
-                                        <td><i id="regno" style="font-size: 14px; font-style: normal; font-weight: bold;"></i></td>
+                                        <td><i id="regno" style="font-size: 14px; font-style: normal; font-weight: bold;">{{ $studentdetails->admission_no }}</i></td>
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">No in Class : </i></td>
@@ -212,7 +212,7 @@
                     <div>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Grand Total: {{ $computedAverage == NULL ? "N.A": round($computedAverage->examstotal, 2)}}</i>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student/Pupil Average: {{ $computedAverage == NULL ? "N.A": round($computedAverage->studentaverage, 2)}}</i>
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Class Average: </i>
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Class Average: {{ $scoresGrandTotal == NULL ? "N.A": round(($scoresGrandTotal / (count($studentdetails->getStudentsArray($classid, $studentdetails->studentsection)) * count($resultMain))), 2)}}</i>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Position: Nill</i>
                     </div>
                     <center>
@@ -267,7 +267,7 @@
                                                 @foreach ($motolistbeha as $item)
                                                 <tr>
                                                     <td class="thdesign1">{{ $item->name }}</td>
-                                                    <td id="punctuation" class="thdesign1"></td>
+                                                    <td id="punctuation" class="thdesign1">{{ $item->getmotoscore($item->id, $studentdetails->id, $schoolsession, $term) }}</td>
                                                 </tr>
                                                 @endforeach
 
@@ -292,7 +292,7 @@
                                                 @foreach ($motolistskills as $item)
                                                 <tr>
                                                     <td class="thdesign1">{{ $item->name }}</td>
-                                                    <td id="punctuation" class="thdesign1"></td>
+                                                    <td id="punctuation" class="thdesign1">{{ $item->getmotoscore($item->id, $studentdetails->id, $schoolsession, $term) }}</td>
                                                 </tr>
                                                 @endforeach
 
