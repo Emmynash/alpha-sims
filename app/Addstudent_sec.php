@@ -18,6 +18,11 @@ class Addstudent_sec extends Model
         return $this->hasOne('App\Addsection_sec', 'id', 'studentsection');
     }
 
+    public function getStudentsArray($classid, $section)
+    {
+        return Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->pluck('id');
+    }
+
     public function getClassCount($classid, $session, $sectionid)
     {
         return Addstudent_sec::where(['classid'=>$classid, 'schoolsession'=>$session, 'studentsection'=>$sectionid])->get();

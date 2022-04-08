@@ -160,10 +160,10 @@
                                         </th>
                                         @endif
                                         @endforeach
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
-                                    <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Total</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Average</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Grade</i></th>
+                                        <th class="text-center"><i style="margin: 0px; padding: 5px; font-size: 14px;">Pos</i></th>
                                 </tr>
                             </thead>
                             <tbody id="resultprinttable">
@@ -212,7 +212,7 @@
                     <div>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Grand Total: {{ $computedAverage == NULL ? "N.A": round($computedAverage->examstotal, 2)}}</i>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student/Pupil Average: {{ $computedAverage == NULL ? "N.A": round($computedAverage->studentaverage, 2)}}</i>
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Class Average: {{ $classAverage == NULL ? "N.A": round($classAverage, 2)}}</i>
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Class Average: {{ $scoresGrandTotal == NULL ? "N.A": round(($scoresGrandTotal / (count($studentdetails->getStudentsArray($classid, $studentdetails->studentsection)) * count($resultMain))), 2)}}</i>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Position: Nill</i>
                     </div>
                     <center>
