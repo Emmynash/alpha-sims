@@ -86,15 +86,7 @@
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Next Term Resumes:</i></td>
                                         <td>
-                                            @if ($term == 1)
-                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermbegins }}</i>
-                                            @elseif ($term == 2)
-                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermbegins }}</i>
-                                            @elseif ($term == 3)
-                                            <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
-                                            @else
-                                            <i style="font-style: normal; font-weight: bold;">NAN</i>
-                                            @endif
+                                            {{$nextTermBegins}}
                                         </td>
                                     </tr>
                                     <tr>
@@ -129,7 +121,7 @@
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">No in Class : </i></td>
-                                        <td><i id="studentposition" style="font-size: 14px; font-style: normal; font-weight: bold;">{{count($getClassRecord)}} </i></td>
+                                        <td><i id="studentposition" style="font-size: 14px; font-style: normal; font-weight: bold;">{{$studentClass->getClassCount($classid)}} </i></td>
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Session:</i></td>
@@ -220,7 +212,7 @@
                     <div>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Grand Total: {{ $computedAverage == NULL ? "N.A": round($computedAverage->examstotal, 2)}}</i>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Student/Pupil Average: {{ $computedAverage == NULL ? "N.A": round($computedAverage->studentaverage, 2)}}</i>
-                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Class Average: {{ $classAverage == NULL ? "N.A": round($classAverage, 2)}}</i>
+                        <i style="margin: 10px 0px 0px 50px; font-style: normal;">Class Average: </i>
                         <i style="margin: 10px 0px 0px 50px; font-style: normal;">Position: Nill</i>
                     </div>
                     <center>
@@ -246,11 +238,11 @@
 
                     <center>
                         <div style="width: 95%; margin: 3px auto;">
-                            <i style="font-size: 13px; font-style: normal;">Very Good = <b>5</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Good = <b>4</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Average = <b>3</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Fair = <b>2</b>,</i>
-                            <i style="font-size: 13px; font-style: normal;">Poor = <b>1</b></i>
+                            <i style="font-size: 13px; font-style: normal;">Excellent = <b>5</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Very good = <b>4</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Good = <b>3</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Average = <b>2</b>,</i>
+                            <i style="font-size: 13px; font-style: normal;">Fair = <b>1</b></i>
                         </div>
                     </center>
 
@@ -360,29 +352,13 @@
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
                             NEXT TERM BEGINS:
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
-                                @if ($term == 1)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermbegins }}</i>
-                                @elseif ($term == 2)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermbegins }}</i>
-                                @elseif ($term == 3)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermstarts }}</i>
-                                @else
-                                <i style="font-style: normal; font-weight: bold;">NAN</i>
-                                @endif
+                                {{$nextTermBegins}}
                             </i>
                         </div>
                         <div data-toggle="collapse" data-target="#honourorpricesremark" style="width: 45%; margin: 0 auto; border-bottom: 1px solid black;">
                             NEXT TERM ENDS:
                             <i style="font-style: normal;" id="honourorpricesremarkmain">
-                                @if ($term == 1)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->secondtermends }}</i>
-                                @elseif ($term == 2)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->thirdtermends }}</i>
-                                @elseif ($term == 3)
-                                <i style="font-style: normal; font-weight: bold;">{{ $addschool->firsttermends }}</i>
-                                @else
-                                <i style="font-style: normal; font-weight: bold;">NAN</i>
-                                @endif
+                                {{$nextTermEnds}}
                             </i>
                         </div>
                     </div>

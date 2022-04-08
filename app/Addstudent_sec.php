@@ -31,4 +31,8 @@ class Addstudent_sec extends Model
 
         return $electives;
     }
+    public function getStudentsArray($classid, $section)
+    {
+        return Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->pluck('id');
+    }
 }

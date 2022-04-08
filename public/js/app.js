@@ -81826,9 +81826,9 @@ function SchoolSetUp() {
     session: '',
     firsttermstarts: '',
     firsttermends: '',
-    secondtermstarts: '',
+    secondtermbegins: '',
     secondtermends: '',
-    thirdtermstarts: '',
+    thirdtermbegins: '',
     thirdtermends: ''
   }),
       _useState58 = _slicedToArray(_useState57, 2),
@@ -81876,9 +81876,9 @@ function SchoolSetUp() {
         session: response.data.schoolDetails.schoolsession,
         firsttermstarts: response.data.schoolDetails.firsttermstarts,
         firsttermends: response.data.schoolDetails.firsttermends,
-        secondtermstarts: response.data.schoolDetails.secondtermstarts,
+        secondtermbegins: response.data.schoolDetails.secondtermbegins,
         secondtermends: response.data.schoolDetails.secondtermends,
-        thirdtermstarts: response.data.schoolDetails.thirdtermstarts,
+        thirdtermbegins: response.data.schoolDetails.thirdtermbegins,
         thirdtermends: response.data.schoolDetails.thirdtermends
       }));
 
@@ -81944,8 +81944,7 @@ function SchoolSetUp() {
   }
 
   function handleChange(evt) {
-    var value = evt.target.value;
-    setsessiondata(_objectSpread(_objectSpread({}, sessiondata), {}, _defineProperty({}, evt.target.name, value)));
+    setsessiondata(_objectSpread(_objectSpread({}, sessiondata), {}, _defineProperty({}, evt.target.name, evt.target.value)));
   }
 
   function handleAssessmentSetup(evt) {
@@ -82326,8 +82325,8 @@ function SchoolSetUp() {
   }, "2nd term begins"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "date",
     onChange: handleChange,
-    value: sessiondata.secondtermstarts,
-    name: "secondtermstarts",
+    value: sessiondata.secondtermbegins,
+    name: "secondtermbegins",
     id: "",
     className: "form-control form-control-sm"
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -82366,8 +82365,8 @@ function SchoolSetUp() {
   }, "3rd term begins"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "date",
     onChange: handleChange,
-    value: sessiondata.thirdtermstarts,
-    name: "thirdtermstarts",
+    value: sessiondata.thirdtermbegins,
+    name: "thirdtermbegins",
     id: "",
     className: "form-control form-control-sm"
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -82417,7 +82416,7 @@ function SchoolSetUp() {
     style: {
       paddingLeft: '10px'
     }
-  }, "SetUp Continous Assessment(e.g Exams, CA1, CA2 etc)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, "Set Up Continuous Assessment (e.g Exams, First Ass, First Test)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row",
     style: {
       margin: '10px'
@@ -82464,7 +82463,7 @@ function SchoolSetUp() {
     onClick: setUpAssessment
   }, "Save")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "alert alert-info"
-  }, "Drag and drop to order assessment"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["DragDropContext"], {
+  }, "Drag and drop to re-order assessments appearance"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["DragDropContext"], {
     onDragEnd: handleOndragEnds
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__["Droppable"], {
     droppableId: "assessments"
@@ -82513,7 +82512,7 @@ function SchoolSetUp() {
     style: {
       padding: '5px'
     }
-  }, "Continous Assessment Sub-category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, "Continuous Assessment Sub-category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row",
     style: {
       margin: '5px'
@@ -82736,7 +82735,7 @@ function SchoolSetUp() {
     className: "form-control form-control-sm",
     onChange: handleChangeClassArms,
     value: classArms,
-    placeholder: "Arms"
+    placeholder: "Add New Arm "
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: addSchoolClassArms,
     className: "btn btn-sm btn-info badge"
@@ -82782,7 +82781,7 @@ function SchoolSetUp() {
     className: "form-control form-control-sm",
     onChange: handleChangeSchoolClubs,
     value: schoolclubs,
-    placeholder: "Enter Club name"
+    placeholder: "Add New Club"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: addSchoolCLubs,
     className: "btn btn-sm btn-info badge"

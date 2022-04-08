@@ -84,7 +84,7 @@ class ResultController_sec extends Controller
             'classid' => 'required',
             'term' => 'required',
             'student_reg_no' => 'required',
-            'session' => 'required'
+            'session' => 'required',
         ]);
 
 
@@ -95,10 +95,11 @@ class ResultController_sec extends Controller
             $term = $request->input('term');
             $regNo = $request->input('student_reg_no');
             $schoolsession = $request->input('session');
+            $section = $request->input('section');
 
             $checkclasstype = Classlist_sec::find($classid);
 
-            $studentdetails = Addstudent_sec::find($regNo);
+            $studentdetails = Addstudent_sec::find($classid);
 
             $addschool = Addpost::find(Auth::user()->schoolid);
 
@@ -106,10 +107,11 @@ class ResultController_sec extends Controller
 
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid);
+            $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
             // ->orderBy('order', 'ASC')->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
+            // ->orderBy('order', 'DESC')->get();
 
             $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
@@ -119,17 +121,46 @@ class ResultController_sec extends Controller
 
             $computedAverage = ComputedAverages::where(['session' => $schoolsession, 'regno' => $regNo, 'term' => $term])->first();
 
-            $getClassGrandTotal = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->sum('examstotal');
 
-            $getClassRecord = ComputedAverages::where(['session' => $schoolsession, 'term' => $term])->get();
+            $assessmentHeadCompiled = array();
+            for ($i = 0; $i < count($assessment); $i++) {
+                $assementHead = '<th colspan=' . $this->getSubAssessmentCount($assessment[$i]->id) . '>' . $assessment[$i]->name . '</th>';
+                array_push($assessmentHeadCompiled, $assementHead);
+            }
+            $subAssessmentMarks = array();
+            for ($i = 0; $i < count($assessment); $i++) {
+                $subAss = SubAssesmentModel::where('catid', $assessment[$i]->id)->get();
+                for ($k = 0; $k < count($subAss); $k++) {
+                    $subValue = $subAss[$k]->maxmarks;
+                    array_push($subAssessmentMarks, $subValue);
+                }
+            }
 
-            $recordCount = count($getClassRecord) * count($resultMain);
+            $nextTermBegins = '';
+            if ($addschool->term == 1) {
+                $nextTermBegins = $addschool->secondtermbegins;
+            } elseif ($addschool->term == 2) {
+                $nextTermBegins = $addschool->thirdtermbegins;
+            } elseif ($addschool->term == 3) {
+                $nextTermBegins = $addschool->firsttermstarts;
+            } else {
+                $nextTermBegins = 'NAN';
+            }
 
-            $classAverage = $getClassGrandTotal /  $recordCount; 
+            $nextTermEnds = '';
+            if ($addschool->term == 1) {
+                $nextTermEnds = $addschool->secondtermends;
+            } elseif ($addschool->term == 2) {
+                $nextTermEnds = $addschool->thirdtermends;
+            } elseif ($addschool->term == 3) {
+                $nextTermEnds = $addschool->firsttermends;
+            } else {
+                $nextTermEnds = 'NAN';
+            }
 
 
 
-            return view('secondary.result.viewresult.singleprimary', compact('resultMain', 'getClassRecord', 'classAverage', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+            return view('secondary.result.viewresult.singleprimary', compact('nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessmentMarks', 'resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();
@@ -367,31 +398,31 @@ class ResultController_sec extends Controller
 
         $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
-        $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
-        // ->orderBy('order', 'ASC')->get();
+        $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
         $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
 
         $nextTermBegins = '';
-        if($addschool->term == 1){
-            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">'.$addschool->secondtermstarts.'</i>';
-        }elseif($addschool->term == 2){
-            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">'.$addschool->thirdtermstarts.'</i>';
-        }elseif($addschool->term == 3){
-            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">'.$addschool->firsttermstarts.'</i>';
-        }else{
+        if ($addschool->term == 1) {
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermbegins . '</i>';
+        } elseif ($addschool->term == 2) {
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermbegins . '</i>';
+        } elseif ($addschool->term == 3) {
+            $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">' . $addschool->firsttermstarts . '</i>';
+        } else {
             $nextTermBegins = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
         }
 
         $nextTermEnds = '';
-        if($addschool->term == 1){
-            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">'.$addschool->secondtermends.'</i>';
-        }elseif($addschool->term == 2){
-            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">'.$addschool->thirdtermends.'</i>';
-        }elseif($addschool->term == 3){
-            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">'.$addschool->firsttermends.'</i>';
-        }else{
+        if ($addschool->term == 1) {
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->secondtermends . '</i>';
+        } elseif ($addschool->term == 2) {
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->thirdtermends . '</i>';
+        } elseif ($addschool->term == 3) {
+            $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">' . $addschool->firsttermends . '</i>';
+        } else {
             $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
         }
+
 
         $assessmentHeadCompiled = array();
         for ($i=0; $i < count($assessment); $i++) { 
@@ -456,7 +487,7 @@ class ResultController_sec extends Controller
 
             $printPdf = 
         '<style type="text/css" media="screen">
-        .outer {margin:0 auto}
+        .outer {margin:-10 auto}
         .outer > * {
           display:inline-block;
           vertical-align:middle;
@@ -572,24 +603,22 @@ class ResultController_sec extends Controller
         </div>
         <br>
         <div style="width: 100%;">
-            <i style="font-style:normal; padding: 10px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
-            <i style="font-style:normal; padding: 10px;">Student/Pupil Average: '.$this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section).'</i>
-            <i style="font-style:normal; padding: 10px;">Class Average: '.round($classAverage, 2).'</i>
-            <i style="font-style:normal; padding: 10px;">Position: Nill</i>
+            <i style="font-style:normal; padding: 8px;">Grand Total: '.$this->getGrandTotal($term, $getStudents[$i]->id, $schoolsession).'</i>
+            <i style="font-style:normal; padding: 8px;">Student/Pupil Average: '. round($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section), 2).'</i>
+            <i style="font-style:normal; padding: 8px;">Class Average: '.round(($scoresGrandTotal / (count($getStudentsArray) * $this->getSubjectCount($term, $getStudents[$i]->id, $schoolsession))), 2). '</i>
+            <i style="font-style:normal; padding: 8px;">Position: Nill</i>
         </div>
         <br>
-        <center>
-            <div style="width: 95%; margin: 3px auto;">
-                <i style="font-size: 13px; font-style: normal;">Very Good = <b>5</b>,</i>
-                <i style="font-size: 13px; font-style: normal;">Good = <b>4</b>,</i>
-                <i style="font-size: 13px; font-style: normal;">Average = <b>3</b>,</i>
-                <i style="font-size: 13px; font-style: normal;">Fair = <b>2</b>,</i>
-                <i style="font-size: 13px; font-style: normal;">Poor = <b>1</b></i>
-            </div>
-        </center>
-        <p style="text-align: center;">RATINGS</p>
-        <div class="studentDetails">
+        <p style="text-align: center; margin-top: -10px">RATINGS</p>
+        <div class="studentDetails" style="margin: -2px">
             <div class="studentDetailsone">
+                <div style="width: 95%; margin: 3px auto;">
+                    <i style="font-size: 13px; font-style: normal;">Excellent = <b>5</b>,</i>
+                    <i style="font-size: 13px; font-style: normal;">Very good = <b>4</b>,</i>
+                    <i style="font-size: 13px; font-style: normal;">Good = <b>3</b>,</i>
+                    <i style="font-size: 13px; font-style: normal;">Average = <b>2</b>,</i>
+                    <i style="font-size: 13px; font-style: normal;">Fair = <b>1</b></i>
+                </div>
                 <table style="width: 100%;">
                     <tr>
                         <th style="font-size: 14px;">BEHAVIOUR AND ACTIVITIES</th>
@@ -605,29 +634,29 @@ class ResultController_sec extends Controller
                         <th style="font-size: 14px;">SKILLS</th>
                         <th style="font-size: 14px;">Marks(1-5)</th>
                     </tr>
-                    '.implode(" ",$motoSkill).'
+                    '.implode(" ",$motoSkill). '
                 </table>
             </div>
         </div>
         <br>
-        <div style="width: 100%; margin-bottom: 10px;">
-            <p style="padding: 0px; margin: 0;">FORM MASTER\'S REMARK: '.$commentMain.'</p>
+        <div style="width: 100%; margin-bottom: 5px; margin-top: -11px;">
+            <p style="padding: 0px; margin: 0;">FORM TEACHER\'S REMARK: '.$commentMain.'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
-        <div style="width: 100%; margin-bottom: 15px;">
+        <div style="width: 100%; margin-bottom: 10px;">
             <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)).'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
-        <div style="width: 100%; margin-bottom: 10px;">
+        <div style="width: 100%; margin-bottom: 8px;">
             <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S SIGNATURE: <img src='.$addschool->schoolprincipalsignature.' height="50px"></p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div class="remark" style="width: 100%; margin-bottom: 10px;">
             <div style="width: 49.5%;">
-                <p style="padding: 0px; margin: 0;">NEXT TERM BEGINS: '.$nextTermBegins.'</p>
+                <p style="padding: 0px; margin: 0;">NEXT TERM BEGINS: '.$nextTermBegins. '</p>
                 <div style="height: 1px; width: 100%; background-color: black;"></div>
             </div>
-            <div style="width: 49.5%;">
+            <div style="width: 49.5%; margin-bottom: -10px;">
                 <p style="padding: 0px; margin: 0;">NEXT TERM ENDS: '.$nextTermEnds.'</p>
                 <div style="height: 1px; width: 100%; background-color: black;"></div>
             </div>
@@ -716,6 +745,12 @@ class ResultController_sec extends Controller
                 return view('secondary.result.viewresult.resultseniorsec', compact('studentInClass', 'motolistbeha', 'motolistskills', 'addschool', 'term', 'schoolsession', 'classid', 'section', 'classtype'));
             }
         }
+    }
+
+        public function getSubjectCount($term, $regNo, $session)
+    {
+        $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
+        return count($resultsSubject);
     }
 
     public function getSubjectScores($term, $regNo, $session)

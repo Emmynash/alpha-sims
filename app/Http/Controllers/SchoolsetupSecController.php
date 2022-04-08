@@ -155,20 +155,21 @@ class SchoolsetupSecController extends Controller
             return response()->json(array('msg' => $msg), 200);
         }
 
+        
         $schoolId = Auth::user()->schoolid;
 
         $updateSchoolSession = Addpost::find($schoolId);
         $updateSchoolSession->schoolsession = $request->session;
         $updateSchoolSession->firsttermstarts = $request->firsttermstarts;
         $updateSchoolSession->firsttermends = $request->firsttermends;
-        $updateSchoolSession->secondtermbegins = $request->secondtermstarts;
+        $updateSchoolSession->secondtermbegins = $request->secondtermbegins;
         $updateSchoolSession->secondtermends = $request->secondtermends;
-        $updateSchoolSession->thirdtermbegins = $request->thirdtermstarts;
+        $updateSchoolSession->thirdtermbegins = $request->thirdtermbegins;
         $updateSchoolSession->thirdtermends = $request->thirdtermends;
         $updateSchoolSession->save();
 
         $msg = 1;
-        return response()->json(array('msg' => $msg), 200);
+        return response()->json(array('msg' => $updateSchoolSession), 200);
 
     }
 
@@ -312,7 +313,7 @@ class SchoolsetupSecController extends Controller
         
     }
 
-    public function fetchSchoolDetailsSetUp()
+    public function fetchSchoolDetailsSetUp() 
     {
         $schoolDetails = Addpost::where('id', Auth::user()->schoolid)->first();
 
@@ -324,7 +325,8 @@ class SchoolsetupSecController extends Controller
 
         $clubs = Addclub_sec::where("schoolid", Auth::user()->schoolid)->get();
 
-        $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->orderBy('order', 'asc')->get();
+        $assessment = AssesmentModel::where("schoolid", Auth::user()->schoolid)->get();
+        // ->orderBy('order', 'asc')->get();
 
         $subasscategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id','=','sub_assesment_models.catid')
                          ->where('sub_assesment_models.schoolid', Auth::user()->schoolid)
