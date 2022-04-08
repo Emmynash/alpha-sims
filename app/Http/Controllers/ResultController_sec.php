@@ -94,6 +94,7 @@ class ResultController_sec extends Controller
             $term = $request->input('term');
             $regNo = $request->input('student_reg_no');
             $schoolsession = $request->input('session');
+            $section = $request->input('section');
 
             $checkclasstype = Classlist_sec::find($classid);
 
@@ -119,7 +120,7 @@ class ResultController_sec extends Controller
 
             $computedAverage = ComputedAverages::where(['session' => $schoolsession, 'regno' => $regNo, 'term' => $term])->first();
 
-            $getStudentsArray = Addstudent_sec::where(['classid' => $classid,'studentsection' => $studentdetails->studentsection])->pluck('id');
+            $getStudentsArray = Addstudent_sec::where(['classid' => $classid])->pluck('id');
 
             $scoresGrandTotal = DB::table('computed_averages')
                                 ->whereIn('regno', $getStudentsArray)
