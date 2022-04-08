@@ -16,7 +16,6 @@ class CreateResultSettingsTable extends Migration
         Schema::create('result_settings', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug');
             $table->string('fontSize');
             $table->integer('schoolId');
             $table->timestamps();
