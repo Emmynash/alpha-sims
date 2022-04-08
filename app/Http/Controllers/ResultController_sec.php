@@ -678,8 +678,7 @@ class ResultController_sec extends Controller
 
         $pdf = App::make('dompdf.wrapper');
         $pdf->loadHTML(implode(" ",$printOutArray))->setPaper('a4', 'portrait');
-        $pdf->download('result.pdf');
-        // return $pdf->stream();
+        return $pdf->stream();
 
         // $pdf = App::make('dompdf.wrapper');
         // $pdf->loadView('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
