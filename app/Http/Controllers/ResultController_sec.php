@@ -99,7 +99,7 @@ class ResultController_sec extends Controller
 
             $checkclasstype = Classlist_sec::find($classid);
 
-            $studentdetails = Addstudent_sec::find($classid);
+            $studentdetails = Addstudent_sec::find($regNo);
 
             $addschool = Addpost::find(Auth::user()->schoolid);
 
