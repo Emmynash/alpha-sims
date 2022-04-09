@@ -108,10 +108,8 @@ class ResultController_sec extends Controller
             $subCatAss = SubAssesmentModel::where('schoolid', Auth::user()->schoolid)->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'ASC')->get();
-            // ->orderBy('order', 'ASC')->get();
 
             $assessment = AssesmentModel::where('schoolid', Auth::user()->schoolid)->orderBy('order', 'DESC')->get();
-            // ->orderBy('order', 'DESC')->get();
 
             $motolistbeha = MotoList::where(['schoolid' => Auth::user()->schoolid, 'category' => 'behaviour'])->get();
 
@@ -120,6 +118,12 @@ class ResultController_sec extends Controller
             $studentClass = Classlist_sec::find($classid);
 
             $computedAverage = ComputedAverages::where(['session' => $schoolsession, 'regno' => $regNo, 'term' => $term])->first();
+
+            $getStudentsArray = Addstudent_sec::where(['classid' => $classid])->pluck('id');
+
+            $scoresGrandTotal = DB::table('computed_averages')
+                                ->whereIn('regno', $getStudentsArray)
+                                ->sum('examstotal');
 
 
             $assessmentHeadCompiled = array();
@@ -160,7 +164,7 @@ class ResultController_sec extends Controller
 
 
 
-            return view('secondary.result.viewresult.singleprimary', compact('nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessmentMarks', 'resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+            return view('secondary.result.viewresult.singleprimary', compact('scoresGrandTotal','nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessmentMarks', 'resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();
