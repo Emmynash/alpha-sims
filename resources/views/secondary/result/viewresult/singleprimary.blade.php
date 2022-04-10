@@ -169,8 +169,8 @@
                             <tbody id="resultprinttable">
                                 <tr style='font-size: 14px;'>
                                     <th style='font-size: 14px; text-align:center; font-weight:bold;'></th>
-                                    @foreach ($subCatAss as $ass)
-                                    <th style='font-size: 14px; text-align:center;'>{{$ass->maxmarks}}</th>
+                                    @foreach ($subAssessmentMarks as $ass)
+                                    <th style='font-size: 14px; text-align:center;'>{{$ass}}</th>
                                     @endforeach
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
