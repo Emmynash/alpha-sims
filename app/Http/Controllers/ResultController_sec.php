@@ -373,7 +373,6 @@ class ResultController_sec extends Controller
 
         $addschool = Addpost::find(Auth::user()->schoolid);
         $getClass = Classlist_sec::find($classid);
-        $getStudentdetails = Addstudent_sec::find($section);
         $getSection = Addsection_sec::find($section);
 
        
@@ -641,6 +640,7 @@ class ResultController_sec extends Controller
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 10px;">
+            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)).'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 8px;">
@@ -872,18 +872,18 @@ class ResultController_sec extends Controller
         return $subAssessmentScore;
     }
 
-    // public function getHeadOfSchoolComment($average)
-    // {
-    //     $comments = HeadOfchoolComment::all();
-    //     $selectedComment = 'Nill';
-    //     for ($i=0; $i < count($comments); $i++) { 
+    public function getHeadOfSchoolComment($average)
+    {
+        $comments = HeadOfchoolComment::all();
+        $selectedComment = 'Nill';
+        for ($i=0; $i < count($comments); $i++) { 
             
-    //         if ($average >= (int)$comments[$i]->marksTo && $average <= (int)$comments[$i]->marksFrom ) {
-    //             $selectedComment = $comments[$i]->comment;
-    //         }
+            if ($average >= (int)$comments[$i]->marksTo && $average <= (int)$comments[$i]->marksFrom ) {
+                $selectedComment = $comments[$i]->comment;
+            }
 
-    //     }
+        }
 
-    //     return $selectedComment;
-    // }
+        return $selectedComment;
+    }
 }
