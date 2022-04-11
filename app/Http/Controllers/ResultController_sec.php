@@ -752,6 +752,7 @@ class ResultController_sec extends Controller
 
     public function getSubjectScores($term, $regNo, $session, $classid, $studentsection)
     {
+        dump($classid, $term, $studentsection);
         $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
         $resultList = array();
         for ($i=0; $i < count($resultsSubject); $i++) { 
