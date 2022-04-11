@@ -752,7 +752,6 @@ class ResultController_sec extends Controller
 
     public function getSubjectScores($term, $regNo, $session, $classid, $studentsection)
     {
-        dump($classid, $term, $studentsection);
         $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
         $resultList = array();
         for ($i=0; $i < count($resultsSubject); $i++) { 
@@ -766,7 +765,7 @@ class ResultController_sec extends Controller
             <td><center>'.round($resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->total, 2).'</center></td>
             <td><center>'.round($resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id, 2)->average).'</center></td>
             <td><center>'.$resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->grade.'</center></td>
-            <td><center>'.$resultsSubject[$i]->getStudentRecord($resultsSubject[$i]->subjectid, $session, $regNo, $classid, $term, $studentsection)->position.'</center></td></tr>';
+            <td><center>'.$resultsSubject[$i]->getStudentRecordBulk($resultsSubject[$i]->subjectid, $session, $regNo, $classid, $term)->position.'</center></td></tr>';
             array_push($resultList, $resultView);
         }
         return $resultList;

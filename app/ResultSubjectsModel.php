@@ -23,6 +23,11 @@ class ResultSubjectsModel extends Model
 
         return AssessmentTableTotal::where(['subjectid'=> $subjectid, 'session' => $schoolsession, 'regno' => $regNo, 'classid'=> $classid, 'term'=> $term, 'sectionid'=> $studentsection ])->first();
     }
+    public function getStudentRecordBulk($subjectid, $schoolsession, $regNo, $classid, $term)
+    {
+
+        return AssessmentTableTotal::where(['subjectid' => $subjectid, 'session' => $schoolsession, 'regno' => $regNo, 'classid' => $classid, 'term' => $term])->first();
+    }
 
     public function getSubjectScores($assessment_id)
     {
