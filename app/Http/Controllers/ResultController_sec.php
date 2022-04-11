@@ -374,9 +374,8 @@ class ResultController_sec extends Controller
         $addschool = Addpost::find(Auth::user()->schoolid);
         $getClass = Classlist_sec::find($classid);
         $getSection = Addsection_sec::find($section);
-        $studentdetails = Addstudent_sec::find($regNo);
+        $getStudentdetails = Addstudent_sec::find($section);
 
-        // return view('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
        
         $resultMain = ResultSubjectsModel::where(['result_subjects_models.term' => $term, 'result_subjects_models.studentregno' => $regNo, 'result_subjects_models.session' => $schoolsession])->get();
 
@@ -537,15 +536,15 @@ class ResultController_sec extends Controller
             <div class="studentDetailsone">
                 <table style="width: 100%;">
                     <tr>
-                        <td>Name of Student</td>
+                        <td>Name of Student:</td>
                         <td>'.$getStudents[$i]->firstname." ".$getStudents[$i]->middlename." ".$getStudents[$i]->lastname.'</td>
                     </tr>
                     <tr>
-                        <td>Class</td>
+                        <td>Class:</td>
                         <td>'.$getClass->classname.$getSection->sectionname.'</td>
                     </tr>
                     <tr>
-                        <td>Next term resumes</td>
+                        <td>Next term resumes:</td>
                         <td>'.$nextTermBegins.'</td>
                     </tr>
                     <tr>
@@ -557,7 +556,7 @@ class ResultController_sec extends Controller
             <div class="studentDetailstwo" style="">
                 <table style="width: 100%;">
                     <tr>
-                        <td>Term</td>
+                        <td>Term:</td>
                         <td>Name of Student</td>
                     </tr>
                     <tr>
@@ -565,11 +564,11 @@ class ResultController_sec extends Controller
                         <td>'.$getStudents[$i]->admission_no.'</td>
                     </tr>
                     <tr>
-                        <td>No in Class</td>
-                        <td>'.count($studentdetails->getClassCountBulk($classid, $schoolsession)).'</td>
+                        <td>No in Class:</td>
+                        <td>'.count($getStudentdetails->getClassCount($classid, $schoolsession, $section)).'</td>
                     </tr>
                     <tr>
-                        <td>Session</td>
+                        <td>Session:</td>
                         <td>'.$schoolsession.'</td>
                     </tr>
                 </table>
@@ -831,6 +830,16 @@ class ResultController_sec extends Controller
         if($getAverage == null){
             return 0;
         }else{
+            return $getAverage->studentaverage;
+        }
+    }
+
+    public function getClassCount($term, $regno, $session, $classid, $section)
+    {
+        $getAverage = ComputedAverages::where(['term' => $term, 'session' => $session, 'regno' => $regno])->first();
+        if ($getAverage == null) {
+            return 0;
+        } else {
             return $getAverage->studentaverage;
         }
     }
