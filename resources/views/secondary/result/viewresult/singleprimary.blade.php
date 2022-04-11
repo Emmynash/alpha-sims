@@ -121,7 +121,7 @@
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">No in Class : </i></td>
-                                        <td><i id="studentposition" style="font-size: 14px; font-style: normal; font-weight: bold;">{{$studentClass->getClassCount($classid)}} </i></td>
+                                        <td><i id="studentposition" style="font-size: 14px; font-style: normal; font-weight: bold;">{{count($studentdetails->getClassCount($classid, $schoolsession, $studentdetails->studentsection))}} </i></td>
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Session:</i></td>

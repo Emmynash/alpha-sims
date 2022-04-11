@@ -374,6 +374,7 @@ class ResultController_sec extends Controller
         $addschool = Addpost::find(Auth::user()->schoolid);
         $getClass = Classlist_sec::find($classid);
         $getSection = Addsection_sec::find($section);
+        $studentdetails = Addstudent_sec::find($regNo);
 
         // return view('secondary.result.viewresult.resulttest', compact('motolistbeha', 'motolistskills', 'addschool'));
        
@@ -565,7 +566,7 @@ class ResultController_sec extends Controller
                     </tr>
                     <tr>
                         <td>No in Class</td>
-                        <td>'.count($getStudents).'</td>
+                        <td>'.count($studentdetails->getClassCount($classid, $schoolsession, $section)).'</td>
                     </tr>
                     <tr>
                         <td>Session</td>
