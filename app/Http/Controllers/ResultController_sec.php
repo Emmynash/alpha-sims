@@ -566,7 +566,7 @@ class ResultController_sec extends Controller
                     </tr>
                     <tr>
                         <td>No in Class</td>
-                        <td>'.count($studentdetails->getClassCount($classid, $schoolsession, $studentdetails->studentsection)).'</td>
+                        <td>'.count($studentdetails->getClassCountBulk($classid, $schoolsession)).'</td>
                     </tr>
                     <tr>
                         <td>Session</td>

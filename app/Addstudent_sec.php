@@ -22,6 +22,10 @@ class Addstudent_sec extends Model
     {
         return Addstudent_sec::where(['classid'=>$classid, 'schoolsession'=>$session, 'studentsection'=>$sectionid])->get();
     }
+    public function getClassCountBulk($classid, $session)
+    {
+        return Addstudent_sec::where(['classid' => $classid, 'schoolsession' => $session])->get();
+    }
 
     public function getStudentElective($regno, $classid, $sectionid)
     {
