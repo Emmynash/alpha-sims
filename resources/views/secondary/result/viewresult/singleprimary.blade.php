@@ -200,7 +200,7 @@
                                         <center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->grade }}</center>
                                     </td>
                                     <td class='text-center thdesign' style='font-size: 14px;'>
-                                        <center>{{ $item->getStudentRecord($item->subjectid, $schoolsession, $regNo) == NULL ? "---":$item->getStudentRecord($item->subjectid, $schoolsession, $regNo)->position }}</center>
+                                        <center>{{ $item->getStudentRecord($item->subjectid, $schoolsession, $regNo, $classid, $term, $studentdetails->studentsection) == NULL ? "---":$item->getStudentRecord($item->subjectid, $schoolsession, $regNo, $classid, $term, $studentdetails->studentsection)->position }}</center>
                                     </td>
                                 <tr>
 

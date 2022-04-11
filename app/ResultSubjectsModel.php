@@ -19,9 +19,9 @@ class ResultSubjectsModel extends Model
     {
         return AssessmentResultModel::where(['space_id'=>$space_id])->first();
     }
-    public function getStudentRecord($subjectid, $schoolsession, $regNo){
+    public function getStudentRecord($subjectid, $schoolsession, $regNo, $classid, $term, $studentsection){
 
-        return AssessmentTableTotal::where(['subjectid'=> $subjectid, 'session' => $schoolsession, 'regno' => $regNo])->first();
+        return AssessmentTableTotal::where(['subjectid'=> $subjectid, 'session' => $schoolsession, 'regno' => $regNo, 'classid'=> $classid, 'term'=> $term, 'sectionid'=> $studentsection ])->first();
     }
 
     public function getSubjectScores($assessment_id)

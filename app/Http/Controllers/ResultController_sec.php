@@ -120,15 +120,10 @@ class ResultController_sec extends Controller
             $getStudentsArray = Addstudent_sec::where(['classid' => $classid])->pluck('id');
 
             $scoresGrandTotal = DB::table('computed_averages')
-                                ->whereIn('regno', $getStudentsArray)
+                                ->whereIn('regno', $getStudentsArray) 
                                 ->sum('examstotal');
 
 
-            $assessmentHeadCompiled = array();
-            for ($i = 0; $i < count($assessment); $i++) {
-                $assementHead = '<th colspan=' . $this->getSubAssessmentCount($assessment[$i]->id) . '>' . $assessment[$i]->name . '</th>';
-                array_push($assessmentHeadCompiled, $assementHead);
-            }
             $subAssessmentMarks = array();
             for ($i = 0; $i < count($assessment); $i++) {
                 $subAss = SubAssesmentModel::where('catid', $assessment[$i]->id)->get();
@@ -161,8 +156,7 @@ class ResultController_sec extends Controller
             }
 
 
-
-            return view('secondary.result.viewresult.singleprimary', compact('scoresGrandTotal','nextTermBegins', 'nextTermEnds', 'assessmentHeadCompiled', 'subAssessmentMarks', 'resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
+            return view('secondary.result.viewresult.singleprimary', compact('scoresGrandTotal','nextTermBegins', 'nextTermEnds', 'subAssessmentMarks', 'resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
             //get subject list
             $getSubjectList = CLassSubjects::where(['classid' => $classid, 'sectionid' => $studentdetails->studentsection, 'subjecttype' => 2])->pluck('subjectid')->toArray();
@@ -601,7 +595,7 @@ class ResultController_sec extends Controller
                     <th></th>
                     <th></th>
                 </tr>
-                '.implode(" ",$this->getSubjectScores($term, $getStudents[$i]->id, $schoolsession)).'
+                '.implode(" ",$this->getSubjectScores($term, $getStudents[$i]->id, $schoolsession,$classid, $term, $section)).'
             </table>
         </div>
         <br>
@@ -756,7 +750,7 @@ class ResultController_sec extends Controller
         return count($resultsSubject);
     }
 
-    public function getSubjectScores($term, $regNo, $session)
+    public function getSubjectScores($term, $regNo, $session, $classid, $studentsection)
     {
         $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$regNo, 'session'=>$session])->get();
         $resultList = array();
@@ -771,7 +765,7 @@ class ResultController_sec extends Controller
             <td><center>'.round($resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->total, 2).'</center></td>
             <td><center>'.round($resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id, 2)->average).'</center></td>
             <td><center>'.$resultsSubject[$i]->getAssessmentsTotal($resultsSubject[$i]->id)->grade.'</center></td>
-            <td><center>'.$resultsSubject[$i]->getStudentRecord($resultsSubject[$i]->subjectid, $session, $regNo)->position.'</center></td></tr>';
+            <td><center>'.$resultsSubject[$i]->getStudentRecord($resultsSubject[$i]->subjectid, $session, $regNo, $classid, $term, $studentsection)->position.'</center></td></tr>';
             array_push($resultList, $resultView);
         }
         return $resultList;
