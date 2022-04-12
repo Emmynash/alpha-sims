@@ -155,6 +155,7 @@ class ResultController_sec extends Controller
                 $nextTermEnds = 'NAN';
             }
 
+            dump($scoresGrandTotal);
 
             return view('secondary.result.viewresult.singleprimary', compact('scoresGrandTotal','nextTermBegins', 'nextTermEnds', 'subAssessmentMarks', 'resultMain', 'subCatAss', 'assessment', 'motolistbeha', 'motolistskills', 'classid', 'regNo', 'schoolsession', 'studentdetails', 'term', 'addschool', 'schoolsession', 'studentClass', 'computedAverage'));
 
