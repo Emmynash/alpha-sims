@@ -121,7 +121,7 @@
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">No in Class : </i></td>
-                                        <td><i id="studentposition" style="font-size: 14px; font-style: normal; font-weight: bold;">{{$studentClass->getClassCount($classid)}} </i></td>
+                                        <td><i id="studentposition" style="font-size: 14px; font-style: normal; font-weight: bold;">{{count($studentdetails->getClassCount($classid, $schoolsession, $studentdetails->studentsection))}} </i></td>
                                     </tr>
                                     <tr>
                                         <td><i style="font-size: 14px; font-style: normal;">Session:</i></td>
@@ -169,8 +169,8 @@
                             <tbody id="resultprinttable">
                                 <tr style='font-size: 14px;'>
                                     <th style='font-size: 14px; text-align:center; font-weight:bold;'></th>
-                                    @foreach ($subCatAss as $ass)
-                                    <th style='font-size: 14px; text-align:center;'>{{$ass->maxmarks}}</th>
+                                    @foreach ($subAssessmentMarks as $ass)
+                                    <th style='font-size: 14px; text-align:center;'>{{$ass}}</th>
                                     @endforeach
                                     <th class='' style='font-size: 14px;'></th>
                                     <th class='' style='font-size: 14px;'></th>
@@ -200,7 +200,7 @@
                                         <center>{{ $item->getAssessmentsTotal($item->id) == NULL ? "---":$item->getAssessmentsTotal($item->id)->grade }}</center>
                                     </td>
                                     <td class='text-center thdesign' style='font-size: 14px;'>
-                                        <center>{{ $item->getStudentRecord($item->subjectid, $schoolsession, $regNo) == NULL ? "---":$item->getStudentRecord($item->subjectid, $schoolsession, $regNo)->position }}</center>
+                                        <center>{{ $item->getStudentRecord($item->subjectid, $schoolsession, $regNo, $classid, $term, $studentdetails->studentsection) == NULL ? "---":$item->getStudentRecord($item->subjectid, $schoolsession, $regNo, $classid, $term, $studentdetails->studentsection)->position }}</center>
                                     </td>
                                 <tr>
 
