@@ -48,14 +48,16 @@ class ResultAverageProcess
 
             $schoolsession = DB::table('addposts')->where('id', Auth::user()->schoolid)->first()->schoolsession;
 
-            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(5, function ($students) use ($classid, $section, $term, $getSubCategory, $schoolsession) {
+            //get subjects
+            $classSubjects = DB::table('c_lass_subjects')->join('addsubject_secs', 'addsubject_secs.id', '=', 'c_lass_subjects.subjectid')->where(['c_lass_subjects.classid' => $classid, 'c_lass_subjects.sectionid' => $section])->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
+
+            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(5, function ($students) use ($classid, $section, $term, $getSubCategory, $schoolsession, $classSubjects) {
 
                 
 
                 foreach ($students as $student) {
 
-                    //get subjects
-                    $classSubjects = DB::table('c_lass_subjects')->join('addsubject_secs', 'addsubject_secs.id', '=', 'c_lass_subjects.subjectid')->where(['c_lass_subjects.classid' => $classid, 'c_lass_subjects.sectionid' => $section])->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
+                    
 
 
                     for ($j = 0; $j < $classSubjects->count(); $j++) {
