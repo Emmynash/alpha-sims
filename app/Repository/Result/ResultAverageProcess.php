@@ -44,14 +44,16 @@ class ResultAverageProcess
             //get all students in the class
             // $getAllStudent = Addstudent_sec::where(['classid' => $classid, 'studentsection' => $section])->get();
 
-            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(5, function ($students) use ($classid, $section, $term) {
+            $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id', '=', 'sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->get();
 
-                $schoolsession = Addpost::where('id', Auth::user()->schoolid)->first()->schoolsession;
+            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(5, function ($students) use ($classid, $section, $term, $getSubCategory) {
+
+                $schoolsession = DB::table('addposts')->where('id', Auth::user()->schoolid)->first()->schoolsession;
 
                 foreach ($students as $student) {
 
                     //get subjects
-                    $classSubjects = CLassSubjects::join('addsubject_secs', 'addsubject_secs.id', '=', 'c_lass_subjects.subjectid')->where(['c_lass_subjects.classid' => $classid, 'c_lass_subjects.sectionid' => $section])->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
+                    $classSubjects = DB::table('c_lass_subjects')->join('addsubject_secs', 'addsubject_secs.id', '=', 'c_lass_subjects.subjectid')->where(['c_lass_subjects.classid' => $classid, 'c_lass_subjects.sectionid' => $section])->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
 
 
                     for ($j = 0; $j < $classSubjects->count(); $j++) {
@@ -121,7 +123,7 @@ class ResultAverageProcess
                         } else {
 
 
-                            try {
+                            // try {
                                 $createSubjectData = ResultSubjectsModel::updateOrCreate(
                                     [
                                         'term' => $term,
@@ -138,17 +140,23 @@ class ResultAverageProcess
                                         'subjectid' => $classSubjects[$j]->subjectid
                                     ]
                                 );
-                            } catch (\Throwable $th) {
-                                //throw $th;
-                                return 'error';
-                            }
 
-                            $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id', '=', 'sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->get();
+
+
+
+
+
+                            // } catch (\Throwable $th) {
+                            //     //throw $th;
+                            //     return 'error';
+                            // }
+
+                            
 
                             for ($k = 0; $k < $getSubCategory->count(); $k++) {
-                                $getSubjectTotalMark = AssessmentTableTotal::where(['regno' => $student->id, 'subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->first();
-                                $getSubjectAverage = AssessmentTableTotal::where(['subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->sum('totals');
-                                $getSubjectStudentCount = AssessmentTableTotal::where(['subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->get();
+                                $getSubjectTotalMark = DB::table('assessment_table_totals')->where(['regno' => $student->id, 'subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->first();
+                                $getSubjectAverage = DB::table('assessment_table_totals')->where(['subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->sum('totals');
+                                $getSubjectStudentCount = DB::table('assessment_table_totals')->where(['subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->get();
                                 $addAssessment = AssessmentResultModel::updateOrcreate([
                                     'assessmentcatname' => $getSubCategory[$k]->name,
                                     'assessmentcatnamesub' => $getSubCategory[$k]->subname,
@@ -170,7 +178,7 @@ class ResultAverageProcess
 
 
 
-                                $getScore = RecordMarks::where(['subassessment_id' => $getSubCategory[$k]->id, 'term' => $term, 'student_id' => $student->id, 'session' => $schoolsession, 'subjectid' => $classSubjects[$j]->subjectid])->first();
+                                $getScore = DB::table('record_marks')->where(['subassessment_id' => $getSubCategory[$k]->id, 'term' => $term, 'student_id' => $student->id, 'session' => $schoolsession, 'subjectid' => $classSubjects[$j]->subjectid])->first();
 
                                 if ($getScore != null) {
 
@@ -185,8 +193,8 @@ class ResultAverageProcess
                         }
                     }
 
-                    $assessmentTableTotalsSum = AssessmentTableTotal::where(['regno' => $student->id, 'term' => $term, 'session' => $schoolsession, 'sectionid' => $section])->sum('totals');
-                        $assessmentTableTotals = AssessmentTableTotal::where(['regno' => $student->id, 'term' => $term, 'session' => $schoolsession, 'sectionid' => $section])->get();
+                        $assessmentTableTotalsSum = DB::table('assessment_table_totals')->where(['regno' => $student->id, 'term' => $term, 'session' => $schoolsession, 'sectionid' => $section])->sum('totals');
+                        $assessmentTableTotals = DB::table('assessment_table_totals')->where(['regno' => $student->id, 'term' => $term, 'session' => $schoolsession, 'sectionid' => $section])->get();
 
                         if (count($assessmentTableTotals) > 0) {
 
