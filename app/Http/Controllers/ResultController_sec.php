@@ -419,6 +419,17 @@ class ResultController_sec extends Controller
             $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
         }
 
+        $schoolTerm = '';
+        if ($addschool->term == 1) {
+            $schoolTerm = 'First';
+        } elseif ($addschool->term == 2) {
+            $schoolTerm = 'Second';
+        } elseif ($addschool->term == 3) {
+            $schoolTerm = 'Third';
+        } else {
+            $schoolTerm = '';
+        }
+
 
         $assessmentHeadCompiled = array();
         for ($i=0; $i < count($assessment); $i++) { 
@@ -556,7 +567,7 @@ class ResultController_sec extends Controller
                 <table style="width: 100%;">
                     <tr>
                         <td>Term:</td>
-                        <td>Name of Student</td>
+                        <td>'.$schoolTerm.'</td>
                     </tr>
                     <tr>
                         <td>Admission No:</td>
@@ -636,11 +647,11 @@ class ResultController_sec extends Controller
         </div>
         <br>
         <div style="width: 100%; margin-bottom: 5px; margin-top: -11px;">
-            <p style="padding: 0px; margin: 0;">FORM TEACHER\'S REMARK: '.$commentMain.'</p>
+            <p style="padding: 0px; margin: 0;">FORM TEACHER\'S REMARK: '.$commentMain. '</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 10px;">
-            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)).'</p>
+            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: ' . $this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)) . '</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 8px;">

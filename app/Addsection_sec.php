@@ -11,4 +11,8 @@ class Addsection_sec extends Model
     {
         return Addstudent_sec::where(['classid' => $classid, 'schoolsession' => $session, 'studentsection' => $sectionid])->get();
     }
+    public function getStudentGender($regNo)
+    {
+        return Addstudent_sec::find($regNo);
+    }
 }
