@@ -51,7 +51,7 @@ class ResultAverageProcess
             //get subjects
             $classSubjects = DB::table('c_lass_subjects')->join('addsubject_secs', 'addsubject_secs.id', '=', 'c_lass_subjects.subjectid')->where(['c_lass_subjects.classid' => $classid, 'c_lass_subjects.sectionid' => $section])->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
 
-            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(5, function ($students) use ($classid, $section, $term, $getSubCategory, $schoolsession, $classSubjects) {
+            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(50, function ($students) use ($classid, $section, $term, $getSubCategory, $schoolsession, $classSubjects) {
 
                 
 
@@ -160,7 +160,6 @@ class ResultAverageProcess
                             for ($k = 0; $k < $getSubCategory->count(); $k++) {
                                 $getSubjectTotalMark = DB::table('assessment_table_totals')->where(['regno' => $student->id, 'subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->first();
                                 $getSubjectAverage = DB::table('assessment_table_totals')->where(['subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->pluck('totals')->toArray();
-                                // $getSubjectStudentCount = DB::table('assessment_table_totals')->where(['subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->get();
                                 $addAssessment = AssessmentResultModel::updateOrcreate([
                                     'assessmentcatname' => $getSubCategory[$k]->name,
                                     'assessmentcatnamesub' => $getSubCategory[$k]->subname,
@@ -221,7 +220,7 @@ class ResultAverageProcess
                                 'regno' => $student->id,
                                 'term' => $term
                             ], [
-                                'examstotal' => $assessmentTableTotalsSum,
+                                'examstotal' => array_sum($assessmentTableTotalsSum),
                                 'studentaverage' => '0',
                                 'session' => $schoolsession,
                                 'regno' => $student->id,
@@ -239,187 +238,6 @@ class ResultAverageProcess
             });
 
 
-
-
-
-            // $testarray = array();
-
-            // if ($getAllStudent->count() > 0) {
-
-            //     for ($i = 0; $i < $getAllStudent->count(); $i++) {
-
-            //         //get subjects
-            //         $classSubjects = CLassSubjects::join('addsubject_secs', 'addsubject_secs.id', '=', 'c_lass_subjects.subjectid')->where(['c_lass_subjects.classid' => $classid, 'c_lass_subjects.sectionid' => $section])->select('c_lass_subjects.*', 'addsubject_secs.subjectname')->get();
-
-            //         for ($j = 0; $j < $classSubjects->count(); $j++) {
-
-
-
-            //             if ($classSubjects[$j]->subjecttype == 1) {
-
-            //                 $elective = ElectiveAdd::where(['subjectid' => $classSubjects[$j]->subjectid, 'regno' => $getAllStudent[$i]->id, 'classid' => $classid])->get();
-
-            //                 if ($elective->count() > 0) {
-
-            //                     $createSubjectData = ResultSubjectsModel::updateOrCreate(
-            //                         [
-            //                             'term' => $term,
-            //                             'studentregno' => $getAllStudent[$i]->id,
-            //                             'session' => $schoolsession,
-            //                             'subjectid' => $classSubjects[$j]->subjectid
-            //                         ],
-            //                         [
-            //                             'subjectname' => $classSubjects[$j]->subjectname,
-            //                             'term' => $term,
-            //                             'studentregno' => $getAllStudent[$i]->id,
-            //                             'session' => $schoolsession,
-            //                             'subjectid' => $classSubjects[$j]->subjectid
-            //                         ]
-            //                     );
-
-            //                     $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id', '=', 'sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->get();
-
-            //                     for ($k = 0; $k < $getSubCategory->count(); $k++) {
-            //                         $getSubjectTotalMark = AssessmentTableTotal::where(['regno' => $getAllStudent[$i]->id, 'subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->first();
-            //                         $addAssessment = AssessmentResultModel::updateOrcreate(
-            //                             [
-            //                                 'term' => $term,
-            //                                 'regno' => $getAllStudent[$i]->id,
-            //                                 'session' => $schoolsession,
-            //                                 'space_id' => $createSubjectData->id
-            //                             ],
-            //                             [
-            //                                 'assessmentcatname' => $getSubCategory[$k]->name,
-            //                                 'assessmentcatnamesub' => $getSubCategory[$k]->subname,
-            //                                 'term' => $term,
-            //                                 'regno' => $getAllStudent[$i]->id,
-            //                                 'session' => $schoolsession,
-            //                                 'total' => $getSubjectTotalMark == NULL ? '0' : $getSubjectTotalMark->totals,
-            //                                 'space_id' => $createSubjectData->id
-            //                             ]
-            //                         );
-
-            //                         $getScore = RecordMarks::where(['subassessment_id' => $getSubCategory[$k]->id, 'term' => $term, 'student_id' => $getAllStudent[$i]->id, 'session' => $schoolsession])->first();
-
-            //                         if ($getScore != null) {
-
-            //                             $assessmentscoreresult = AssessmentScoreResultModel::updateOrcreate(
-            //                                 [
-            //                                     'assessment_id' => $addAssessment->id,
-            //                                 ],
-            //                                 [
-            //                                     'assessment_id' => $addAssessment->id,
-            //                                     'score' => $getScore->scrores
-            //                                 ]
-            //                             );
-            //                         }
-            //                     }
-            //                 }
-            //             } else {
-
-
-            //                 try {
-            //                     $createSubjectData = ResultSubjectsModel::updateOrCreate(
-            //                         [
-            //                             'term' => $term,
-            //                             'studentregno' => $getAllStudent[$i]->id,
-            //                             'session' => $schoolsession,
-            //                             'subjectname' => $classSubjects[$j]->subjectname,
-            //                             'subjectid' => $classSubjects[$j]->subjectid
-            //                         ],
-            //                         [
-            //                             'subjectname' => $classSubjects[$j]->subjectname,
-            //                             'term' => $term,
-            //                             'studentregno' => $getAllStudent[$i]->id,
-            //                             'session' => $schoolsession,
-            //                             'subjectid' => $classSubjects[$j]->subjectid
-            //                         ]
-            //                     );
-            //                 } catch (\Throwable $th) {
-            //                     //throw $th;
-            //                     return 'error';
-            //                 }
-
-            //                 $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id', '=', 'sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->get();
-
-            //                 for ($k = 0; $k < $getSubCategory->count(); $k++) {
-            //                     $getSubjectTotalMark = AssessmentTableTotal::where(['regno' => $getAllStudent[$i]->id, 'subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->first();
-            //                     $getSubjectAverage = AssessmentTableTotal::where(['subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->sum('totals');
-            //                     $getSubjectStudentCount = AssessmentTableTotal::where(['subjectid' => $classSubjects[$j]->subjectid, 'term' => $term, 'session' => $schoolsession, 'classid' => $classid])->get();
-            //                     $addAssessment = AssessmentResultModel::updateOrcreate([
-            //                         'assessmentcatname' => $getSubCategory[$k]->name,
-            //                         'assessmentcatnamesub' => $getSubCategory[$k]->subname,
-            //                         'term' => $term,
-            //                         'regno' => $getAllStudent[$i]->id,
-            //                         'session' => $schoolsession,
-            //                         'space_id' => $createSubjectData->id
-            //                     ], [
-            //                         'assessmentcatname' => $getSubCategory[$k]->name,
-            //                         'assessmentcatnamesub' => $getSubCategory[$k]->subname,
-            //                         'term' => $term,
-            //                         'regno' => $getAllStudent[$i]->id,
-            //                         'session' => $schoolsession,
-            //                         'total' => $getSubjectTotalMark == NULL ? '0' : $getSubjectTotalMark->totals,
-            //                         'grade' => $getSubjectTotalMark == NULL ? 'N.A' : $getSubjectTotalMark->grade,
-            //                         'average' => $getSubjectAverage / $getSubjectStudentCount->count(),
-            //                         'space_id' => $createSubjectData->id
-            //                     ]);
-
-
-
-            //                     $getScore = RecordMarks::where(['subassessment_id' => $getSubCategory[$k]->id, 'term' => $term, 'student_id' => $getAllStudent[$i]->id, 'session' => $schoolsession, 'subjectid' => $classSubjects[$j]->subjectid])->first();
-
-            //                     if ($getScore != null) {
-
-            //                         $assessmentscoreresult = AssessmentScoreResultModel::updateOrcreate([
-            //                             'assessment_id' => $addAssessment->id,
-            //                         ], [
-            //                             'assessment_id' => $addAssessment->id,
-            //                             'score' => $getScore->scrores
-            //                         ]);
-            //                     }
-            //                 }
-            //             }
-            //         }
-
-
-            //         //process result averages
-            //         try {
-            //             $assessmentTableTotalsSum = AssessmentTableTotal::where(['regno' => $getAllStudent[$i]->id, 'term' => $term, 'session' => $schoolsession, 'sectionid' => $section])->sum('totals');
-            //             $assessmentTableTotals = AssessmentTableTotal::where(['regno' => $getAllStudent[$i]->id, 'term' => $term, 'session' => $schoolsession, 'sectionid' => $section])->get();
-
-            //             if (count($assessmentTableTotals) > 0) {
-
-            //                 $createAverage = ComputedAverages::updateOrcreate([
-            //                     'session' => $schoolsession,
-            //                     'regno' => $getAllStudent[$i]->id,
-            //                     'term' => $term
-            //                 ], [
-            //                     'examstotal' => $assessmentTableTotalsSum,
-            //                     'studentaverage' => $assessmentTableTotalsSum / count($assessmentTableTotals),
-            //                     'session' => $schoolsession,
-            //                     'regno' => $getAllStudent[$i]->id,
-            //                     'term' => $term
-            //                 ]);
-            //             } else {
-            //                 $createAverage = ComputedAverages::updateOrcreate([
-            //                     'session' => $schoolsession,
-            //                     'regno' => $getAllStudent[$i]->id,
-            //                     'term' => $term
-            //                 ], [
-            //                     'examstotal' => $assessmentTableTotalsSum,
-            //                     'studentaverage' => '0',
-            //                     'session' => $schoolsession,
-            //                     'regno' => $getAllStudent[$i]->id,
-            //                     'term' => $term
-            //                 ]);
-            //                 // return $createAverage;
-            //             }
-            //         } catch (\Throwable $th) {
-            //             return "here";
-            //         }
-            //     }
-            // }
 
 
             //change status of result ready model 
