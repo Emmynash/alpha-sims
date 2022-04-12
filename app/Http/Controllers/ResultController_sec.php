@@ -878,7 +878,7 @@ class ResultController_sec extends Controller
         $selectedComment = 'Nill';
         for ($i=0; $i < count($comments); $i++) { 
             
-            if ($average >= (int)$comments[$i]->marksFrom && $average <= (int)$comments[$i]->marksTo ) {
+            if ($average >= $comments[$i]->marksFrom && $average <= $comments[$i]->marksTo ) {
                 $selectedComment = $comments[$i]->comment;
             }
 
