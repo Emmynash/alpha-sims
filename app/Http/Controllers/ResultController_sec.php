@@ -33,6 +33,7 @@ use App\Models\ResultSetting;
 use App\RecordMarks;
 use App\ResultSubjectsModel;
 use App\SubAssesmentModel;
+use App\FormTeachers;
 use App\User;
 use Svg\Tag\Rect;
 
@@ -219,10 +220,12 @@ class ResultController_sec extends Controller
     public function result_by_class()
     {
         $school = Addpost::find(Auth::user()->schoolid);
-        // $resultSettings = ResultSetting::where('schoolId', Auth::user()->schoolid)->get();
+        $formTeacherClasses = FormTeachers::join('classlist_secs', 'classlist_secs.id', '=', 'form_teachers.class_id')
+        ->join('addsection_secs', 'addsection_secs.id', '=', 'form_teachers.form_id')
+        ->where('teacher_id', Auth::user()->id)
+        ->select('addsection_secs.id as sectionId', 'classlist_secs.classname', 'addsection_secs.sectionname', 'classlist_secs.status', 'classlist_secs.index', 'classlist_secs.id', 'classlist_secs.classtype', 'classlist_secs.schoolid')->get();
 
-        // return view('secondary.result.resultbyclass', compact('school', 'resultSettings'));
-        return view('secondary.result.resultbyclass', compact('school'));
+        return view('secondary.result.resultbyclass', compact('school', 'formTeacherClasses'));
     }
 
     public function addResultSettings(Request $request)
