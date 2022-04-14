@@ -1,7 +1,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 5px; border-bottom: 1px solid #fff;">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -12px; border-bottom: 1px solid #fff;">
 
     </div>
 
