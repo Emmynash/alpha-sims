@@ -251,8 +251,8 @@ function Moto() {
                                 <div className="col-12 col-md-6">
                                     <select name="" onChange={(e) => handleChangeSection(e)} value={selectedsection} id="" className="form-control form-control-sm">
                                         <option value="">Select a Section</option>
-                                        {section_sec.map(d => (
-                                            <option key={d.id + "motosection"} value={d.id} >{d.sectionname}</option>
+                                        {allClasses.map(d => (
+                                            <option key={d.id + "motosection"} value={d.sectionId} >{d.sectionname}</option>
                                         ))}
                                     </select>
                                 </div>

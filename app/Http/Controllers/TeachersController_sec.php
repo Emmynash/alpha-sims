@@ -98,7 +98,7 @@ class TeachersController_sec extends Controller
             $formTeacherClasses = FormTeachers::join('classlist_secs', 'classlist_secs.id', '=', 'form_teachers.class_id')
                 ->join('addsection_secs', 'addsection_secs.id', '=', 'form_teachers.form_id')
                 ->where('teacher_id', Auth::user()->id)
-                ->select('classlist_secs.classname', 'classlist_secs.status', 'classlist_secs.index', 'classlist_secs.id', 'classlist_secs.classtype', 'classlist_secs.schoolid')->get();
+                ->select('addsection_secs.id as sectionId', 'addsection_secs.sectionname', 'classlist_secs.classname', 'classlist_secs.status', 'classlist_secs.index', 'classlist_secs.id', 'classlist_secs.classtype', 'classlist_secs.schoolid')->get();
 
             $houses = Addhouse_sec::where('schoolid', Auth::user()->schoolid)->get();
 
