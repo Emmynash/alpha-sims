@@ -539,7 +539,7 @@
             <li class="nav-item">
               <a id="addStaff" href="{{ route('addstaff') }}" class="nav-link">
                 <i class="nav-icon fas fa-user-plus"></i>
-                <p>Add Non-Academic Staff</p>
+                <p>All Staff</p>
               </a>
             </li>
             @endcan
