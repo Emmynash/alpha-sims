@@ -108,13 +108,13 @@
                 @endif
                 
             </div>
-            <div class="row" style="margin: 10px;">
+            {{-- <div class="row" style="margin: 10px;">
               <div class="col-12 col-md-6">
                 <div class="card" data-toggle="modal" data-target="#getresultentireclass" style="border-radius: 0px; border-left: 10px solid green;">
                   <i style="font-style: normal; padding: 10px;"><i class="fas fa-paste"></i> Click to print entire class report </i>
                 </div>
               </div>
-            </div>
+            </div> --}}
             {{-- <form action="{{ route('result_sheet_settings') }}" method="post">
               @csrf
               <div class="row" style="margin:10px;">

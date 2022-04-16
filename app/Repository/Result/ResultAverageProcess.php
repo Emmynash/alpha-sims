@@ -75,7 +75,7 @@ class ResultAverageProcess
             });
 
 
-            $computeAverage = StudentAverage::where(["session" => $schoolsession, "term" => $term, "classid" => $classid])->avg('average');
+            $computeAverage = StudentAverage::where(["session" => $schoolsession, "term" => $term, "classid" => $classid])->pluck('average')->toArray();
 
 
             if (count($computeAverage) > 0) {
@@ -86,7 +86,7 @@ class ResultAverageProcess
                     'classid' => $classid,
                     'sectionId' => $section
                 ], [
-                    'average' => $computeAverage,
+                    'average' => array_sum($computeAverage) / count($computeAverage),
                     'session' => $schoolsession,
                     'term' => $term,
                     'classid' => $classid,
