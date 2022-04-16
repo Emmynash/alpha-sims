@@ -295,7 +295,7 @@ class ResultGenerationController extends Controller
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 10px;">
-            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverge($term, $classid, $studentData->id, $schoolsession)).'</p>
+            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment(round($this->getStudentAverge($term, $classid, $studentData->id, $schoolsession), 2)).'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 8px;">
