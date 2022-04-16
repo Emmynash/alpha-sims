@@ -9,6 +9,6 @@ class StudentAverage extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'term', 'classid', 'regNo', 'session', 'average'
+        'term', 'classid', 'regNo', 'session', 'average', 'section', 'examsTotal'
     ];
 }
