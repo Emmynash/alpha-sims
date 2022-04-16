@@ -86,6 +86,7 @@ class ResultController_sec extends Controller
             'student_reg_no' => 'required',
             'session' => 'required',
         ]);
+        
 
 
 
@@ -433,6 +434,7 @@ class ResultController_sec extends Controller
         for ($i=0; $i < count($getStudents); $i++) { 
 
             $resultsSubject = ResultSubjectsModel::where(['term'=>$term, 'studentregno'=>$getStudents[$i]->id, 'session'=>$schoolsession])->get();
+
             $classAverage = ($scoresGrandTotal /  count($getStudentsArray))*count($resultsSubject);
 
             $motolistbeha = MotoList::leftjoin('add_moto_secs', 'add_moto_secs.moto_id','=','moto_lists.id')
