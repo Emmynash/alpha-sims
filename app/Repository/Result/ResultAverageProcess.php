@@ -45,12 +45,12 @@ class ResultAverageProcess
         try {
 
 
-            $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id', '=', 'sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->get();
+            // $getSubCategory = SubAssesmentModel::join('assesment_models', 'assesment_models.id', '=', 'sub_assesment_models.catid')->select('sub_assesment_models.*', 'assesment_models.name')->where('sub_assesment_models.schoolid', Auth::user()->schoolid)->get();
 
             $schoolsession = DB::table('addposts')->where('id', Auth::user()->schoolid)->first()->schoolsession;
 
 
-            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(50, function ($students) use ($classid, $section, $term, $getSubCategory, $schoolsession) {
+            DB::table('addstudent_secs')->where(['classid' => $classid, 'studentsection' => $section])->orderBy('id')->chunk(50, function ($students) use ($classid, $section, $term, $schoolsession) {
 
 
 
@@ -60,13 +60,13 @@ class ResultAverageProcess
 
                     if (count($getSubjectAverage) > 0) {
                         $studentAverage =  StudentAverage::updateOrCreate(
-                            ["regNo" => $student->id, "session" => $schoolsession, "term" => $term],
-                            ["regNo" => $student->id, "session" => $schoolsession, "term" => $term, "classid" => $classid, "average" => array_sum($getSubjectAverage) / count($getSubjectAverage)]
+                            ["regNo" => $student->id, "session" => $schoolsession, "term" => $term, 'section'=>$section],
+                            ["regNo" => $student->id, "session" => $schoolsession, "term" => $term, "classid" => $classid, 'section'=>$section, "average" => array_sum($getSubjectAverage) / count($getSubjectAverage), 'examsTotal'=>array_sum($getSubjectAverage)]
                         );
                     } else {
                         $studentAverage =  StudentAverage::updateOrCreate(
-                            ["regNo" => $student->id, "session" => $schoolsession, "term" => $term],
-                            ["regNo" => $student->id, "session" => $schoolsession, "term" => $term, "classid" => $classid, "average" => 0]
+                            ["regNo" => $student->id, "session" => $schoolsession, "term" => $term, 'section'=>$section],
+                            ["regNo" => $student->id, "session" => $schoolsession, "term" => $term, "classid" => $classid, 'section'=>$section, "average" => 0, 'examsTotal'=>0]
                         );
                     }
                     
@@ -75,10 +75,27 @@ class ResultAverageProcess
             });
 
 
-            $computeAverage = StudentAverage::where(["session" => $schoolsession, "term" => $term, "classid" => $classid])->pluck('average')->toArray();
+            $StudentExamsTotal = StudentAverage::where(["session" => $schoolsession, "term" => $term, "classid" => $classid, 'section'=>$section])->sum('examsTotal');
+
+           
+            $getStudentsArray = Addstudent_sec::where(['classid' => $classid, 'studentsection'=>$section, 'schoolid'=>Auth::user()->schoolid])->pluck('id');
+
+            // $scoresGrandTotal = DB::table('assessment_table_totals')
+            //                     ->whereIn('regno', $getStudentsArray) 
+            //                     ->sum('totals');
+
+            $subjectCount = CLassSubjects::where(['classid'=>$classid, 'sectionId'=>$section])->get();
+
+            // $sum = array_sum($computeAverage);
+
+            $multiply = (count($getStudentsArray))*count($subjectCount);
+
+            $divide = $StudentExamsTotal/$multiply;
+
+            // return $divide;
 
 
-            if (count($computeAverage) > 0) {
+            if ($StudentExamsTotal > 0) {
 
                 ClassAverage::updateOrcreate([
                     'session' => $schoolsession,
@@ -86,7 +103,7 @@ class ResultAverageProcess
                     'classid' => $classid,
                     'sectionId' => $section
                 ], [
-                    'average' => array_sum($computeAverage) / count($computeAverage),
+                    'average' => $divide,
                     'session' => $schoolsession,
                     'term' => $term,
                     'classid' => $classid,
