@@ -14,7 +14,7 @@ class MigrationAddSlugToUserSettingsTable extends Migration
     public function up()
     {
         Schema::table('result_settings', function (Blueprint $table) {
-            $table->string('slug');
+            // $table->string('slug');
         });
     }
 
@@ -26,7 +26,7 @@ class MigrationAddSlugToUserSettingsTable extends Migration
     public function down()
     {
         Schema::table('result_settings', function (Blueprint $table) {
-            $table->string('slug');
+            // $table->string('slug');
         });
     }
 }
