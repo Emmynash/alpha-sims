@@ -33,6 +33,7 @@ use App\Models\ResultSetting;
 use App\RecordMarks;
 use App\ResultSubjectsModel;
 use App\SubAssesmentModel;
+use App\FormTeachers;
 use App\User;
 use Svg\Tag\Rect;
 
@@ -220,10 +221,12 @@ class ResultController_sec extends Controller
     public function result_by_class()
     {
         $school = Addpost::find(Auth::user()->schoolid);
-        // $resultSettings = ResultSetting::where('schoolId', Auth::user()->schoolid)->get();
+        $formTeacherClasses = FormTeachers::join('classlist_secs', 'classlist_secs.id', '=', 'form_teachers.class_id')
+        ->join('addsection_secs', 'addsection_secs.id', '=', 'form_teachers.form_id')
+        ->where('teacher_id', Auth::user()->id)
+        ->select('addsection_secs.id as sectionId', 'classlist_secs.classname', 'addsection_secs.sectionname', 'classlist_secs.status', 'classlist_secs.index', 'classlist_secs.id', 'classlist_secs.classtype', 'classlist_secs.schoolid')->get();
 
-        // return view('secondary.result.resultbyclass', compact('school', 'resultSettings'));
-        return view('secondary.result.resultbyclass', compact('school'));
+        return view('secondary.result.resultbyclass', compact('school', 'formTeacherClasses'));
     }
 
     public function addResultSettings(Request $request)
@@ -420,6 +423,17 @@ class ResultController_sec extends Controller
             $nextTermEnds = '<i style="font-style: normal; font-weight: bold;">NAN</i>';
         }
 
+        $schoolTerm = '';
+        if ($addschool->term == 1) {
+            $schoolTerm = 'First';
+        } elseif ($addschool->term == 2) {
+            $schoolTerm = 'Second';
+        } elseif ($addschool->term == 3) {
+            $schoolTerm = 'Third';
+        } else {
+            $schoolTerm = '';
+        }
+
 
         $assessmentHeadCompiled = array();
         for ($i=0; $i < count($assessment); $i++) { 
@@ -550,7 +564,7 @@ class ResultController_sec extends Controller
                     </tr>
                     <tr>
                         <td>Sex</td>
-                        <td></td>
+                        <td>'.$getStudents[$i]->gender.'</td>
                     </tr>
                 </table>
             </div>
@@ -558,7 +572,7 @@ class ResultController_sec extends Controller
                 <table style="width: 100%;">
                     <tr>
                         <td>Term:</td>
-                        <td>Name of Student</td>
+                        <td>'.$schoolTerm.'</td>
                     </tr>
                     <tr>
                         <td>Admission No:</td>
@@ -638,11 +652,11 @@ class ResultController_sec extends Controller
         </div>
         <br>
         <div style="width: 100%; margin-bottom: 5px; margin-top: -11px;">
-            <p style="padding: 0px; margin: 0;">FORM TEACHER\'S REMARK: '.$commentMain.'</p>
+            <p style="padding: 0px; margin: 0;">FORM TEACHER\'S REMARK: '.$commentMain. '</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 10px;">
-            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)).'</p>
+            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: ' . $this->getHeadOfSchoolComment($this->getStudentAverage($term, $getStudents[$i]->id, $schoolsession, $classid, $section)) . '</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 8px;">
@@ -880,7 +894,7 @@ class ResultController_sec extends Controller
         $selectedComment = 'Nill';
         for ($i=0; $i < count($comments); $i++) { 
             
-            if ($average >= (int)$comments[$i]->marksTo && $average <= (int)$comments[$i]->marksFrom ) {
+            if ($average >= $comments[$i]->marksFrom && $average <= $comments[$i]->marksTo ) {
                 $selectedComment = $comments[$i]->comment;
             }
 

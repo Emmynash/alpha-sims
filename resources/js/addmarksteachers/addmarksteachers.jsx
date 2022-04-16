@@ -386,7 +386,7 @@ function AddMarksTeachers() {
             </div> : ""}
 
             <div className="card">
-                <i style={{ fontStyle: 'normal', fontSize: '14px', padding: '10px' }}>List of classes asigned to you. Click on any to add scrores.</i>
+                <i style={{ fontStyle: 'normal', fontSize: '14px', padding: '10px' }}>List of assigned classes.</i>
             </div>
             {
                 subjectlist.map(d => (
@@ -430,7 +430,7 @@ function AddMarksTeachers() {
                                     <th>Total</th>
                                     <th>Position</th>
                                     <th>Grade</th>
-                                    <th>Action</th>
+                                    <th>Action</th> 
                                 </tr>
                             </thead>
                             <tbody>

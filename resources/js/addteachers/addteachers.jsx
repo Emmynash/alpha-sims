@@ -335,7 +335,7 @@ const AddTeachers = () => {
                                                 <td>{formatter.format(Date.parse(teachers.created_at))}</td>
                                                 <td>
                                                     <button style={{ marginRight: '5px' }} data-toggle="modal" onClick={() => fetch_teacher_subjects(teachers.systemid)} data-target="#viewsubject" className="btn btn-sm btn-info badge">view</button>
-                                                    <button data-toggle="modal" onClick={() => confirmTeachersRegAsign(teachers)} data-target="#asign-subject-more" className="btn btn-sm btn-warning badge">Asign</button>
+                                                    <button data-toggle="modal" onClick={() => confirmTeachersRegAsign(teachers)} data-target="#asign-subject-more" className="btn btn-sm btn-warning badge">Assign</button>
                                                 </td>
                                             </tr>
 
@@ -356,7 +356,7 @@ const AddTeachers = () => {
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h4 className="modal-title">Asign Subject</h4>
+                                <h4 className="modal-title">Assign Subject</h4>
                                 <button type="button" onClick={closeModal} className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
@@ -466,7 +466,7 @@ const AddTeachers = () => {
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h4 className="modal-title">Asign Subject</h4>
+                                <h4 className="modal-title">Assign Subject</h4>
                                 <button type="button" onClick={closeModal} className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
@@ -593,7 +593,7 @@ const AddTeachers = () => {
                                                 <div style={{ flex: 0.5 }}></div>
                                                 <i style={{ fontStyle: 'normal', fontSize: '14px' }}>{d.classname}{d.sectionname}</i>
                                                 <div style={{ flex: 1 }}></div>
-                                                <button onClick={() => unasignSubjectToTeacher(d.id)} className="btn btn-sm badge btn-danger">Unasign</button>
+                                                <button onClick={() => unasignSubjectToTeacher(d.id)} className="btn btn-sm badge btn-danger">Unassign</button>
                                             </div>
                                         </div>
 

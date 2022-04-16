@@ -174,7 +174,7 @@ function Moto() {
             <button data-toggle="modal" data-target="#getstudents" className="btn btn-info btn-sm">Get Students</button>
             <hr />
             <div className="alert alert-warning">
-                <i>Note: You can enter Psychomotor multiple times all you need to do is to fill and resubmit.</i>
+                <i>Note: Psychomotor can be entered multiple times by clicking the Add/Completed button.</i>
             </div>
             <div className="row">
                 <div className="col-12">
@@ -251,8 +251,8 @@ function Moto() {
                                 <div className="col-12 col-md-6">
                                     <select name="" onChange={(e) => handleChangeSection(e)} value={selectedsection} id="" className="form-control form-control-sm">
                                         <option value="">Select a Section</option>
-                                        {section_sec.map(d => (
-                                            <option key={d.id + "motosection"} value={d.id} >{d.sectionname}</option>
+                                        {allClasses.map(d => (
+                                            <option key={d.id + "motosection"} value={d.sectionId} >{d.sectionname}</option>
                                         ))}
                                     </select>
                                 </div>
