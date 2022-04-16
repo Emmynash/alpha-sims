@@ -254,9 +254,9 @@ class ResultGenerationController extends Controller
         </div>
         <br>
         <div style="width: 100%;">
-            <i style="font-style:normal; padding: 8px;">Grand Total: '.$this->getStudentGrandTotal($term, $classid, $section, $regNo, $schoolsession).'</i>
-            <i style="font-style:normal; padding: 8px;">Student/Pupil Average: '.round($this->getStudentAverge($term, $classid, $studentData->id, $schoolsession, 2)).'</i>
-            <i style="font-style:normal; padding: 8px;">Class Average: '.round($this->getClassAverge($term, $classid, $schoolsession, $section, 2)).'</i>
+            <i style="font-style:normal; padding: 8px;">Grand Total: '.round($this->getStudentGrandTotal($term, $classid, $section, $regNo, $schoolsession), 2).'</i> 
+            <i style="font-style:normal; padding: 8px;">Student/Pupil Average: '.round($this->getStudentAverge($term, $classid, $studentData->id, $schoolsession), 2).'</i>
+            <i style="font-style:normal; padding: 8px;">Class Average: '.round($this->getClassAverge($term, $classid, $schoolsession, $section), 2).'</i>
             <i style="font-style:normal; padding: 8px;">Position: Nill</i>
         </div>
         <br>
@@ -295,7 +295,7 @@ class ResultGenerationController extends Controller
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 10px;">
-            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverge($term, $studentData->id, $schoolsession, $classid, $section)).'</p>
+            <p style="padding: 0px; margin: 0;">HEAD OF SCHOOL\'S COMMENT: '.$this->getHeadOfSchoolComment($this->getStudentAverge($term, $classid, $studentData->id, $schoolsession)).'</p>
             <div style="height: 1px; width: 100%; background-color: black;"></div>
         </div>
         <div style="width: 100%; margin-bottom: 8px;">
@@ -419,7 +419,7 @@ class ResultGenerationController extends Controller
             for ($i=0; $i < count($scores); $i++) { 
 
                 $value = $scores == NULL ? 0:$scores[$i]->scrores;
-                $subAssScore = '<td><center>'.$value.'</center></td>';
+                $subAssScore = '<td><center>'.round($value, 2).'</center></td>';
 
                 array_push($subAssessmentScore, $subAssScore);
             }
@@ -497,6 +497,7 @@ class ResultGenerationController extends Controller
             }
 
         }
+
 
         return $selectedComment;
     }
