@@ -482,7 +482,7 @@ class ResultGenerationController extends Controller
         if($getStudentAverge == null){
             return 0;
         }else{
-            return $getStudentAverge->averge;
+            return $getStudentAverge->average;
         }
     }
 
