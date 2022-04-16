@@ -84,11 +84,12 @@
           
                         
                         <td>
-                            <form action="{{ route('result_print_single_sec') }}" method="POST" id="formgetsingleresult{{ $entirestudentm->id }}">
+                            <form action="{{ route('single_result') }}" method="POST" id="formgetsingleresult{{ $entirestudentm->id }}">
                                 @csrf
                                 <input type="hidden" value="{{ $entirestudentm->id }}" name="student_reg_no">
                                 <input type="hidden" value="{{ $session }}" name="session">
                                 <input type="hidden" value="{{ $term }}" name="term">
+                                <input type="hidden" value="{{ $section }}" name="section">
                                 <input type="hidden" value="{{ $entirestudentm->classid }}" name="classid">
                             </form>
                             <button type="submit" form="formgetsingleresult{{ $entirestudentm->id }}" class="btn btn-sm btn-warning"><i class="fas fa-eye"></i>

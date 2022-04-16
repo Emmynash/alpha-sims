@@ -46,6 +46,8 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapPsychomotorRoutes();
 
+        $this->mapResultRoutes();
+
         //
     }
 
@@ -105,6 +107,14 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/psychomotor.php'));
+    }
+
+    protected function mapResultRoutes()
+    {
+        Route::prefix('result')
+             ->middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/result.php'));
     }
 
 }
