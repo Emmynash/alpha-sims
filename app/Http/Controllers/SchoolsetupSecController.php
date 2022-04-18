@@ -517,7 +517,7 @@ class SchoolsetupSecController extends Controller
 
     public function deletecomment(Request $request)
     {
-        $deleteComment = CommentTable::find($request->deleteid);
+        $deleteComment = HeadOfchoolComment::find($request->deleteid);
         $deleteComment->delete();
 
         return back()->with('success', 'Comment deleted successfully');
