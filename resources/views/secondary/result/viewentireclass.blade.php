@@ -30,7 +30,14 @@
     </div>
     <!-- /.content-header -->
     <div class="container">
-      <button class="btn btn-sm btn-warning">View All</button>
+      <button class="btn btn-sm btn-warning" type="submit" form="bulkPrinting">View All</button>
+      <form action="{{ route('multiple_result') }}" method="post" id="bulkPrinting">
+        @csrf
+        <input type="hidden" value="{{ $session }}" name="session">
+        <input type="hidden" value="{{ $term }}" name="term">
+        <input type="hidden" value="{{ $section }}" name="section">
+        <input type="hidden" value="{{ $classid }}" name="classid">
+      </form>
     </div>
 
     <hr>

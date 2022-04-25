@@ -267,10 +267,11 @@ class ResultController_sec extends Controller
         $term = $request->term;
         $section = $request->section;
         $session = $request->session;
+        $classid = $request->classid;
 
         $entirestudent = Addstudent_sec::where(['classid' => $request->classid, "studentsection" => $request->section, "schoolsession" => $request->session])->get();
 
-        return view('secondary.result.viewentireclass', compact('entirestudent', 'term', 'section', 'session'));
+        return view('secondary.result.viewentireclass', compact('entirestudent', 'term', 'section', 'session', 'classid'));
     }
 
     public function generateResult()
